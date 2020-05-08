@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "898116005110",
+    "firebase_url": "https://reamot-rn.firebaseio.com",
+    "project_id": "reamot-rn",
+    "storage_bucket": "reamot-rn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898116005110:android:1a94bdf954ff1cc94810d7",
+        "android_client_info": {
+          "package_name": "com.reamotreactnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898116005110-htk2cf33pn0ool8ndg3dcv8aledugq3b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp-8jZITxFzUM9JiP-8GpzxbDHWLuwN6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898116005110-htk2cf33pn0ool8ndg3dcv8aledugq3b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
