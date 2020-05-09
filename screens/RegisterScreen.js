@@ -32,17 +32,15 @@ export default class RegisterScreen extends React.Component {
         this.state.user.email,
         this.state.user.password
       )
-      .catch(error => this.setState({ errorMessage: error.message }));
-
-    firestore()
-      .collection("users")
-      .add({
-        name: this.state.user.name,
-        email: this.state.user.email
-      })
       .then(() => {
-        console.log("User added!");
-      });
+        firestore()
+          .collection("users")
+          .add({
+            name: this.state.user.name,
+            email: this.state.user.email
+          });
+      })
+      .catch(error => this.setState({ errorMessage: error.message }));
   };
 
   handlePickAvatar = () => {};

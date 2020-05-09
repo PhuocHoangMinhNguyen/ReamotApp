@@ -46,7 +46,7 @@ export default class LoginScreen extends React.Component {
         />
         <Image
           source={require("../assets/loginLogo.png")}
-          style={{ marginTop: -110, alignSelf: "center" }}
+          style={{ marginTop: -150, alignSelf: "center" }}
         />
         <Text style={styles.greeting}>{"Hello again.\nWelcome back."}</Text>
 
