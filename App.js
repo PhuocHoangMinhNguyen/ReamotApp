@@ -7,6 +7,11 @@
  */
 
 import React, { Component } from "react";
+
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator } from "react-navigation-tabs";
+
 import { Platform, StyleSheet, Text, View } from "react-native";
 
 import firebase from "@react-native-firebase/app";
