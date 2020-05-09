@@ -43,6 +43,8 @@ export default class RegisterScreen extends React.Component {
       });
   };
 
+  handlePickAvatar = () => {};
+
   render() {
     return (
       <View style={styles.container}>
@@ -63,16 +65,23 @@ export default class RegisterScreen extends React.Component {
         </TouchableOpacity>
         <View
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 64,
-            alignItems: "center",
-            width: "100%"
+            alignItems: 'center',
+            width: '100%'
           }}
         >
           <Text style={styles.greeting}>
             {"Hello!\nSign up to get started."}
           </Text>
-          <TouchableOpacity style={styles.avatar}>
+          <TouchableOpacity
+            style={styles.avatarPlaceholder}
+            onPress={this.handlePickAvatar}
+          >
+            <Image
+              source={{ uri: this.state.user.avatar }}
+              style={styles.avatar}
+            />
             <Ionicons
               name="ios-add"
               size={40}
@@ -93,8 +102,10 @@ export default class RegisterScreen extends React.Component {
             <Text style={styles.inputTitle}>Full Name</Text>
             <TextInput
               style={styles.input}
-              onChangeText={name => this.setState({ name })}
-              value={this.state.name}
+              onChangeText={name =>
+                this.setState({ user: { ...this.state.user, name } })
+              }
+              value={this.state.user.name}
             />
           </View>
 
@@ -103,8 +114,10 @@ export default class RegisterScreen extends React.Component {
             <TextInput
               style={styles.input}
               autoCapitalize="none"
-              onChangeText={email => this.setState({ email })}
-              value={this.state.email}
+              onChangeText={email =>
+                this.setState({ user: { ...this.state.user, email } })
+              }
+              value={this.state.user.email}
             />
           </View>
 
@@ -114,8 +127,10 @@ export default class RegisterScreen extends React.Component {
               style={styles.input}
               secureTextEntry
               autoCapitalize="none"
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
+              onChangeText={password =>
+                this.setState({ user: { ...this.state.user, password } })
+              }
+              value={this.state.user.password}
             />
           </View>
         </View>
@@ -129,7 +144,7 @@ export default class RegisterScreen extends React.Component {
           onPress={() => this.props.navigation.navigate("Login")}
         >
           <Text style={{ color: "#414959", fontSize: 13 }}>
-            Already have an account?{" "}
+            Already have an account?
             <Text style={{ fontWeight: "500", color: "#E9446A" }}>Sign in</Text>
           </Text>
         </TouchableOpacity>
@@ -137,7 +152,6 @@ export default class RegisterScreen extends React.Component {
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -196,7 +210,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  avatar: {
+  avatarPlaceholder: {
     width: 100,
     height: 100,
     backgroundColor: "#E1E2E6",
@@ -204,5 +218,11 @@ const styles = StyleSheet.create({
     marginTop: 48,
     justifyContent: "center",
     alignItems: "center"
+  },
+  avatar: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    borderRadius: 50
   }
 });
