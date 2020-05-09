@@ -7,13 +7,12 @@ import {
   SafeAreaView,
   TextInput,
   Image,
-  Platform,
-  PermissionsAndroid
 } from "react-native";
-import * as Permissions from "expo-permissions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 //import * as ImagePicker from "expo-image-picker";
 import ImagePicker from "react-native-image-picker";
+import firestore from "@react-native-firebase/firestore";
+import UserPermissions from "../utilities/UserPermissions";
 
 export default class PostScreen extends React.Component {
   state = {
@@ -22,25 +21,18 @@ export default class PostScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.getPhotoPermission();
+    UserPermissions.getPhotoPermission;
   }
 
-  getPhotoPermission = async () => {
-    if (Platform.OS === "ios") {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-      if (status !== "granted") {
-        alert(
-          "We need permission to use your camera roll if you'd like to incude a photo."
-        );
-      }
-    } 
-
-    if (Platform.OS === "android") {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-      );
-    }
+  handlePost = () => {
+    firestore()
+      .collection("posts")
+      .add({
+        text: this.text,
+        uid: this.uid,
+        timestamp: this.timestamp,
+        image: this.image
+      });
   };
 
   pickImage = async () => {
@@ -66,7 +58,7 @@ export default class PostScreen extends React.Component {
         console.log("User tapped custom button: ", response.customButton);
         alert(response.customButton);
       } else {
-        let source = response;
+        let source = response.uri;
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
