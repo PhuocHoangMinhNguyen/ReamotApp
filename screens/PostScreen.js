@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import * as Permissions from "expo-permissions";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import * as ImagePicker from "expo-image-picker";
+//import * as ImagePicker from "expo-image-picker";
+import ImagePicker from "react-native-image-picker"
 
 export default class PostScreen extends React.Component {
   state = {
@@ -36,15 +37,36 @@ export default class PostScreen extends React.Component {
   };
 
   pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3]
-    });
+    var options = {
+      title: "Select Image",
+      customButtons: [
+        { name: "customOptionKey", title: "Choose Photo from Custom Option" }
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
 
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
+    let result = await ImagePicker.showImagePicker(options, response => {
+      console.log("Response = ", response);
+
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          image: source
+        });
+      }
+    });
   };
 
   render() {
