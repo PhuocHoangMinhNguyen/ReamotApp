@@ -11,14 +11,17 @@ import React, { Component } from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import LoadingScreen from "./screens/LoadingScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 
 import HomeScreen from "./screens/HomeScreen";
-
-import firebase from "@react-native-firebase/app";
+import MessageScreen from "./screens/MessageScreen";
+import PostScreen from "./screens/PostScreen";
+import NotificationScreen from "./screens/NotificationScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -27,20 +30,78 @@ import firebase from "@react-native-firebase/app";
 //    3) import the package here in your JavaScript code: `import '@react-native-firebase/auth';`
 //    4) The Firebase Auth service is now available to use here: `firebase.auth().currentUser`
 
-const AppStack = createStackNavigator({
-  Home: HomeScreen
-});
+const AppTabNavigator = createBottomTabNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-home" size={24} color={tintColor} />
+        )
+      }
+    },
+    Message: {
+      screen: MessageScreen,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-chatboxes" size={24} color={tintColor} />
+        )
+      }
+    },
+    Post: {
+      screen: PostScreen,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons
+            name="ios-add-circle"
+            size={48}
+            color="#E9446A"
+            style={{
+              shadowColor: "#E9446A",
+              shadowOffset: { width: 0, height: 10 },
+              shadowRadius: 10,
+              shadowOpacity: 0.3
+            }}
+          />
+        )
+      }
+    },
+    Notification: {
+      screen: NotificationScreen,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-notifications" size={24} color={tintColor} />
+        )
+      }
+    },
+    Profile: {
+      screen: ProfileScreen,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-person" size={24} color={tintColor} />
+        )
+      }
+    }
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: "#161F3D",
+      inactiveTintColor: "#B8BBC4",
+      showLabel: false
+    }
+  }
+);
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
   Register: RegisterScreen
 });
 
-export default createAppContainer (
+export default createAppContainer(
   createSwitchNavigator(
     {
       Loading: LoadingScreen,
-      App: AppStack,
+      App: AppTabNavigator,
       Auth: AuthStack
     },
     {
