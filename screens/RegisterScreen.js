@@ -24,17 +24,27 @@ export default class RegisterScreen extends React.Component {
   };
 
   handleSignUp = () => {
-    auth()
-      .createUserWithEmailAndPassword(
-        this.state.user.email,
-        this.state.user.password
-      )
+    auth().createUserWithEmailAndPassword(
+      this.state.user.email,
+      this.state.user.password
+    );
+    /*
       .then(userCredentials => {
         return userCredentials.user.updateProfile({
           displayName: this.state.name
         });
       })
       .catch(error => this.setState({ errorMessage: error.message }));
+      */
+    firestore()
+      .collection("users")
+      .add({
+        name: this.state.user.name,
+        email: this.state.user.email
+      })
+      .then(() => {
+        console.log("User added!");
+      });
   };
 
   render() {
@@ -54,7 +64,9 @@ export default class RegisterScreen extends React.Component {
             <TextInput
               style={styles.input}
               autoCapitalize="none"
-              onChangeText={name => this.setState({ name })}
+              onChangeText={name =>
+                this.setState({ user: { ...this.state.user, name } })
+              }
               value={this.state.user.name}
             />
           </View>
@@ -64,7 +76,9 @@ export default class RegisterScreen extends React.Component {
             <TextInput
               style={styles.input}
               autoCapitalize="none"
-              onChangeText={email => this.setState({ email })}
+              onChangeText={email =>
+                this.setState({ user: { ...this.state.user, email } })
+              }
               value={this.state.user.email}
             />
           </View>
@@ -75,7 +89,9 @@ export default class RegisterScreen extends React.Component {
               style={styles.input}
               secureTextEntry
               autoCapitalize="none"
-              onChangeText={password => this.setState({ password })}
+              onChangeText={password =>
+                this.setState({ user: { ...this.state.user, password } })
+              }
               value={this.state.user.password}
             />
           </View>
