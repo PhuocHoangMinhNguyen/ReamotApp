@@ -7,12 +7,13 @@ import {
   SafeAreaView,
   TextInput,
   Image,
-  Platform
+  Platform,
+  PermissionsAndroid
 } from "react-native";
 import * as Permissions from "expo-permissions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 //import * as ImagePicker from "expo-image-picker";
-import ImagePicker from "react-native-image-picker"
+import ImagePicker from "react-native-image-picker";
 
 export default class PostScreen extends React.Component {
   state = {
@@ -33,6 +34,12 @@ export default class PostScreen extends React.Component {
           "We need permission to use your camera roll if you'd like to incude a photo."
         );
       }
+    } 
+
+    if (Platform.OS === "android") {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+      );
     }
   };
 
