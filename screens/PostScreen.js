@@ -29,7 +29,7 @@ export default class PostScreen extends React.Component {
     if (Platform.OS === "ios") {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-      if (status != "granted") {
+      if (status !== "granted") {
         alert(
           "We need permission to use your camera roll if you'd like to incude a photo."
         );
