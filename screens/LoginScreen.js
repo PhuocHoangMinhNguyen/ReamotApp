@@ -5,10 +5,17 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Image,
+  StatusBar,
+  LayoutAnimation
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 
 export default class LoginScreen extends React.Component {
+  static navigationOptions = {
+    headerShown: false
+  };
+
   state = {
     email: "",
     password: "",
@@ -24,8 +31,23 @@ export default class LoginScreen extends React.Component {
   };
 
   render() {
+    LayoutAnimation.easeInEaseOut();
+
     return (
       <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Image
+          source={require("../assets/authHeader.png")}
+          style={{ marginTop: -176, marginLeft: -50 }}
+        />
+        <Image
+          source={require("../assets/authFooter.png")}
+          style={{ position: "absolute", bottom: -325, right: -225 }}
+        />
+        <Image
+          source={require("../assets/loginLogo.png")}
+          style={{ marginTop: -110, alignSelf: "center" }}
+        />
         <Text style={styles.greeting}>{"Hello again.\nWelcome back."}</Text>
 
         <View style={styles.errorMessage}>
@@ -66,8 +88,8 @@ export default class LoginScreen extends React.Component {
           onPress={() => this.props.navigation.navigate("Register")}
         >
           <Text style={{ color: "#414959", fontSize: 13 }}>
-            New to Reamot?
-            <Text style={{ fontWeight: "500", color: "#E9446A" }}>Sign Up</Text>
+            New to SocialApp?{' '}
+            <Text style={{ fontWeight: "500", color: "#E9446A" }}>Sign up</Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -80,21 +102,9 @@ const styles = StyleSheet.create({
     flex: 1
   },
   greeting: {
-    marginTop: 32,
+    marginTop: -32,
     fontSize: 18,
     fontWeight: "400",
-    textAlign: "center"
-  },
-  errorMessage: {
-    height: 72,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 30
-  },
-  error: {
-    color: "#E9446A",
-    fontSize: 13,
-    fontWeight: "600",
     textAlign: "center"
   },
   form: {
@@ -120,5 +130,17 @@ const styles = StyleSheet.create({
     height: 52,
     alignItems: "center",
     justifyContent: "center"
+  },
+  errorMessage: {
+    height: 72,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 30
+  },
+  error: {
+    color: "#E9446A",
+    fontSize: 13,
+    fontWeight: "600",
+    textAlign: "center"
   }
 });
