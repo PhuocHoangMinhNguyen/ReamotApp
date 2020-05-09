@@ -27,10 +27,12 @@ export default class RegisterScreen extends React.Component {
   };
 
   handleSignUp = () => {
-    auth().createUserWithEmailAndPassword(
-      this.state.user.email,
-      this.state.user.password
-    );
+    auth()
+      .createUserWithEmailAndPassword(
+        this.state.user.email,
+        this.state.user.password
+      )
+      .catch(error => this.setState({ errorMessage: error.message }));
 
     firestore()
       .collection("users")
@@ -51,7 +53,7 @@ export default class RegisterScreen extends React.Component {
         <StatusBar barStyle="light-content" />
         <Image
           source={require("../assets/authHeader.png")}
-          style={{ marginTop: -116, marginLeft: -50 }}
+          style={{ marginTop: -180, marginLeft: -50 }}
         />
         <Image
           source={require("../assets/authFooter.png")}
@@ -65,10 +67,10 @@ export default class RegisterScreen extends React.Component {
         </TouchableOpacity>
         <View
           style={{
-            position: 'absolute',
-            top: 64,
-            alignItems: 'center',
-            width: '100%'
+            position: "absolute",
+            top: 24,
+            alignItems: "center",
+            width: "100%"
           }}
         >
           <Text style={styles.greeting}>
@@ -89,12 +91,12 @@ export default class RegisterScreen extends React.Component {
               style={{ marginTop: 6, marginLeft: 2 }}
             />
           </TouchableOpacity>
-        </View>
 
-        <View style={styles.errorMessage}>
-          {this.state.errorMessage && (
-            <Text style={styles.error}>{this.state.errorMessage}</Text>
-          )}
+          <View style={styles.errorMessage}>
+            {this.state.errorMessage && (
+              <Text style={styles.error}>{this.state.errorMessage}</Text>
+            )}
+          </View>
         </View>
 
         <View style={styles.form}>
@@ -109,7 +111,7 @@ export default class RegisterScreen extends React.Component {
             />
           </View>
 
-          <View style={{ marginTop: 32 }}>
+          <View style={{ marginTop: 24 }}>
             <Text style={styles.inputTitle}>Email Address</Text>
             <TextInput
               style={styles.input}
@@ -121,7 +123,7 @@ export default class RegisterScreen extends React.Component {
             />
           </View>
 
-          <View style={{ marginTop: 32 }}>
+          <View style={{ marginTop: 24 }}>
             <Text style={styles.inputTitle}>Password</Text>
             <TextInput
               style={styles.input}
@@ -140,7 +142,7 @@ export default class RegisterScreen extends React.Component {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={{ alignSelf: "center", marginTop: 32 }}
+          style={{ alignSelf: "center", marginTop: 24 }}
           onPress={() => this.props.navigation.navigate("Login")}
         >
           <Text style={{ color: "#414959", fontSize: 13 }}>
@@ -157,14 +159,15 @@ const styles = StyleSheet.create({
     flex: 1
   },
   greeting: {
-    marginTop: 32,
+    marginTop: 12,
     fontSize: 18,
     fontWeight: "500",
     textAlign: "center",
     color: "#FFF"
   },
   form: {
-    marginBottom: 48,
+    marginTop: 60,
+    marginBottom: 24,
     marginHorizontal: 30
   },
   inputTitle: {
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   errorMessage: {
-    height: 72,
+    marginTop: 12,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 30
@@ -201,7 +204,7 @@ const styles = StyleSheet.create({
   },
   back: {
     position: "absolute",
-    top: 48,
+    top: 24,
     left: 32,
     width: 32,
     height: 32,
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: "#E1E2E6",
     borderRadius: 50,
-    marginTop: 48,
+    marginTop: 24,
     justifyContent: "center",
     alignItems: "center"
   },

@@ -67,7 +67,7 @@ export default class LoginScreen extends React.Component {
             />
           </View>
 
-          <View style={{ marginTop: 32 }}>
+          <View style={{ marginTop: 24 }}>
             <Text style={styles.inputTitle}>Password</Text>
             <TextInput
               style={styles.input}
@@ -84,7 +84,7 @@ export default class LoginScreen extends React.Component {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={{ alignSelf: "center", marginTop: 32 }}
+          style={{ alignSelf: "center", marginTop: 24 }}
           onPress={() => this.props.navigation.navigate("Register")}
         >
           <Text style={{ color: "#414959", fontSize: 13 }}>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   form: {
-    marginBottom: 48,
+    marginBottom: 24,
     marginHorizontal: 30
   },
   inputTitle: {
