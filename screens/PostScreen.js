@@ -9,10 +9,10 @@ import {
   Image
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-//import * as ImagePicker from "expo-image-picker";
 import ImagePicker from "react-native-image-picker";
 import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
+import auth from "@react-native-firebase/auth";
 import UserPermissions from "../utilities/UserPermissions";
 
 export default class PostScreen extends React.Component {
@@ -39,7 +39,7 @@ export default class PostScreen extends React.Component {
   addPost = async ({ text, localUri }) => {
     const remoteUri = await this.uploadPhotoAsync(
       localUri,
-      `photos/${this.uid}/${Date.now()}`
+      `photos/${(auth().currentUser || {}).uid}/${Date.now()}`
     );
 
     return new Promise((res, rej) => {

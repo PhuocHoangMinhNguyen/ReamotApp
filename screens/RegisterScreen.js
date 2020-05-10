@@ -9,8 +9,11 @@ import {
   Image
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import auth from "@react-native-firebase/auth";
+import ImagePicker from "react-native-image-picker";
 import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
+import auth from "@react-native-firebase/auth";
+import UserPermissions from "../utilities/UserPermissions";
 
 export default class RegisterScreen extends React.Component {
   static navigationOptions = {
@@ -21,29 +24,102 @@ export default class RegisterScreen extends React.Component {
     user: {
       name: "",
       email: "",
-      password: ""
+      password: "",
+      avatar: null
     },
     errorMessage: null
   };
 
   handleSignUp = () => {
-    auth()
-      .createUserWithEmailAndPassword(
-        this.state.user.email,
-        this.state.user.password
-      )
-      .then(() => {
-        firestore()
-          .collection("users")
-          .add({
-            name: this.state.user.name,
-            email: this.state.user.email
-          });
-      })
-      .catch(error => this.setState({ errorMessage: error.message }));
+    this.createUser(this.state.user);
   };
 
-  handlePickAvatar = () => {};
+  createUser = async user => {
+    let remoteUri = null;
+
+    try {
+      await auth().createUserWithEmailAndPassword(user.email, user.password);
+
+      let db = firestore()
+        .collection("users")
+        .doc((auth().currentUser || {}).uid);
+
+      db.set({
+        name: user.name,
+        email: user.email,
+        avatar: null
+      });
+
+      if (user.avatar) {
+        remoteUri = await this.uploadPhotoAsync(
+          user.avatar,
+          `avatars/${(auth().currentUser || {}).uid}`
+        );
+
+        db.set({ avatar: remoteUri }, { merge: true });
+      }
+    } catch (error) {
+      alert("Error: ", error);
+    }
+  };
+
+  uploadPhotoAsync = (uri, filename) => {
+    return new Promise(async (res, rej) => {
+      const response = await fetch(uri);
+      const file = await response.blob();
+
+      let upload = storage()
+        .ref(filename)
+        .put(file);
+
+      upload.on(
+        "state_changed",
+        snapshot => {},
+        err => {
+          rej(err);
+        },
+        async () => {
+          const url = await upload.snapshot.ref.getDownloadURL();
+          res(url);
+        }
+      );
+    });
+  };
+
+  handlePickAvatar = async () => {
+    UserPermissions.getPhotoPermission();
+
+    var options = {
+      title: "Select Image",
+      customButtons: [
+        { name: "customOptionKey", title: "Choose Photo from Custom Option" }
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
+
+    let result = await ImagePicker.showImagePicker(options, response => {
+      console.log("Response = ", response);
+
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response.uri;
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          user: { ...this.state.user, avatar: source }
+        });
+      }
+    });
+  };
 
   render() {
     return (
@@ -89,12 +165,12 @@ export default class RegisterScreen extends React.Component {
               style={{ marginTop: 6, marginLeft: 2 }}
             />
           </TouchableOpacity>
+        </View>
 
-          <View style={styles.errorMessage}>
-            {this.state.errorMessage && (
-              <Text style={styles.error}>{this.state.errorMessage}</Text>
-            )}
-          </View>
+        <View style={styles.errorMessage}>
+          {this.state.errorMessage && (
+            <Text style={styles.error}>{this.state.errorMessage}</Text>
+          )}
         </View>
 
         <View style={styles.form}>
