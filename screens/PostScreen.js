@@ -47,8 +47,6 @@ export default class PostScreen extends React.Component {
         .collection("posts")
         .add({
           text,
-          uid: this.uid,
-          timestamp: this.timestamp,
           image: remoteUri
         })
         .then(ref => {
