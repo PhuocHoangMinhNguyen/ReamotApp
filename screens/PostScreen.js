@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
-  Image,
+  Image
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 //import * as ImagePicker from "expo-image-picker";
 import ImagePicker from "react-native-image-picker";
 import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
 import UserPermissions from "../utilities/UserPermissions";
 
 export default class PostScreen extends React.Component {
@@ -25,14 +26,38 @@ export default class PostScreen extends React.Component {
   }
 
   handlePost = () => {
-    firestore()
-      .collection("posts")
-      .add({
-        text: this.text,
-        uid: this.uid,
-        timestamp: this.timestamp,
-        image: this.image
+    this.addPost({ text: this.state.text.trim(), localUri: this.state.image })
+      .then(ref => {
+        this.setState({ text: "", image: null });
+        this.props.navigation.goBack();
+      })
+      .catch(error => {
+        alert(error);
       });
+  };
+
+  addPost = async ({ text, localUri }) => {
+    const remoteUri = await this.uploadPhotoAsync(
+      localUri,
+      `photos/${this.uid}/${Date.now()}`
+    );
+
+    return new Promise((res, rej) => {
+      firestore()
+        .collection("posts")
+        .add({
+          text,
+          uid: this.uid,
+          timestamp: this.timestamp,
+          image: remoteUri
+        })
+        .then(ref => {
+          res(ref);
+        })
+        .catch(error => {
+          rej(error);
+        });
+    });
   };
 
   pickImage = async () => {
@@ -65,6 +90,29 @@ export default class PostScreen extends React.Component {
           image: source
         });
       }
+    });
+  };
+
+  uploadPhotoAsync = (uri, filename) => {
+    return new Promise(async (res, rej) => {
+      const response = await fetch(uri);
+      const file = await response.blob();
+
+      let upload = storage()
+        .ref(filename)
+        .put(file);
+
+      upload.on(
+        "state_changed",
+        snapshot => {},
+        err => {
+          rej(err);
+        },
+        async () => {
+          const url = await upload.snapshot.ref.getDownloadURL();
+          res(url);
+        }
+      );
     });
   };
 
