@@ -125,7 +125,7 @@ export default class PostScreen extends React.Component {
         </TouchableOpacity>
         <Image
           source={require("../assets/loginLogo.png")}
-          style={{ marginTop: 20, alignSelf: "center" }}
+          style={{ marginTop: 48, alignSelf: "center" }}
         />
         <Text style={styles.greeting}>{"Hello again.\nWelcome back."}</Text>
 
