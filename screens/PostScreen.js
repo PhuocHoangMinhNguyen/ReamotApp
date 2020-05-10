@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
+  StatusBar,
   TextInput,
   Image
 } from "react-native";
@@ -116,43 +116,62 @@ export default class PostScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-            <Ionicons name="md-arrow-back" size={24} color="#D8D9DB" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.handlePost}>
-            <Text style={{ fontWeight: "500" }}>Post</Text>
-          </TouchableOpacity>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.back}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
+        </TouchableOpacity>
+        <Image
+          source={require("../assets/loginLogo.png")}
+          style={{ marginTop: 20, alignSelf: "center" }}
+        />
+        <Text style={styles.greeting}>{"Hello again.\nWelcome back."}</Text>
+
+        <View style={styles.errorMessage}>
+          {this.state.errorMessage && (
+            <Text style={styles.error}>{this.state.errorMessage}</Text>
+          )}
         </View>
 
-        <View style={styles.inputContainer}>
-          <Image
-            source={require("../assets/tempAvatar.jpg")}
-            style={styles.avatar}
-          />
-          <TextInput
-            autoFocus={true}
-            multiline={true}
-            numberOfLines={4}
-            style={{ flex: 1 }}
-            placeholder="Want to share something?"
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
-          />
+        <View style={styles.form}>
+          <View>
+            <Text style={styles.inputTitle}>Email Address</Text>
+            <TextInput
+              style={styles.input}
+              autoCapitalize="none"
+              onChangeText={email => this.setState({ email })}
+              value={this.state.email}
+            />
+          </View>
+
+          <View style={{ marginTop: 24 }}>
+            <Text style={styles.inputTitle}>Password</Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              autoCapitalize="none"
+              onChangeText={password => this.setState({ password })}
+              value={this.state.password}
+            />
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.photo} onPress={this.pickImage}>
-          <Ionicons name="md-camera" size={32} color="#D8D9DB" />
+        <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+          <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign in</Text>
         </TouchableOpacity>
 
-        <View style={{ marginHorizontal: 32, marginTop: 32, height: 150 }}>
-          <Image
-            source={{ uri: this.state.image }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        </View>
-      </SafeAreaView>
+        <TouchableOpacity
+          style={{ alignSelf: "center", marginTop: 24 }}
+          onPress={() => this.props.navigation.navigate("Register")}
+        >
+          <Text style={{ color: "#414959", fontSize: 13 }}>
+            New to SocialApp?{' '}
+            <Text style={{ fontWeight: "500", color: "#E9446A" }}>Sign up</Text>
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -161,26 +180,57 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#D8D9DB"
+  greeting: {
+    marginTop: -32,
+    fontSize: 18,
+    fontWeight: "400",
+    textAlign: "center"
   },
-  inputContainer: {
-    margin: 32,
-    flexDirection: "row"
+  form: {
+    marginBottom: 24,
+    marginHorizontal: 30
   },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    marginRight: 16
+  inputTitle: {
+    color: "#8A8F9E",
+    fontSize: 10,
+    textTransform: "uppercase"
   },
-  photo: {
-    alignItems: "flex-end",
-    marginHorizontal: 32
-  }
+  input: {
+    borderBottomColor: "#8A8F9E",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    height: 40,
+    fontSize: 15,
+    color: "#161F3D"
+  },
+  button: {
+    marginHorizontal: 30,
+    backgroundColor: "#E9446A",
+    borderRadius: 4,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  errorMessage: {
+    height: 72,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 30
+  },
+  error: {
+    color: "#E9446A",
+    fontSize: 13,
+    fontWeight: "600",
+    textAlign: "center"
+  },
+  back: {
+    position: "absolute",
+    top: 24,
+    left: 32,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(21, 22, 48, 0.1)",
+    alignItems: "center",
+    justifyContent: "center"
+  },
 });
