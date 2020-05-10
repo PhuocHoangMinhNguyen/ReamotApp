@@ -10,7 +10,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 
 import HomeScreen from "./screens/HomeScreen";
-import MessageScreen from "./screens/MessageScreen";
+import CalendarScreen from "./screens/CalendarScreen";
 import PostScreen from "./screens/PostScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import ProfileScreen from "./screens/ProfileScreen";
@@ -34,11 +34,11 @@ const AppContainer = createStackNavigator(
             )
           }
         },
-        Message: {
-          screen: MessageScreen,
+        Calendar: {
+          screen: CalendarScreen,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
-              <Ionicons name="ios-chatboxes" size={24} color={tintColor} />
+              <Ionicons name="ios-calendar" size={24} color={tintColor} />
             )
           }
         },
