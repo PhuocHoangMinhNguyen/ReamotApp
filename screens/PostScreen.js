@@ -6,8 +6,10 @@ import {
   View,
   Text,
   Image,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 
@@ -46,6 +48,12 @@ function Users() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity
+          //style={styles.back}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Ionicons name="md-arrow-back" size={24} color="#D8D9DB" />
+        </TouchableOpacity>
         <SearchBar
           placeholder="Search Medicine..."
           lightTheme
@@ -120,7 +128,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     color: "#454D65"
-  }
+  },
+  back: {
+    position: "absolute",
+    top: 24,
+    left: 32,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(21, 22, 48, 0.1)",
+    alignItems: "center",
+    justifyContent: "center"
+  },
 });
 
 export default function PostScreen() {
