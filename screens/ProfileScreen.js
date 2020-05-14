@@ -10,10 +10,6 @@ export default class ProfileScreen extends React.Component {
 
   unsubscribe = null;
 
-  uid = () => {
-    (auth().currentUser || {}).uid;
-  };
-
   componentDidMount() {
     const user = this.props.uid || (auth().currentUser || {}).uid;
 
