@@ -20,7 +20,7 @@
     "expo-permissions": "^8.1.0",
     "moment": "^2.25.3",
     "react": "16.9.0",
-    "react-native": "0.61.5",
+    "react-native": "^0.62.2",
     "react-native-calendars": "^1.265.0",
     "react-native-elements": "^2.0.0",
     "react-native-gesture-handler": "^1.6.1",

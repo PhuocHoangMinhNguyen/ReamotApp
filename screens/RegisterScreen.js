@@ -25,6 +25,7 @@ export default class RegisterScreen extends React.Component {
       name: "",
       email: "",
       password: "",
+      phoneNumber: "",
       avatar: null
     },
     errorMessage: null
@@ -38,25 +39,30 @@ export default class RegisterScreen extends React.Component {
     let remoteUri = null;
 
     try {
-      await auth().createUserWithEmailAndPassword(user.email, user.password);
+      await auth()
+        .createUserWithEmailAndPassword(user.email, user.password)
+        .catch(error => this.setState({ errorMessage: error.message }));
 
-      let db = firestore()
-        .collection("users")
-        .doc((auth().currentUser || {}).uid);
+      if (this.state.errorMessage == null) {
+        let db = firestore()
+          .collection("users")
+          .doc((auth().currentUser || {}).uid);
 
-      db.set({
-        name: user.name,
-        email: user.email,
-        avatar: null
-      });
+        db.set({
+          name: user.name,
+          email: user.email,
+          phoneNumber: phoneNumber,
+          avatar: null
+        });
 
-      if (user.avatar) {
-        remoteUri = await this.uploadPhotoAsync(
-          user.avatar,
-          `avatars/${(auth().currentUser || {}).uid}`
-        );
+        if (user.avatar) {
+          remoteUri = await this.uploadPhotoAsync(
+            user.avatar,
+            `users/${(auth().currentUser || {}).uid}`
+          );
 
-        db.set({ avatar: remoteUri }, { merge: true });
+          db.set({ avatar: remoteUri }, { merge: true });
+        }
       }
     } catch (error) {
       alert("Error: ", error);
@@ -74,7 +80,7 @@ export default class RegisterScreen extends React.Component {
 
       upload.on(
         "state_changed",
-        snapshot => {},
+        snapshot => { },
         err => {
           rej(err);
         },
@@ -207,6 +213,18 @@ export default class RegisterScreen extends React.Component {
                 this.setState({ user: { ...this.state.user, password } })
               }
               value={this.state.user.password}
+            />
+          </View>
+
+          <View style={{ marginTop: 24 }}>
+            <Text style={styles.inputTitle}>Phone Number</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={phoneNumber =>
+                this.setState({ user: { ...this.state.user, phoneNumber } })
+              }
+              value={this.state.user.phoneNumber}
             />
           </View>
         </View>
