@@ -79,9 +79,7 @@ function renderItem(item) {
     <View style={styles.feedItem}>
       <Image
         source={
-          item.avatar
-            ? { uri: item.image }
-            : require("../assets/tempAvatar.jpg")
+          item.image ? { uri: item.image } : require("../assets/tempAvatar.jpg")
         }
         style={styles.avatar}
       />
