@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default class NotificationScreen extends React.Component {
+export default class MedicineScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Notification Screen</Text>
+        <Text>Medicine Screen</Text>
       </View>
     );
   }

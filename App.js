@@ -12,7 +12,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import PostScreen from "./screens/PostScreen";
-import NotificationScreen from "./screens/NotificationScreen";
+import MedicineScreen from "./screens/MedicineScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
@@ -61,7 +61,7 @@ const AppContainer = createStackNavigator(
           }
         },
         Notification: {
-          screen: NotificationScreen,
+          screen: MedicineScreen,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Ionicons name="ios-notifications" size={24} color={tintColor} />

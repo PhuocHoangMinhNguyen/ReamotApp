@@ -51,7 +51,7 @@ export default class RegisterScreen extends React.Component {
         db.set({
           name: user.name,
           email: user.email,
-          phoneNumber: phoneNumber,
+          phoneNumber: user.phoneNumber,
           avatar: null
         });
 
