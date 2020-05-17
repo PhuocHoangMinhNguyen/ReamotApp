@@ -6,7 +6,8 @@ import {
   View,
   Text,
   Image,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
@@ -76,7 +77,10 @@ function Medicines() {
 
 function renderItem(item) {
   return (
-    <View style={styles.feedItem}>
+    <TouchableOpacity
+      style={styles.feedItem}
+      //onPress={() => this.props.navigation.navigate("MediInfo")}
+    >
       <Image
         source={
           item.image ? { uri: item.image } : require("../assets/tempAvatar.jpg")
@@ -84,7 +88,7 @@ function renderItem(item) {
         style={styles.avatar}
       />
       <Text style={styles.name}>{item.name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

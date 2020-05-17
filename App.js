@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
@@ -14,6 +14,7 @@ import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import PostScreen from "./screens/PostScreen";
 import MedicineScreen from "./screens/MedicineScreen";
+import MediInfo from "./screens/MediInfoScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
@@ -110,12 +111,18 @@ const AuthStack = createStackNavigator({
   Register: RegisterScreen
 });
 
+//const MedicineStack = createStackNavigator({
+  //MediInfo: MediInfo,
+  //Medicine: MedicineScreen
+//});
+
 export default createAppContainer(
   createSwitchNavigator(
     {
       Loading: LoadingScreen,
       App: AppContainer,
       Auth: AuthStack
+      //Medi: MedicineStack
     },
     {
       initialRouteName: "Loading"
