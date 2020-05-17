@@ -191,7 +191,7 @@ export default class RegisterScreen extends React.Component {
             />
           </View>
 
-          <View style={{ marginTop: 24 }}>
+          <View style={{ marginTop: 12 }}>
             <Text style={styles.inputTitle}>Email Address</Text>
             <TextInput
               style={styles.input}
@@ -203,7 +203,7 @@ export default class RegisterScreen extends React.Component {
             />
           </View>
 
-          <View style={{ marginTop: 24 }}>
+          <View style={{ marginTop: 12 }}>
             <Text style={styles.inputTitle}>Password</Text>
             <TextInput
               style={styles.input}
@@ -216,7 +216,7 @@ export default class RegisterScreen extends React.Component {
             />
           </View>
 
-          <View style={{ marginTop: 24 }}>
+          <View style={{ marginTop: 12 }}>
             <Text style={styles.inputTitle}>Phone Number</Text>
             <TextInput
               style={styles.input}
@@ -234,7 +234,7 @@ export default class RegisterScreen extends React.Component {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={{ alignSelf: "center", marginTop: 24 }}
+          style={{ alignSelf: "center", marginTop: 12 }}
           onPress={() => this.props.navigation.navigate("Login")}
         >
           <Text style={{ color: "#414959", fontSize: 13 }}>
@@ -258,7 +258,6 @@ const styles = StyleSheet.create({
     color: "#FFF"
   },
   form: {
-    marginTop: 60,
     marginBottom: 24,
     marginHorizontal: 30
   },
@@ -283,7 +282,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   errorMessage: {
-    marginTop: 12,
+    marginTop: 0,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 30
@@ -306,8 +305,8 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   avatarPlaceholder: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     backgroundColor: "#E1E2E6",
     borderRadius: 50,
     marginTop: 24,
@@ -316,8 +315,8 @@ const styles = StyleSheet.create({
   },
   avatar: {
     position: "absolute",
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 50
   }
 });
