@@ -4,6 +4,7 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
 import LoadingScreen from "./screens/LoadingScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -64,7 +65,7 @@ const AppContainer = createStackNavigator(
           screen: MedicineScreen,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
-              <Ionicons name="ios-notifications" size={24} color={tintColor} />
+              <Material name="pill" size={24} color={tintColor} />
             )
           }
         },
