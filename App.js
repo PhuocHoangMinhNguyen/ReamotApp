@@ -30,8 +30,8 @@ const AuthStack = createStackNavigator({
 });
 
 const MedicineStack = createStackNavigator({
-  MediInfo: MediInfoScreen,
-  ListMedicine: MedicineScreen
+  ListMedicine: MedicineScreen,
+  MediInfo: MediInfoScreen
 });
 
 const AppContainer = createStackNavigator(
@@ -73,7 +73,7 @@ const AppContainer = createStackNavigator(
           }
         },
         Medicine: {
-          screen: MedicineScreen,
+          screen: MedicineStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Material name="pill" size={24} color={tintColor} />
@@ -121,7 +121,7 @@ export default createAppContainer(
     {
       Loading: LoadingScreen,
       App: AppContainer,
-      Auth: AuthStack,
+      Auth: AuthStack
       //Medi: MedicineStack
     },
     {
