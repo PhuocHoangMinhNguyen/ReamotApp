@@ -11,27 +11,27 @@ import {
 import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 
-function Users() {
+function Medicines() {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
-  const [users, setUsers] = useState([]); // Initial empty array of users
+  const [medicines, setMedicine] = useState([]); // Initial empty array of users
   const [text, setText] = useState("");
   const [myArray, setArray] = useState([]);
 
   useEffect(() => {
     const subscriber = firestore()
-      .collection("users")
+      .collection("medicine")
       .onSnapshot(querySnapshot => {
-        const users = [];
+        const medicines = [];
 
         querySnapshot.forEach(documentSnapshot => {
-          users.push({
+          medicines.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id
           });
         });
 
-        setUsers(users);
-        setArray(users);
+        setMedicine(medicines);
+        setArray(medicines);
         setLoading(false);
       });
 
@@ -51,7 +51,7 @@ function Users() {
           lightTheme
           round
           onChangeText={newText => {
-            const newData = users.filter(function(item) {
+            const newData = medicines.filter(function(item) {
               //applying filter for the inserted text in search bar
               const itemData = item.name
                 ? item.name.toUpperCase()
@@ -80,7 +80,7 @@ function renderItem(item) {
       <Image
         source={
           item.avatar
-            ? { uri: item.avatar }
+            ? { uri: item.image }
             : require("../assets/tempAvatar.jpg")
         }
         style={styles.avatar}
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
 export default function MedicineScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <Users />
+      <Medicines />
     </SafeAreaView>
   );
 }
