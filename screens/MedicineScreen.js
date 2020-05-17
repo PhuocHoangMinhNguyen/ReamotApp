@@ -12,6 +12,10 @@ import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 
 export default class MedicineScreen extends React.Component {
+  static navigationOptions = {
+    headerShown: false
+  };
+
   constructor(props) {
     super(props);
     this.state = {

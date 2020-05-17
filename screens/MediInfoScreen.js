@@ -3,12 +3,15 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
+  TouchableOpacity
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class MediInfoScreen extends React.Component {
+  static navigationOptions = {
+    headerShown: false
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -18,31 +21,34 @@ export default class MediInfoScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-            <Ionicons name="md-arrow-back" size={24} color="#D8D9DB" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.handlePost}>
-            <Text style={{ fontWeight: "500" }}>Post</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.back}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
+        </TouchableOpacity>
         <Text>Medicine Information Screen</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#D8D9DB"
+  back: {
+    position: "absolute",
+    top: 24,
+    left: 32,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(21, 22, 48, 0.1)",
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
