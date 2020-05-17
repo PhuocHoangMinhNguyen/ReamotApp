@@ -14,7 +14,7 @@ import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import PostScreen from "./screens/PostScreen";
 import MedicineScreen from "./screens/MedicineScreen";
-import MediInfo from "./screens/MediInfoScreen";
+import MediInfoScreen from "./screens/MediInfoScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
@@ -23,6 +23,16 @@ import ProfileScreen from "./screens/ProfileScreen";
 //    2) rebuild your app via `yarn run run:android` or `yarn run run:ios`
 //    3) import the package here in your JavaScript code: `import '@react-native-firebase/auth';`
 //    4) The Firebase Auth service is now available to use here: `firebase.auth().currentUser`
+
+const AuthStack = createStackNavigator({
+  Login: LoginScreen,
+  Register: RegisterScreen
+});
+
+const MedicineStack = createStackNavigator({
+  MediInfo: MediInfoScreen,
+  ListMedicine: MedicineScreen
+});
 
 const AppContainer = createStackNavigator(
   {
@@ -62,7 +72,7 @@ const AppContainer = createStackNavigator(
             )
           }
         },
-        Notification: {
+        Medicine: {
           screen: MedicineScreen,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
@@ -106,22 +116,12 @@ const AppContainer = createStackNavigator(
   }
 );
 
-const AuthStack = createStackNavigator({
-  Login: LoginScreen,
-  Register: RegisterScreen
-});
-
-//const MedicineStack = createStackNavigator({
-  //MediInfo: MediInfo,
-  //Medicine: MedicineScreen
-//});
-
 export default createAppContainer(
   createSwitchNavigator(
     {
       Loading: LoadingScreen,
       App: AppContainer,
-      Auth: AuthStack
+      Auth: AuthStack,
       //Medi: MedicineStack
     },
     {

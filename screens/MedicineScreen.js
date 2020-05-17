@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   StyleSheet,
-  ActivityIndicator,
   FlatList,
   View,
   Text,
@@ -12,84 +11,96 @@ import {
 import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 
-function Medicines() {
-  const [loading, setLoading] = useState(true); // Set loading to true on component mount
-  const [medicines, setMedicine] = useState([]); // Initial empty array of users
-  const [text, setText] = useState("");
-  const [myArray, setArray] = useState([]);
+export default class MedicineScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      medicines: [],
+      text: "",
+      myArray: []
+    };
+  }
 
-  useEffect(() => {
-    const subscriber = firestore()
+  unsubscribe = null;
+
+  componentDidMount() {
+    this.unsubscribe = firestore()
       .collection("medicine")
       .onSnapshot(querySnapshot => {
-        const medicines = [];
+        let temp = [];
 
         querySnapshot.forEach(documentSnapshot => {
-          medicines.push({
+          temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id
           });
         });
 
-        setMedicine(medicines);
-        setArray(medicines);
-        setLoading(false);
+        this.setState({
+          medicines: temp,
+          myArray: temp,
+          loading: false
+        });
       });
-
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
-  }, []);
-
-  if (loading) {
-    return <ActivityIndicator />;
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <SearchBar
-          placeholder="Search Medicine..."
-          lightTheme
-          round
-          onChangeText={newText => {
-            const newData = medicines.filter(function(item) {
-              //applying filter for the inserted text in search bar
-              const itemData = item.name
-                ? item.name.toUpperCase()
-                : "".toUpperCase();
-              const textData = newText.toUpperCase();
-              return itemData.indexOf(textData) > -1;
-            });
-            setArray(newData);
-            setText(newText);
-          }}
-          value={text}
-        />
-      </View>
-      <FlatList
-        style={styles.feed}
-        data={myArray}
-        renderItem={({ item }) => renderItem(item)}
-      />
-    </SafeAreaView>
-  );
-}
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
 
-function renderItem(item) {
-  return (
-    <TouchableOpacity
-      style={styles.feedItem}
-      //onPress={() => this.props.navigation.navigate("MediInfo")}
-    >
-      <Image
-        source={
-          item.image ? { uri: item.image } : require("../assets/tempAvatar.jpg")
-        }
-        style={styles.avatar}
-      />
-      <Text style={styles.name}>{item.name}</Text>
-    </TouchableOpacity>
-  );
+  renderItem = item => {
+    return (
+      <TouchableOpacity
+        style={styles.feedItem}
+        onPress={() => this.props.navigation.navigate("MediInfo")}
+      >
+        <Image
+          source={
+            item.image
+              ? { uri: item.image }
+              : require("../assets/tempAvatar.jpg")
+          }
+          style={styles.avatar}
+        />
+        <Text style={styles.name}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  searchFilterFunction(newText) {
+    const newData = this.state.medicines.filter(function(item) {
+      //applying filter for the inserted text in search bar
+      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+      const textData = newText.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      myArray: newData,
+      text: newText
+    });
+  }
+
+  render() {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <SearchBar
+            placeholder="Search Medicine..."
+            lightTheme
+            round
+            onChangeText={newText => this.searchFilterFunction(newText)}
+            value={this.state.text}
+          />
+        </View>
+        <FlatList
+          style={styles.feed}
+          data={this.state.myArray}
+          renderItem={({ item }) => this.renderItem(item)}
+        />
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -135,11 +146,3 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
-
-export default function MedicineScreen() {
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <Medicines />
-    </SafeAreaView>
-  );
-}
