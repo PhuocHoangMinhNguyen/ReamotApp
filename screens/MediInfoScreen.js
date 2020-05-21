@@ -28,21 +28,22 @@ export default class MediInfoScreen extends React.Component {
         >
           <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
         </TouchableOpacity>
-        <View style={styles.information}>
-          <View style={{ flexDirection: "row" }}>
-            <Image
-              source={
-                this.state.medicine.image
-                  ? { uri: this.state.medicine.image }
-                  : require("../assets/tempAvatar.jpg")
-              }
-              style={styles.image}
-            />
-            <Text style={styles.name}>{this.state.medicine.name}</Text>
+        <View style={{ marginHorizontal: 16 }}>
+          <View style={styles.information}>
+            <View style={{ flexDirection: "row" }}>
+              <Image
+                source={
+                  this.state.medicine.image
+                    ? { uri: this.state.medicine.image }
+                    : require("../assets/tempAvatar.jpg")
+                }
+                style={styles.image}
+              />
+              <Text style={styles.name}>{this.state.medicine.name}</Text>
+            </View>
+            <Text>{this.state.medicine.description}</Text>
           </View>
-          <Text>{this.state.medicine.description}</Text>
         </View>
-
       </View>
     );
   }
