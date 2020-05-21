@@ -41,7 +41,7 @@ export default class MediInfoScreen extends React.Component {
               />
               <Text style={styles.name}>{this.state.medicine.name}</Text>
             </View>
-            <Text>{this.state.medicine.description}</Text>
+            <Text style={styles.description}>{this.state.medicine.description}</Text>
           </View>
         </View>
       </View>
@@ -82,5 +82,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 16,
     marginVertical: 8,
+  },
+  description: {
+    marginTop: 12
   }
 });
