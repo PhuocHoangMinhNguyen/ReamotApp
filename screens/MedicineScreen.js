@@ -139,8 +139,10 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     marginRight: 16,
+    marginLeft: 8
   },
   name: {
+    flex: 1,
     fontSize: 15,
     fontWeight: "500",
     color: "#454D65",
