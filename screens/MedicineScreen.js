@@ -6,14 +6,14 @@ import {
   Text,
   Image,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 
 export default class MedicineScreen extends React.Component {
   static navigationOptions = {
-    headerShown: false
+    headerShown: false,
   };
 
   constructor(props) {
@@ -22,7 +22,7 @@ export default class MedicineScreen extends React.Component {
       loading: true,
       medicines: [],
       text: "",
-      myArray: []
+      myArray: [],
     };
   }
 
@@ -31,20 +31,20 @@ export default class MedicineScreen extends React.Component {
   componentDidMount() {
     this.unsubscribe = firestore()
       .collection("medicine")
-      .onSnapshot(querySnapshot => {
+      .onSnapshot((querySnapshot) => {
         let temp = [];
 
-        querySnapshot.forEach(documentSnapshot => {
+        querySnapshot.forEach((documentSnapshot) => {
           temp.push({
             ...documentSnapshot.data(),
-            key: documentSnapshot.id
+            key: documentSnapshot.id,
           });
         });
 
         this.setState({
           medicines: temp,
           myArray: temp,
-          loading: false
+          loading: false,
         });
       });
   }
@@ -53,11 +53,18 @@ export default class MedicineScreen extends React.Component {
     this.unsubscribe();
   }
 
-  renderItem = item => {
+  renderItem = (item) => {
+    let dataSendtoInfor = {
+      image: item.image,
+      name: item.name,
+      description: item.description
+    };
     return (
       <TouchableOpacity
         style={styles.feedItem}
-        onPress={() => this.props.navigation.navigate("MediInfo")}
+        onPress={() => {
+          this.props.navigation.navigate("MediInfo", dataSendtoInfor);
+        }}
       >
         <Image
           source={
@@ -73,7 +80,7 @@ export default class MedicineScreen extends React.Component {
   };
 
   searchFilterFunction(newText) {
-    const newData = this.state.medicines.filter(function(item) {
+    const newData = this.state.medicines.filter(function (item) {
       //applying filter for the inserted text in search bar
       const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
       const textData = newText.toUpperCase();
@@ -81,7 +88,7 @@ export default class MedicineScreen extends React.Component {
     });
     this.setState({
       myArray: newData,
-      text: newText
+      text: newText,
     });
   }
 
@@ -93,7 +100,7 @@ export default class MedicineScreen extends React.Component {
             placeholder="Search Medicine..."
             lightTheme
             round
-            onChangeText={newText => this.searchFilterFunction(newText)}
+            onChangeText={(newText) => this.searchFilterFunction(newText)}
             value={this.state.text}
           />
         </View>
@@ -110,33 +117,33 @@ export default class MedicineScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#EBECF4"
+    backgroundColor: "#EBECF4",
   },
   header: {
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: "#D8D9DB"
+    borderBottomColor: "#D8D9DB",
   },
   feed: {
-    marginHorizontal: 16
+    marginHorizontal: 16,
   },
   feedItem: {
     backgroundColor: "#FFF",
     borderRadius: 5,
     padding: 8,
     flexDirection: "row",
-    marginVertical: 8
+    marginVertical: 8,
   },
   avatar: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    marginRight: 16
+    marginRight: 16,
   },
   name: {
     fontSize: 15,
     fontWeight: "500",
-    color: "#454D65"
+    color: "#454D65",
   },
   back: {
     position: "absolute",
@@ -147,6 +154,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "rgba(21, 22, 48, 0.1)",
     alignItems: "center",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
