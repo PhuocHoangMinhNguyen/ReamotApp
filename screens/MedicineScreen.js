@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 
 export default class MedicineScreen extends React.Component {
   static navigationOptions = {
@@ -30,15 +31,33 @@ export default class MedicineScreen extends React.Component {
 
   componentDidMount() {
     this.unsubscribe = firestore()
-      .collection("medicine")
-      .onSnapshot((querySnapshot) => {
+      .collection("prescription")
+      .onSnapshot((queryPrescriptionSnapshot) => {
         let temp = [];
 
-        querySnapshot.forEach((documentSnapshot) => {
-          temp.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
+        queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
+          if (documentPrescriptionSnapshot.data().patientEmail == auth().currentUser.email) {
+            firestore()
+              .collection("medicine")
+              .onSnapshot((queryMedicineSnapshot) => {
+                let temp = [];
+
+                queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
+                  if (documentMedicineSnapshot.data().name == documentPrescriptionSnapshot.data().name) {
+                    temp.push({
+                      ...documentMedicineSnapshot.data(),
+                      key: documentMedicineSnapshot.id,
+                    });
+                  }
+                });
+
+                this.setState({
+                  medicines: temp,
+                  myArray: temp,
+                  loading: false,
+                });
+              });
+          }
         });
 
         this.setState({
