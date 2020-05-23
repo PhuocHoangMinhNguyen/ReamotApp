@@ -72,8 +72,12 @@ export default class MedicineScreen extends React.Component {
     this.unsubscribe();
   }
 
+  handleClick = (dataInfor) => {
+    this.props.navigation.navigate("MediInfo", dataInfor);
+  }
+
   renderItem = (item) => {
-    let dataSendtoInfor = {
+    let dataInfor = {
       image: item.image,
       name: item.name,
       description: item.description
@@ -82,7 +86,7 @@ export default class MedicineScreen extends React.Component {
       <TouchableOpacity
         style={styles.feedItem}
         onPress={() => {
-          this.props.navigation.navigate("MediInfo", dataSendtoInfor);
+          this.handleClick(dataInfor);
         }}
       >
         <Image

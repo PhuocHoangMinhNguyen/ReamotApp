@@ -16,6 +16,7 @@ import PostScreen from "./screens/PostScreen";
 import MedicineScreen from "./screens/MedicineScreen";
 import MediInfoScreen from "./screens/MediInfoScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import ReminderScreen from "./screens/ChangeReminder";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -29,10 +30,14 @@ const AuthStack = createStackNavigator({
   Register: RegisterScreen
 });
 
-const MedicineStack = createStackNavigator({
-  ListMedicine: MedicineScreen,
-  MediInfo: MediInfoScreen
-});
+const MedicineStack = createStackNavigator(
+  {
+    ListMedicine: MedicineScreen,
+    MediInfo: MediInfoScreen,
+    Reminder: ReminderScreen
+  },
+  { initialRouteName: "ListMedicine" }
+);
 
 const AppContainer = createStackNavigator(
   {
@@ -122,7 +127,6 @@ export default createAppContainer(
       Loading: LoadingScreen,
       App: AppContainer,
       Auth: AuthStack
-      //Medi: MedicineStack
     },
     {
       initialRouteName: "Loading"

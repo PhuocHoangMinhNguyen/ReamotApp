@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class MediInfoScreen extends React.Component {
@@ -9,6 +9,7 @@ export default class MediInfoScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    //this.handlePress = this.handlePress.bind(this);
     this.state = {
       medicine: {},
     };
@@ -19,7 +20,15 @@ export default class MediInfoScreen extends React.Component {
     this.setState({ medicine: paramsFromMedicineScreen });
   }
 
+  handlePress = () => {
+    this.props.navigation.navigate("Reminder", this.props.navigation.state.params)
+  }
+
   render() {
+    let dataReminder = {
+      image: "",
+      name: ""
+    };
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -44,6 +53,10 @@ export default class MediInfoScreen extends React.Component {
             <Text style={styles.description}>{this.state.medicine.description}</Text>
           </View>
         </View>
+        <Button
+          onPress={this.handlePress}
+          title="Change Reminder"
+        />
       </View>
     );
   }
