@@ -1,6 +1,7 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
+import NumericInput from "react-native-numeric-input"
 
 export default class ChangeReminder extends React.Component {
     static navigationOptions = {
@@ -11,12 +12,17 @@ export default class ChangeReminder extends React.Component {
         super(props);
         this.state = {
             medicine: {},
+            reminder: {},
         };
     }
 
     componentDidMount() {
         let paramsFromMediInfoScreen = this.props.navigation.state.params;
         this.setState({ medicine: paramsFromMediInfoScreen });
+    }
+
+    handlePress() {
+
     }
 
     render() {
@@ -41,6 +47,21 @@ export default class ChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
+                <NumericInput
+                    value={this.state.value}
+                    onChange={value => this.setState({ value })}
+                    onLimitReached={(isMax, msg) => console.log(isMax, msg)}
+                    totalWidth={240}
+                    totalHeight={50}
+                    iconSize={25}
+                    step={1}
+                    valueType='real'
+                    rounded
+                    textColor='#B0228C'
+                    iconStyle={{ color: 'white' }}
+                    rightButtonBackgroundColor='#EA3788'
+                    leftButtonBackgroundColor='#E56B70' />
+                <Button title="Save" onPress={this.handlePress} />
             </View>
         );
     }
