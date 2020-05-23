@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
-import NumericInput from "react-native-numeric-input"
 
 export default class ChangeReminder extends React.Component {
     static navigationOptions = {
@@ -47,20 +46,6 @@ export default class ChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
-                <NumericInput
-                    value={this.state.value}
-                    onChange={value => this.setState({ value })}
-                    onLimitReached={(isMax, msg) => console.log(isMax, msg)}
-                    totalWidth={240}
-                    totalHeight={50}
-                    iconSize={25}
-                    step={1}
-                    valueType='real'
-                    rounded
-                    textColor='#B0228C'
-                    iconStyle={{ color: 'white' }}
-                    rightButtonBackgroundColor='#EA3788'
-                    leftButtonBackgroundColor='#E56B70' />
                 <Button title="Save" onPress={this.handlePress} />
             </View>
         );
@@ -70,7 +55,6 @@ export default class ChangeReminder extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center",
         justifyContent: "center",
     },
     back: {
@@ -100,6 +84,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 16,
         marginVertical: 8,
-        width: 380
-    },
+        marginHorizontal: 16
+    }
 });

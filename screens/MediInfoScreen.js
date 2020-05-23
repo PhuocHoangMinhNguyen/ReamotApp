@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button, FlatList } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import firestore from "@react-native-firebase/firestore";
 
 export default class MediInfoScreen extends React.Component {
   static navigationOptions = {
@@ -12,23 +13,45 @@ export default class MediInfoScreen extends React.Component {
     //this.handlePress = this.handlePress.bind(this);
     this.state = {
       medicine: {},
+      reminder: [],
     };
   }
 
   componentDidMount() {
     let paramsFromMedicineScreen = this.props.navigation.state.params;
     this.setState({ medicine: paramsFromMedicineScreen });
-  }
+
+    firestore().collection("prescription").onSnapshot((querySnapshot) => {
+      let temp = [];
+
+      querySnapshot.forEach((documentSnapshot) => {
+        temp.push({
+          ...documentSnapshot.data(),
+          key: documentSnapshot.id,
+        });
+      });
+
+      this.setState({ reminder: temp });
+    }
+    )
+  };
 
   handlePress = () => {
     this.props.navigation.navigate("Reminder", this.props.navigation.state.params)
   }
 
+  renderItem = (item) => {
+    console.log(item)
+    return (
+      <View style={styles.reminder}>
+        <Text style={styles.time}>8:00AM</Text>
+        <Text style={styles.repeat}>Daily</Text>
+        <Button style={styles.edit} title="Edit" onPress={this.handlePress} />
+      </View>
+    );
+  };
+
   render() {
-    let dataReminder = {
-      image: "",
-      name: ""
-    };
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -37,25 +60,30 @@ export default class MediInfoScreen extends React.Component {
         >
           <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
         </TouchableOpacity>
-        <View style={{ marginHorizontal: 16 }}>
-          <View style={styles.information}>
-            <View style={{ flexDirection: "row" }}>
-              <Image
-                source={
-                  this.state.medicine.image
-                    ? { uri: this.state.medicine.image }
-                    : require("../assets/tempAvatar.jpg")
-                }
-                style={styles.image}
-              />
-              <Text style={styles.name}>{this.state.medicine.name}</Text>
-            </View>
-            <Text style={styles.description}>{this.state.medicine.description}</Text>
+        <View style={styles.information}>
+          <View style={{ flexDirection: "row" }}>
+            <Image
+              source={
+                this.state.medicine.image
+                  ? { uri: this.state.medicine.image }
+                  : require("../assets/tempAvatar.jpg")
+              }
+              style={styles.image}
+            />
+            <Text style={styles.name}>{this.state.medicine.name}</Text>
           </View>
+          <Text style={styles.description}>{this.state.medicine.description}</Text>
         </View>
-        <Button
-          onPress={this.handlePress}
-          title="Change Reminder"
+
+        <View style={styles.reminder}>
+          <Text style={styles.time}>8:00AM</Text>
+          <Text style={styles.repeat}>Daily</Text>
+          <Button style={styles.edit} title="Edit" onPress={this.handlePress} />
+        </View>
+
+        <FlatList
+          data={this.state.reminder}
+          renderItem={({ item }) => this.renderItem(item)}
         />
       </View>
     );
@@ -64,12 +92,12 @@ export default class MediInfoScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 70,
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   back: {
     position: "absolute",
+    marginTop: -70,
     top: 24,
     left: 32,
     width: 32,
@@ -95,8 +123,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 16,
     marginVertical: 8,
+    marginHorizontal: 16,
   },
   description: {
     marginTop: 12
+  },
+  reminder: {
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  time: {
+    fontSize: 25
+  },
+  repeat: {
+    fontSize: 25
   }
 });
