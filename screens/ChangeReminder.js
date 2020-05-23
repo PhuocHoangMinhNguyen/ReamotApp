@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
+import InputSpinner from "react-native-input-spinner"
 
 export default class ChangeReminder extends React.Component {
     static navigationOptions = {
@@ -46,6 +47,17 @@ export default class ChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
+                <InputSpinner
+                    max={10}
+                    min={0}
+                    step={1}
+                    colorMax={"#f04048"}
+                    colorMin={"#40c5f4"}
+                    value={this.state.number}
+                    onChange={(num) => {
+                        console.log(num);
+                    }}
+                />
                 <Button title="Save" onPress={this.handlePress} />
             </View>
         );
