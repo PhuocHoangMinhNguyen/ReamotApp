@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button, FlatList } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 
 export default class MediInfoScreen extends React.Component {
   static navigationOptions = {
@@ -10,28 +11,54 @@ export default class MediInfoScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    //this.handlePress = this.handlePress.bind(this);
     this.state = {
       medicine: {},
+      prescription: {},
       reminder: [],
+      arraySize: 0,
     };
   }
 
   componentDidMount() {
+    //Get data from Medicine Screen
     let paramsFromMedicineScreen = this.props.navigation.state.params;
     this.setState({ medicine: paramsFromMedicineScreen });
 
+    // Get Prescription data to know number of times.
     firestore().collection("prescription").onSnapshot((querySnapshot) => {
+      let tempValue = 0;
+      let tempValue2 = 0;
+
+      querySnapshot.forEach((documentSnapshot) => {
+        if (documentSnapshot.data().patientEmail == auth().currentUser.email
+          && documentSnapshot.data().name == this.props.navigation.state.params.name) {
+          tempValue = parseInt(documentSnapshot.data().times, 10)
+          tempValue2 = parseInt(documentSnapshot.data().number, 10)
+        }
+      });
+      this.setState({
+        prescription: {
+          times: tempValue,
+          number: tempValue2
+        }
+      });
+    }
+    )
+
+    // Get Reminder data
+    firestore().collection("reminder").onSnapshot((querySnapshot) => {
       let temp = [];
+      let counting = 0;
 
       querySnapshot.forEach((documentSnapshot) => {
         temp.push({
           ...documentSnapshot.data(),
           key: documentSnapshot.id,
         });
+        counting++;
       });
 
-      this.setState({ reminder: temp });
+      this.setState({ reminder: temp, arraySize: counting });
     }
     )
   };
@@ -41,17 +68,35 @@ export default class MediInfoScreen extends React.Component {
   }
 
   renderItem = (item) => {
-    console.log(item)
+    const nonEmptyItem =
+      <View>
+        <Text style={styles.time}>{this.state.reminder.times}</Text>
+        <Button style={styles.edit} title="Edit" onPress={this.handlePress} />
+      </View>;
+    const emptyItem =
+      <TouchableOpacity onPress={this.handlePress}>
+        <Text style={{ fontSize: 25 }}>+ Add Reminder</Text>
+      </TouchableOpacity>;
+    let message;
+    if (item == "null") {
+      message = emptyItem
+    } else {
+      message = nonEmptyItem
+    }
     return (
       <View style={styles.reminder}>
-        <Text style={styles.time}>8:00AM</Text>
-        <Text style={styles.repeat}>Daily</Text>
-        <Button style={styles.edit} title="Edit" onPress={this.handlePress} />
+        {message}
       </View>
     );
   };
 
   render() {
+    let database;
+    if (this.state.arraySize < this.state.prescription.times) {
+      for (let i = this.state.arraySize; i < this.state.prescription.times; i++) {
+        this.state.reminder.push("null")
+      }
+    }
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -75,15 +120,16 @@ export default class MediInfoScreen extends React.Component {
           <Text style={styles.description}>{this.state.medicine.description}</Text>
         </View>
 
-        <View style={styles.reminder}>
-          <Text style={styles.time}>8:00AM</Text>
+        <View style={styles.prescription}>
+          <Text style={styles.time}>{this.state.prescription.number}</Text>
+          <Text style={styles.time}>{this.state.prescription.times} times</Text>
           <Text style={styles.repeat}>Daily</Text>
-          <Button style={styles.edit} title="Edit" onPress={this.handlePress} />
         </View>
 
         <FlatList
           data={this.state.reminder}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
     );
@@ -116,7 +162,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
-    marginVertical: 24
+    marginVertical: 24,
+    fontSize: 20
   },
   information: {
     backgroundColor: "#FFF",
@@ -135,6 +182,15 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     flexDirection: "row",
+    justifyContent: "space-evenly"
+  },
+  prescription: {
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    flexDirection: "row",
     justifyContent: "space-between"
   },
   time: {
@@ -142,5 +198,5 @@ const styles = StyleSheet.create({
   },
   repeat: {
     fontSize: 25
-  }
+  },
 });

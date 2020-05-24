@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import InputSpinner from "react-native-input-spinner"
+import firestore from "@react-native-firebase/firestore";
 
 export default class ChangeReminder extends React.Component {
     static navigationOptions = {
@@ -22,7 +23,11 @@ export default class ChangeReminder extends React.Component {
     }
 
     handlePress() {
-
+        firestore()
+            .collection("reminder")
+            .add({
+                name: this.state.medicine.name
+            });
     }
 
     render() {
