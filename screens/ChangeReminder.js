@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import InputSpinner from "react-native-input-spinner"
+import DateTimePicker from "@react-native-community/datetimepicker"
 import firestore from "@react-native-firebase/firestore";
 
 export default class ChangeReminder extends React.Component {
@@ -14,6 +15,8 @@ export default class ChangeReminder extends React.Component {
         this.state = {
             medicine: {},
             reminder: {},
+            selectedHours: 0,
+            selectedMinutes: 0
         };
     }
 
@@ -62,6 +65,11 @@ export default class ChangeReminder extends React.Component {
                     onChange={(num) => {
                         console.log(num);
                     }}
+                />
+                <TimePicker
+                    selectedHours={this.state.selectedHours}
+                    selectedMinutes={this.state.selectedMinutes}
+                    onChange={(hours, minutes) => this.setState({ selectedHours: hours, selectedMinutes: minutes })}
                 />
                 <Button title="Save" onPress={this.handlePress} />
             </View>
