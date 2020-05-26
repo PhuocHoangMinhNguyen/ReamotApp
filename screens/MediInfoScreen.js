@@ -75,7 +75,7 @@ export default class MediInfoScreen extends React.Component {
       </View>;
     const emptyItem =
       <TouchableOpacity onPress={this.handlePress}>
-        <Text style={{ fontSize: 25 }}>+ Add Reminder</Text>
+        <Text style={{ fontSize: 20 }}>+ Add Reminder</Text>
       </TouchableOpacity>;
     let message;
     if (item == "null") {
@@ -194,9 +194,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   time: {
-    fontSize: 25
+    fontSize: 20
   },
   repeat: {
-    fontSize: 25
+    fontSize: 20
   },
 });
