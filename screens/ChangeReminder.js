@@ -1,9 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
-import InputSpinner from "react-native-input-spinner"
-import DateTimePicker from "@react-native-community/datetimepicker"
-import firestore from "@react-native-firebase/firestore";
+import Alarm from "../utilities/Alarm"
 
 export default class ChangeReminder extends React.Component {
     static navigationOptions = {
@@ -14,23 +12,13 @@ export default class ChangeReminder extends React.Component {
         super(props);
         this.state = {
             medicine: {},
-            reminder: {},
-            selectedHours: 0,
-            selectedMinutes: 0
+            reminder: {}
         };
     }
 
     componentDidMount() {
         let paramsFromMediInfoScreen = this.props.navigation.state.params;
         this.setState({ medicine: paramsFromMediInfoScreen });
-    }
-
-    handlePress() {
-        firestore()
-            .collection("reminder")
-            .add({
-                name: this.state.medicine.name
-            });
     }
 
     render() {
@@ -55,23 +43,7 @@ export default class ChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
-                <InputSpinner
-                    max={10}
-                    min={0}
-                    step={1}
-                    colorMax={"#f04048"}
-                    colorMin={"#40c5f4"}
-                    value={this.state.number}
-                    onChange={(num) => {
-                        console.log(num);
-                    }}
-                />
-                <TimePicker
-                    selectedHours={this.state.selectedHours}
-                    selectedMinutes={this.state.selectedMinutes}
-                    onChange={(hours, minutes) => this.setState({ selectedHours: hours, selectedMinutes: minutes })}
-                />
-                <Button title="Save" onPress={this.handlePress} />
+                <Alarm />
             </View>
         );
     }
@@ -80,10 +52,11 @@ export default class ChangeReminder extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
+        marginTop: 100
     },
     back: {
         position: "absolute",
+        marginTop: -100,
         top: 24,
         left: 32,
         width: 32,
