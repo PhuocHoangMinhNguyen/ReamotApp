@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -16,19 +16,12 @@ const alarmNotifData = {
     loop_sound: true,
 };
 
-class AlarmApp extends Component {
-    constructor(props, context) {
-        super(props, context);
+class AlarmApp extends React.Component {
 
-        const fire_date = ReactNativeAN.parseDate(new Date(Date.now()));
-
-        this.state = {
-            testDate: new Date(Date.now()),
-            fireDate: fire_date,
-            show: false
-        };
-        this.setAlarm = this.setAlarm.bind(this);
-        this.stopAlarm = this.stopAlarm.bind(this);
+    state = {
+        testDate: new Date(Date.now()),
+        fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
+        show: false
     }
 
     setAlarm = () => {

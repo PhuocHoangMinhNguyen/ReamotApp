@@ -6,7 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  Image
+  Image,
+  ImageBackground
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ImagePicker from "react-native-image-picker";
@@ -129,16 +130,8 @@ export default class RegisterScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ImageBackground source={require("../assets/registerBackground.png")} style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <Image
-          source={require("../assets/authHeader.png")}
-          style={{ marginTop: -180, marginLeft: -50 }}
-        />
-        <Image
-          source={require("../assets/authFooter.png")}
-          style={{ position: "absolute", bottom: -325, right: -225 }}
-        />
         <TouchableOpacity
           style={styles.back}
           onPress={() => this.props.navigation.goBack()}
@@ -147,7 +140,6 @@ export default class RegisterScreen extends React.Component {
         </TouchableOpacity>
         <View
           style={{
-            position: "absolute",
             top: 24,
             alignItems: "center",
             width: "100%"
@@ -239,10 +231,10 @@ export default class RegisterScreen extends React.Component {
         >
           <Text style={{ color: "#414959", fontSize: 13 }}>
             Already have an account?
-            <Text style={{ fontWeight: "500", color: "#E9446A" }}>Sign in</Text>
+            <Text style={{ fontWeight: "500", color: "#018ABE" }}> Sign in</Text>
           </Text>
         </TouchableOpacity>
-      </View>
+      </ImageBackground>
     );
   }
 }
@@ -275,14 +267,14 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 30,
-    backgroundColor: "#E9446A",
+    backgroundColor: "#018ABE",
     borderRadius: 4,
     height: 52,
     alignItems: "center",
     justifyContent: "center"
   },
   errorMessage: {
-    marginTop: 0,
+    marginTop: 60,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 30

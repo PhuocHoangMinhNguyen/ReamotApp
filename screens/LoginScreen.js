@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
-  LayoutAnimation
+  LayoutAnimation,
+  ImageBackground
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 
@@ -34,25 +35,19 @@ export default class LoginScreen extends React.Component {
     LayoutAnimation.easeInEaseOut();
 
     return (
-      <View style={styles.container}>
+      <ImageBackground
+        source={require("../assets/LogInBackground.png")}
+        style={{ marginTop: -50, flex: 1 }}
+      >
         <StatusBar barStyle="light-content" />
-        <Image
-          source={require("../assets/authHeader.png")}
-          style={{ marginTop: -80, marginLeft: -50 }}
-        />
-        <Image
-          source={require("../assets/authFooter.png")}
-          style={{ position: "absolute", bottom: -325, right: -225 }}
-        />
-        <View style={{ marginTop: -100 }}>
+        <View>
           <Text style={styles.greeting}>{"Hello again.\nWelcome back."}</Text>
           <Image
-            source={require("../assets/loginLogo.png")}
+            source={require("../assets/logoTest.png")}
             style={{
-              marginTop: 12,
               alignSelf: 'center',
-              width: 100,
-              height: 100,
+              width: 200,
+              height: 200,
             }}
           />
 
@@ -95,27 +90,24 @@ export default class LoginScreen extends React.Component {
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>
               New to SocialApp?{' '}
-              <Text style={{ fontWeight: '500', color: '#E9446A' }}>
+              <Text style={{ fontWeight: '500', color: '#018ABE' }}>
                 Sign up
               </Text>
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: -100
-  },
   greeting: {
-    marginTop: -32,
+    marginTop: 100,
     fontSize: 18,
     fontWeight: "500",
     textAlign: "center",
+    color: "#FFF"
   },
   form: {
     marginBottom: 24,
@@ -135,7 +127,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 30,
-    backgroundColor: "#E9446A",
+    backgroundColor: "#018ABE",
     borderRadius: 4,
     height: 52,
     alignItems: "center",
