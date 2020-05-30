@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  Dimensions,
+  Keyboard,
   View,
   Text,
   StyleSheet,
@@ -8,9 +10,11 @@ import {
   Image,
   StatusBar,
   LayoutAnimation,
-  ImageBackground
+  ImageBackground,
+  ScrollView
 } from "react-native";
 import auth from "@react-native-firebase/auth";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -20,7 +24,7 @@ export default class LoginScreen extends React.Component {
   state = {
     email: "",
     password: "",
-    errorMessage: null
+    errorMessage: null,
   };
 
   handleLogin = () => {
@@ -33,24 +37,20 @@ export default class LoginScreen extends React.Component {
 
   render() {
     LayoutAnimation.easeInEaseOut();
-
     return (
-      <ImageBackground
-        source={require("../assets/LogInBackground.png")}
-        style={{ marginTop: -50, flex: 1 }}
-      >
-        <StatusBar barStyle="light-content" />
-        <View>
-          <Text style={styles.greeting}>{"Hello again.\nWelcome back."}</Text>
-          <Image
-            source={require("../assets/logoTest.png")}
-            style={{
-              alignSelf: 'center',
-              width: 200,
-              height: 200,
-            }}
-          />
-
+      <View style={{ flex: 1 }}>
+        <Image
+          source={require("../assets/logoTest.png")}
+          style={{
+            marginTop: 30,
+            alignSelf: 'center',
+            width: 200,
+            height: 200,
+            marginLeft: 10
+          }}
+        />
+        <KeyboardAwareScrollView>
+          <StatusBar barStyle="light-content" />
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
               <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -68,7 +68,7 @@ export default class LoginScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 24 }}>
+            <View style={{ marginTop: 32 }}>
               <Text style={styles.inputTitle}>Password</Text>
               <TextInput
                 style={styles.input}
@@ -85,7 +85,7 @@ export default class LoginScreen extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 24 }}
+            style={{ alignSelf: "center", marginTop: 32 }}
             onPress={() => this.props.navigation.navigate("Register")}
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>
@@ -95,22 +95,30 @@ export default class LoginScreen extends React.Component {
               </Text>
             </Text>
           </TouchableOpacity>
-        </View>
-      </ImageBackground>
+        </KeyboardAwareScrollView>
+        <ImageBackground
+          style={[styles.fixed, styles.containter, { zIndex: -1 }]}
+          source={require("../assets/registerBackground.png")}
+        />
+      </View >
     );
   }
 }
 
 const styles = StyleSheet.create({
-  greeting: {
-    marginTop: 100,
-    fontSize: 18,
-    fontWeight: "500",
-    textAlign: "center",
-    color: "#FFF"
+  containter: {
+    width: Dimensions.get("window").width, //for full screen
+    height: Dimensions.get("window").height //for full screen
+  },
+  fixed: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
   },
   form: {
-    marginBottom: 24,
+    marginBottom: 48,
     marginHorizontal: 30
   },
   inputTitle: {

@@ -56,7 +56,7 @@ export default class ProfileScreen extends React.Component {
           </View>
         </View>
 
-        <Button
+        <Button style={styles.button}
           onPress={() => {
             auth().signOut();
           }}
@@ -109,5 +109,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500",
     marginTop: 4
+  },
+  button: {
+    color: "#018ABE"
   }
 });

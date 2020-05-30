@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Dimensions,
   View,
   Text,
   StyleSheet,
@@ -7,7 +8,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
-  ImageBackground
+  ImageBackground,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ImagePicker from "react-native-image-picker";
@@ -15,6 +16,7 @@ import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
 import auth from "@react-native-firebase/auth";
 import UserPermissions from "../utilities/UserPermissions";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 export default class RegisterScreen extends React.Component {
   static navigationOptions = {
@@ -130,17 +132,16 @@ export default class RegisterScreen extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={require("../assets/registerBackground.png")} style={styles.container}>
-        <StatusBar barStyle="light-content" />
+      <View style={{ flex: 1 }}>
         <TouchableOpacity
           style={styles.back}
           onPress={() => this.props.navigation.goBack()}
         >
           <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
         </TouchableOpacity>
+        <StatusBar barStyle="light-content" />
         <View
           style={{
-            top: 24,
             alignItems: "center",
             width: "100%"
           }}
@@ -164,86 +165,102 @@ export default class RegisterScreen extends React.Component {
             />
           </TouchableOpacity>
         </View>
-
-        <View style={styles.errorMessage}>
-          {this.state.errorMessage && (
-            <Text style={styles.error}>{this.state.errorMessage}</Text>
-          )}
-        </View>
-
-        <View style={styles.form}>
-          <View>
-            <Text style={styles.inputTitle}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={name =>
-                this.setState({ user: { ...this.state.user, name } })
-              }
-              value={this.state.user.name}
-            />
+        <KeyboardAwareScrollView>
+          <View style={styles.errorMessage}>
+            {this.state.errorMessage && (
+              <Text style={styles.error}>{this.state.errorMessage}</Text>
+            )}
           </View>
 
-          <View style={{ marginTop: 12 }}>
-            <Text style={styles.inputTitle}>Email Address</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={email =>
-                this.setState({ user: { ...this.state.user, email } })
-              }
-              value={this.state.user.email}
-            />
+          <View style={styles.form}>
+            <View>
+              <Text style={styles.inputTitle}>Full Name</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={name =>
+                  this.setState({ user: { ...this.state.user, name } })
+                }
+                value={this.state.user.name}
+              />
+            </View>
+
+            <View style={{ marginTop: 24 }}>
+              <Text style={styles.inputTitle}>Email Address</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                onChangeText={email =>
+                  this.setState({ user: { ...this.state.user, email } })
+                }
+                value={this.state.user.email}
+              />
+            </View>
+
+            <View style={{ marginTop: 24 }}>
+              <Text style={styles.inputTitle}>Password</Text>
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                autoCapitalize="none"
+                onChangeText={password =>
+                  this.setState({ user: { ...this.state.user, password } })
+                }
+                value={this.state.user.password}
+              />
+            </View>
+
+            <View style={{ marginTop: 24 }}>
+              <Text style={styles.inputTitle}>Phone Number</Text>
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                onChangeText={phoneNumber =>
+                  this.setState({ user: { ...this.state.user, phoneNumber } })
+                }
+                value={this.state.user.phoneNumber}
+              />
+            </View>
           </View>
 
-          <View style={{ marginTop: 12 }}>
-            <Text style={styles.inputTitle}>Password</Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              autoCapitalize="none"
-              onChangeText={password =>
-                this.setState({ user: { ...this.state.user, password } })
-              }
-              value={this.state.user.password}
-            />
-          </View>
+          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+            <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
+          </TouchableOpacity>
 
-          <View style={{ marginTop: 12 }}>
-            <Text style={styles.inputTitle}>Phone Number</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              onChangeText={phoneNumber =>
-                this.setState({ user: { ...this.state.user, phoneNumber } })
-              }
-              value={this.state.user.phoneNumber}
-            />
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-          <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ alignSelf: "center", marginTop: 12 }}
-          onPress={() => this.props.navigation.navigate("Login")}
-        >
-          <Text style={{ color: "#414959", fontSize: 13 }}>
-            Already have an account?
+          <TouchableOpacity
+            style={{ alignSelf: "center", marginTop: 24 }}
+            onPress={() => this.props.navigation.navigate("Login")}
+          >
+            <Text style={{ color: "#414959", fontSize: 13 }}>
+              Already have an account?
             <Text style={{ fontWeight: "500", color: "#018ABE" }}> Sign in</Text>
-          </Text>
-        </TouchableOpacity>
-      </ImageBackground>
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAwareScrollView>
+        <ImageBackground
+          style={[styles.fixed, styles.containter, { zIndex: -1 }]}
+          source={require("../assets/registerBackground.png")}
+        />
+      </View>
     );
   }
 }
 const styles = StyleSheet.create({
+  containter: {
+    width: Dimensions.get("window").width, //for full screen
+    height: Dimensions.get("window").height //for full screen
+  },
+  fixed: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
   container: {
     flex: 1
   },
   greeting: {
-    marginTop: 12,
+    marginTop: 32,
     fontSize: 18,
     fontWeight: "500",
     textAlign: "center",
@@ -274,10 +291,11 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   errorMessage: {
-    marginTop: 60,
+    marginTop: 72,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 30
+    marginHorizontal: 30,
+    marginBottom: 24
   },
   error: {
     color: "#E9446A",
@@ -297,8 +315,8 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   avatarPlaceholder: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     backgroundColor: "#E1E2E6",
     borderRadius: 50,
     marginTop: 24,
@@ -307,8 +325,8 @@ const styles = StyleSheet.create({
   },
   avatar: {
     position: "absolute",
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     borderRadius: 50
   }
 });
