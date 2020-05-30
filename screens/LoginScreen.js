@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Dimensions,
-  Keyboard,
   View,
   Text,
   StyleSheet,
@@ -11,10 +10,10 @@ import {
   StatusBar,
   LayoutAnimation,
   ImageBackground,
-  ScrollView
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import Toast from "react-native-simple-toast"
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -30,9 +29,15 @@ export default class LoginScreen extends React.Component {
   handleLogin = () => {
     const { email, password } = this.state;
 
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch(error => this.setState({ errorMessage: error.message }));
+    if (email == "") {
+      Toast.show("Please Enter Email Information", Toast.LONG)
+    } else if (password == "") {
+      Toast.show("Please Enter Password", Toast.LONG)
+    } else {
+      auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(error => this.setState({ errorMessage: error.message }));
+    }
   };
 
   render() {

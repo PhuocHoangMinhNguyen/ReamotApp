@@ -17,6 +17,7 @@ import storage from "@react-native-firebase/storage";
 import auth from "@react-native-firebase/auth";
 import UserPermissions from "../utilities/UserPermissions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import Toast from "react-native-simple-toast"
 
 export default class RegisterScreen extends React.Component {
   static navigationOptions = {
@@ -35,7 +36,22 @@ export default class RegisterScreen extends React.Component {
   };
 
   handleSignUp = () => {
-    this.createUser(this.state.user);
+    const { name, email, password, phoneNumber } = this.state.user
+    if (name == "") {
+      Toast.show("Please Enter Full Name", Toast.LONG)
+      console.log("Test")
+    } else if (email == "") {
+      Toast.show("Please Enter Email Information", Toast.LONG)
+      console.log("Test")
+    } else if (password == "") {
+      Toast.show("Please Enter A Password", Toast.LONG)
+      console.log("Test")
+    } else if (phoneNumber == "") {
+      Toast.show("Please Enter Cpntact Number", Toast.LONG)
+      console.log("Test")
+    } else {
+      this.createUser(this.state.user);
+    }
   };
 
   createUser = async user => {
@@ -210,7 +226,7 @@ export default class RegisterScreen extends React.Component {
             </View>
 
             <View style={{ marginTop: 20 }}>
-              <Text style={styles.inputTitle}>Phone Number</Text>
+              <Text style={styles.inputTitle}>Contact Number</Text>
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
