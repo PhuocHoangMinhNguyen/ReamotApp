@@ -184,7 +184,7 @@ export default class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 24 }}>
+            <View style={{ marginTop: 20 }}>
               <Text style={styles.inputTitle}>Email Address</Text>
               <TextInput
                 style={styles.input}
@@ -196,7 +196,7 @@ export default class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 24 }}>
+            <View style={{ marginTop: 20 }}>
               <Text style={styles.inputTitle}>Password</Text>
               <TextInput
                 style={styles.input}
@@ -209,7 +209,7 @@ export default class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 24 }}>
+            <View style={{ marginTop: 20 }}>
               <Text style={styles.inputTitle}>Phone Number</Text>
               <TextInput
                 style={styles.input}
@@ -227,7 +227,7 @@ export default class RegisterScreen extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 24 }}
+            style={{ alignSelf: "center", marginTop: 20 }}
             onPress={() => this.props.navigation.navigate("Login")}
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     color: "#FFF"
   },
   form: {
-    marginBottom: 24,
+    marginBottom: 20,
     marginHorizontal: 30
   },
   inputTitle: {
@@ -291,11 +291,11 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   errorMessage: {
-    marginTop: 72,
+    marginTop: 36,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 30,
-    marginBottom: 24
+    marginBottom: 15
   },
   error: {
     color: "#E9446A",
