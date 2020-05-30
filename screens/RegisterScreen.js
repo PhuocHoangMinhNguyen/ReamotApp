@@ -32,15 +32,20 @@ export default class RegisterScreen extends React.Component {
       phoneNumber: "",
       avatar: null
     },
-    errorMessage: null
+    errorMessage: null,
+    showPassword: false
   };
+
+  handlePassword = () => {
+    this.setState({ showPassword: !this.state.showPassword })
+  }
 
   handleSignUp = () => {
     const { name, email, password, phoneNumber } = this.state.user
-    if (name == "") {
+    if (name.trim == "") {
       Toast.show("Please Enter Full Name", Toast.LONG)
       console.log("Test")
-    } else if (email == "") {
+    } else if (email.trim == "") {
       Toast.show("Please Enter Email Information", Toast.LONG)
       console.log("Test")
     } else if (password == "") {
@@ -147,6 +152,14 @@ export default class RegisterScreen extends React.Component {
   };
 
   render() {
+    const showPass = <Ionicons name="ios-eye-off" size={24} />;
+    const hidePass = <Ionicons name="ios-eye" size={24} />;
+    let message;
+    if (this.state.showPassword == false) {
+      message = hidePass;
+    } else {
+      message = showPass;
+    }
     return (
       <View style={{ flex: 1 }}>
         <TouchableOpacity
@@ -214,15 +227,20 @@ export default class RegisterScreen extends React.Component {
 
             <View style={{ marginTop: 20 }}>
               <Text style={styles.inputTitle}>Password</Text>
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                autoCapitalize="none"
-                onChangeText={password =>
-                  this.setState({ user: { ...this.state.user, password } })
-                }
-                value={this.state.user.password}
-              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.password}
+                  secureTextEntry={!this.state.showPassword}
+                  autoCapitalize="none"
+                  onChangeText={password =>
+                    this.setState({ user: { ...this.state.user, password } })
+                  }
+                  value={this.state.user.password}
+                />
+                <TouchableOpacity onPress={this.handlePassword}>
+                  {message}
+                </TouchableOpacity>
+              </View>
             </View>
 
             <View style={{ marginTop: 20 }}>
@@ -297,6 +315,17 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 15,
     color: "#161F3D"
+  },
+  password: {
+    height: 40,
+    fontSize: 15,
+    color: "#161F3D",
+    flex: 1
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    borderBottomColor: "#8A8F9E",
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   button: {
     marginHorizontal: 30,

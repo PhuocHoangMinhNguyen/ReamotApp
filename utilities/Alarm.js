@@ -10,10 +10,12 @@ const alarmNotifData = {
     message: "Stand up",
     vibrate: true,
     play_sound: true,
-    schedule_type: "once",
+    schedule_type: "repeat",
+    repeat_interval: 1440,
     channel: "wakeup",
     data: { content: "my notification id is 22" },
     loop_sound: true,
+    has_button: true
 };
 
 class AlarmApp extends React.Component {
@@ -39,6 +41,11 @@ class AlarmApp extends React.Component {
 
     showMode = () => {
         this.setState({ show: true })
+    }
+
+    viewAlarms = async () => {
+        const list = await ReactNativeAN.getScheduledAlarms();
+        this.setState({ update: JSON.stringify(list) });
     }
 
     onChange = (event, selectedDate) => {
@@ -82,6 +89,14 @@ class AlarmApp extends React.Component {
                         color="#841584"
                     />
                 </View>
+                <View style={{ marginVertical: 18 }}>
+                    <Button
+                        onPress={this.viewAlarms}
+                        title="See all active alarms"
+                        color="#841584"
+                    />
+                </View>
+                <Text>{update}</Text>
             </View>
         );
     }

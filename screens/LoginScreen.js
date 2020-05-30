@@ -14,6 +14,7 @@ import {
 import auth from "@react-native-firebase/auth";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import Toast from "react-native-simple-toast"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -24,12 +25,17 @@ export default class LoginScreen extends React.Component {
     email: "",
     password: "",
     errorMessage: null,
+    showPassword: false
   };
+
+  handlePassword = () => {
+    this.setState({ showPassword: !this.state.showPassword })
+  }
 
   handleLogin = () => {
     const { email, password } = this.state;
 
-    if (email == "") {
+    if (email.trim == "") {
       Toast.show("Please Enter Email Information", Toast.LONG)
     } else if (password == "") {
       Toast.show("Please Enter Password", Toast.LONG)
@@ -41,6 +47,14 @@ export default class LoginScreen extends React.Component {
   };
 
   render() {
+    const showPass = <Ionicons name="ios-eye-off" size={24} />;
+    const hidePass = <Ionicons name="ios-eye" size={24} />;
+    let message;
+    if (this.state.showPassword == false) {
+      message = hidePass;
+    } else {
+      message = showPass;
+    }
     LayoutAnimation.easeInEaseOut();
     return (
       <View style={{ flex: 1 }}>
@@ -75,13 +89,18 @@ export default class LoginScreen extends React.Component {
 
             <View style={{ marginTop: 32 }}>
               <Text style={styles.inputTitle}>Password</Text>
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                autoCapitalize="none"
-                onChangeText={password => this.setState({ password })}
-                value={this.state.password}
-              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.password}
+                  secureTextEntry={!this.state.showPassword}
+                  autoCapitalize="none"
+                  onChangeText={password => this.setState({ password })}
+                  value={this.state.password}
+                />
+                <TouchableOpacity onPress={this.handlePassword}>
+                  {message}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
 
@@ -157,5 +176,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     textAlign: "center"
-  }
+  },
+  password: {
+    height: 40,
+    fontSize: 15,
+    color: "#161F3D",
+    flex: 1
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    borderBottomColor: "#8A8F9E",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
 });
