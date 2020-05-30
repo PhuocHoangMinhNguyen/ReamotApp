@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Alarm from "../utilities/Alarm"
 
