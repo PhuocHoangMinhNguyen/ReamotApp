@@ -30,7 +30,9 @@ export default class ChangeReminder extends React.Component {
                 update: '',
                 testDate: new Date(Date.now()),
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
-                show: false
+                show: false,
+                changed: false,
+                initial: ''
             }
         };
         this.scheduleAlarm = this.scheduleAlarm.bind(this);
@@ -38,8 +40,17 @@ export default class ChangeReminder extends React.Component {
     }
 
     componentDidMount() {
-        let paramsFromMediInfoScreen = this.props.navigation.state.params;
+        let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
+        //let initialStatement = this.props.navigation.state.params.itemTime
         this.setState({ medicine: paramsFromMediInfoScreen });
+        /*
+        this.setState({
+            alarm: {
+                ...this.state.alarm,
+                initial: initialStatement
+            }
+        })
+        */
     }
 
     scheduleAlarm = () => {
@@ -108,7 +119,8 @@ export default class ChangeReminder extends React.Component {
                 ...this.state.alarm,
                 show: Platform.OS === 'ios',
                 testDate: currentDate,
-                fireDate: ReactNativeAN.parseDate(currentDate)
+                fireDate: ReactNativeAN.parseDate(currentDate),
+                changed: true,
             }
         });
         console.log("TestDate: " + testDate)
@@ -116,7 +128,13 @@ export default class ChangeReminder extends React.Component {
     }
 
     render() {
-        const { update, testDate, show } = this.state.alarm;
+        const { update, testDate, show, changed, initial } = this.state.alarm;
+        let message;
+        if (changed == true) {
+            message = moment(testDate).format('hh:mm a')
+        } else {
+            message = initial
+        }
         return (
             <View style={styles.container}>
                 <TouchableOpacity
@@ -142,7 +160,7 @@ export default class ChangeReminder extends React.Component {
                     <View>
                         <View style={styles.timePicker}>
                             <Button onPress={this.showMode} title="Show time picker!" />
-                            <Text>{moment(testDate).format('hh:mm a')}</Text>
+                            <Text>{message}</Text>
                         </View>
                         {show && (
                             <DateTimePicker
@@ -231,7 +249,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 16,
         marginVertical: 8,
-        marginHorizontal: 16,
         flexDirection: "row",
         justifyContent: "space-between"
     },

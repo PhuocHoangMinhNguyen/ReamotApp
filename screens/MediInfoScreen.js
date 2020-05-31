@@ -67,7 +67,10 @@ export default class MediInfoScreen extends React.Component {
     this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
   }
   handleChangeReminder = () => {
-    this.props.navigation.navigate("ChangeReminder", this.props.navigation.state.params)
+    this.props.navigation.navigate("ChangeReminder", {
+      medicine: this.props.navigation.state.params,
+      //itemTime: itemTimes
+    })
   }
 
   renderItem = (item) => {
