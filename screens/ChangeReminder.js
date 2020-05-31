@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth";
 
 import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -67,7 +68,7 @@ export default class ChangeReminder extends React.Component {
             id: `${name} ${moment(testDate).format('hh:mm a')}`,
             medicine: name,
             times: moment(testDate).format('hh:mm a'),
-            patientName: null,
+            patientName: auth().currentUser.email,
         })
         this.props.navigation.goBack()
     };
@@ -93,9 +94,6 @@ export default class ChangeReminder extends React.Component {
     }
 
     deleteAlarm = () => {
-        const { name } = this.state.medicine
-        const { testDate } = this.state.alarm
-        firestore().collection("reminder").doc(`${name} ${moment(testDate).format('hh:mm a')}`)
         this.props.navigation.goBack()
     }
 
