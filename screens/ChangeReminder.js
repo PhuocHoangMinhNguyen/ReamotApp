@@ -42,6 +42,13 @@ export default class ChangeReminder extends React.Component {
     componentDidMount() {
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
         this.setState({ medicine: paramsFromMediInfoScreen });
+        let paramsTime = this.props.navigation.state.params.itemTime;
+        this.setState({
+            alarm: {
+                ...this.state.alarm,
+                initial: paramsTime
+            }
+        })
     }
 
     scheduleAlarm = () => {
@@ -113,8 +120,6 @@ export default class ChangeReminder extends React.Component {
                 changed: true,
             }
         });
-        console.log("TestDate: " + testDate)
-        console.log("FireDate: " + fireDate)
     }
 
     render() {

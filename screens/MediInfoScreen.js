@@ -66,17 +66,21 @@ export default class MediInfoScreen extends React.Component {
   handleNewReminder = () => {
     this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
   }
-  handleChangeReminder = () => {
+
+  handleChangeReminder = (item) => {
     this.props.navigation.navigate("ChangeReminder", {
       medicine: this.props.navigation.state.params,
+      id: item.id,
+      itemTime: item.times
     })
   }
 
   renderItem = (item) => {
+    const itemDetails = item
     const nonEmptyItem =
       <View style={styles.prescription}>
         <Text style={styles.time}>{item.times}</Text>
-        <Button style={styles.edit} title="Edit" onPress={this.handleChangeReminder} />
+        <Button style={styles.edit} title="Edit" onPress={() => this.handleChangeReminder(itemDetails)} />
       </View>;
     const emptyItem =
       <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
