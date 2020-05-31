@@ -16,7 +16,7 @@ const alarmNotifData = {
     message: " "
 };
 
-export default class ChangeReminder extends React.Component {
+export default class NewReminder extends React.Component {
     static navigationOptions = {
         headerShown: false,
     };

@@ -63,18 +63,21 @@ export default class MediInfoScreen extends React.Component {
     )
   };
 
-  handlePress = () => {
-    this.props.navigation.navigate("Reminder", this.props.navigation.state.params)
+  handleNewReminder = () => {
+    this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
+  }
+  handleChangeReminder = () => {
+    this.props.navigation.navigate("ChangeReminder", this.props.navigation.state.params)
   }
 
   renderItem = (item) => {
     const nonEmptyItem =
-      <View>
-        <Text style={styles.time}>{this.state.reminder.times}</Text>
-        <Button style={styles.edit} title="Edit" onPress={this.handlePress} />
+      <View style={styles.prescription}>
+        <Text style={styles.time}>{item.times}</Text>
+        <Button style={styles.edit} title="Edit" onPress={this.handleChangeReminder} />
       </View>;
     const emptyItem =
-      <TouchableOpacity onPress={this.handlePress}>
+      <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
         <Text style={{ fontSize: 20 }}>+ Add Reminder</Text>
       </TouchableOpacity>;
     let message;
@@ -84,9 +87,7 @@ export default class MediInfoScreen extends React.Component {
       message = nonEmptyItem
     }
     return (
-      <View style={styles.reminder}>
-        {message}
-      </View>
+      message
     );
   };
 
