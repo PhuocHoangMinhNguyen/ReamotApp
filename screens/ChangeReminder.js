@@ -41,16 +41,7 @@ export default class ChangeReminder extends React.Component {
 
     componentDidMount() {
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
-        //let initialStatement = this.props.navigation.state.params.itemTime
         this.setState({ medicine: paramsFromMediInfoScreen });
-        /*
-        this.setState({
-            alarm: {
-                ...this.state.alarm,
-                initial: initialStatement
-            }
-        })
-        */
     }
 
     scheduleAlarm = () => {
@@ -97,7 +88,6 @@ export default class ChangeReminder extends React.Component {
     deleteAlarm = () => {
         const { name } = this.state.medicine
         const { testDate } = this.state.alarm
-        console.log(`${name} ${moment(testDate).format('hh:mm a')}`)
         firestore().collection("reminder").doc(`${name} ${moment(testDate).format('hh:mm a')}`)
         this.props.navigation.goBack()
     }
