@@ -12,7 +12,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 
 import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
-import PostScreen from "./screens/PostScreen";
+import DoctorScreen from "./screens/DoctorScreen";
 import MedicineScreen from "./screens/MedicineScreen";
 import MediInfoScreen from "./screens/MediInfoScreen";
 import ProfileScreen from "./screens/ProfileScreen";
@@ -69,8 +69,8 @@ const AppContainer = createStackNavigator(
             )
           }
         },
-        Post: {
-          screen: PostScreen,
+        Doctor: {
+          screen: DoctorScreen,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Material
