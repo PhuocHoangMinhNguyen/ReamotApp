@@ -61,29 +61,23 @@ const AppContainer = createStackNavigator(
             )
           }
         },
-        Post: {
-          screen: PostScreen,
-          navigationOptions: {
-            tabBarIcon: ({ tintColor }) => (
-              <Ionicons
-                name="ios-add-circle"
-                size={48}
-                color="#018ABE"
-                style={{
-                  shadowColor: "#E9446A",
-                  shadowOffset: { width: 0, height: 10 },
-                  shadowRadius: 10,
-                  shadowOpacity: 0.3
-                }}
-              />
-            )
-          }
-        },
         Medicine: {
           screen: MedicineStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Material name="pill" size={24} color={tintColor} />
+            )
+          }
+        },
+        Post: {
+          screen: PostScreen,
+          navigationOptions: {
+            tabBarIcon: ({ tintColor }) => (
+              <Material
+                name="doctor"
+                size={24}
+                color={tintColor}
+              />
             )
           }
         },
@@ -99,11 +93,7 @@ const AppContainer = createStackNavigator(
       {
         defaultNavigationOptions: {
           tabBarOnPress: ({ navigation, defaultHandler }) => {
-            if (navigation.state.key === "Post") {
-              navigation.navigate("postModal");
-            } else {
-              defaultHandler();
-            }
+            defaultHandler();
           }
         },
         tabBarOptions: {
@@ -113,9 +103,6 @@ const AppContainer = createStackNavigator(
         }
       }
     ),
-    postModal: {
-      screen: PostScreen
-    }
   },
   {
     mode: "modal",
