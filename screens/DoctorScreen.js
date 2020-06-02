@@ -21,7 +21,7 @@ export default class DoctorScreen extends React.Component {
   unsubscribe = null;
 
   componentDidMount() {
-    this.unsubscribe = firestore()
+    firestore()
       .collection("doctor")
       .onSnapshot((querySnapshot) => {
         let temp = [];
@@ -39,15 +39,29 @@ export default class DoctorScreen extends React.Component {
           loading: false,
         });
       });
-  }
 
-  componentWillUnmount() {
-    this.unsubscribe();
+    firestore()
+      .collection("pharmacist")
+      .onSnapshot((querySnapshot) => {
+        let temp = [];
+
+        querySnapshot.forEach((documentSnapshot) => {
+          temp.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+
+        this.setState({
+          doc_phar: this.state.doc_phar.concat(temp),
+          myArray: this.state.myArray.concat(temp),
+          loading: false,
+        });
+      });
   }
 
   handleClick = (dataInfor) => {
-    //this.props.navigation.navigate("DoctorInfo", dataInfor);
-    this.props.navigation.navigate("DoctorInfo");
+    this.props.navigation.navigate("DoctorInfo", dataInfor);
   }
 
   renderItem = (item) => {
@@ -76,7 +90,16 @@ export default class DoctorScreen extends React.Component {
   };
 
   searchFilterFunction(newText) {
-
+    const newData = this.state.doc_phar.filter(function (item) {
+      //applying filter for the inserted text in search bar
+      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+      const textData = newText.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      myArray: newData,
+      text: newText,
+    });
   }
 
   render() {
