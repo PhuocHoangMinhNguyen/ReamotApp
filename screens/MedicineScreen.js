@@ -170,15 +170,4 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#454D65",
   },
-  back: {
-    position: "absolute",
-    top: 24,
-    left: 32,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
 });

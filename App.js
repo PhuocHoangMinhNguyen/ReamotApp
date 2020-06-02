@@ -12,12 +12,15 @@ import RegisterScreen from "./screens/RegisterScreen";
 
 import HomeScreen from "./screens/HomeScreen";
 import CalendarScreen from "./screens/CalendarScreen";
-import DoctorScreen from "./screens/DoctorScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+
 import MedicineScreen from "./screens/MedicineScreen";
 import MediInfoScreen from "./screens/MediInfoScreen";
-import ProfileScreen from "./screens/ProfileScreen";
 import NewReminderScreen from "./screens/NewReminder";
-import ChangeReminderScreen from "./screens/ChangeReminder"
+import ChangeReminderScreen from "./screens/ChangeReminder";
+
+import DoctorScreen from "./screens/DoctorScreen";
+import DoctorInfoScreen from "./screens/DoctorInfoScreen";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -40,6 +43,14 @@ const MedicineStack = createStackNavigator(
   },
   { initialRouteName: "ListMedicine" }
 );
+
+const DoctorStack = createStackNavigator(
+  {
+    DoctorScreen: DoctorScreen,
+    DoctorInfo: DoctorInfoScreen
+  },
+  { initialRouteName: "DoctorScreen" }
+)
 
 const AppContainer = createStackNavigator(
   {
@@ -70,7 +81,7 @@ const AppContainer = createStackNavigator(
           }
         },
         Doctor: {
-          screen: DoctorScreen,
+          screen: DoctorStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Material
