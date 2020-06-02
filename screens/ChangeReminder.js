@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-n
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth";
+import Toast from "react-native-simple-toast"
 
 import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -26,13 +27,17 @@ export default class ChangeReminder extends React.Component {
         super(props);
         this.state = {
             medicine: {},
-            reminder: {},
             alarm: {
                 update: '',
+                // testDate is the date shown when time is picked
                 testDate: new Date(Date.now()),
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
                 show: false,
+                // "Changed" is the value to indicate when a new time is picked
+                // change to true when a new time is picked
                 changed: false,
+                // "Initial" is the inial text next to DateTimePicker,
+                // which is the reminder time value inside firestore before editing.
                 initial: ''
             }
         };
@@ -41,8 +46,10 @@ export default class ChangeReminder extends React.Component {
     }
 
     componentDidMount() {
+        // Text value from params and put it as state.medicine
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
         this.setState({ medicine: paramsFromMediInfoScreen });
+        // Text value from params and put it as state.alarm.initial
         let paramsTime = this.props.navigation.state.params.itemTime;
         this.setState({
             alarm: {
@@ -52,6 +59,7 @@ export default class ChangeReminder extends React.Component {
         })
     }
 
+    // set a NEW alarm, store it in firestore
     scheduleAlarm = () => {
         const { testDate, fireDate } = this.state.alarm;
         const { name } = this.state.medicine;
@@ -64,15 +72,21 @@ export default class ChangeReminder extends React.Component {
             }
         });
         ReactNativeAN.scheduleAlarm(details);
-        firestore().collection("reminder").add({
-            id: `${name} ${moment(testDate).format('hh:mm a')}`,
-            medicine: name,
-            times: moment(testDate).format('hh:mm a'),
-            patientName: auth().currentUser.email,
-        })
+        firestore().collection("reminder")
+            .doc(`${name} ${moment(testDate).format('hh:mm a')}`)
+            .set({
+                id: `${name} ${moment(testDate).format('hh:mm a')}`,
+                medicine: name,
+                times: moment(testDate).format('hh:mm a'),
+                patientName: auth().currentUser.email,
+            })
+            .then(() => {
+                Toast.show("Reminder Set!")
+            })
         this.props.navigation.goBack()
     };
 
+    // stop the current alarm sound
     stopAlarm = () => {
         this.setState({
             alarm: {
@@ -83,17 +97,19 @@ export default class ChangeReminder extends React.Component {
         ReactNativeAN.stopAlarmSound();
     };
 
-    viewAlarms = async () => {
-        const list = await ReactNativeAN.getScheduledAlarms();
-        this.setState({
-            alarm: {
-                ...this.state.alarm,
-                update: JSON.stringify(list)
-            }
-        });
-    }
-
+    // delete alarm from reminder collection in firestore
     deleteAlarm = () => {
+        const { initial } = this.state.alarm
+        const { name } = this.state.medicine
+
+        console.log(`${name} ${initial}`)
+        firestore().collection("reminder")
+            .doc(`${name} ${initial}`)
+            .delete()
+            .then(() => {
+                Toast.show("Reminder Deleted!")
+            })
+
         this.props.navigation.goBack()
     }
 
@@ -107,7 +123,7 @@ export default class ChangeReminder extends React.Component {
     }
 
     onChange = (event, selectedDate) => {
-        const { testDate, fireDate } = this.state.alarm;
+        const { testDate } = this.state.alarm;
         let currentDate = selectedDate || testDate;
         this.setState({
             alarm: {
@@ -178,13 +194,6 @@ export default class ChangeReminder extends React.Component {
                         <Button
                             onPress={this.stopAlarm}
                             title="Stop Alarm Sound"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={this.viewAlarms}
-                            title="See all active alarms"
                             color="#018ABE"
                         />
                     </View>

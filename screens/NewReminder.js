@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
+import Toast from "react-native-simple-toast"
 
 import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -54,12 +55,17 @@ export default class NewReminder extends React.Component {
             }
         });
         ReactNativeAN.scheduleAlarm(details);
-        firestore().collection("reminder").add({
-            id: `${name} ${moment(testDate).format('hh:mm a')}`,
-            medicine: name,
-            times: moment(testDate).format('hh:mm a'),
-            patientName: null,
-        })
+        firestore().collection("reminder")
+            .doc(`${name} ${moment(testDate).format('hh:mm a')}`)
+            .set({
+                id: `${name} ${moment(testDate).format('hh:mm a')}`,
+                medicine: name,
+                times: moment(testDate).format('hh:mm a'),
+                patientName: null,
+            })
+            .then(() => {
+                Toast.show("Reminder Set!")
+            })
         this.props.navigation.goBack()
     };
 
@@ -72,24 +78,6 @@ export default class NewReminder extends React.Component {
         });
         ReactNativeAN.stopAlarmSound();
     };
-
-    viewAlarms = async () => {
-        const list = await ReactNativeAN.getScheduledAlarms();
-        this.setState({
-            alarm: {
-                ...this.state.alarm,
-                update: JSON.stringify(list)
-            }
-        });
-    }
-
-    deleteAlarm = () => {
-        const { name } = this.state.medicine
-        const { testDate } = this.state.alarm
-        console.log(`${name} ${moment(testDate).format('hh:mm a')}`)
-        firestore().collection("reminder").doc(`${name} ${moment(testDate).format('hh:mm a')}`)
-        this.props.navigation.goBack()
-    }
 
     showMode = () => {
         this.setState({
@@ -111,8 +99,6 @@ export default class NewReminder extends React.Component {
                 fireDate: ReactNativeAN.parseDate(currentDate)
             }
         });
-        console.log("TestDate: " + testDate)
-        console.log("FireDate: " + fireDate)
     }
 
     render() {
@@ -167,20 +153,6 @@ export default class NewReminder extends React.Component {
                         <Button
                             onPress={this.stopAlarm}
                             title="Stop Alarm Sound"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={this.viewAlarms}
-                            title="See all active alarms"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={this.deleteAlarm}
-                            title="Delete alarm"
                             color="#018ABE"
                         />
                     </View>
