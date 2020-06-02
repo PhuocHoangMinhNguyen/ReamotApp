@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Button, FlatList } fro
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
+import ViewMoreText from "react-native-view-more-text"
 
 export default class MediInfoScreen extends React.Component {
   static navigationOptions = {
@@ -75,6 +76,18 @@ export default class MediInfoScreen extends React.Component {
     })
   }
 
+  renderViewMore(onPress) {
+    return (
+      <Text onPress={onPress} style={{ color: '#018ABE' }}>View More</Text>
+    )
+  }
+
+  renderViewLess(onPress) {
+    return (
+      <Text onPress={onPress} style={{ color: '#018ABE' }}>View less</Text>
+    )
+  }
+
   renderItem = (item) => {
     const itemDetails = item
     const nonEmptyItem =
@@ -84,7 +97,7 @@ export default class MediInfoScreen extends React.Component {
       </View>;
     const emptyItem =
       <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
-        <Text style={{ fontSize: 20 }}>+ Add Reminder</Text>
+        <Text style={{ fontSize: 18 }}>+ Add Reminder</Text>
       </TouchableOpacity>;
     let message;
     if (item == "null") {
@@ -124,7 +137,13 @@ export default class MediInfoScreen extends React.Component {
             />
             <Text style={styles.name}>{this.state.medicine.name}</Text>
           </View>
-          <Text style={styles.description}>{this.state.medicine.description}</Text>
+          <ViewMoreText
+            numberOfLines={3}
+            renderViewMore={this.renderViewMore}
+            renderViewLess={this.renderViewLess}
+            textStyle={styles.description}>
+            <Text>{this.state.medicine.description}</Text>
+          </ViewMoreText>
         </View>
 
         <View style={styles.prescription}>
@@ -201,9 +220,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   time: {
-    fontSize: 20
+    fontSize: 18
   },
   repeat: {
-    fontSize: 20
+    fontSize: 18
   },
 });
