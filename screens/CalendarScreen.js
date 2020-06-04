@@ -1,11 +1,34 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Agenda } from "react-native-calendars";
+import firestore from "@react-native-firebase/firestore";
+
+dummyDatabase = {
+  name: "Drug Alert Street Drugs Single Kit",
+  time: "4:20pm"
+}
 
 export default class CalendarScreen extends React.Component {
   state = {
-    items: {}
+    items: {},
+    reminder: []
   };
+
+  componentDidMount() {
+    firestore().collection("reminder").onSnapshot((querySnapshot) => {
+      let temp = [];
+
+      querySnapshot.forEach((documentSnapshot) => {
+        temp.push({
+          ...documentSnapshot.data(),
+          key: documentSnapshot.id,
+        });
+      });
+
+      this.setState({ reminder: temp });
+    }
+    )
+  }
 
   timeToString(time) {
     const date = new Date(time);
@@ -23,13 +46,11 @@ export default class CalendarScreen extends React.Component {
         const strTime = this.timeToString(time);
         if (!this.state.items[strTime]) {
           this.state.items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            this.state.items[strTime].push({
-              name: "Item for " + strTime + " #" + j,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            });
-          }
+          this.state.items[strTime].push({
+            name: dummyDatabase.name,
+            time: dummyDatabase.time,
+            height: Math.max(50, Math.floor(Math.random() * 150))
+          });
         }
       }
       const newItems = {};
@@ -53,7 +74,13 @@ export default class CalendarScreen extends React.Component {
   renderItem(item) {
     return (
       <TouchableOpacity style={styles.item}>
-        <Text>{item.name}</Text>
+        <Image
+          source={require("../assets/tempAvatar.jpg")}
+          style={styles.image} />
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <Text>{item.name}</Text>
+          <Text>{item.time}</Text>
+        </View>
       </TouchableOpacity>
     );
   }
@@ -83,6 +110,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    marginTop: 17
+    marginTop: 17,
+    flexDirection: "row"
+  },
+  image: {
+    width: 50,
+    height: 50
   }
 });
