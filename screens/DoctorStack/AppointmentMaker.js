@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-simple-toast";
 import { ConfirmDialog } from "react-native-simple-dialogs";
@@ -102,6 +102,16 @@ export default class AppointmentMaker extends React.Component {
                         onChange={this.onChangeTime}
                     />
                 )}
+                <View style={styles.reason}>
+                    <Text style={styles.inputTitle}>Reason</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={reason =>
+                            this.setState({ reason: reason })
+                        }
+                        value={this.state.reason}
+                    />
+                </View>
                 <View style={styles.button}>
                     <Button
                         title="Set Appointment"
@@ -158,5 +168,21 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
         marginVertical: 8,
         marginHorizontal: 16
+    },
+    inputTitle: {
+        color: "#8A8F9E",
+        fontSize: 12,
+        textTransform: "uppercase"
+    },
+    input: {
+        borderBottomColor: "#8A8F9E",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15,
+        color: "#161F3D"
+    },
+    reason: {
+        marginHorizontal: 16,
+        marginVertical: 8
     }
 });
