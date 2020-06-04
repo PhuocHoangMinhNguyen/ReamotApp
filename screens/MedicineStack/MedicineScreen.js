@@ -33,8 +33,6 @@ export default class MedicineScreen extends React.Component {
     this.unsubscribe = firestore()
       .collection("prescription")
       .onSnapshot((queryPrescriptionSnapshot) => {
-        let temp = [];
-
         queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
           if (documentPrescriptionSnapshot.data().patientEmail == auth().currentUser.email) {
             firestore()
@@ -58,12 +56,6 @@ export default class MedicineScreen extends React.Component {
                 });
               });
           }
-        });
-
-        this.setState({
-          medicines: temp,
-          myArray: temp,
-          loading: false,
         });
       });
   }
