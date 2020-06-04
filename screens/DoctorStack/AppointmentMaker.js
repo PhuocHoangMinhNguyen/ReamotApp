@@ -53,8 +53,8 @@ export default class AppointmentMaker extends React.Component {
         this.setState({ dialogVisible: false })
         firestore().collection("appointment")
             .add({
-                date: this.state.testDate,
-                time: this.state.testTime,
+                date: moment(this.state.testDate).format("MMM Do YYYY"),
+                time: moment(this.state.testTime).format('hh:mm a'),
                 reason: this.state.reason,
             })
             .then(() => {
