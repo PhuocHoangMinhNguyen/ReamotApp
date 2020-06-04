@@ -4,9 +4,16 @@ import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
 export default class ProfileScreen extends React.Component {
-  state = {
-    user: {}
+  static navigationOptions = {
+    headerShown: false,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: {}
+    }
+  }
 
   unsubscribe = null;
 
@@ -25,6 +32,10 @@ export default class ProfileScreen extends React.Component {
     this.unsubscribe();
   }
 
+  handlePress = () => {
+    this.props.navigation.navigate("AppointList")
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -41,7 +52,12 @@ export default class ProfileScreen extends React.Component {
           </View>
           <Text style={styles.name}>{this.state.user.name}</Text>
         </View>
-        <Button style={styles.button}
+        <Button
+          onPress={this.handlePress}
+          title="Log out"
+        />
+
+        <Button
           onPress={() => {
             auth().signOut();
           }}
@@ -76,7 +92,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 24
   },
-  button: {
-    color: "#018ABE"
-  }
 });
