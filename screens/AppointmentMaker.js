@@ -1,11 +1,19 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons"
+import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import Toast from "react-native-simple-toast";
+import { ConfirmDialog } from "react-native-simple-dialogs";
 
 export default class AppointmentMaker extends React.Component {
     static navigationOptions = {
         headerShown: false,
     };
+
+    state = {
+        dialogVisible: false
+    }
+
+    handlePress = () => { this.setState({ dialogVisible: true }) }
 
     render() {
         return (
@@ -16,7 +24,29 @@ export default class AppointmentMaker extends React.Component {
                 >
                     <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
                 </TouchableOpacity>
-                <Text>Appointment Maker</Text>
+                <Button
+                    title="Set Appointment"
+                    onPress={this.handlePress} />
+                <ConfirmDialog
+                    visible={this.state.dialogVisible}
+                    title="Alert"
+                    message="Are you sure?"
+                    onTouchOutside={() => this.setState({ dialogVisible: false })}
+                    positiveButton={{
+                        title: "YES",
+                        onPress: () => {
+                            this.setState({ dialogVisible: false })
+                            Toast.show("Your request is confirmed !")
+                        }
+                    }}
+                    negativeButton={{
+                        title: "NO",
+                        onPress: () => {
+                            this.setState({ dialogVisible: false })
+                            Toast.show("Your request is canceled !")
+                        }
+                    }}
+                />
             </View>
         );
     }
