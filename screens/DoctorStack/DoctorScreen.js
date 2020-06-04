@@ -18,8 +18,6 @@ export default class DoctorScreen extends React.Component {
     }
   }
 
-  unsubscribe = null;
-
   componentDidMount() {
     firestore()
       .collection("doctor")

@@ -89,7 +89,7 @@ export default class NewReminder extends React.Component {
     }
 
     onChange = (event, selectedDate) => {
-        const { testDate, fireDate } = this.state.alarm;
+        const { testDate } = this.state.alarm;
         let currentDate = selectedDate || testDate;
         this.setState({
             alarm: {

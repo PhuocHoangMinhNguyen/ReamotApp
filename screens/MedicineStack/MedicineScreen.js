@@ -27,10 +27,8 @@ export default class MedicineScreen extends React.Component {
     };
   }
 
-  unsubscribe = null;
-
   componentDidMount() {
-    this.unsubscribe = firestore()
+    firestore()
       .collection("prescription")
       .onSnapshot((queryPrescriptionSnapshot) => {
         queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
@@ -58,10 +56,6 @@ export default class MedicineScreen extends React.Component {
           }
         });
       });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
   }
 
   handleClick = (dataInfor) => {
