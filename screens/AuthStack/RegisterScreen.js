@@ -15,7 +15,7 @@ import ImagePicker from "react-native-image-picker";
 import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
 import auth from "@react-native-firebase/auth";
-import UserPermissions from "../utilities/UserPermissions";
+import UserPermissions from "../../utilities/UserPermissions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import Toast from "react-native-simple-toast"
 

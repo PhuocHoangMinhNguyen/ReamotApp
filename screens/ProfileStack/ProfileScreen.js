@@ -52,17 +52,20 @@ export default class ProfileScreen extends React.Component {
           </View>
           <Text style={styles.name}>{this.state.user.name}</Text>
         </View>
-        <Button
-          onPress={this.handlePress}
-          title="Log out"
-        />
-
-        <Button
-          onPress={() => {
-            auth().signOut();
-          }}
-          title="Log out"
-        />
+        <View style={styles.button}>
+          <Button
+            onPress={this.handlePress}
+            title="Appointment List"
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            onPress={() => {
+              auth().signOut();
+            }}
+            title="Log out"
+          />
+        </View>
       </View>
     );
   }
@@ -92,4 +95,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 24
   },
+  button: {
+    marginVertical: 8,
+    marginHorizontal: 16
+  }
 });
