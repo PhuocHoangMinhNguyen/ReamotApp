@@ -65,8 +65,8 @@ export default class NewReminder extends React.Component {
             })
             .then(() => {
                 Toast.show("Reminder Set!")
+                this.props.navigation.goBack()
             })
-        this.props.navigation.goBack()
     };
 
     stopAlarm = () => {

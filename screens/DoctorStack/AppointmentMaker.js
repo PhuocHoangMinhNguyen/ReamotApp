@@ -5,6 +5,7 @@ import Toast from "react-native-simple-toast";
 import { ConfirmDialog } from "react-native-simple-dialogs";
 import TimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
+import firestore from "@react-native-firebase/firestore";
 
 export default class AppointmentMaker extends React.Component {
     static navigationOptions = {
@@ -17,6 +18,7 @@ export default class AppointmentMaker extends React.Component {
         testDate: new Date(Date.now()),
         showTime: false,
         testTime: new Date(Date.now()),
+        reason: ""
     }
 
     showModeDate = () => {
@@ -49,7 +51,16 @@ export default class AppointmentMaker extends React.Component {
 
     handleYes = () => {
         this.setState({ dialogVisible: false })
-        Toast.show("Your request is canceled !")
+        firestore().collection("appointment")
+            .add({
+                date: this.state.testDate,
+                time: this.state.testTime,
+                reason: this.state.reason,
+            })
+            .then(() => {
+                Toast.show("Your appointment is confirmed !")
+                this.props.navigation.goBack()
+            })
     }
 
     render() {

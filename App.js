@@ -7,21 +7,25 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
 import LoadingScreen from "./screens/LoadingScreen";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
 
-import HomeScreen from "./screens/HomeScreen";
-import CalendarScreen from "./screens/CalendarScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import LoginScreen from "./screens/AuthStack/LoginScreen";
+import RegisterScreen from "./screens/AuthStack/RegisterScreen";
 
-import MedicineScreen from "./screens/MedicineScreen";
-import MediInfoScreen from "./screens/MediInfoScreen";
-import NewReminderScreen from "./screens/NewReminder";
-import ChangeReminderScreen from "./screens/ChangeReminder";
+import HomeScreen from "./screens/HomeStack/HomeScreen";
 
-import DoctorScreen from "./screens/DoctorScreen";
-import DoctorInfoScreen from "./screens/DoctorInfoScreen";
-import Appointment from "./screens/AppointmentMaker";
+import CalendarScreen from "./screens/CalendarStack/CalendarScreen";
+
+import MedicineScreen from "./screens/MedicineStack/MedicineScreen";
+import MediInfoScreen from "./screens/MedicineStack/MediInfoScreen";
+import NewReminderScreen from "./screens/MedicineStack/NewReminder";
+import ChangeReminderScreen from "./screens/MedicineStack/ChangeReminder";
+
+import DoctorScreen from "./screens/DoctorStack/DoctorScreen";
+import DoctorInfoScreen from "./screens/DoctorStack/DoctorInfoScreen";
+import Appointment from "./screens/DoctorStack/AppointmentMaker";
+
+import ProfileScreen from "./screens/ProfileStack/ProfileScreen";
+import AppointmentList from "./screens/ProfileStack/AppointmentList";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -52,6 +56,14 @@ const DoctorStack = createStackNavigator(
     Appointment: Appointment
   },
   { initialRouteName: "DoctorScreen" }
+)
+
+const ProfileStack = createStackNavigator(
+  {
+    Profile: ProfileScreen,
+    AppointList: AppointmentList
+  },
+  { initialRouteName: "Profile" }
 )
 
 const AppContainer = createStackNavigator(
@@ -95,7 +107,7 @@ const AppContainer = createStackNavigator(
           }
         },
         Profile: {
-          screen: ProfileScreen,
+          screen: ProfileStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Ionicons name="ios-person" size={24} color={tintColor} />
