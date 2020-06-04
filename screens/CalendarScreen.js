@@ -75,7 +75,7 @@ export default class CalendarScreen extends React.Component {
     return (
       <TouchableOpacity style={styles.item}>
         <Image
-          source={require("../assets/tempAvatar.jpg")}
+          source={require("../assets/dummyImage.jpg")}
           style={styles.image} />
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>{item.name}</Text>

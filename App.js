@@ -21,6 +21,7 @@ import ChangeReminderScreen from "./screens/ChangeReminder";
 
 import DoctorScreen from "./screens/DoctorScreen";
 import DoctorInfoScreen from "./screens/DoctorInfoScreen";
+import Appointment from "./screens/AppointmentMaker";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -47,7 +48,8 @@ const MedicineStack = createStackNavigator(
 const DoctorStack = createStackNavigator(
   {
     DoctorScreen: DoctorScreen,
-    DoctorInfo: DoctorInfoScreen
+    DoctorInfo: DoctorInfoScreen,
+    Appointment: Appointment
   },
   { initialRouteName: "DoctorScreen" }
 )

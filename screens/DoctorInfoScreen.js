@@ -25,6 +25,10 @@ export default class DoctorInfoScreen extends React.Component {
 
     handlePress = () => { this.setState({ dialogVisible: true }) }
 
+    handleSchedule = () => {
+        this.props.navigation.navigate("Appointment");
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -54,7 +58,7 @@ export default class DoctorInfoScreen extends React.Component {
                 <View style={{ marginVertical: 5 }}>
                     <Button
                         title="Schedule An Appointment"
-                        onPress={this.handlePress} />
+                        onPress={this.handleSchedule} />
                 </View>
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
