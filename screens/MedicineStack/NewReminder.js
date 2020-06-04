@@ -117,7 +117,7 @@ export default class NewReminder extends React.Component {
                             source={
                                 this.state.medicine.image
                                     ? { uri: this.state.medicine.image }
-                                    : require("../assets/tempAvatar.jpg")
+                                    : require("../../assets/tempAvatar.jpg")
                             }
                             style={styles.image}
                         />

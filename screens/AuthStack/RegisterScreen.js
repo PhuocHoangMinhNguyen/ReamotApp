@@ -272,7 +272,7 @@ export default class RegisterScreen extends React.Component {
         </KeyboardAwareScrollView>
         <ImageBackground
           style={[styles.fixed, styles.containter, { zIndex: -1 }]}
-          source={require("../assets/registerBackground.png")}
+          source={require("../../assets/registerBackground.png")}
         />
       </View>
     );

@@ -43,7 +43,7 @@ export default class DoctorInfoScreen extends React.Component {
                         source={
                             this.state.doctor.avatar
                                 ? { uri: this.state.doctor.avatar }
-                                : require("../assets/tempAvatar.jpg")
+                                : require("../../assets/tempAvatar.jpg")
                         }
                         style={styles.image} />
                     <View style={{ alignItems: "center" }}>

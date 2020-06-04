@@ -93,7 +93,7 @@ export default class MedicineScreen extends React.Component {
           source={
             item.image
               ? { uri: item.image }
-              : require("../assets/tempAvatar.jpg")
+              : require("../../assets/tempAvatar.jpg")
           }
           style={styles.avatar}
         />

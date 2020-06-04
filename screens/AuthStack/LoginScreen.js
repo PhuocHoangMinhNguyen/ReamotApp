@@ -59,7 +59,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <Image
-          source={require("../assets/logoTest.png")}
+          source={require("../../assets/logoTest.png")}
           style={{
             marginTop: 30,
             alignSelf: 'center',
@@ -122,7 +122,7 @@ export default class LoginScreen extends React.Component {
         </KeyboardAwareScrollView>
         <ImageBackground
           style={[styles.fixed, styles.containter, { zIndex: -1 }]}
-          source={require("../assets/registerBackground.png")}
+          source={require("../../assets/registerBackground.png")}
         />
       </View >
     );

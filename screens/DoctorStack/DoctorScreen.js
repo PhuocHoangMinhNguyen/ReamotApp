@@ -80,7 +80,7 @@ export default class DoctorScreen extends React.Component {
           source={
             item.avatar
               ? { uri: item.avatar }
-              : require("../assets/tempAvatar.jpg")
+              : require("../../assets/tempAvatar.jpg")
           }
           style={styles.avatar}
         />
