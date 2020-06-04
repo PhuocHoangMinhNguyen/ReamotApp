@@ -2,6 +2,7 @@ import React from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-simple-toast";
+import { ConfirmDialog } from "react-native-simple-dialogs";
 
 export default class DoctorInfoScreen extends React.Component {
     static navigationOptions = {
@@ -12,6 +13,7 @@ export default class DoctorInfoScreen extends React.Component {
         super(props);
         this.state = {
             doctor: {},
+            dialogVisible: false
         };
     }
 
@@ -21,13 +23,7 @@ export default class DoctorInfoScreen extends React.Component {
         this.setState({ doctor: paramsFromDoctorScreen });
     }
 
-    handleDetails = () => {
-        Toast.show("Your medical details is sent to this individual !")
-    }
-
-    handleSchedule = () => {
-        Toast.show("Your appointment is set !")
-    }
+    handlePress = () => { this.setState({ dialogVisible: true }) }
 
     render() {
         return (
@@ -53,13 +49,33 @@ export default class DoctorInfoScreen extends React.Component {
                 <View style={{ marginVertical: 5 }}>
                     <Button
                         title="Give access of medical details"
-                        onPress={this.handleDetails} />
+                        onPress={this.handlePress} />
                 </View>
                 <View style={{ marginVertical: 5 }}>
                     <Button
                         title="Schedule An Appointment"
-                        onPress={this.handleSchedule} />
+                        onPress={this.handlePress} />
                 </View>
+                <ConfirmDialog
+                    visible={this.state.dialogVisible}
+                    title="Alert"
+                    message="Are you sure?"
+                    onTouchOutside={() => this.setState({ dialogVisible: false })}
+                    positiveButton={{
+                        title: "YES",
+                        onPress: () => {
+                            this.setState({ dialogVisible: false })
+                            Toast.show("Your request is confirmed !")
+                        }
+                    }}
+                    negativeButton={{
+                        title: "NO",
+                        onPress: () => {
+                            this.setState({ dialogVisible: false })
+                            Toast.show("Your request is canceled !")
+                        }
+                    }}
+                />
             </View >
         );
     }
