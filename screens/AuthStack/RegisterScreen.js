@@ -152,8 +152,8 @@ export default class RegisterScreen extends React.Component {
   };
 
   render() {
-    const showPass = <Ionicons name="ios-eye-off" size={24} />;
-    const hidePass = <Ionicons name="ios-eye" size={24} />;
+    const showPass = <Ionicons name="ios-eye" size={24} />;
+    const hidePass = <Ionicons name="ios-eye-off" size={24} />;
     let message;
     if (this.state.showPassword == false) {
       message = hidePass;

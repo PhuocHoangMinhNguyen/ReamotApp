@@ -18,7 +18,6 @@ export default class DoctorInfoScreen extends React.Component {
     }
 
     componentDidMount() {
-        //Get data from Medicine Screen
         let paramsFromDoctorScreen = this.props.navigation.state.params;
         this.setState({ doctor: paramsFromDoctorScreen });
     }
@@ -26,7 +25,7 @@ export default class DoctorInfoScreen extends React.Component {
     handlePress = () => { this.setState({ dialogVisible: true }) }
 
     handleSchedule = () => {
-        this.props.navigation.navigate("Appointment");
+        this.props.navigation.navigate("Appointment", this.props.navigation.state.params);
     }
 
     render() {

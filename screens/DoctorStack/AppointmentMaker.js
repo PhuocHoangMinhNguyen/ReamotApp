@@ -6,19 +6,29 @@ import { ConfirmDialog } from "react-native-simple-dialogs";
 import TimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 
 export default class AppointmentMaker extends React.Component {
     static navigationOptions = {
         headerShown: false,
     };
 
-    state = {
-        dialogVisible: false,
-        showDate: false,
-        testDate: new Date(Date.now()),
-        showTime: false,
-        testTime: new Date(Date.now()),
-        reason: ""
+    constructor(props) {
+        super(props);
+        this.state = {
+            doctor: {},
+            dialogVisible: false,
+            showDate: false,
+            testDate: new Date(Date.now()),
+            showTime: false,
+            testTime: new Date(Date.now()),
+            reason: ""
+        }
+    }
+
+    componentDidMount() {
+        let paramsFromDoctorScreen = this.props.navigation.state.params;
+        this.setState({ doctor: paramsFromDoctorScreen });
     }
 
     showModeDate = () => {
@@ -50,12 +60,15 @@ export default class AppointmentMaker extends React.Component {
     handlePress = () => { this.setState({ dialogVisible: true }) }
 
     handleYes = () => {
+        const patient = auth().currentUser.email
         this.setState({ dialogVisible: false })
         firestore().collection("appointment")
             .add({
+                doctor: this.state.doctor.name,
                 date: moment(this.state.testDate).format("MMM Do YYYY"),
                 time: moment(this.state.testTime).format('hh:mm a'),
                 reason: this.state.reason,
+                patientEmail: patient
             })
             .then(() => {
                 Toast.show("Your appointment is confirmed !")
