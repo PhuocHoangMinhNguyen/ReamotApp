@@ -105,7 +105,7 @@ export default class DoctorScreen extends React.Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <SearchBar
-            placeholder="Search Doctor..."
+            placeholder="Search Doctor/ Pharmacist..."
             lightTheme
             round
             onChangeText={(newText) => this.searchFilterFunction(newText)}
