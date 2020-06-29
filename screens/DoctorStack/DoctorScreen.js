@@ -19,40 +19,30 @@ export default class DoctorScreen extends React.Component {
   }
 
   componentDidMount() {
+    let temp = [];
     firestore()
       .collection("doctor")
       .onSnapshot((querySnapshot) => {
-        let temp = [];
-
         querySnapshot.forEach((documentSnapshot) => {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
-        });
-
-        this.setState({
-          doc_phar: temp,
-          myArray: temp,
-          loading: false,
         });
       });
 
     firestore()
       .collection("pharmacist")
       .onSnapshot((querySnapshot) => {
-        let temp = [];
-
         querySnapshot.forEach((documentSnapshot) => {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
         });
-
         this.setState({
-          doc_phar: this.state.doc_phar.concat(temp),
-          myArray: this.state.myArray.concat(temp),
+          doc_phar: temp,
+          myArray: temp,
           loading: false,
         });
       });
