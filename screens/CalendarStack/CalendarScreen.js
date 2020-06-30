@@ -1,13 +1,23 @@
 import React from "react";
-import { StyleSheet, FlatList, TouchableOpacity, Image, View, Text } from "react-native";
+import { StyleSheet, FlatList, Image, View, Text, Button } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default class CalendarScreen extends React.Component {
-  state = {
-    medicine: [],
-    reminder: []
+  static navigationOptions = {
+    headerShown: false,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      medicine: [],
+      reminder: [],
+      show: false,
+      testDate: new Date(Date.now()),
+    }
+  }
 
   componentDidMount() {
     // Check from Reminder
@@ -38,6 +48,19 @@ export default class CalendarScreen extends React.Component {
     })
   }
 
+  showMode = () => {
+    this.setState({ show: true })
+  }
+
+  onChangeDate = (event, selectedDate) => {
+    const { testDate } = this.state;
+    let currentDate = selectedDate || testDate;
+    this.setState({
+      show: Platform.OS === 'ios',
+      testDate: currentDate,
+    });
+  }
+
   renderItem(item) {
     return (
       <View style={styles.feedItem}>
@@ -56,11 +79,32 @@ export default class CalendarScreen extends React.Component {
 
   render() {
     return (
-      <FlatList
-        style={styles.feed}
-        data={this.state.medicine}
-        renderItem={({ item }) => this.renderItem(item)}
-      />
+      <View>
+        <FlatList
+          style={styles.feed}
+          data={this.state.medicine}
+          renderItem={({ item }) => this.renderItem(item)}
+        />
+        <View style={styles.button}>
+          <View />
+          <Button
+            onPress={this.showMode}
+            title="Show Calendar"
+            color="#018ABE"
+          />
+        </View>
+        {this.state.show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            timeZoneOffsetInMinutes={0}
+            value={this.state.testDate}
+            mode="day"
+            is24Hour={false}
+            display="default"
+            onChange={this.onChangeDate}
+          />
+        )}
+      </View>
     );
   }
 }
@@ -94,4 +138,10 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#454D65",
   },
+  button: {
+    marginVertical: 15,
+    marginHorizontal: 30,
+    flexDirection: "row",
+    justifyContent: "space-between"
+  }
 });

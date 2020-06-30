@@ -14,6 +14,7 @@ import RegisterScreen from "./screens/AuthStack/RegisterScreen";
 import HomeScreen from "./screens/HomeStack/HomeScreen";
 
 import CalendarScreen from "./screens/CalendarStack/CalendarScreen";
+//import ShowCalendar from "./screens/CalendarStack/ShowCalendar";
 
 import MedicineScreen from "./screens/MedicineStack/MedicineScreen";
 import MediInfoScreen from "./screens/MedicineStack/MediInfoScreen";
@@ -49,6 +50,14 @@ const MedicineStack = createStackNavigator(
   { initialRouteName: "ListMedicine" }
 );
 
+const CalendarStack = createStackNavigator(
+  {
+    Calendar: CalendarScreen,
+    //ShowCalendar: ShowCalendar
+  },
+  { initialRouteName: "Calendar" }
+)
+
 const DoctorStack = createStackNavigator(
   {
     DoctorScreen: DoctorScreen,
@@ -79,7 +88,7 @@ const AppContainer = createStackNavigator(
           }
         },
         Calendar: {
-          screen: CalendarScreen,
+          screen: CalendarStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Ionicons name="ios-calendar" size={24} color={tintColor} />
