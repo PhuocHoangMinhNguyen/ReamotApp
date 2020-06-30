@@ -80,9 +80,18 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 50,
-    height: 50
+    height: 50,
+    borderRadius: 18,
+    marginRight: 16,
+    marginLeft: 8
   },
   feed: {
     marginHorizontal: 16,
+  },
+  name: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#454D65",
   },
 });
