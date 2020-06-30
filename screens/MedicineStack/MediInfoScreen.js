@@ -43,8 +43,7 @@ export default class MediInfoScreen extends React.Component {
           number: tempValue2
         }
       });
-    }
-    )
+    })
 
     // Get Reminder data
     firestore().collection("reminder").onSnapshot((querySnapshot) => {
@@ -60,10 +59,8 @@ export default class MediInfoScreen extends React.Component {
           counting++;
         }
       });
-
       this.setState({ reminder: temp, arraySize: counting });
-    }
-    )
+    })
   };
 
   handleNewReminder = () => {
