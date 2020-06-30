@@ -29,39 +29,35 @@ export default class MedicineScreen extends React.Component {
   }
 
   componentDidMount() {
-    firestore()
-      .collection("prescription")
-      .onSnapshot((queryPrescriptionSnapshot) => {
-        let temp = []
-        queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
-          if (documentPrescriptionSnapshot.data().patientEmail == auth().currentUser.email) {
-            temp.push(documentPrescriptionSnapshot.data().name)
-            console.log(documentPrescriptionSnapshot.data().name)
-          }
-        })
-        this.setState({ medicineNameList: temp })
-        console.log(this.state.medicineNameList.length)
-        let temp2 = [];
-        for (let i = 0; i < this.state.medicineNameList.length; i++) {
-          firestore()
-            .collection("medicine")
-            .onSnapshot((queryMedicineSnapshot) => {
-              queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
-                if (documentMedicineSnapshot.data().name == this.state.medicineNameList[i]) {
-                  temp2.push({
-                    ...documentMedicineSnapshot.data(),
-                    key: documentMedicineSnapshot.id,
-                  });
-                }
-              });
-            });
+    firestore().collection("prescription").onSnapshot((queryPrescriptionSnapshot) => {
+      let temp = []
+      queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
+        if (documentPrescriptionSnapshot.data().patientEmail == auth().currentUser.email) {
+          temp.push(documentPrescriptionSnapshot.data().name)
+          console.log(documentPrescriptionSnapshot.data().name)
         }
-        this.setState({
-          medicines: temp2,
-          myArray: temp2,
-          loading: false,
+      })
+      this.setState({ medicineNameList: temp })
+      console.log(this.state.medicineNameList.length)
+      let temp2 = [];
+      for (let i = 0; i < this.state.medicineNameList.length; i++) {
+        firestore().collection("medicine").onSnapshot((queryMedicineSnapshot) => {
+          queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
+            if (documentMedicineSnapshot.data().name == this.state.medicineNameList[i]) {
+              temp2.push({
+                ...documentMedicineSnapshot.data(),
+                key: documentMedicineSnapshot.id,
+              });
+            }
+          });
         });
+      }
+      this.setState({
+        medicines: temp2,
+        myArray: temp2,
+        loading: false,
       });
+    });
   }
 
   handleClick = (dataInfor) => {
