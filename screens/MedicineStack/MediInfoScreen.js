@@ -50,9 +50,8 @@ export default class MediInfoScreen extends React.Component {
     firestore().collection("reminder").onSnapshot((querySnapshot) => {
       let temp = [];
       let counting = 0;
-
       querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email
+        if (documentSnapshot.data().patientName == auth().currentUser.email
           && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
           temp.push({
             ...documentSnapshot.data(),
@@ -114,7 +113,6 @@ export default class MediInfoScreen extends React.Component {
   };
 
   render() {
-    let database;
     if (this.state.arraySize < this.state.prescription.times) {
       for (let i = this.state.arraySize; i < this.state.prescription.times; i++) {
         this.state.reminder.push("null")
