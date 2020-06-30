@@ -52,7 +52,8 @@ export default class MediInfoScreen extends React.Component {
       let counting = 0;
 
       querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
+        if (documentSnapshot.data().patientEmail == auth().currentUser.email
+          && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,

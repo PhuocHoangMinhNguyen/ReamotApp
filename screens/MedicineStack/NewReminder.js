@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast"
 
 import ReactNativeAN from 'react-native-alarm-notification';
@@ -61,7 +62,7 @@ export default class NewReminder extends React.Component {
                 id: `${name} ${moment(testDate).format('hh:mm a')}`,
                 medicine: name,
                 times: moment(testDate).format('hh:mm a'),
-                patientName: null,
+                patientName: auth().currentUser.email,
             })
             .then(() => {
                 Toast.show("Reminder Set!")
