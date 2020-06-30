@@ -1,95 +1,65 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { Agenda } from "react-native-calendars";
+import { StyleSheet, FlatList, TouchableOpacity, Image, View, Text } from "react-native";
 import firestore from "@react-native-firebase/firestore";
-
-dummyDatabase = {
-  name: "Drug Alert Street Drugs Single Kit",
-  time: "4:20pm"
-}
+import auth from "@react-native-firebase/auth";
 
 export default class CalendarScreen extends React.Component {
   state = {
-    items: {},
+    medicine: [],
     reminder: []
   };
 
   componentDidMount() {
+    // Check from Reminder
     firestore().collection("reminder").onSnapshot((querySnapshot) => {
       let temp = [];
       querySnapshot.forEach((documentSnapshot) => {
-        temp.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-        });
-      });
-      this.setState({ reminder: temp });
-    }
-    )
-  }
-
-  timeToString(time) {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
-
-  rowHasChanged(r1, r2) {
-    return r1.name !== r2.name;
-  }
-
-  loadItems(day) {
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-          this.state.items[strTime].push({
-            name: dummyDatabase.name,
-            time: dummyDatabase.time,
-          });
+        if (documentSnapshot.data().patientName == auth().currentUser.email) {
+          temp.push(documentSnapshot.data().medicine);
         }
-      }
-      const newItems = {};
-      Object.keys(this.state.items).forEach(key => {
-        newItems[key] = this.state.items[key];
-      });
-      this.setState({ items: newItems });
-    }, 1000);
-  }
+      })
+      this.setState({ reminder: temp });
 
-  renderEmptyDate() {
-    return (
-      <View style={styles.emptyDate}>
-        <Text>This is empty date!</Text>
-      </View>
-    );
+      // Check from Medicine
+      let temp2 = [];
+      for (let i = 0; i < this.state.reminder.length; i++) {
+        firestore().collection("medicine").onSnapshot((queryReminderSnapshot) => {
+          queryReminderSnapshot.forEach((documentReminderSnapshot) => {
+            if (documentReminderSnapshot.data().name == this.state.reminder[i]) {
+              temp2.push({
+                ...documentReminderSnapshot.data(),
+                key: documentReminderSnapshot.id,
+              });
+            }
+          });
+          this.setState({ medicine: temp2 });
+        })
+      }
+    })
   }
 
   renderItem(item) {
     return (
-      <TouchableOpacity style={styles.item}>
+      <View style={styles.feedItem}>
         <Image
-          source={require("../../assets/dummyImage.jpg")}
-          style={styles.image} />
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text>{item.name}</Text>
-          <Text>{item.time}</Text>
-        </View>
-      </TouchableOpacity>
+          source={
+            item.image
+              ? { uri: item.image }
+              : require("../../assets/tempAvatar.jpg")
+          }
+          style={styles.image}
+        />
+        <Text style={styles.name}>{item.name}</Text>
+      </View>
     );
   }
 
   render() {
     return (
-      <Agenda
-        items={this.state.items}
-        loadItemsForMonth={this.loadItems.bind(this)}
-        renderItem={this.renderItem.bind(this)}
-        renderEmptyDate={this.renderEmptyDate.bind(this)}
-        rowHasChanged={this.rowHasChanged.bind(this)}
-        pastScrollRange={1}
-        futureScrollRange={2}
+      <FlatList
+        style={styles.feed}
+        data={this.state.medicine}
+        renderItem={({ item }) => this.renderItem(item)}
       />
     );
   }
@@ -99,7 +69,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  item: {
+  feedItem: {
     backgroundColor: "white",
     flex: 1,
     borderRadius: 5,
@@ -111,5 +81,8 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 50
-  }
+  },
+  feed: {
+    marginHorizontal: 16,
+  },
 });
