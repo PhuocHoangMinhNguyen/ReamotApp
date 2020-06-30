@@ -17,14 +17,12 @@ export default class CalendarScreen extends React.Component {
   componentDidMount() {
     firestore().collection("reminder").onSnapshot((querySnapshot) => {
       let temp = [];
-
       querySnapshot.forEach((documentSnapshot) => {
         temp.push({
           ...documentSnapshot.data(),
           key: documentSnapshot.id,
         });
       });
-
       this.setState({ reminder: temp });
     }
     )
