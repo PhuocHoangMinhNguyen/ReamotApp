@@ -47,7 +47,6 @@ export default class CalendarScreen extends React.Component {
           this.state.items[strTime].push({
             name: dummyDatabase.name,
             time: dummyDatabase.time,
-            height: Math.max(50, Math.floor(Math.random() * 150))
           });
         }
       }
@@ -55,9 +54,7 @@ export default class CalendarScreen extends React.Component {
       Object.keys(this.state.items).forEach(key => {
         newItems[key] = this.state.items[key];
       });
-      this.setState({
-        items: newItems
-      });
+      this.setState({ items: newItems });
     }, 1000);
   }
 
