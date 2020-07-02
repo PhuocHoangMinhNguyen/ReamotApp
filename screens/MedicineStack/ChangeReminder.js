@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ScrollView } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth";
@@ -9,16 +9,20 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 
+// Notification Data Structure.
 const alarmNotifData = {
     vibrate: true,
     play_sound: true,
-    schedule_type: "once",
-    channel: "wakeup",
+    schedule_type: "repeat",
+    repeat_interval: 5, // repeat for 5 mins
+    channel: "takemedicine",
     loop_sound: true,
     message: " "
 };
 
 export default class ChangeReminder extends React.Component {
+    _isMounted = false
+
     static navigationOptions = {
         headerShown: false,
     };
@@ -26,6 +30,7 @@ export default class ChangeReminder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            alarmID: "",
             medicine: {},
             alarm: {
                 update: '',
@@ -46,6 +51,7 @@ export default class ChangeReminder extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true
         // Text value from params and put it as state.medicine
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
         this.setState({ medicine: paramsFromMediInfoScreen });
@@ -57,14 +63,36 @@ export default class ChangeReminder extends React.Component {
                 initial: paramsTime
             }
         })
+        // Find the alarm Id of the reminder that is going to be changed.
+        let temp = ""
+        firestore().collection("reminder").onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((documentSnapshot) => {
+                if (documentSnapshot.data().medicine == this.state.medicine.name
+                    && documentSnapshot.data().patientEmail == auth().currentUser.email
+                    && documentSnapshot.data().times == this.state.alarm.initial) {
+                    temp = documentSnapshot.id
+                }
+            })
+            // Assign temp to alarmID.
+            this.setState({ alarmID: temp })
+            console.log("Change Reminder - Check alarm ID in Firestore: " + this.state.alarmID)
+        })
     }
 
-    // set a NEW alarm, store it in firestore
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
+    // set a NEW alarm, store it in firestore, and replace the existing alarm
     scheduleAlarm = () => {
+        // Delete Existing Alarm
+        ReactNativeAN.deleteAlarm(
+            firestore().collection("reminder").doc(this.state.alarmID).id
+        );
         const { testDate, fireDate } = this.state.alarm;
         const { name } = this.state.medicine;
-        const details = { ...alarmNotifData, fire_date: fireDate, title: name, alarm_id: `${name} ${moment(testDate).format('hh:mm a')}` };
-        console.log(`alarm set: ${fireDate}`);
+        const details = { ...alarmNotifData, fire_date: fireDate, title: name, alarm_id: this.state.alarmID };
+        console.log(`Change Reminder - Check alarm_id in ReactNativeAN: ${details.alarm_id}`);
         this.setState({
             alarm: {
                 ...this.state.alarm,
@@ -72,22 +100,20 @@ export default class ChangeReminder extends React.Component {
             }
         });
         ReactNativeAN.scheduleAlarm(details);
-        firestore().collection("reminder")
-            .doc(`${name} ${moment(testDate).format('hh:mm a')}`)
-            .set({
-                id: `${name} ${moment(testDate).format('hh:mm a')}`,
-                medicine: name,
-                times: moment(testDate).format('hh:mm a'),
-                patientName: auth().currentUser.email,
-            })
-            .then(() => {
-                Toast.show("Reminder Set!")
-            })
+        firestore().collection("reminder").doc(this.state.alarmID).set({
+            medicine: name,
+            times: moment(testDate).format('hh:mm a'),
+            patientEmail: auth().currentUser.email,
+        }).then(() => {
+            Toast.show("Reminder Set!")
+        })
         this.props.navigation.goBack()
     };
 
     // stop the current alarm sound
     stopAlarm = () => {
+        const { testDate, initial } = this.state.alarm
+        const { name } = this.state.medicine
         this.setState({
             alarm: {
                 ...this.state.alarm,
@@ -95,22 +121,42 @@ export default class ChangeReminder extends React.Component {
             }
         });
         ReactNativeAN.stopAlarmSound();
+        ReactNativeAN.removeAllFiredNotifications();
+        /*
+        firestore().collection("history").add({
+            medicine: name,
+            patientEmail: auth().currentUser.email,
+            time: moment().format('h:mm:ss a'),
+            date: moment().format('MMMM Do YYYY')
+        })
+        */
     };
 
     // delete alarm from reminder collection in firestore
     deleteAlarm = () => {
-        const { initial } = this.state.alarm
-        const { name } = this.state.medicine
-
-        console.log(`${name} ${initial}`)
-        firestore().collection("reminder")
-            .doc(`${name} ${initial}`)
-            .delete()
+        // Delete the reminder from "reminder" collection
+        firestore().collection("reminder").doc(this.state.alarmID).delete()
             .then(() => {
                 Toast.show("Reminder Deleted!")
             })
-
+        // Get alarm_id
+        console.log("Change Reminder - Check AlarmID before Deleting: " + firestore().collection("reminder").doc(this.state.alarmID).id)
+        ReactNativeAN.stopAlarmSound();
+        ReactNativeAN.removeAllFiredNotifications();
+        ReactNativeAN.deleteAlarm(
+            firestore().collection("reminder").doc(this.state.alarmID).id
+        );
         this.props.navigation.goBack()
+    }
+
+    getScheduledAlarms = async () => {
+        const alarm = await ReactNativeAN.getScheduledAlarms();
+        this.setState({
+            alarm: {
+                ...this.state.alarm,
+                update: JSON.stringify(alarm)
+            }
+        });
     }
 
     showMode = () => {
@@ -130,7 +176,6 @@ export default class ChangeReminder extends React.Component {
                 ...this.state.alarm,
                 show: Platform.OS === 'ios',
                 testDate: currentDate,
-                fireDate: ReactNativeAN.parseDate(currentDate),
                 changed: true,
             }
         });
@@ -145,7 +190,7 @@ export default class ChangeReminder extends React.Component {
             message = initial
         }
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -204,9 +249,16 @@ export default class ChangeReminder extends React.Component {
                             color="#018ABE"
                         />
                     </View>
+                    <View style={{ marginVertical: 5 }}>
+                        <Button
+                            onPress={this.getScheduledAlarms}
+                            title="Get Scheduled Alarms"
+                            color="#018ABE"
+                        />
+                    </View>
                     <Text>{update}</Text>
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }

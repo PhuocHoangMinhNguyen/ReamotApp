@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ScrollView } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth";
@@ -9,16 +9,20 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 
+// Notification Data Structure.
 const alarmNotifData = {
     vibrate: true,
     play_sound: true,
-    schedule_type: "once",
-    channel: "wakeup",
+    schedule_type: "repeat",
+    repeat_interval: 5, // Repeat for 5 mins
+    channel: "takemedicine",
     loop_sound: true,
     message: " "
 };
 
 export default class NewReminder extends React.Component {
+    _isMounted = false
+
     static navigationOptions = {
         headerShown: false,
     };
@@ -26,8 +30,8 @@ export default class NewReminder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            countReminderId: 0,
             medicine: {},
-            reminder: {},
             alarm: {
                 update: '',
                 testDate: new Date(Date.now()),
@@ -36,33 +40,58 @@ export default class NewReminder extends React.Component {
             }
         };
         this.scheduleAlarm = this.scheduleAlarm.bind(this);
-        this.stopAlarm = this.stopAlarm.bind(this);
     }
 
     componentDidMount() {
+        this._isMounted = true
         let paramsFromMediInfoScreen = this.props.navigation.state.params;
         this.setState({ medicine: paramsFromMediInfoScreen });
+
+        // To decide the alarm Id of the new reminder for ReactNativeAN and Firebase
+        let temp = 0
+        firestore().collection("reminder").onSnapshot((querySnapshot) => {
+            // If the collection is not empty
+            if (querySnapshot.size) {
+                querySnapshot.forEach((documentSnapshot) => {
+                    // This is to make temp become the largest value of the Id in Firebase
+                    if (temp < parseInt(documentSnapshot.id)) {
+                        temp = parseInt(documentSnapshot.id)
+                    }
+                })
+                // To make temp be the new reminder ID
+                temp++
+            }
+            // Assign temp value to countReminderId.
+            this.setState({ countReminderId: temp })
+        })
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     scheduleAlarm = () => {
         const { testDate, fireDate } = this.state.alarm;
         const { name } = this.state.medicine;
-        const details = { ...alarmNotifData, fire_date: fireDate, title: name, alarm_id: `${name} ${moment(testDate).format('hh:mm a')}` };
-        console.log(`alarm set: ${fireDate}`);
+        // Put more detail into Notification Data Structure, then set it as details for ReactNativeAN.
+        // alarm_id is the new reminder id from countReminderId.toString(), to convert from int to string.
+        const details = { ...alarmNotifData, fire_date: fireDate, title: name, alarm_id: this.state.countReminderId.toString() };
+        console.log(`New Reminder - Check alarm_id in ReactNativeAN: ${details.alarm_id}`);
         this.setState({
             alarm: {
                 ...this.state.alarm,
                 update: `alarm set: ${fireDate}`
             }
         });
+        // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details);
+        // Officially add the alarm details into Firebase, alarm id is also from countReminderId.toString()
         firestore().collection("reminder")
-            .doc(`${name} ${moment(testDate).format('hh:mm a')}`)
+            .doc(this.state.countReminderId.toString())
             .set({
-                id: `${name} ${moment(testDate).format('hh:mm a')}`,
                 medicine: name,
                 times: moment(testDate).format('hh:mm a'),
-                patientName: auth().currentUser.email,
+                patientEmail: auth().currentUser.email,
             })
             .then(() => {
                 Toast.show("Reminder Set!")
@@ -70,15 +99,15 @@ export default class NewReminder extends React.Component {
             })
     };
 
-    stopAlarm = () => {
+    getScheduledAlarms = async () => {
+        const alarm = await ReactNativeAN.getScheduledAlarms();
         this.setState({
             alarm: {
                 ...this.state.alarm,
-                update: ''
+                update: JSON.stringify(alarm)
             }
         });
-        ReactNativeAN.stopAlarmSound();
-    };
+    }
 
     showMode = () => {
         this.setState({
@@ -105,7 +134,7 @@ export default class NewReminder extends React.Component {
     render() {
         const { update, testDate, show } = this.state.alarm;
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -152,14 +181,14 @@ export default class NewReminder extends React.Component {
                     </View>
                     <View style={{ marginVertical: 5 }}>
                         <Button
-                            onPress={this.stopAlarm}
-                            title="Stop Alarm Sound"
+                            onPress={this.getScheduledAlarms}
+                            title="Get Scheduled Alarms"
                             color="#018ABE"
                         />
                     </View>
                     <Text>{update}</Text>
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }

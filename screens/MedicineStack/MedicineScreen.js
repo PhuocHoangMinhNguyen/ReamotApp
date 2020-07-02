@@ -48,13 +48,13 @@ export default class MedicineScreen extends React.Component {
               });
             }
           });
+          this.setState({
+            medicines: temp2,
+            myArray: temp2,
+            loading: false,
+          });
         });
       }
-      this.setState({
-        medicines: temp2,
-        myArray: temp2,
-        loading: false,
-      });
     });
   }
 

@@ -6,6 +6,8 @@ import auth from "@react-native-firebase/auth";
 import ViewMoreText from "react-native-view-more-text"
 
 export default class MediInfoScreen extends React.Component {
+  _isMounted = false
+
   static navigationOptions = {
     headerShown: false,
   };
@@ -21,6 +23,7 @@ export default class MediInfoScreen extends React.Component {
   }
 
   componentDidMount() {
+    this._isMounted = true
     //Get data from Medicine Screen
     let paramsFromMedicineScreen = this.props.navigation.state.params;
     this.setState({ medicine: paramsFromMedicineScreen });
@@ -50,7 +53,7 @@ export default class MediInfoScreen extends React.Component {
       let temp = [];
       let counting = 0;
       querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientName == auth().currentUser.email
+        if (documentSnapshot.data().patientEmail == auth().currentUser.email
           && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
           temp.push({
             ...documentSnapshot.data(),
@@ -63,6 +66,10 @@ export default class MediInfoScreen extends React.Component {
     })
   };
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   handleNewReminder = () => {
     this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
   }
@@ -70,7 +77,6 @@ export default class MediInfoScreen extends React.Component {
   handleChangeReminder = (item) => {
     this.props.navigation.navigate("ChangeReminder", {
       medicine: this.props.navigation.state.params,
-      id: item.id,
       itemTime: item.times
     })
   }
