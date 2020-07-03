@@ -11,7 +11,7 @@ import LoadingScreen from "./screens/LoadingScreen";
 import LoginScreen from "./screens/AuthStack/LoginScreen";
 import RegisterScreen from "./screens/AuthStack/RegisterScreen";
 
-import HomeScreen from "./screens/HomeStack/HomeScreen";
+import HomeScreen from "./screens/HomeStack/BackEnd/HomeScreen";
 
 import CalendarScreen from "./screens/CalendarStack/CalendarScreen";
 //import ShowCalendar from "./screens/CalendarStack/ShowCalendar";
@@ -25,8 +25,8 @@ import DoctorScreen from "./screens/DoctorStack/DoctorScreen";
 import DoctorInfoScreen from "./screens/DoctorStack/DoctorInfoScreen";
 import Appointment from "./screens/DoctorStack/AppointmentMaker";
 
-import ProfileScreen from "./screens/ProfileStack/ProfileScreen";
-import AppointmentList from "./screens/ProfileStack/AppointmentList";
+import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
+import AppointmentList from "./screens/ProfileStack/BackEnd/AppointmentList";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
