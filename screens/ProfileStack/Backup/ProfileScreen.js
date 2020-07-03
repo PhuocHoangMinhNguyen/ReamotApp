@@ -45,7 +45,7 @@ export default class ProfileScreen extends React.Component {
               source={
                 this.state.user.avatar
                   ? { uri: this.state.user.avatar }
-                  : require("./assets/tempAvatar.jpg")
+                  : require("../../../assets/tempAvatar.jpg")
               }
               style={styles.avatar}
             />

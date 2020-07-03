@@ -1,0 +1,12 @@
+July 3rd 2020
+Problem 1: stopAlarm just snoozes the alarm instead of actually stopping it.
+( Need a closer look into the problem )
+
+Problem 2: alarm Id is stored incorrectly. 
+ - It supposes to be 0 but turns out to be 1.
+ - The alarm sometimes works when 2 alarms are set 
+    (Need closer look into the problem)
+
+Problem 3: When the alarm is deleted, "update" is set to ''
+ - Instead, "update" supposes to just only delete the deleted alarm,
+    leaving the non-deleted alarms appear (Optional)
