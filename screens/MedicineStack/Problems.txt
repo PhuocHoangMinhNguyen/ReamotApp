@@ -11,3 +11,9 @@ Problem 2: alarm Id is stored incorrectly in ReactNativeAN
 Problem 3: When the alarm is deleted, "update" is set to ''
  - Instead, "update" supposes to just only delete the deleted alarm,
     leaving the non-deleted alarms appear (Optional)
+
+Problem 4: The library author has "alarmId" and "id" attributes.
+ - Need to find the differences.
+
+Debug 1: alarm_id cannot be 0 because due to ANModule.java in ReactNativeAN,
+if alarm_id <= 0, it will be set as System.currentTimeMillis();

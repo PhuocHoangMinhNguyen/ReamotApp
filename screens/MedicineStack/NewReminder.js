@@ -59,8 +59,8 @@ export default class NewReminder extends React.Component {
                     }
                 })
                 // To make temp be the new reminder ID
-                temp++
             }
+            temp++
             // Assign temp value to countReminderId.
             this.setState({ countReminderId: temp })
         })
