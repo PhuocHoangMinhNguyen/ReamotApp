@@ -1,14 +1,17 @@
-July 4rd 2020
-Problem 1: stopAlarm just snoozes the alarm instead of actually stopping it.
-( Need a closer look into the problem )
+July 5rd 2020
+Problem 1: repeat_interval
 
-Problem 2: When the alarm is stopped using stopAlarmSound(), "update" is set to ''
+Problem 1: When the alarm is stopped using stopAlarmSound(), "update" is set to ''
 
-Main Problem: deleteAlarm() function is written incorrectly by ReactNativeAN Authors.
- - deleteAlarm() argument should be "alarm_id" instead of "id"
- ==> Waiting for author correction.
+Problem 2: Modifying Alarm in Change Reminder is having problem (Need closer look into the problem)
 
-New Problem: interval is set as 1, regardless of "repeat_interval" value.
+Problem 3: Need to add requirement that the remiders of the same medicine need to be at least one hour gap from each other
+
+Main Problem: interval is set as 1, regardless of "repeat_interval" value.
 
 Debug 1: alarm_id cannot be 0 because due to ANModule.java in ReactNativeAN,
 if alarm_id <= 0, it will be set as System.currentTimeMillis();
+
+Debug 2: deleteAlarm() is not working correctly, it takes argument as "id" instead of "alarm_id"
+
+Solution 1: deleteAlarm() somehow fixed (Need more test)
