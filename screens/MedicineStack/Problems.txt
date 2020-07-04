@@ -1,19 +1,14 @@
-July 3rd 2020
+July 4rd 2020
 Problem 1: stopAlarm just snoozes the alarm instead of actually stopping it.
 ( Need a closer look into the problem )
 
-Problem 2: alarm Id is stored incorrectly in ReactNativeAN
- - It supposes to be 0 but turns out to be 1.
- - The alarm sometimes works when 2 alarms are set 
-    (Need closer look into the problem)
- - However, the id is stored correctly in Firestore
+Problem 2: When the alarm is stopped using stopAlarmSound(), "update" is set to ''
 
-Problem 3: When the alarm is deleted, "update" is set to ''
- - Instead, "update" supposes to just only delete the deleted alarm,
-    leaving the non-deleted alarms appear (Optional)
+Main Problem: deleteAlarm() function is written incorrectly by ReactNativeAN Authors.
+ - deleteAlarm() argument should be "alarm_id" instead of "id"
+ ==> Waiting for author correction.
 
-Problem 4: The library author has "alarmId" and "id" attributes.
- - Need to find the differences.
+New Problem: interval is set as 1, regardless of "repeat_interval" value.
 
 Debug 1: alarm_id cannot be 0 because due to ANModule.java in ReactNativeAN,
 if alarm_id <= 0, it will be set as System.currentTimeMillis();

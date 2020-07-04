@@ -15,9 +15,10 @@ const alarmNotifData = {
     play_sound: true,
     schedule_type: "repeat",
     repeat_interval: 5, // Repeat for 5 mins
-    channel: "takemedicine",
+    channel: "",
     loop_sound: true,
-    message: " "
+    message: "",
+    data: { content: "" }
 };
 
 export default class NewReminder extends React.Component {
@@ -70,25 +71,23 @@ export default class NewReminder extends React.Component {
         this._isMounted = false;
     }
 
-    scheduleAlarm = () => {
+    getANid = async (details) => {
         const { testDate, fireDate } = this.state.alarm;
         const { name } = this.state.medicine;
-        // Put more detail into Notification Data Structure, then set it as details for ReactNativeAN.
-        // alarm_id is the new reminder id from countReminderId.toString(), to convert from int to string.
-        const details = { ...alarmNotifData, fire_date: fireDate, title: name, alarm_id: this.state.countReminderId.toString() };
-        console.log(`New Reminder - Check alarm_id in ReactNativeAN: ${details.alarm_id}`);
-        this.setState({
-            alarm: {
-                ...this.state.alarm,
-                update: `alarm set: ${fireDate}`
+        // Get the alarm's "id", set it as idAN
+        const alarm = await ReactNativeAN.getScheduledAlarms();
+        let idAN = ""
+        for (let i = 0; i < alarm.length; i++) {
+            if (alarm[i].alarmId == details.alarm_id) {
+                idAN = alarm[i].id
+                console.log("idAN: " + idAN)
             }
-        });
-        // Officially make a new alarm with information from details.
-        ReactNativeAN.scheduleAlarm(details);
+        }
         // Officially add the alarm details into Firebase, alarm id is also from countReminderId.toString()
         firestore().collection("reminder")
             .doc(this.state.countReminderId.toString())
             .set({
+                idAN: idAN,
                 medicine: name,
                 times: moment(testDate).format('hh:mm a'),
                 patientEmail: auth().currentUser.email,
@@ -97,16 +96,38 @@ export default class NewReminder extends React.Component {
                 Toast.show("Reminder Set!")
                 this.props.navigation.goBack()
             })
+    }
+
+    scheduleAlarm = () => {
+        const { testDate, fireDate } = this.state.alarm;
+        const { name } = this.state.medicine;
+        // Put more detail into Notification Data Structure, then set it as details for ReactNativeAN.
+        // alarm_id is the new reminder id from countReminderId.toString(), to convert from int to string.
+        const details = {
+            ...alarmNotifData,
+            fire_date: fireDate,
+            title: name,
+            alarm_id: this.state.countReminderId.toString(),
+        };
+        console.log(`New Reminder - Check alarm_id in ReactNativeAN: ${details.alarm_id}`);
+        // Officially make a new alarm with information from details.
+        ReactNativeAN.scheduleAlarm(details);
+        this.getANid(details);
     };
 
     getScheduledAlarms = async () => {
         const alarm = await ReactNativeAN.getScheduledAlarms();
+        console.log("Type Of Alarm: " + typeof (alarm))
         this.setState({
             alarm: {
                 ...this.state.alarm,
                 update: JSON.stringify(alarm)
             }
         });
+        console.log("Alarm Length: " + alarm.length)
+        for (let i = 0; i < alarm.length; i++) {
+            console.log(alarm[i].id);
+        }
     }
 
     showMode = () => {
