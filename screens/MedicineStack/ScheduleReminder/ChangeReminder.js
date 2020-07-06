@@ -13,10 +13,9 @@ import moment from 'moment'
 const alarmNotifData = {
     schedule_type: "repeat",
     repeat_interval: 5, // repeat for 5 mins
-    channel: "",
+    channel: "reminder",
     loop_sound: true,
-    message: "",
-    data: { content: "" }
+    message: "Take your Medicine",
 };
 
 export default class ChangeReminder extends React.Component {

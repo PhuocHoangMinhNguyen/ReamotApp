@@ -12,10 +12,10 @@ import moment from 'moment'
 // Notification Data Structure.
 const alarmNotifData = {
     schedule_type: "once",
-    channel: "",
+    channel: "reminder",
     loop_sound: true,
-    message: "",
-    data: { content: "" }
+    //small_icon: "ic_launcher",
+    message: "Take your Medicine",
 };
 
 export default class ChangeReminder extends React.Component {
@@ -131,6 +131,10 @@ export default class ChangeReminder extends React.Component {
         ReactNativeAN.stopAlarmSound();
         ReactNativeAN.removeAllFiredNotifications();
         const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 600000));
+        // 10 minutes = 600.000 miliseconds
+        // 5 minutes = 300.000 miliseconds.
+        // 1 hour = 3.600.000 miliseconds
+        // 24 hours = 86.400.000 miliseconds.
         const details = {
             ...alarmNotifData,
             fire_date: fireDates,

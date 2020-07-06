@@ -12,11 +12,10 @@ import moment from 'moment'
 // Notification Data Structure.
 const alarmNotifData = {
     schedule_type: "repeat",
-    repeat_interval: 5, // Repeat for 5 mins
-    channel: "",
+    repeat_interval: 5, // repeat for 5 mins
+    channel: "reminder",
     loop_sound: true,
-    message: "",
-    data: { content: "" }
+    message: "Take your Medicine",
 };
 
 export default class NewReminder extends React.Component {
