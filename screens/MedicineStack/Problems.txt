@@ -10,6 +10,8 @@ Problem 2: Modifying Alarm in Change Reminder is having problem (Need closer loo
 
 Problem 3: Need to add requirement that the remiders of the same medicine need to be at least one hour gap from each other
 
+Problem 4: Need to add condition if the input time is before the current time.
+
 Main Problem: interval is set as 1, regardless of "repeat_interval" value.
 
 Debug 1: alarm_id cannot be 0 because due to ANModule.java in ReactNativeAN,

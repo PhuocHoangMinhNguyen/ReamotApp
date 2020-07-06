@@ -19,13 +19,13 @@ import CalendarScreen from "./screens/CalendarStack/CalendarScreen";
 import MedicineScreen from "./screens/MedicineStack/MedicineScreen";
 import MediInfoScreen from "./screens/MedicineStack/MediInfoScreen";
 
-// React Native Alarm Notification
-//import NewReminderScreen from "./screens/MedicineStack/ReactNativeAlarmNotification/NewReminder";
-//import ChangeReminderScreen from "./screens/MedicineStack/ReactNativePushNotification/ChangeReminder";
+// Schedule Reminder
+//import NewReminderScreen from "./screens/MedicineStack/ScheduleReminder/NewReminder";
+//import ChangeReminderScreen from "./screens/MedicineStack/ScheduleReminder/ChangeReminder";
 
-// React Native Push Notification
-import NewReminderScreen from "./screens/MedicineStack/ReactNativePushNotification/NewReminder";
-import ChangeReminderScreen from "./screens/MedicineStack/ReactNativePushNotification/ChangeReminder";
+// Once Reminder
+import NewReminderScreen from "./screens/MedicineStack/OnceReminder/NewReminder";
+import ChangeReminderScreen from "./screens/MedicineStack/OnceReminder/ChangeReminder";
 
 import DoctorScreen from "./screens/DoctorStack/DoctorScreen";
 import DoctorInfoScreen from "./screens/DoctorStack/DoctorInfoScreen";

@@ -11,8 +11,6 @@ import moment from 'moment'
 
 // Notification Data Structure.
 const alarmNotifData = {
-    vibrate: true,
-    play_sound: true,
     schedule_type: "repeat",
     repeat_interval: 5, // repeat for 5 mins
     channel: "",
