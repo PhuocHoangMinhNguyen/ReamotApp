@@ -11,8 +11,6 @@ import moment from 'moment'
 
 // Notification Data Structure.
 const alarmNotifData = {
-    vibrate: true,
-    play_sound: true,
     schedule_type: "repeat",
     repeat_interval: 5, // Repeat for 5 mins
     channel: "",
@@ -72,7 +70,7 @@ export default class NewReminder extends React.Component {
     }
 
     getANid = async (details) => {
-        const { testDate, fireDate } = this.state.alarm;
+        const { testDate } = this.state.alarm;
         const { name } = this.state.medicine;
         // Get the alarm's "id", set it as idAN
         const alarm = await ReactNativeAN.getScheduledAlarms();
@@ -80,7 +78,6 @@ export default class NewReminder extends React.Component {
         for (let i = 0; i < alarm.length; i++) {
             if (alarm[i].alarmId == details.alarm_id) {
                 idAN = alarm[i].id
-                console.log("idAN: " + idAN)
             }
         }
         // Officially add the alarm details into Firebase, alarm id is also from countReminderId.toString()
@@ -99,7 +96,7 @@ export default class NewReminder extends React.Component {
     }
 
     scheduleAlarm = () => {
-        const { testDate, fireDate } = this.state.alarm;
+        const { fireDate } = this.state.alarm;
         const { name } = this.state.medicine;
         // Put more detail into Notification Data Structure, then set it as details for ReactNativeAN.
         // alarm_id is the new reminder id from countReminderId.toString(), to convert from int to string.
@@ -109,7 +106,6 @@ export default class NewReminder extends React.Component {
             title: name,
             alarm_id: this.state.countReminderId.toString(),
         };
-        console.log(`New Reminder - Check alarm_id in ReactNativeAN: ${details.alarm_id}`);
         // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details);
         this.getANid(details);
@@ -117,17 +113,12 @@ export default class NewReminder extends React.Component {
 
     getScheduledAlarms = async () => {
         const alarm = await ReactNativeAN.getScheduledAlarms();
-        console.log("Type Of Alarm: " + typeof (alarm))
         this.setState({
             alarm: {
                 ...this.state.alarm,
                 update: JSON.stringify(alarm)
             }
         });
-        console.log("Alarm Length: " + alarm.length)
-        for (let i = 0; i < alarm.length; i++) {
-            console.log(alarm[i].id);
-        }
     }
 
     showMode = () => {
@@ -168,7 +159,7 @@ export default class NewReminder extends React.Component {
                             source={
                                 this.state.medicine.image
                                     ? { uri: this.state.medicine.image }
-                                    : require("../../assets/tempAvatar.jpg")
+                                    : require("../../../assets/tempAvatar.jpg")
                             }
                             style={styles.image}
                         />

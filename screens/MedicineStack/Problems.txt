@@ -4,6 +4,9 @@ Problem 1: repeat_interval
 Problem 1: When the alarm is stopped using stopAlarmSound(), "update" is set to ''
 
 Problem 2: Modifying Alarm in Change Reminder is having problem (Need closer look into the problem)
+ - Doesnt delete the previous alarm before setting a new one (fixed)
+ - Doesnt save idAN attribute in Firestore (fixed)
+ - fireDate and testDate are not the same
 
 Problem 3: Need to add requirement that the remiders of the same medicine need to be at least one hour gap from each other
 
@@ -14,4 +17,6 @@ if alarm_id <= 0, it will be set as System.currentTimeMillis();
 
 Debug 2: deleteAlarm() is not working correctly, it takes argument as "id" instead of "alarm_id"
 
-Solution 1: deleteAlarm() somehow fixed (Need more test)
+Solution 1: deleteAlarm() fixed
+
+Solution 2: scheduleAlarm() in ChangeReminder somehow fixed

@@ -82,7 +82,6 @@ export default class ChangeReminder extends React.Component {
                 alarmID: tempId,
                 idAN: tempIdAN,
             })
-            console.log("Change Reminder - Check alarm ID in Firestore: " + this.state.alarmID)
         })
     }
 
@@ -91,22 +90,33 @@ export default class ChangeReminder extends React.Component {
     }
 
     getANid = async (details) => {
+        const { testDate } = this.state.alarm;
+        const { name } = this.state.medicine;
         // Get the NEW alarm's "id", set it as idAN
-        const alarm = ReactNativeAN.getScheduledAlarms();
+        const alarm = await ReactNativeAN.getScheduledAlarms();
         let idAN = ""
         for (let i = 0; i < alarm.length; i++) {
             if (alarm[i].alarmId == details.alarm_id) {
                 idAN = alarm[i].id
             }
         }
-        return idAN;
+        firestore().collection("reminder").doc(this.state.alarmID)
+            .update({
+                idAN: idAN,
+                medicine: name,
+                times: moment(testDate).format('hh:mm a'),
+                patientEmail: auth().currentUser.email,
+            }).then(() => {
+                Toast.show("Reminder Updated!")
+                this.props.navigation.goBack()
+            })
     }
 
     // set a NEW alarm, store it in firestore, and replace the existing alarm
     scheduleAlarm = () => {
         // Delete Existing Alarm
         ReactNativeAN.deleteAlarm(this.state.idAN.toString());
-        const { testDate, fireDate } = this.state.alarm;
+        const { fireDate } = this.state.alarm;
         const { name } = this.state.medicine;
         const details = {
             ...alarmNotifData,
@@ -115,17 +125,8 @@ export default class ChangeReminder extends React.Component {
             alarm_id: this.state.alarmID
         };
         console.log(`Change Reminder - Check alarm_id in ReactNativeAN: ${details.alarm_id}`);
-        ReactNativeAN.scheduleAlarm(details);
-        const idAN = this.getANid(details)
-        firestore().collection("reminder").doc(this.state.alarmID).set({
-            idAN: idAN,
-            medicine: name,
-            times: moment(testDate).format('hh:mm a'),
-            patientEmail: auth().currentUser.email,
-        }).then(() => {
-            Toast.show("Reminder Set!")
-        })
-        this.props.navigation.goBack()
+        ReactNativeAN.scheduleAlarm(details)
+        this.getANid(details)
     };
 
     // stop the current alarm sound
@@ -159,11 +160,8 @@ export default class ChangeReminder extends React.Component {
             .then(() => {
                 Toast.show("Reminder Deleted!")
             })
-        console.log("Change Reminder - Check AlarmID before Deleting: "
-            + firestore().collection("reminder").doc(this.state.alarmID).id)
         ReactNativeAN.stopAlarmSound();
         ReactNativeAN.removeAllFiredNotifications();
-        console.log("This.state.idAN: " + this.state.idAN)
         ReactNativeAN.deleteAlarm(this.state.idAN.toString());
         this.props.navigation.goBack()
     }
@@ -176,9 +174,6 @@ export default class ChangeReminder extends React.Component {
                 update: JSON.stringify(alarm)
             }
         });
-        for (let i = 0; i < alarm.length; i++) {
-            console.log(alarm[i].id);
-        }
     }
 
     showMode = () => {
@@ -198,6 +193,7 @@ export default class ChangeReminder extends React.Component {
                 ...this.state.alarm,
                 show: Platform.OS === 'ios',
                 testDate: currentDate,
+                fireDate: ReactNativeAN.parseDate(currentDate),
                 changed: true,
             }
         });
@@ -225,7 +221,7 @@ export default class ChangeReminder extends React.Component {
                             source={
                                 this.state.medicine.image
                                     ? { uri: this.state.medicine.image }
-                                    : require("../../assets/tempAvatar.jpg")
+                                    : require("../../../assets/tempAvatar.jpg")
                             }
                             style={styles.image}
                         />
