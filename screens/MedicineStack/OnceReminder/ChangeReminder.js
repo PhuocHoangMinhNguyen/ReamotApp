@@ -130,7 +130,7 @@ export default class ChangeReminder extends React.Component {
         const { name } = this.state.medicine
         ReactNativeAN.stopAlarmSound();
         ReactNativeAN.removeAllFiredNotifications();
-        const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 600000));
+        const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000));
         // 10 minutes = 600.000 miliseconds
         // 5 minutes = 300.000 miliseconds.
         // 1 hour = 3.600.000 miliseconds
