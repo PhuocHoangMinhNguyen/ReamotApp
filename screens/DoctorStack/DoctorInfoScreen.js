@@ -35,7 +35,7 @@ export default class DoctorInfoScreen extends React.Component {
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
-                    <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
+                    <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
                 <View style={styles.information}>
                     <Image
