@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth";
@@ -205,7 +205,7 @@ export default class ChangeReminder extends React.Component {
             message = initial
         }
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -273,7 +273,7 @@ export default class ChangeReminder extends React.Component {
                     </View>
                     <Text>{update}</Text>
                 </View>
-            </ScrollView>
+            </View>
         );
     }
 }
