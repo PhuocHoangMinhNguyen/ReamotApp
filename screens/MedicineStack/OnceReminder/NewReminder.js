@@ -9,6 +9,8 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 
+import vision, { VisionBarcodeValueType } from '@react-native-firebase/ml-vision';
+
 // Notification Data Structure.
 const alarmNotifData = {
     schedule_type: "once",
@@ -110,6 +112,9 @@ export default class NewReminder extends React.Component {
         this.getANid(details);
     };
 
+    /* This is used to check the scheduled Alarms 
+        - Uncomment only in testing phase
+        - Delete prior release
     getScheduledAlarms = async () => {
         const alarm = await ReactNativeAN.getScheduledAlarms();
         this.setState({
@@ -119,6 +124,7 @@ export default class NewReminder extends React.Component {
             }
         });
     }
+    */
 
     showMode = () => {
         this.setState({
@@ -138,6 +144,48 @@ export default class NewReminder extends React.Component {
                 show: Platform.OS === 'ios',
                 testDate: currentDate,
                 fireDate: ReactNativeAN.parseDate(currentDate)
+            }
+        });
+    }
+
+    processBarcodes = async (localPath) => {
+        const barcodes = await vision().barcodeDetectorProcessImage(localPath);
+
+        barcodes.forEach(barcode => {
+            if (barcode.valueType === VisionBarcodeValueType.CALENDAR_EVENT) {
+                console.log('Barcode is a calendar event: ', barcode.calendarEvent);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.CONTACT_INFO) {
+                console.log('Barcode contains contact info: ', barcode.contactInfo);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.DRIVER_LICENSE) {
+                console.log('Barcode contains drivers license info: ', barcode.driverLicense);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.EMAIL) {
+                console.log('Barcode contains email address info: ', barcode.email);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.GEO) {
+                console.log('Barcode contains location info: ', barcode.geoPoint);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.PHONE) {
+                console.log('Barcode contains phone number info: ', barcode.phone);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.SMS) {
+                console.log('Barcode contains SMS info: ', barcode.sms);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.URL) {
+                console.log('Barcode contains URL info: ', barcode.url);
+            }
+
+            if (barcode.valueType === VisionBarcodeValueType.WIFI) {
+                console.log('Barcode contains WIFI info: ', barcode.wifi);
             }
         });
     }
@@ -192,8 +240,8 @@ export default class NewReminder extends React.Component {
                     </View>
                     <View style={{ marginVertical: 5 }}>
                         <Button
-                            onPress={this.getScheduledAlarms}
-                            title="Get Scheduled Alarms"
+                            onPress={this.processBarcodes}
+                            title="Check Barcodes"
                             color="#018ABE"
                         />
                     </View>
