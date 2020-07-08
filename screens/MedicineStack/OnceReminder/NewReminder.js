@@ -33,7 +33,6 @@ export default class NewReminder extends React.Component {
             countReminderId: 0,
             medicine: {},
             alarm: {
-                update: '',
                 testDate: new Date(Date.now()),
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
                 show: false
@@ -148,50 +147,8 @@ export default class NewReminder extends React.Component {
         });
     }
 
-    processBarcodes = async (localPath) => {
-        const barcodes = await vision().barcodeDetectorProcessImage(localPath);
-
-        barcodes.forEach(barcode => {
-            if (barcode.valueType === VisionBarcodeValueType.CALENDAR_EVENT) {
-                console.log('Barcode is a calendar event: ', barcode.calendarEvent);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.CONTACT_INFO) {
-                console.log('Barcode contains contact info: ', barcode.contactInfo);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.DRIVER_LICENSE) {
-                console.log('Barcode contains drivers license info: ', barcode.driverLicense);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.EMAIL) {
-                console.log('Barcode contains email address info: ', barcode.email);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.GEO) {
-                console.log('Barcode contains location info: ', barcode.geoPoint);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.PHONE) {
-                console.log('Barcode contains phone number info: ', barcode.phone);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.SMS) {
-                console.log('Barcode contains SMS info: ', barcode.sms);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.URL) {
-                console.log('Barcode contains URL info: ', barcode.url);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.WIFI) {
-                console.log('Barcode contains WIFI info: ', barcode.wifi);
-            }
-        });
-    }
-
     render() {
-        const { update, testDate, show } = this.state.alarm;
+        const { testDate, show } = this.state.alarm;
         return (
             <View style={styles.container}>
                 <TouchableOpacity
@@ -238,14 +195,6 @@ export default class NewReminder extends React.Component {
                             color="#018ABE"
                         />
                     </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={() => { this.props.navigation.navigate("BarcodeScan") }}
-                            title="Check Barcodes"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <Text>{update}</Text>
                 </View>
             </View>
         );

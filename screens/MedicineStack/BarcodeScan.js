@@ -22,7 +22,11 @@ export default class BarcodeScan extends React.Component {
     }
 
     onBarCodeRead = (e) => {
-        this.props.navigation.navigate("NewReminder");
+        this.props.navigation.navigate("ChangeReminder", {
+            medicine: this.props.navigation.state.params.medicine,
+            itemTime: this.props.navigation.state.params.itemTime,
+            stopAlarm: true
+        });
         Alert.alert("Barcode value is" + e.data, "Barcode type is" + e.type);
     }
 

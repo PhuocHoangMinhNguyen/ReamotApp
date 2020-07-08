@@ -30,11 +30,11 @@ export default class ChangeReminder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            stopAlarm: false,
             idAN: "",
             alarmID: "",
             medicine: {},
             alarm: {
-                update: '',
                 // testDate is the date shown when time is picked
                 testDate: new Date(Date.now()),
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
@@ -56,6 +56,7 @@ export default class ChangeReminder extends React.Component {
         // Text value from params and put it as state.medicine
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
         this.setState({ medicine: paramsFromMediInfoScreen });
+
         // Text value from params and put it as state.alarm.initial
         let paramsTime = this.props.navigation.state.params.itemTime;
         this.setState({
@@ -64,6 +65,12 @@ export default class ChangeReminder extends React.Component {
                 initial: paramsTime
             }
         })
+
+        // stopAlarm
+        let paramsStopAlarm = this.props.navigation.state.params.stopAlarm;
+        this.setState({ stopAlarm: paramsStopAlarm })
+        if (this.state.stopAlarm == true) { this.stopAlarm }
+
         // Find the alarm Id of the reminder that is going to be changed.
         let tempId = ""
         let tempIdAN = ""
@@ -247,7 +254,7 @@ export default class ChangeReminder extends React.Component {
     }
 
     render() {
-        const { update, testDate, show, changed, initial } = this.state.alarm;
+        const { testDate, show, changed, initial } = this.state.alarm;
         let message;
         if (changed == true) {
             message = moment(testDate).format('hh:mm a')
@@ -302,7 +309,12 @@ export default class ChangeReminder extends React.Component {
                     </View>
                     <View style={{ marginVertical: 5 }}>
                         <Button
-                            onPress={this.stopAlarm}
+                            onPress={() => {
+                                this.props.navigation.navigate("BarcodeScan", {
+                                    medicine: this.props.navigation.state.params.medicine,
+                                    itemTime: this.props.navigation.state.params.itemTime
+                                })
+                            }}
                             title="Stop Alarm Sound"
                             color="#018ABE"
                         />
@@ -314,14 +326,6 @@ export default class ChangeReminder extends React.Component {
                             color="#018ABE"
                         />
                     </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={this.processBarcodes}
-                            title="Check Barcodes"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <Text>{update}</Text>
                 </View>
             </View>
         );
