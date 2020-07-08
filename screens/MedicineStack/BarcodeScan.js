@@ -1,87 +1,71 @@
-import React from "react";
+import React from 'react';
 import {
-    Text,
     View,
-    Item,
-    Icon,
-    Input,
-    Button
-} from 'native-base';
-import { KeyboardAvoidingView } from "react-native";
+    StyleSheet,
+    Alert,
+    TouchableOpacity,
+} from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import BarcodeMask from 'react-native-barcode-mask';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const styles = {
-    root: {
-        flex: 1,
-    },
-    upperSection: {
-        flex: 1
-    },
-    lowerSection: {
-        paddingVertical: 30,
-        paddingHorizontal: 20,
-        backgroundColor: 'white',
-    },
-    camera: {
-        height: '100%',
-    },
-};
-
-class BarcodeScan extends React.Component {
+export default class BarcodeScan extends React.Component {
+    static navigationOptions = {
+        headerShown: false,
+    };
 
     constructor(props) {
         super(props);
+        this.handleTourch = this.handleTourch.bind(this);
         this.state = {
-            barcode: ''
+            flashOn: false
         }
     }
 
-    onBarCodeRead = (scanResult) => {
-        // scanResult.data will contain your scanned data
+    onBarCodeRead = (e) => {
+        this.props.navigation.navigate("NewReminder");
+        Alert.alert("Barcode value is" + e.data, "Barcode type is" + e.type);
     }
 
-    onGetItemPress = () => {
-        // do something with button press
-    }
-
-    handleChange = () => {
-        // handle user input
+    handleTourch(value) {
+        if (value === true) {
+            this.setState({ flashOn: false });
+        } else {
+            this.setState({ flashOn: true });
+        }
     }
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.root}>  {/* OR Use a simple <View> instead of <KeyboardAvoidingView> */}
-                <View style={styles.upperSection}>
-                    <RNCamera
-                        onBarCodeRead={this.onBarCodeRead}
-                    // ... other related props of RNCamera
-                    >
-                        <BarcodeMask
-                            width={100} height={300} showAnimatedLine={false} outerMaskOpacity={0.8}
-                        />
-                    </RNCamera>
+            <View style={styles.container}>
+                <RNCamera
+                    style={styles.preview}
+                    onBarCodeRead={this.onBarCodeRead}
+                />
+                <View style={styles.bottomOverlay}>
+                    <TouchableOpacity onPress={() => this.handleTourch(this.state.flashOn)}>
+                        <Ionicons size={40} color="#FFF"
+                            name={this.state.flashOn === true ? "flash" : "flash-off"} />
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.lowerSection}>
-                    <Item>
-                        <Icon type={"Ionicons"} active name='md-barcode' />
-                        <Input
-                            placeholder='Barcode of the item'
-                            value={this.state.barcode}
-                            onChangeText={this.handleChange}
-                        />
-                    </Item>
-                    <Button
-                        primary
-                        onPress={this.onGetItemPress}
-                    >
-                        <Text>Get Item</Text>
-                    </Button>
-                </View>
-            </KeyboardAvoidingView>
+            </View>
         )
     }
-
 }
-
-export default BarcodeScan;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    preview: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
+    bottomOverlay: {
+        position: "absolute",
+        width: "100%",
+        flex: 20,
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+});

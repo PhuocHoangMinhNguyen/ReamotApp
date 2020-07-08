@@ -240,7 +240,7 @@ export default class NewReminder extends React.Component {
                     </View>
                     <View style={{ marginVertical: 5 }}>
                         <Button
-                            onPress={this.processBarcodes}
+                            onPress={() => { this.props.navigation.navigate("BarcodeScan") }}
                             title="Check Barcodes"
                             color="#018ABE"
                         />

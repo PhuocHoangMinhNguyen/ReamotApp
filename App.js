@@ -18,6 +18,7 @@ import CalendarScreen from "./screens/CalendarStack/CalendarScreen";
 
 import MedicineScreen from "./screens/MedicineStack/MedicineScreen";
 import MediInfoScreen from "./screens/MedicineStack/MediInfoScreen";
+import BarcodeScan from "./screens/MedicineStack/BarcodeScan";
 
 // Schedule Reminder
 //import NewReminderScreen from "./screens/MedicineStack/ScheduleReminder/NewReminder";
@@ -51,7 +52,8 @@ const MedicineStack = createStackNavigator(
     ListMedicine: MedicineScreen,
     MediInfo: MediInfoScreen,
     NewReminder: NewReminderScreen,
-    ChangeReminder: ChangeReminderScreen
+    ChangeReminder: ChangeReminderScreen,
+    BarcodeScan: BarcodeScan,
   },
   { initialRouteName: "ListMedicine" }
 );
