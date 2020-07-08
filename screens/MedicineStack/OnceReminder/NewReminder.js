@@ -9,8 +9,6 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 
-import vision, { VisionBarcodeValueType } from '@react-native-firebase/ml-vision';
-
 // Notification Data Structure.
 const alarmNotifData = {
     schedule_type: "once",
