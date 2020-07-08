@@ -48,7 +48,6 @@ export default class ChangeReminder extends React.Component {
             }
         };
         this.scheduleAlarm = this.scheduleAlarm.bind(this);
-        this.stopAlarm = this.stopAlarm.bind(this);
     }
 
     componentDidMount() {
@@ -65,11 +64,6 @@ export default class ChangeReminder extends React.Component {
                 initial: paramsTime
             }
         })
-
-        // stopAlarm
-        let paramsStopAlarm = this.props.navigation.state.params.stopAlarm;
-        this.setState({ stopAlarm: paramsStopAlarm })
-        if (this.state.stopAlarm == true) { this.stopAlarm }
 
         // Find the alarm Id of the reminder that is going to be changed.
         let tempId = ""
@@ -135,6 +129,7 @@ export default class ChangeReminder extends React.Component {
     };
 
     // stop the current alarm sound
+    /*
     stopAlarm = () => {
         const { name } = this.state.medicine
         ReactNativeAN.stopAlarmSound();
@@ -158,8 +153,9 @@ export default class ChangeReminder extends React.Component {
             time: moment().format('h:mm:ss a'),
             date: moment().format('MMMM Do YYYY')
         })
-        */
+        
     };
+    */
 
     // delete alarm from reminder collection in firestore
     deleteAlarm = () => {
@@ -312,7 +308,8 @@ export default class ChangeReminder extends React.Component {
                             onPress={() => {
                                 this.props.navigation.navigate("BarcodeScan", {
                                     medicine: this.props.navigation.state.params.medicine,
-                                    itemTime: this.props.navigation.state.params.itemTime
+                                    itemTime: this.props.navigation.state.params.itemTime,
+                                    alarmId: this.state.alarmID
                                 })
                             }}
                             title="Stop Alarm Sound"
