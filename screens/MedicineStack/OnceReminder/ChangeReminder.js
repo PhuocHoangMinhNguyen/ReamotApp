@@ -9,8 +9,6 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 
-import vision, { VisionBarcodeValueType } from '@react-native-firebase/ml-vision';
-
 // Notification Data Structure.
 const alarmNotifData = {
     schedule_type: "once",
@@ -128,35 +126,6 @@ export default class ChangeReminder extends React.Component {
         this.getANid(details)
     };
 
-    // stop the current alarm sound
-    /*
-    stopAlarm = () => {
-        const { name } = this.state.medicine
-        ReactNativeAN.stopAlarmSound();
-        ReactNativeAN.removeAllFiredNotifications();
-        const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000));
-        // 10 minutes = 600.000 miliseconds
-        // 5 minutes = 300.000 miliseconds.
-        // 1 hour = 3.600.000 miliseconds
-        // 24 hours = 86.400.000 miliseconds.
-        const details = {
-            ...alarmNotifData,
-            fire_date: fireDates,
-            title: name,
-            alarm_id: this.state.alarmID
-        };
-        ReactNativeAN.scheduleAlarm(details);
-        /*
-        firestore().collection("history").add({
-            medicine: name,
-            patientEmail: auth().currentUser.email,
-            time: moment().format('h:mm:ss a'),
-            date: moment().format('MMMM Do YYYY')
-        })
-        
-    };
-    */
-
     // delete alarm from reminder collection in firestore
     deleteAlarm = () => {
         // Delete the reminder from "reminder" collection
@@ -203,48 +172,6 @@ export default class ChangeReminder extends React.Component {
                 testDate: currentDate,
                 fireDate: ReactNativeAN.parseDate(currentDate),
                 changed: true,
-            }
-        });
-    }
-
-    processBarcodes = async (localPath) => {
-        const barcodes = await vision().barcodeDetectorProcessImage(localPath);
-
-        barcodes.forEach(barcode => {
-            if (barcode.valueType === VisionBarcodeValueType.CALENDAR_EVENT) {
-                console.log('Barcode is a calendar event: ', barcode.calendarEvent);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.CONTACT_INFO) {
-                console.log('Barcode contains contact info: ', barcode.contactInfo);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.DRIVER_LICENSE) {
-                console.log('Barcode contains drivers license info: ', barcode.driverLicense);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.EMAIL) {
-                console.log('Barcode contains email address info: ', barcode.email);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.GEO) {
-                console.log('Barcode contains location info: ', barcode.geoPoint);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.PHONE) {
-                console.log('Barcode contains phone number info: ', barcode.phone);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.SMS) {
-                console.log('Barcode contains SMS info: ', barcode.sms);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.URL) {
-                console.log('Barcode contains URL info: ', barcode.url);
-            }
-
-            if (barcode.valueType === VisionBarcodeValueType.WIFI) {
-                console.log('Barcode contains WIFI info: ', barcode.wifi);
             }
         });
     }
