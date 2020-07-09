@@ -91,7 +91,8 @@ export default class BarcodeScan extends React.Component {
             //Alert.alert("Barcode value is" + e.data, "Barcode type is" + e.type);
             Alert.alert("Alarm Sound is Stopped");
         } else {
-            Alert.alert("It is not the correct barcode");
+            Alert.alert("Barcode value is" + e.data, "Barcode Firebase is" + medicineBarcode);
+            //Alert.alert("It is not the correct barcode");
         }
     }
 
