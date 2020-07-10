@@ -8,7 +8,6 @@ import {
 import { RNCamera } from 'react-native-camera';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeAN from 'react-native-alarm-notification';
-import firestore from "@react-native-firebase/firestore"
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -28,6 +27,7 @@ export default class BarcodeScan extends React.Component {
         super(props);
         this.handleTourch = this.handleTourch.bind(this);
         this.state = {
+            barcode: "",
             alarmId: "",
             medicine: {},
             flashOn: false
@@ -51,17 +51,9 @@ export default class BarcodeScan extends React.Component {
     }
 
     onBarCodeRead = (e) => {
-        const { name } = this.state.medicine
+        const { name, barcode } = this.state.medicine
         const { alarmId } = this.state
-        let medicineBarcode = ""
-        firestore().collection("medicine").onSnapshot((querySnapshot) => {
-            querySnapshot.forEach((documentSnapshot) => {
-                if (documentSnapshot.data().name == this.state.medicine.name) {
-                    medicineBarcode = documentSnapshot.data().barcode
-                }
-            })
-        })
-        if (medicineBarcode == e.data) {
+        if (barcode == e.data) {
             ReactNativeAN.stopAlarmSound();
             ReactNativeAN.removeAllFiredNotifications();
             const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000));
@@ -88,10 +80,9 @@ export default class BarcodeScan extends React.Component {
                 date: moment().format('MMMM Do YYYY')
             })
             */
-            //Alert.alert("Barcode value is" + e.data, "Barcode type is" + e.type);
             Alert.alert("Alarm Sound is Stopped");
         } else {
-            Alert.alert("Barcode value is" + e.data, "Barcode Firebase is" + medicineBarcode);
+            Alert.alert("Barcode value is" + e.data, "Barcode Firebase is" + barcode);
             //Alert.alert("It is not the correct barcode");
         }
     }

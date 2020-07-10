@@ -66,7 +66,8 @@ export default class MedicineScreen extends React.Component {
     let dataInfor = {
       image: item.image,
       name: item.name,
-      description: item.description
+      description: item.description,
+      barcode: item.barcode
     };
     return (
       <TouchableOpacity
