@@ -26,3 +26,8 @@ Solution 2: scheduleAlarm() in ChangeReminder somehow fixed
 --------------------------------------
 July 9th 2020
 Problem: Cannot have 2 alarms at the same time, notifications will be overlapped.
+
+--------------------------------------
+July 11th 2020
+Problem 1: Barcode Scanned Twice
+Problem 2: Delete Alarm Bugging (Need a closer look)

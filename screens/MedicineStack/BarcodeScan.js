@@ -30,6 +30,7 @@ export default class BarcodeScan extends React.Component {
         super(props);
         this.handleTourch = this.handleTourch.bind(this);
         this.state = {
+            barcodeRead: false,
             barcode: "",
             alarmId: "",
             medicine: {},
@@ -55,37 +56,40 @@ export default class BarcodeScan extends React.Component {
 
     onBarCodeRead = (e) => {
         const { name, barcode } = this.state.medicine
-        const { alarmId } = this.state
-        if (barcode == e.data) {
-            ReactNativeAN.stopAlarmSound();
-            ReactNativeAN.removeAllFiredNotifications();
-            const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000));
-            // 10 minutes = 600.000 miliseconds
-            // 5 minutes = 300.000 miliseconds.
-            // 1 hour = 3.600.000 miliseconds
-            // 24 hours = 86.400.000 miliseconds.
-            const details = {
-                ...alarmNotifData,
-                fire_date: fireDates,
-                title: name,
-                alarm_id: alarmId
-            };
-            ReactNativeAN.scheduleAlarm(details);
-            this.props.navigation.navigate("ChangeReminder", {
-                medicine: this.props.navigation.state.params.medicine,
-                itemTime: this.props.navigation.state.params.itemTime,
-            });
-            firestore().collection("history").add({
-                medicine: name,
-                patientEmail: auth().currentUser.email,
-                time: moment().format('h:mm a'),
-                date: moment().format('MMMM Do YYYY'),
-                status: "taken"
-            })
-            Alert.alert("Alarm Sound is Stopped");
-        } else {
-            Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode);
-            //Alert.alert("It is not the correct barcode");
+        const { alarmId, barcodeRead } = this.state
+        this.setState({ barcodeRead: !barcodeRead })
+        if (this.state.barcodeRead == true) {
+            if (barcode == e.data) {
+                ReactNativeAN.stopAlarmSound();
+                ReactNativeAN.removeAllFiredNotifications();
+                const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000));
+                // 10 minutes = 600.000 miliseconds
+                // 5 minutes = 300.000 miliseconds.
+                // 1 hour = 3.600.000 miliseconds
+                // 24 hours = 86.400.000 miliseconds.
+                const details = {
+                    ...alarmNotifData,
+                    fire_date: fireDates,
+                    title: name,
+                    alarm_id: alarmId
+                };
+                ReactNativeAN.scheduleAlarm(details);
+                this.props.navigation.navigate("ChangeReminder", {
+                    medicine: this.props.navigation.state.params.medicine,
+                    itemTime: this.props.navigation.state.params.itemTime,
+                });
+                firestore().collection("history").add({
+                    medicine: name,
+                    patientEmail: auth().currentUser.email,
+                    time: moment().format('h:mm a'),
+                    date: moment().format('MMMM Do YYYY'),
+                    status: "taken"
+                })
+                Alert.alert("Alarm Sound is Stopped");
+            } else {
+                Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode);
+                //Alert.alert("It is not the correct barcode");
+            }
         }
     }
 
