@@ -29,5 +29,6 @@ Problem: Cannot have 2 alarms at the same time, notifications will be overlapped
 
 --------------------------------------
 July 11th 2020
-Problem 1: Barcode Scanned Twice
+Problem 1: The alarm currently reset after every "loop" starting from the time the alarm is turned off.
+            It should start from the time the alarm is set instead.
 Problem 2: Delete Alarm Bugging (Need a closer look)
