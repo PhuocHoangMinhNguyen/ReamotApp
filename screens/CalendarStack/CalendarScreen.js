@@ -88,6 +88,7 @@ export default class CalendarScreen extends React.Component {
   render() {
     return (
       <View>
+        <Text>{moment(this.state.testDate).format("MMM Do YYYY")}</Text>
         <FlatList
           style={styles.feed}
           data={this.state.medicine}
