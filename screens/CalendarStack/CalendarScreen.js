@@ -43,6 +43,7 @@ export default class CalendarScreen extends React.Component {
               temp2.push({
                 ...documentSnapshot2.data(),
                 time: this.state.history[i].time,
+                date: this.state.history[i].date,
                 key: documentSnapshot2.id,
               });
             }
@@ -67,7 +68,7 @@ export default class CalendarScreen extends React.Component {
   }
 
   renderItem(item) {
-    return (
+    const correctItem =
       <View style={styles.feedItem}>
         <Image
           source={
@@ -82,6 +83,12 @@ export default class CalendarScreen extends React.Component {
           <Text>{item.time}</Text>
         </View>
       </View>
+    let message;
+    if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
+      message = correctItem
+    }
+    return (
+      message
     );
   }
 
