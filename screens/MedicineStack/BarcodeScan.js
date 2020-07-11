@@ -8,6 +8,9 @@ import {
 import { RNCamera } from 'react-native-camera';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeAN from 'react-native-alarm-notification';
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import moment from "moment";
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -72,17 +75,16 @@ export default class BarcodeScan extends React.Component {
                 medicine: this.props.navigation.state.params.medicine,
                 itemTime: this.props.navigation.state.params.itemTime,
             });
-            /*
             firestore().collection("history").add({
                 medicine: name,
                 patientEmail: auth().currentUser.email,
-                time: moment().format('h:mm:ss a'),
-                date: moment().format('MMMM Do YYYY')
+                time: moment().format('h:mm a'),
+                date: moment().format('MMMM Do YYYY'),
+                status: "taken"
             })
-            */
             Alert.alert("Alarm Sound is Stopped");
         } else {
-            Alert.alert("Barcode value is" + e.data, "Barcode Firebase is" + barcode);
+            Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode);
             //Alert.alert("It is not the correct barcode");
         }
     }

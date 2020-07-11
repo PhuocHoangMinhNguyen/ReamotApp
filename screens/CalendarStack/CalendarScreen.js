@@ -3,6 +3,7 @@ import { StyleSheet, FlatList, Image, View, Text, Button } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from "moment";
 
 export default class CalendarScreen extends React.Component {
   static navigationOptions = {
@@ -13,32 +14,35 @@ export default class CalendarScreen extends React.Component {
     super(props);
     this.state = {
       medicine: [],
-      reminder: [],
+      history: [],
       show: false,
       testDate: new Date(Date.now()),
     }
   }
 
   componentDidMount() {
-    // Check from Reminder
-    firestore().collection("reminder").onSnapshot((querySnapshot) => {
+    // Check from History
+    firestore().collection("history").onSnapshot((querySnapshot) => {
       let temp = [];
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientName == auth().currentUser.email) {
-          temp.push(documentSnapshot.data().medicine);
+          temp.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
         }
       })
-      this.setState({ reminder: temp });
+      this.setState({ history: temp });
 
       // Check from Medicine
       let temp2 = [];
-      for (let i = 0; i < this.state.reminder.length; i++) {
-        firestore().collection("medicine").onSnapshot((queryReminderSnapshot) => {
-          queryReminderSnapshot.forEach((documentReminderSnapshot) => {
-            if (documentReminderSnapshot.data().name == this.state.reminder[i]) {
+      for (let i = 0; i < this.state.history.length; i++) {
+        firestore().collection("medicine").onSnapshot((querySnapshot2) => {
+          querySnapshot2.forEach((documentSnapshot2) => {
+            if (documentSnapshot2.data().name == this.state.history[i].medicine) {
               temp2.push({
-                ...documentReminderSnapshot.data(),
-                key: documentReminderSnapshot.id,
+                ...documentSnapshot2.data(),
+                key: documentSnapshot2.id,
               });
             }
           });
