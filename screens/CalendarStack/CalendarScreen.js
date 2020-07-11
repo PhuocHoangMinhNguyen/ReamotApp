@@ -88,7 +88,11 @@ export default class CalendarScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text>{moment(this.state.testDate).format("MMM Do YYYY")}</Text>
+        <View style={styles.testDateContainer}>
+          <Text style={styles.testDate}>
+            {moment(this.state.testDate).format("MMM Do YYYY")}
+          </Text>
+        </View>
         <FlatList
           style={styles.feed}
           data={this.state.medicine}
@@ -152,5 +156,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     flexDirection: "row",
     justifyContent: "space-between"
+  },
+  testDateContainer: {
+    alignItems: "center",
+    marginTop: 12
+  },
+  testDate: {
+    fontSize: 24,
   }
 });
