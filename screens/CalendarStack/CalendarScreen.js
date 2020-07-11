@@ -97,7 +97,7 @@ export default class CalendarScreen extends React.Component {
       <View>
         <View style={styles.testDateContainer}>
           <Text style={styles.testDate}>
-            {moment(this.state.testDate).format("MMM Do YYYY")}
+            {moment(this.state.testDate).format("MMMM Do YYYY")}
           </Text>
         </View>
         <FlatList

@@ -14,7 +14,6 @@ import RegisterScreen from "./screens/AuthStack/RegisterScreen";
 import HomeScreen from "./screens/HomeStack/BackEnd/HomeScreen";
 
 import CalendarScreen from "./screens/CalendarStack/CalendarScreen";
-//import ShowCalendar from "./screens/CalendarStack/ShowCalendar";
 
 import MedicineScreen from "./screens/MedicineStack/MedicineScreen";
 import MediInfoScreen from "./screens/MedicineStack/MediInfoScreen";
