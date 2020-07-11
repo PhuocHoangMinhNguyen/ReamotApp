@@ -25,7 +25,7 @@ export default class CalendarScreen extends React.Component {
     firestore().collection("history").onSnapshot((querySnapshot) => {
       let temp = [];
       querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientName == auth().currentUser.email) {
+        if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
@@ -42,6 +42,7 @@ export default class CalendarScreen extends React.Component {
             if (documentSnapshot2.data().name == this.state.history[i].medicine) {
               temp2.push({
                 ...documentSnapshot2.data(),
+                time: this.state.history[i].time,
                 key: documentSnapshot2.id,
               });
             }
@@ -76,7 +77,10 @@ export default class CalendarScreen extends React.Component {
           }
           style={styles.image}
         />
-        <Text style={styles.name}>{item.name}</Text>
+        <View style={styles.name}>
+          <Text>{item.name}</Text>
+          <Text>{item.time}</Text>
+        </View>
       </View>
     );
   }
