@@ -30,11 +30,13 @@ export default class BarcodeScan extends React.Component {
         super(props);
         this.handleTourch = this.handleTourch.bind(this);
         this.state = {
+            idAN: "",
             barcodeRead: false,
             barcode: "",
-            alarmId: "",
+            firebaseId: "",
             medicine: {},
-            flashOn: false
+            flashOn: false,
+            alarmId: Math.floor(Math.random() * 100).toString(),
         }
     }
 
@@ -46,22 +48,29 @@ export default class BarcodeScan extends React.Component {
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
         this.setState({ medicine: paramsFromMediInfoScreen });
 
-        let paramsAlarmId = this.props.navigation.state.params.alarmId;
-        this.setState({ alarmId: paramsAlarmId });
+        let paramsFirebaseId = this.props.navigation.state.params.firebaseId;
+        this.setState({ firebaseId: paramsFirebaseId });
+
+        let paramsIdAN = this.props.navigation.state.params.idAN;
+        this.setState({ idAN: paramsIdAN });
     }
 
     componentWillUnmount() {
         this._isMounted = false;
     }
 
-    onBarCodeRead = (e) => {
+    onBarCodeRead = async (e) => {
         const { name, barcode } = this.state.medicine
-        const { alarmId, barcodeRead } = this.state
+        const { firebaseId, barcodeRead, alarmId } = this.state
         this.setState({ barcodeRead: !barcodeRead })
         if (this.state.barcodeRead == true) {
             if (barcode == e.data) {
                 ReactNativeAN.stopAlarmSound();
                 ReactNativeAN.removeAllFiredNotifications();
+                // Might Need to delete current alarm
+                // ReactNativeAN.deleteAlarm(this.state.idAN.toString());
+                // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
+                // It should start from the time the alarm is set instead.
                 const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000));
                 // 10 minutes = 600.000 miliseconds
                 // 5 minutes = 300.000 miliseconds.
@@ -74,6 +83,19 @@ export default class BarcodeScan extends React.Component {
                     alarm_id: alarmId
                 };
                 ReactNativeAN.scheduleAlarm(details);
+                // Get the NEW alarm's "id", set it as idAN
+                const alarm = await ReactNativeAN.getScheduledAlarms();
+                let idAN = ""
+                for (let i = 0; i < alarm.length; i++) {
+                    if (alarm[i].alarmId == details.alarm_id) {
+                        idAN = alarm[i].id
+                    }
+                }
+                firestore().collection("reminder").doc(firebaseId)
+                    .update({
+                        idAN: idAN,
+                        alarmId: alarmId
+                    })
                 this.props.navigation.navigate("ChangeReminder", {
                     medicine: this.props.navigation.state.params.medicine,
                     itemTime: this.props.navigation.state.params.itemTime,

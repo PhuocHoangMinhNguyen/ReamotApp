@@ -104,6 +104,7 @@ export default class CalendarScreen extends React.Component {
           style={styles.feed}
           data={this.state.medicine}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={(item, index) => index.toString()}
         />
         <View style={styles.button}>
           <View />

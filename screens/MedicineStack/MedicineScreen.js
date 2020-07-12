@@ -118,6 +118,7 @@ export default class MedicineScreen extends React.Component {
           style={styles.feed}
           data={this.state.myArray}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={(item, index) => index.toString()}
         />
       </SafeAreaView>
     );

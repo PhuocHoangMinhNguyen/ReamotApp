@@ -12,9 +12,9 @@ import {
   ImageBackground,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import Toast from "react-native-simple-toast"
-import Ionicons from "react-native-vector-icons/Ionicons"
+import Toast from "react-native-simple-toast";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -68,7 +68,7 @@ export default class LoginScreen extends React.Component {
             marginLeft: 10
           }}
         />
-        <KeyboardAwareScrollView>
+        <ScrollView>
           <StatusBar barStyle="light-content" />
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
@@ -119,7 +119,7 @@ export default class LoginScreen extends React.Component {
               </Text>
             </Text>
           </TouchableOpacity>
-        </KeyboardAwareScrollView>
+        </ScrollView>
         <ImageBackground
           style={[styles.fixed, styles.containter, { zIndex: -1 }]}
           source={require("../../assets/registerBackground.png")}

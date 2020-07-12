@@ -28,7 +28,7 @@ export default class NewReminder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            reminderId: Math.floor(Math.random() * 100).toString(),
+            countReminderId: 0,
             medicine: {},
             alarm: {
                 update: '',
@@ -44,6 +44,24 @@ export default class NewReminder extends React.Component {
         this._isMounted = true
         let paramsFromMediInfoScreen = this.props.navigation.state.params;
         this.setState({ medicine: paramsFromMediInfoScreen });
+
+        // To decide the alarm Id of the new reminder for ReactNativeAN and Firebase
+        let temp = 0
+        firestore().collection("reminder").onSnapshot((querySnapshot) => {
+            // If the collection is not empty
+            if (querySnapshot.size) {
+                querySnapshot.forEach((documentSnapshot) => {
+                    // This is to make temp become the largest value of the Id in Firebase
+                    if (temp < parseInt(documentSnapshot.id)) {
+                        temp = parseInt(documentSnapshot.id)
+                    }
+                })
+                // To make temp be the new reminder ID
+            }
+            temp++
+            // Assign temp value to countReminderId.
+            this.setState({ countReminderId: temp })
+        })
     }
 
     componentWillUnmount() {
@@ -51,21 +69,20 @@ export default class NewReminder extends React.Component {
     }
 
     getANid = async (details) => {
-        const { testDate } = this.state.alarm
-        const { name } = this.state.medicine
-        const { reminderId } = this.state
+        const { testDate } = this.state.alarm;
+        const { name } = this.state.medicine;
         // Get the alarm's "id", set it as idAN
-        const alarm = await ReactNativeAN.getScheduledAlarms()
+        const alarm = await ReactNativeAN.getScheduledAlarms();
         let idAN = ""
         for (let i = 0; i < alarm.length; i++) {
             if (alarm[i].alarmId == details.alarm_id) {
                 idAN = alarm[i].id
             }
         }
-        // Officially add the alarm details into Firebase, alarm id is also from reminderId
+        // Officially add the alarm details into Firebase, alarm id is also from countReminderId.toString()
         firestore().collection("reminder")
-            .add({
-                alarmId: reminderId,
+            .doc(this.state.countReminderId.toString())
+            .set({
                 idAN: idAN,
                 medicine: name,
                 times: moment(testDate).format('hh:mm a'),
@@ -78,15 +95,15 @@ export default class NewReminder extends React.Component {
     }
 
     scheduleAlarm = () => {
-        const { fireDate } = this.state.alarm
-        const { name } = this.state.medicine
+        const { fireDate } = this.state.alarm;
+        const { name } = this.state.medicine;
         // Put more detail into Notification Data Structure, then set it as details for ReactNativeAN.
-        // alarm_id is the new reminder id from reminderId, to convert from int to string.
+        // alarm_id is the new reminder id from countReminderId.toString(), to convert from int to string.
         const details = {
             ...alarmNotifData,
             fire_date: fireDate,
             title: name,
-            alarm_id: this.state.reminderId,
+            alarm_id: this.state.countReminderId.toString(),
         };
         // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details);
@@ -98,7 +115,7 @@ export default class NewReminder extends React.Component {
         - Delete prior release
     */
     getScheduledAlarms = async () => {
-        const alarm = await ReactNativeAN.getScheduledAlarms()
+        const alarm = await ReactNativeAN.getScheduledAlarms();
         this.setState({
             alarm: {
                 ...this.state.alarm,

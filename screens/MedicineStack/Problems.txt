@@ -1,8 +1,6 @@
 July 5rd 2020
 Problem 1: repeat_interval
 
-Problem 1: When the alarm is stopped using stopAlarmSound(), "update" is set to ''
-
 Problem 2: Modifying Alarm in Change Reminder is having problem (Need closer look into the problem)
  - Doesnt delete the previous alarm before setting a new one (fixed)
  - Doesnt save idAN attribute in Firestore (fixed)
@@ -31,4 +29,14 @@ Problem: Cannot have 2 alarms at the same time, notifications will be overlapped
 July 11th 2020
 Problem 1: The alarm currently reset after every "loop" starting from the time the alarm is turned off.
             It should start from the time the alarm is set instead.
-Problem 2: Delete Alarm Bugging (Need a closer look)
+Problem 2: Should implement Click on Notification
+Main Problem: Delete Alarm Bugging (Need a closer look)
+    - More details: 
+        - If the new alarm has the same alarm_id as the deleted one, it wont be set.
+        - Instead of deleting the alarm, the package set the active value of the alarm as "off"
+        ==> If the new alarm has the same time as the "off" alarm, the alarm wont be set
+        ==> Already has a new request to fix it on Github. ==> Waiting for response.
+    - Reason: Havent found
+    - Solution:
+        - Solution 1 - Failed: Try to use stopAlarmSound instead of deleteAlarm
+        - Solution 2: Need to update the idAN in Firebase

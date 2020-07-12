@@ -9,6 +9,7 @@ import {
   StatusBar,
   Image,
   ImageBackground,
+  ScrollView
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ImagePicker from "react-native-image-picker";
@@ -16,8 +17,7 @@ import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
 import auth from "@react-native-firebase/auth";
 import UserPermissions from "../../utilities/UserPermissions";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import Toast from "react-native-simple-toast"
+import Toast from "react-native-simple-toast";
 
 export default class RegisterScreen extends React.Component {
   static navigationOptions = {
@@ -194,7 +194,7 @@ export default class RegisterScreen extends React.Component {
             />
           </TouchableOpacity>
         </View>
-        <KeyboardAwareScrollView>
+        <ScrollView>
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
               <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -213,7 +213,7 @@ export default class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 20 }}>
+            <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Email Address</Text>
               <TextInput
                 style={styles.input}
@@ -225,7 +225,7 @@ export default class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 20 }}>
+            <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Password</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
@@ -243,7 +243,7 @@ export default class RegisterScreen extends React.Component {
               </View>
             </View>
 
-            <View style={{ marginTop: 20 }}>
+            <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Contact Number</Text>
               <TextInput
                 style={styles.input}
@@ -261,7 +261,7 @@ export default class RegisterScreen extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 20 }}
+            style={{ alignSelf: "center", marginTop: 16 }}
             onPress={() => this.props.navigation.navigate("Login")}
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>
@@ -269,7 +269,7 @@ export default class RegisterScreen extends React.Component {
             <Text style={{ fontWeight: "500", color: "#018ABE" }}> Sign in</Text>
             </Text>
           </TouchableOpacity>
-        </KeyboardAwareScrollView>
+        </ScrollView>
         <ImageBackground
           style={[styles.fixed, styles.containter, { zIndex: -1 }]}
           source={require("../../assets/registerBackground.png")}
