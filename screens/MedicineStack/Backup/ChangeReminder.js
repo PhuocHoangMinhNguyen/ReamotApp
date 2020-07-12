@@ -29,6 +29,8 @@ export default class ChangeReminder extends React.Component {
         super(props);
         this.state = {
             stopAlarm: false,
+            // Use to delete
+            firebaseId: "",
             idAN: "",
             alarmID: "",
             medicine: {},
@@ -66,17 +68,20 @@ export default class ChangeReminder extends React.Component {
         // Find the alarm Id of the reminder that is going to be changed.
         let tempId = ""
         let tempIdAN = ""
+        let tempFirebase = ""
         firestore().collection("reminder").onSnapshot((querySnapshot) => {
             querySnapshot.forEach((documentSnapshot) => {
                 if (documentSnapshot.data().medicine == this.state.medicine.name
                     && documentSnapshot.data().patientEmail == auth().currentUser.email
                     && documentSnapshot.data().times == this.state.alarm.initial) {
-                    tempId = documentSnapshot.id
+                    tempFirebase = documentSnapshot.id
+                    tempId = documentSnapshot.data().alarmId
                     tempIdAN = documentSnapshot.data().idAN
                 }
             })
             // Assign temp to alarmID.
             this.setState({
+                firebaseId: tempFirebase,
                 alarmID: tempId,
                 idAN: tempIdAN,
             })
@@ -91,7 +96,7 @@ export default class ChangeReminder extends React.Component {
     // Having Problems
     deleteAlarm = () => {
         // Delete the reminder from "reminder" collection
-        firestore().collection("reminder").doc(this.state.alarmID).delete()
+        firestore().collection("reminder").doc(this.state.firebaseId).delete()
             .then(() => {
                 ReactNativeAN.deleteAlarm(this.state.idAN.toString());
                 Toast.show("Reminder Deleted!")
@@ -189,7 +194,7 @@ export default class ChangeReminder extends React.Component {
                                 this.props.navigation.navigate("BarcodeScan", {
                                     medicine: this.props.navigation.state.params.medicine,
                                     itemTime: this.props.navigation.state.params.itemTime,
-                                    alarmId: this.state.alarmID,
+                                    firebaseId: this.state.firebaseId,
                                     idAN: this.state.idAN
                                 })
                             }}

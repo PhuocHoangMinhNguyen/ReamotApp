@@ -31,7 +31,6 @@ export default class NewReminder extends React.Component {
             reminderId: Math.floor(Math.random() * 100).toString(),
             medicine: {},
             alarm: {
-                update: '',
                 testDate: new Date(Date.now()),
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
                 show: false
@@ -93,20 +92,6 @@ export default class NewReminder extends React.Component {
         this.getANid(details);
     };
 
-    /* This is used to check the scheduled Alarms 
-        - Uncomment only in testing phase
-        - Delete prior release
-    */
-    getScheduledAlarms = async () => {
-        const alarm = await ReactNativeAN.getScheduledAlarms()
-        this.setState({
-            alarm: {
-                ...this.state.alarm,
-                update: JSON.stringify(alarm)
-            }
-        });
-    }
-
     showMode = () => {
         this.setState({
             alarm: {
@@ -130,7 +115,7 @@ export default class NewReminder extends React.Component {
     }
 
     render() {
-        const { update, testDate, show } = this.state.alarm;
+        const { testDate, show } = this.state.alarm;
         return (
             <ScrollView style={styles.container}>
                 <TouchableOpacity
@@ -177,14 +162,6 @@ export default class NewReminder extends React.Component {
                             color="#018ABE"
                         />
                     </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={this.getScheduledAlarms}
-                            title="Get Scheduled Alarm"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <Text>{update}</Text>
                 </View>
             </ScrollView>
         );

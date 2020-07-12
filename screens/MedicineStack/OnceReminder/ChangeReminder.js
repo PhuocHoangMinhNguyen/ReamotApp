@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth";
@@ -35,7 +35,6 @@ export default class ChangeReminder extends React.Component {
             alarmID: "",
             medicine: {},
             alarm: {
-                update: '',
                 // testDate is the date shown when time is picked
                 testDate: new Date(Date.now()),
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
@@ -93,7 +92,6 @@ export default class ChangeReminder extends React.Component {
     }
 
     // delete alarm from reminder collection in firestore
-    // Having Problems
     deleteAlarm = () => {
         // Delete the reminder from "reminder" collection
         firestore().collection("reminder").doc(this.state.firebaseId).delete()
@@ -102,20 +100,6 @@ export default class ChangeReminder extends React.Component {
                 Toast.show("Reminder Deleted!")
                 this.props.navigation.goBack()
             })
-    }
-
-    /* This is used to check the scheduled Alarms 
-        - Uncomment only in testing phase
-        - Delete prior release
-    */
-    getScheduledAlarms = async () => {
-        const alarm = await ReactNativeAN.getScheduledAlarms();
-        this.setState({
-            alarm: {
-                ...this.state.alarm,
-                update: JSON.stringify(alarm)
-            }
-        });
     }
 
     showMode = () => {
@@ -142,7 +126,7 @@ export default class ChangeReminder extends React.Component {
     }
 
     render() {
-        const { update, testDate, show, changed, initial } = this.state.alarm;
+        const { testDate, show, changed, initial } = this.state.alarm;
         let message;
         if (changed == true) {
             message = moment(testDate).format('hh:mm a')
@@ -150,7 +134,7 @@ export default class ChangeReminder extends React.Component {
             message = initial
         }
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -209,16 +193,8 @@ export default class ChangeReminder extends React.Component {
                             color="#018ABE"
                         />
                     </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={this.getScheduledAlarms}
-                            title="Get Scheduled Alarm"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <Text>{update}</Text>
                 </View>
-            </ScrollView>
+            </View>
         );
     }
 }
