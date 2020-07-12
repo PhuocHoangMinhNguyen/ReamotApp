@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, FlatList, Image, View, Text, Button } from "react-native";
+import { StyleSheet, FlatList, Image, View, Text, Button, SafeAreaView } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -69,7 +69,7 @@ export default class CalendarScreen extends React.Component {
 
   renderItem(item) {
     const correctItem =
-      <View style={styles.feedItem}>
+      <SafeAreaView style={styles.feedItem}>
         <Image
           source={
             item.image
@@ -82,7 +82,7 @@ export default class CalendarScreen extends React.Component {
           <Text>{item.name}</Text>
           <Text>{item.time}</Text>
         </View>
-      </View>
+      </SafeAreaView>
     let message;
     if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
       message = correctItem
@@ -94,18 +94,12 @@ export default class CalendarScreen extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <View style={styles.testDateContainer}>
           <Text style={styles.testDate}>
             {moment(this.state.testDate).format("MMMM Do YYYY")}
           </Text>
         </View>
-        <FlatList
-          style={styles.feed}
-          data={this.state.medicine}
-          renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()}
-        />
         <View style={styles.button}>
           <View />
           <Button
@@ -125,6 +119,12 @@ export default class CalendarScreen extends React.Component {
             onChange={this.onChangeDate}
           />
         )}
+        <FlatList
+          style={styles.feed}
+          data={this.state.medicine}
+          renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
     );
   }
@@ -132,16 +132,15 @@ export default class CalendarScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: "#EBECF4",
   },
   feedItem: {
-    backgroundColor: "white",
-    flex: 1,
+    backgroundColor: "#FFF",
     borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-    marginTop: 17,
-    flexDirection: "row"
+    padding: 8,
+    flexDirection: "row",
+    marginVertical: 8,
   },
   image: {
     width: 50,
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
     color: "#454D65",
   },
   button: {
-    marginVertical: 15,
+    marginTop: 15,
     marginHorizontal: 30,
     flexDirection: "row",
     justifyContent: "space-between"
