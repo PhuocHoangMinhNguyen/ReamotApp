@@ -87,8 +87,6 @@ export default class RegisterScreen extends React.Component {
 
           db.set({ avatar: remoteUri }, { merge: true });
         }
-        Toast.show("Your account is created", Toast.LONG)
-        this.props.navigation.goBack()
       }
     } catch (error) {
       alert("Error: ", error);
