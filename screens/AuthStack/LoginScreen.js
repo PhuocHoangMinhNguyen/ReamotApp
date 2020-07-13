@@ -10,11 +10,11 @@ import {
   StatusBar,
   LayoutAnimation,
   ImageBackground,
+  ScrollView
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { ScrollView } from "react-native-gesture-handler";
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {

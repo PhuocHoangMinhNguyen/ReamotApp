@@ -52,7 +52,7 @@ export default class RegisterScreen extends React.Component {
       Toast.show("Please Enter A Password", Toast.LONG)
       console.log("Test")
     } else if (phoneNumber == "") {
-      Toast.show("Please Enter Cpntact Number", Toast.LONG)
+      Toast.show("Please Enter Contact Number", Toast.LONG)
       console.log("Test")
     } else {
       this.createUser(this.state.user);
@@ -87,6 +87,8 @@ export default class RegisterScreen extends React.Component {
 
           db.set({ avatar: remoteUri }, { merge: true });
         }
+        Toast.show("Your account is created", Toast.LONG)
+        this.props.navigation.goBack()
       }
     } catch (error) {
       alert("Error: ", error);
