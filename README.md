@@ -63,6 +63,33 @@ In your `AndroidManifest.xml`
      .....
 ```
 
+In your `android/build.gradle`
+
+```xml
+    .....
+    ext {
+        buildToolsVersion = "28.0.3"
+        minSdkVersion = 21
+        compileSdkVersion = 28
+        targetSdkVersion = 28
+    }
+    .....
+    dependencies {
+        .....
+        classpath 'com.google.gms:google-services:4.2.0'
+    }
+     .....
+```
+
+In your `android/app/build.gradle`
+
+```xml
+    .....
+    apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+    apply plugin: 'com.google.gms.google-services'
+     .....
+```
+
 ## Code Structure:
 The program including 6 stacks.
 
