@@ -68,6 +68,7 @@ Each stack is for an option in TabBarNavigation except AuthStack.
 ### ProfileStack
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Phuoc Hoang Minh Nguyen** - *Lead Developer* - [PhuocHoangMinhNguyen](https://github.com/PhuocHoangMinhNguyen)
+* **Quang Duy Nguyen** - *HomeStack and ProfileStack Developer* - [Duy1999](https://github.com/Duy1999)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/PhuocHoangMinhNguyen/ReamotReactNative/graphs/contributors) who participated in this project.
