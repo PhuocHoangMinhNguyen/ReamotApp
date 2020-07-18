@@ -61,30 +61,31 @@ The program including 6 stacks.
 
 Each stack is for an option in TabBarNavigation except AuthStack.
 
-### AuthStack
+#### AuthStack
 The stack includes Register and SignIn Screens.
 - Patient can register by providing their full name, email, password, and phone number
 - Patient can sign in using registered email and password.
 - If the patient already signs in, they dont have to sign in again next time they open the application on the same mobile device (thanks to LoadingScreen.js)
 
-### HomeStack
+#### HomeStack
+The stack includes the Home Screen of the application.
 
-### CalendarStack
-The stack shows history of the m
+#### CalendarStack
+The stack shows patient's medication taking history for each day.
 
-### MedicineStack
+#### MedicineStack
 The stack shows:
 - Patient's Medicine Information according to their prescription
 - Their Reminder including the name of the medicine and the time of the reminder
 - When the time of the reminder is reached, an alarm is sound and the patient has to scan the barcode of the medicine to stop the alarm.
 
-### DoctorStack
+#### DoctorStack
 The stack shows:
 - Doctor and Pharmacist list
 - Detail information for each doctor and pharmacist
 - Choices to give doctor/pharmacist their access to monitor their information, and/or to schedule appointments with doctor.
 
-### ProfileStack
+#### ProfileStack
 The stack allows users: 
 - to manage and edit their account
 - to manage their appointments with the doctors.
