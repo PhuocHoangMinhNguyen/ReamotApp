@@ -5,18 +5,17 @@ Reamot is a system, which will be developed with the aim to allow both doctors a
 Reamot is compromised of a mobile app (compatible with both iOS and Android) for patients to not only be reminded to take their medication but to also log in when they take it, as well as a webpage for doctors and pharmacists to gain access to their patient's habits and adherence to their advice. 
 
 ## Table of Contents
-<!--ts-->
-1. [Manual Installation] (#manual-installation)
-- [Android] (#android)
-2. [Code Structure] (#code-structure)
-- [AuthStack] (#authstack)
-- [HomeStack] (#homestack)
-- [CalendarStack] (#calendarstack)
-- [MedicineStack] (#medicinestack)
-- [DoctorStack] (#doctorstack)
-- [ProfileStack] (#profilestack)
-3. [Authors] (#authors)
-<!--te-->
+
+1. [Manual Installation](#manual-installation)
+    - [Android](#android)
+2. [Code Structure](#code-structure)
+    - [AuthStack](#authstack)
+    - [HomeStack](#homestack)
+    - [CalendarStack](#calendarstack)
+    - [MedicineStack](#medicinestack)
+    - [DoctorStack](#doctorstack)
+    - [ProfileStack](#profilestack)
+3. [Authors](#authors)
 
 ## Manual Installation
 #### Android
