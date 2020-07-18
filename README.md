@@ -1,7 +1,8 @@
 # Reamot
 
 Reamot is a system, which will be developed with the aim to allow both doctors and pharmacists to monitor the medication adherence of their patients. 
-In order for the system to work, it will be compromised of a mobile app (compatible with both iOS and Android) for patients to not only be reminded to take their medication but to also log in when they take it, as well as a webpage for doctors and pharmacists to gain access to their patient's habits and adherence to their advice. 
+
+Reamot is compromised of a mobile app (compatible with both iOS and Android) for patients to not only be reminded to take their medication but to also log in when they take it, as well as a webpage for doctors and pharmacists to gain access to their patient's habits and adherence to their advice. 
 
 ## Android manual Installation
 
@@ -61,11 +62,34 @@ The program including 6 stacks.
 Each stack is for an option in TabBarNavigation except AuthStack.
 
 ### AuthStack
+The stack includes Register and SignIn Screens.
+- Patient can register by providing their full name, email, password, and phone number
+- Patient can sign in using registered email and password.
+- If the patient already signs in, they dont have to sign in again next time they open the application on the same mobile device (thanks to LoadingScreen.js)
+
 ### HomeStack
+
 ### CalendarStack
+The stack shows history of the m
+
 ### MedicineStack
+The stack shows:
+- Patient's Medicine Information according to their prescription
+- Their Reminder including the name of the medicine and the time of the reminder
+- When the time of the reminder is reached, an alarm is sound and the patient has to scan the barcode of the medicine to stop the alarm.
+
 ### DoctorStack
+The stack shows:
+- Doctor and Pharmacist list
+- Detail information for each doctor and pharmacist
+- Choices to give doctor/pharmacist their access to monitor their information, and/or to schedule appointments with doctor.
+
 ### ProfileStack
+The stack allows users: 
+- to manage and edit their account
+- to manage their appointments with the doctors.
+- to log out of the application
+
 ## Authors
 
 * **Phuoc Hoang Minh Nguyen** - *Lead Developer* - [PhuocHoangMinhNguyen](https://github.com/PhuocHoangMinhNguyen)
