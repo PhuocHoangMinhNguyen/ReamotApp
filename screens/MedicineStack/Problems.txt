@@ -1,4 +1,9 @@
 
-Problem 1: deleteAlarm function in react-native-alarm-notification package wont delete the alarm but set it as Inactive 
+Problem 1 (Found Work Around): deleteAlarm function in react-native-alarm-notification package wont delete the alarm but set it as Inactive 
     ==> if alarm_id is the same as pre-set alarm, it wont be set.
     ==> Cannot be fixed, one work around as setting alarm_id using Math.floor(Math.random() * 1000) function.
+
+Problem 2 (Unsolved): 
+    - barcode occasionally scanned twice ==> Alarm set twice.
+    - Although the second alarm won't be set, however, it will still be updated in Cloud Firestore
+    ==> wrong idAN will be used to delete ==> Alarm won't be deleted.
