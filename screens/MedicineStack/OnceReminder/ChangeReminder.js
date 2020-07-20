@@ -29,6 +29,7 @@ export default class ChangeReminder extends React.Component {
         super(props)
         this.state = {
             medicine: {},
+            // Ids from Firebase.
             firebase: {
                 firebaseId: "",
                 idAN: "",
@@ -67,7 +68,7 @@ export default class ChangeReminder extends React.Component {
             }
         })
 
-        // Find the alarm Id of the reminder that is going to be changed.
+        // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
         let tempFirebase = ""
         firestore().collection("reminder").onSnapshot((querySnapshot) => {
@@ -79,7 +80,7 @@ export default class ChangeReminder extends React.Component {
                     tempIdAN = documentSnapshot.data().idAN
                 }
             })
-            // Assign temp to alarmID.
+            // Assign to firebaseId and idAN in state.firebase
             this.setState({
                 firebase: {
                     ...this.state.firebase,
@@ -90,18 +91,20 @@ export default class ChangeReminder extends React.Component {
         })
     }
 
-    // delete alarm from reminder collection in firestore
+    // delete alarm from "reminder" collection in firestore
     deleteAlarm = () => {
         const { firebaseId, idAN } = this.state.firebase
         // Delete the reminder from "reminder" collection
         firestore().collection("reminder").doc(firebaseId).delete()
             .then(() => {
+                // Delete Alarm using state.idAN
                 ReactNativeAN.deleteAlarm(idAN.toString())
                 Toast.show("Reminder Deleted!")
                 this.props.navigation.goBack()
             })
     }
 
+    // Show TimePicker
     showMode = () => {
         this.setState({
             timePicker: {
@@ -111,6 +114,7 @@ export default class ChangeReminder extends React.Component {
         })
     }
 
+    // When a time is chosen from TimePicker
     onChange = (event, selectedDate) => {
         const { testDate } = this.state.timePicker;
         let currentDate = selectedDate || testDate;
@@ -178,11 +182,11 @@ export default class ChangeReminder extends React.Component {
                     <View style={{ marginVertical: 5 }}>
                         <Button
                             onPress={() => {
+                                // To stop alarm sound, go to BarcodeScan
                                 this.props.navigation.navigate("BarcodeScan", {
                                     medicine: this.props.navigation.state.params.medicine,
                                     itemTime: this.props.navigation.state.params.itemTime,
                                     firebaseId: this.state.firebase.firebaseId,
-                                    idAN: this.state.firebase.idAN
                                 })
                             }}
                             title="Stop Alarm Sound"

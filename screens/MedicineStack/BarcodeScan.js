@@ -28,12 +28,15 @@ export default class BarcodeScan extends React.Component {
         super(props)
         this.handleTourch = this.handleTourch.bind(this)
         this.state = {
-            idAN: "",
+            //prevent the alarm to be read twice
             barcodeRead: false,
-            barcode: "",
+            // To update Firebase document data including idAN and alarmId
             firebaseId: "",
+            // medicine details
             medicine: {},
+            // Set flashOff by default
             flashOn: false,
+            // Details in Problems.txt file, Problem 1
             alarmId: Math.floor(Math.random() * 100).toString(),
         }
     }
@@ -47,10 +50,6 @@ export default class BarcodeScan extends React.Component {
         // Take value from params and put it as state.firebaseId
         let paramsFirebaseId = this.props.navigation.state.params.firebaseId
         this.setState({ firebaseId: paramsFirebaseId })
-
-        // Take value from params and put it as state.idAN
-        let paramsIdAN = this.props.navigation.state.params.idAN
-        this.setState({ idAN: paramsIdAN })
     }
 
     onBarCodeRead = async (e) => {
