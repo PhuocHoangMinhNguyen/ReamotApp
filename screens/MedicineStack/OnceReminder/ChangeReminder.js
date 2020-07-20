@@ -21,6 +21,8 @@ const alarmNotifData = {
 }
 
 export default class ChangeReminder extends React.Component {
+    _isMounted
+
     static navigationOptions = {
         headerShown: false,
     }
@@ -54,6 +56,7 @@ export default class ChangeReminder extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
@@ -89,6 +92,10 @@ export default class ChangeReminder extends React.Component {
                 }
             })
         })
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false
     }
 
     // delete alarm from "reminder" collection in firestore
