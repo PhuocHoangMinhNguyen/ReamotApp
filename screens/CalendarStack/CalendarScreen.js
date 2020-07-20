@@ -6,7 +6,7 @@ import React from "react"
 import { StyleSheet, FlatList, Image, View, Text, Button, SafeAreaView } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
-import DateTimePicker from '@react-native-community/datetimepicker'
+import DatePicker from '@react-native-community/datetimepicker'
 import moment from "moment"
 
 export default class CalendarScreen extends React.Component {
@@ -58,6 +58,7 @@ export default class CalendarScreen extends React.Component {
     })
   }
 
+  // Show DatePicker
   showMode = () => {
     this.setState({ show: true })
   }
@@ -113,7 +114,7 @@ export default class CalendarScreen extends React.Component {
           />
         </View>
         {this.state.show && (
-          <DateTimePicker
+          <DatePicker
             testID="dateTimePicker"
             timeZoneOffsetInMinutes={0}
             value={this.state.testDate}

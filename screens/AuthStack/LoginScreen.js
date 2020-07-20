@@ -32,10 +32,12 @@ export default class LoginScreen extends React.Component {
     showPassword: false
   }
 
+  // Handle Show, Hide Password
   handlePassword = () => {
     this.setState({ showPassword: !this.state.showPassword })
   }
 
+  // Handle Login using email and password.
   handleLogin = () => {
     const { password } = this.state
     // Solve the problem when there is space in the end of email by mistake

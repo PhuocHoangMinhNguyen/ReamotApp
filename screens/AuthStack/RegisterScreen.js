@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Register Screen
-// Status:
+// Status: Optimized
 
 import React from "react"
 import {

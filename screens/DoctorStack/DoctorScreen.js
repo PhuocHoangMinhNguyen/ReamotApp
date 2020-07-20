@@ -32,6 +32,7 @@ export default class DoctorScreen extends React.Component {
 
   componentDidMount() {
     let temp = []
+    // push doctor data into temp
     firestore().collection("doctor").onSnapshot((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         temp.push({
@@ -41,6 +42,7 @@ export default class DoctorScreen extends React.Component {
       })
     })
 
+    // push pharmacist data into temp
     firestore().collection("pharmacist").onSnapshot((querySnapshot) => {
       querySnapshot.forEach((documentSnapshot) => {
         temp.push({
@@ -48,6 +50,7 @@ export default class DoctorScreen extends React.Component {
           key: documentSnapshot.id,
         })
       })
+      // put temp data into myArray and doc_phar attributes of state
       this.setState({
         doc_phar: temp,
         myArray: temp,
@@ -56,10 +59,13 @@ export default class DoctorScreen extends React.Component {
     })
   }
 
+  // Click on each item in flatlist will lead user to doctorinfo screen 
+  // to show that doctor/pharmacist information with some options.
   handleClick = (dataInfor) => {
     this.props.navigation.navigate("DoctorInfo", dataInfor);
   }
 
+  // Information appears on each item.
   renderItem = (item) => {
     let dataInfor = {
       avatar: item.avatar,
@@ -85,6 +91,7 @@ export default class DoctorScreen extends React.Component {
     )
   }
 
+  // Responsible for SearchBar to work.
   searchFilterFunction(newText) {
     const newData = this.state.doc_phar.filter(function (item) {
       //applying filter for the inserted text in search bar

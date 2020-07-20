@@ -22,14 +22,18 @@ export default class DoctorInfoScreen extends React.Component {
     }
 
     componentDidMount() {
+        // Take doctor data from DoctorScreen, including avatar and name.
+        // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
         this.setState({ doctor: paramsFromDoctorScreen })
     }
 
-    handlePress = () => { this.setState({ dialogVisible: true }) }
+    // Give doctor access to user's data.
+    handleGiveAccessToDoctor = () => { this.setState({ dialogVisible: true }) }
 
+    // Send user to AppointmentScreen to choose appointment time and reason.
     handleSchedule = () => {
-        this.props.navigation.navigate("Appointment", this.props.navigation.state.params);
+        this.props.navigation.navigate("Appointment", this.props.navigation.state.params)
     }
 
     render() {
@@ -56,7 +60,7 @@ export default class DoctorInfoScreen extends React.Component {
                 <View style={{ marginVertical: 5 }}>
                     <Button
                         title="Give access of medical details"
-                        onPress={this.handlePress} />
+                        onPress={this.handleGiveAccessToDoctor} />
                 </View>
                 <View style={{ marginVertical: 5 }}>
                     <Button
