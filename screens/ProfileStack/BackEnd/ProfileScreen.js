@@ -1,35 +1,35 @@
-import React from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import React from "react"
+import { View, Text, StyleSheet, Button, Image } from "react-native"
+import auth from "@react-native-firebase/auth"
+import firestore from "@react-native-firebase/firestore"
 
 export default class ProfileScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       user: {}
     }
   }
 
-  unsubscribe = null;
+  unsubscribe = null
 
   componentDidMount() {
-    const user = this.props.uid || (auth().currentUser || {}).uid;
+    const user = this.props.uid || (auth().currentUser || {}).uid
 
     this.unsubscribe = firestore()
       .collection("users")
       .doc(user)
       .onSnapshot(doc => {
-        this.setState({ user: doc.data() });
-      });
+        this.setState({ user: doc.data() })
+      })
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribe()
   }
 
   handlePress = () => {
@@ -67,7 +67,7 @@ export default class ProfileScreen extends React.Component {
           />
         </View>
       </View>
-    );
+    )
   }
 }
 
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16
   }
-});
+})

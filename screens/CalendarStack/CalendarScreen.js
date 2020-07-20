@@ -1,17 +1,21 @@
-import React from "react";
-import { StyleSheet, FlatList, Image, View, Text, Button, SafeAreaView } from "react-native";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from "moment";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Used to show patient's taking medication history
+// Status: Optimized in function, need more design
+
+import React from "react"
+import { StyleSheet, FlatList, Image, View, Text, Button, SafeAreaView } from "react-native"
+import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth"
+import DateTimePicker from '@react-native-community/datetimepicker'
+import moment from "moment"
 
 export default class CalendarScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       medicine: [],
       history: [],
@@ -29,10 +33,10 @@ export default class CalendarScreen extends React.Component {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
-          });
+          })
         }
       })
-      this.setState({ history: temp });
+      this.setState({ history: temp })
 
       // Check from Medicine
       let temp2 = [];
@@ -48,7 +52,7 @@ export default class CalendarScreen extends React.Component {
               });
             }
           });
-          this.setState({ medicine: temp2 });
+          this.setState({ medicine: temp2 })
         })
       }
     })
@@ -83,7 +87,7 @@ export default class CalendarScreen extends React.Component {
           <Text>{item.time}</Text>
         </View>
       </SafeAreaView>
-    let message;
+    let message
     if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
       message = correctItem
     }
@@ -171,4 +175,4 @@ const styles = StyleSheet.create({
   testDate: {
     fontSize: 24,
   }
-});
+})

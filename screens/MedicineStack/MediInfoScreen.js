@@ -1,8 +1,12 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button, FlatList } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Show medicine details, and reminder for that medicine of that patient.
+// Status: In development
+
+import React from "react"
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button, FlatList } from "react-native"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth"
 import ViewMoreText from "react-native-view-more-text"
 
 export default class MediInfoScreen extends React.Component {
@@ -10,28 +14,28 @@ export default class MediInfoScreen extends React.Component {
 
   static navigationOptions = {
     headerShown: false,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       medicine: {},
       prescription: {},
       reminder: [],
       arraySize: 0,
-    };
+    }
   }
 
   componentDidMount() {
     this._isMounted = true
     //Get data from Medicine Screen
-    let paramsFromMedicineScreen = this.props.navigation.state.params;
-    this.setState({ medicine: paramsFromMedicineScreen });
+    let paramsFromMedicineScreen = this.props.navigation.state.params
+    this.setState({ medicine: paramsFromMedicineScreen })
 
     // Get Prescription data to know number of times.
     firestore().collection("prescription").onSnapshot((querySnapshot) => {
-      let tempValue = 0;
-      let tempValue2 = 0;
+      let tempValue = 0
+      let tempValue2 = 0
 
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
@@ -45,13 +49,13 @@ export default class MediInfoScreen extends React.Component {
           times: tempValue,
           number: tempValue2
         }
-      });
+      })
     })
 
     // Get Reminder data
     firestore().collection("reminder").onSnapshot((querySnapshot) => {
-      let temp = [];
-      let counting = 0;
+      let temp = []
+      let counting = 0
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
           && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
@@ -59,15 +63,15 @@ export default class MediInfoScreen extends React.Component {
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
-          counting++;
+          counting++
         }
-      });
-      this.setState({ reminder: temp, arraySize: counting });
+      })
+      this.setState({ reminder: temp, arraySize: counting })
     })
-  };
+  }
 
   componentWillUnmount() {
-    this._isMounted = false;
+    this._isMounted = false
   }
 
   handleNewReminder = () => {
@@ -78,7 +82,6 @@ export default class MediInfoScreen extends React.Component {
     this.props.navigation.navigate("ChangeReminder", {
       medicine: this.props.navigation.state.params,
       itemTime: item.times,
-      //stopAlarm: false
     })
   }
 
@@ -100,11 +103,11 @@ export default class MediInfoScreen extends React.Component {
       <View style={styles.prescription}>
         <Text style={styles.time}>{item.times}</Text>
         <Button style={styles.edit} title="Edit" onPress={() => this.handleChangeReminder(itemDetails)} />
-      </View>;
+      </View>
     const emptyItem =
       <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
         <Text style={{ fontSize: 18 }}>+ Add Reminder</Text>
-      </TouchableOpacity>;
+      </TouchableOpacity>
     let message;
     if (item == "null") {
       message = emptyItem
@@ -163,7 +166,7 @@ export default class MediInfoScreen extends React.Component {
           keyExtractor={(item, index) => index.toString()}
         />
       </View>
-    );
+    )
   }
 }
 
@@ -230,4 +233,4 @@ const styles = StyleSheet.create({
   repeat: {
     fontSize: 18
   },
-});
+})

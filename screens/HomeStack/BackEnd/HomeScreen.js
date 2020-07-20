@@ -1,7 +1,11 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React from "react"
+import { View, Text, StyleSheet } from "react-native"
 
 export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    headerShown: false,
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -17,4 +21,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-});
+})

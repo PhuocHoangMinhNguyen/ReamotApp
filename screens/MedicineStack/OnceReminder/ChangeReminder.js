@@ -1,12 +1,15 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Allow patient to delete their reminder and stop sounding alarm
+// Status: In development
+
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth";
+import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
-
-import ReactNativeAN from 'react-native-alarm-notification';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import ReactNativeAN from 'react-native-alarm-notification'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
 // Notification Data Structure.
@@ -16,7 +19,7 @@ const alarmNotifData = {
     loop_sound: true,
     //small_icon: "ic_launcher",
     message: "Take your Medicine",
-};
+}
 
 export default class ChangeReminder extends React.Component {
     _isMounted = false
@@ -46,17 +49,17 @@ export default class ChangeReminder extends React.Component {
                 // which is the reminder time value inside firestore before editing.
                 initial: ''
             }
-        };
+        }
     }
 
     componentDidMount() {
         this._isMounted = true
         // Text value from params and put it as state.medicine
-        let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine;
-        this.setState({ medicine: paramsFromMediInfoScreen });
+        let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
+        this.setState({ medicine: paramsFromMediInfoScreen })
 
         // Text value from params and put it as state.alarm.initial
-        let paramsTime = this.props.navigation.state.params.itemTime;
+        let paramsTime = this.props.navigation.state.params.itemTime
         this.setState({
             alarm: {
                 ...this.state.alarm,
@@ -96,7 +99,7 @@ export default class ChangeReminder extends React.Component {
         // Delete the reminder from "reminder" collection
         firestore().collection("reminder").doc(this.state.firebaseId).delete()
             .then(() => {
-                ReactNativeAN.deleteAlarm(this.state.idAN.toString());
+                ReactNativeAN.deleteAlarm(this.state.idAN.toString())
                 Toast.show("Reminder Deleted!")
                 this.props.navigation.goBack()
             })
@@ -122,7 +125,7 @@ export default class ChangeReminder extends React.Component {
                 fireDate: ReactNativeAN.parseDate(currentDate),
                 changed: true,
             }
-        });
+        })
     }
 
     render() {
@@ -195,7 +198,7 @@ export default class ChangeReminder extends React.Component {
                     </View>
                 </View>
             </View>
-        );
+        )
     }
 }
 
@@ -242,4 +245,4 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },
-});
+})

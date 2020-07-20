@@ -1,15 +1,27 @@
-import React from "react";
-import { View, Text, SafeAreaView, StyleSheet, FlatList, TouchableOpacity, Image } from "react-native";
-import { SearchBar } from "react-native-elements";
-import firestore from "@react-native-firebase/firestore";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
+// Status: In development
+
+import React from "react"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Image
+} from "react-native"
+import { SearchBar } from "react-native-elements"
+import firestore from "@react-native-firebase/firestore"
 
 export default class DoctorScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       loading: true,
       doc_phar: [],
@@ -19,33 +31,29 @@ export default class DoctorScreen extends React.Component {
   }
 
   componentDidMount() {
-    let temp = [];
-    firestore()
-      .collection("doctor")
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          temp.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-        });
-      });
+    let temp = []
+    firestore().collection("doctor").onSnapshot((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        temp.push({
+          ...documentSnapshot.data(),
+          key: documentSnapshot.id,
+        })
+      })
+    })
 
-    firestore()
-      .collection("pharmacist")
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          temp.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-        });
-        this.setState({
-          doc_phar: temp,
-          myArray: temp,
-          loading: false,
-        });
-      });
+    firestore().collection("pharmacist").onSnapshot((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        temp.push({
+          ...documentSnapshot.data(),
+          key: documentSnapshot.id,
+        })
+      })
+      this.setState({
+        doc_phar: temp,
+        myArray: temp,
+        loading: false,
+      })
+    })
   }
 
   handleClick = (dataInfor) => {
@@ -56,12 +64,12 @@ export default class DoctorScreen extends React.Component {
     let dataInfor = {
       avatar: item.avatar,
       name: item.name,
-    };
+    }
     return (
       <TouchableOpacity
         style={styles.feedItem}
         onPress={() => {
-          this.handleClick(dataInfor);
+          this.handleClick(dataInfor)
         }}
       >
         <Image
@@ -74,20 +82,20 @@ export default class DoctorScreen extends React.Component {
         />
         <Text style={styles.name}>{item.name}</Text>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   searchFilterFunction(newText) {
     const newData = this.state.doc_phar.filter(function (item) {
       //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
-      const textData = newText.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
+      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
+      const textData = newText.toUpperCase()
+      return itemData.indexOf(textData) > -1
+    })
     this.setState({
       myArray: newData,
       text: newText,
-    });
+    })
   }
 
   render() {
@@ -108,7 +116,7 @@ export default class DoctorScreen extends React.Component {
           renderItem={({ item }) => this.renderItem(item)}
         />
       </SafeAreaView>
-    );
+    )
   }
 }
 
@@ -145,4 +153,4 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#454D65",
   },
-});
+})

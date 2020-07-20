@@ -1,11 +1,11 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import React from "react"
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export default class AppointmentList extends React.Component {
     static navigationOptions = {
         headerShown: false,
-    };
+    }
 
     render() {
         return (
@@ -18,7 +18,7 @@ export default class AppointmentList extends React.Component {
                 </TouchableOpacity>
                 <Text>Appointment List</Text>
             </View>
-        );
+        )
     }
 }
 
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-});
+})

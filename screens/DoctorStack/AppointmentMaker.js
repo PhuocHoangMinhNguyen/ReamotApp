@@ -1,20 +1,24 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Toast from "react-native-simple-toast";
-import { ConfirmDialog } from "react-native-simple-dialogs";
-import TimePicker from "@react-native-community/datetimepicker";
-import moment from "moment";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
+// Status: In development
+
+import React from "react"
+import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput } from "react-native"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import Toast from "react-native-simple-toast"
+import { ConfirmDialog } from "react-native-simple-dialogs"
+import TimePicker from "@react-native-community/datetimepicker"
+import moment from "moment"
+import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth"
 
 export default class AppointmentMaker extends React.Component {
     static navigationOptions = {
         headerShown: false,
-    };
+    }
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             doctor: {},
             dialogVisible: false,
@@ -27,8 +31,8 @@ export default class AppointmentMaker extends React.Component {
     }
 
     componentDidMount() {
-        let paramsFromDoctorScreen = this.props.navigation.state.params;
-        this.setState({ doctor: paramsFromDoctorScreen });
+        let paramsFromDoctorScreen = this.props.navigation.state.params
+        this.setState({ doctor: paramsFromDoctorScreen })
     }
 
     showModeDate = () => {
@@ -40,21 +44,21 @@ export default class AppointmentMaker extends React.Component {
     }
 
     onChangeDate = (event, selectedDate) => {
-        const { testDate } = this.state;
+        const { testDate } = this.state
         let currentDate = selectedDate || testDate;
         this.setState({
             showDate: Platform.OS === 'ios',
             testDate: currentDate,
-        });
+        })
     }
 
     onChangeTime = (event, selectedTime) => {
-        const { testTime } = this.state;
-        let currentTime = selectedTime || testTime;
+        const { testTime } = this.state
+        let currentTime = selectedTime || testTime
         this.setState({
             showTime: Platform.OS === 'ios',
             testTime: currentTime,
-        });
+        })
     }
 
     handlePress = () => { this.setState({ dialogVisible: true }) }
@@ -148,7 +152,7 @@ export default class AppointmentMaker extends React.Component {
                     }}
                 />
             </View>
-        );
+        )
     }
 }
 
@@ -198,4 +202,4 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginVertical: 8
     }
-});
+})

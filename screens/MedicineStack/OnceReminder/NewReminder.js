@@ -1,12 +1,15 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Allow patient to make a new reminder
+// Status: In development
+
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
-
-import ReactNativeAN from 'react-native-alarm-notification';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import ReactNativeAN from 'react-native-alarm-notification'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
 // Notification Data Structure.
@@ -14,9 +17,8 @@ const alarmNotifData = {
     schedule_type: "once",
     channel: "reminder",
     loop_sound: true,
-    //small_icon: "ic_launcher",
     message: "Take your Medicine",
-};
+}
 
 export default class NewReminder extends React.Component {
     _isMounted = false
@@ -26,7 +28,7 @@ export default class NewReminder extends React.Component {
     };
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             reminderId: Math.floor(Math.random() * 100).toString(),
             medicine: {},
@@ -36,17 +38,17 @@ export default class NewReminder extends React.Component {
                 show: false
             }
         };
-        this.scheduleAlarm = this.scheduleAlarm.bind(this);
+        this.scheduleAlarm = this.scheduleAlarm.bind(this)
     }
 
     componentDidMount() {
         this._isMounted = true
-        let paramsFromMediInfoScreen = this.props.navigation.state.params;
-        this.setState({ medicine: paramsFromMediInfoScreen });
+        let paramsFromMediInfoScreen = this.props.navigation.state.params
+        this.setState({ medicine: paramsFromMediInfoScreen })
     }
 
     componentWillUnmount() {
-        this._isMounted = false;
+        this._isMounted = false
     }
 
     getANid = async (details) => {
@@ -88,8 +90,8 @@ export default class NewReminder extends React.Component {
             alarm_id: this.state.reminderId,
         };
         // Officially make a new alarm with information from details.
-        ReactNativeAN.scheduleAlarm(details);
-        this.getANid(details);
+        ReactNativeAN.scheduleAlarm(details)
+        this.getANid(details)
     };
 
     showMode = () => {
@@ -102,8 +104,8 @@ export default class NewReminder extends React.Component {
     }
 
     onChange = (event, selectedDate) => {
-        const { testDate } = this.state.alarm;
-        let currentDate = selectedDate || testDate;
+        const { testDate } = this.state.alarm
+        let currentDate = selectedDate || testDate
         this.setState({
             alarm: {
                 ...this.state.alarm,
@@ -115,7 +117,7 @@ export default class NewReminder extends React.Component {
     }
 
     render() {
-        const { testDate, show } = this.state.alarm;
+        const { testDate, show } = this.state.alarm
         return (
             <View style={styles.container}>
                 <TouchableOpacity
@@ -164,7 +166,7 @@ export default class NewReminder extends React.Component {
                     </View>
                 </View>
             </View>
-        );
+        )
     }
 }
 
@@ -212,4 +214,4 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },
-});
+})

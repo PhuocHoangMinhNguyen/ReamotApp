@@ -1,11 +1,15 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
+// Status: In development
+
+import React from "react"
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export default class AppointmentList extends React.Component {
     static navigationOptions = {
         headerShown: false,
-    };
+    }
 
     render() {
         return (
@@ -18,7 +22,7 @@ export default class AppointmentList extends React.Component {
                 </TouchableOpacity>
                 <Text>Appointment List</Text>
             </View>
-        );
+        )
     }
 }
 
@@ -39,4 +43,4 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-});
+})

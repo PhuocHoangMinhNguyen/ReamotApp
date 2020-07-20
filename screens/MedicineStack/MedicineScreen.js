@@ -1,4 +1,8 @@
-import React from "react";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Show the list of medicines that is in patient's prescriptions
+// Status: In development
+
+import React from "react"
 import {
   StyleSheet,
   FlatList,
@@ -7,10 +11,10 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
-} from "react-native";
-import { SearchBar } from "react-native-elements";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
+} from "react-native"
+import { SearchBar } from "react-native-elements"
+import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth"
 
 export default class MedicineScreen extends React.Component {
   static navigationOptions = {
@@ -18,7 +22,7 @@ export default class MedicineScreen extends React.Component {
   };
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       loading: true,
       medicines: [],
@@ -52,14 +56,14 @@ export default class MedicineScreen extends React.Component {
             medicines: temp2,
             myArray: temp2,
             loading: false,
-          });
-        });
+          })
+        })
       }
-    });
+    })
   }
 
   handleClick = (dataInfor) => {
-    this.props.navigation.navigate("MediInfo", dataInfor);
+    this.props.navigation.navigate("MediInfo", dataInfor)
   }
 
   renderItem = (item) => {
@@ -73,7 +77,7 @@ export default class MedicineScreen extends React.Component {
       <TouchableOpacity
         style={styles.feedItem}
         onPress={() => {
-          this.handleClick(dataInfor);
+          this.handleClick(dataInfor)
         }}
       >
         <Image
@@ -92,9 +96,9 @@ export default class MedicineScreen extends React.Component {
   searchFilterFunction(newText) {
     const newData = this.state.medicines.filter(function (item) {
       //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
-      const textData = newText.toUpperCase();
-      return itemData.indexOf(textData) > -1;
+      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
+      const textData = newText.toUpperCase()
+      return itemData.indexOf(textData) > -1
     });
     this.setState({
       myArray: newData,
@@ -158,4 +162,4 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#454D65",
   },
-});
+})

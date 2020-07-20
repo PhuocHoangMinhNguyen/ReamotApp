@@ -1,4 +1,8 @@
-import React from "react";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Sign In Screen
+// Status: Optimized
+
+import React from "react"
 import {
   Dimensions,
   View,
@@ -11,51 +15,54 @@ import {
   LayoutAnimation,
   ImageBackground,
   ScrollView
-} from "react-native";
-import auth from "@react-native-firebase/auth";
-import Toast from "react-native-simple-toast";
-import Ionicons from "react-native-vector-icons/Ionicons";
+} from "react-native"
+import auth from "@react-native-firebase/auth"
+import Toast from "react-native-simple-toast"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
     headerShown: false
-  };
+  }
 
   state = {
     email: "",
     password: "",
     errorMessage: null,
     showPassword: false
-  };
+  }
 
   handlePassword = () => {
     this.setState({ showPassword: !this.state.showPassword })
   }
 
   handleLogin = () => {
-    const { email, password } = this.state;
+    const { password } = this.state
+    // Solve the problem when there is space in the end of email by mistake
+    const email = this.state.email.trim()
 
-    if (email.trim == "") {
+    if (email == "") {
       Toast.show("Please Enter Email Information", Toast.LONG)
     } else if (password == "") {
       Toast.show("Please Enter Password", Toast.LONG)
     } else {
       auth()
         .signInWithEmailAndPassword(email, password)
-        .catch(error => this.setState({ errorMessage: error.message }));
+        .catch(error => this.setState({ errorMessage: error.message }))
     }
-  };
+  }
 
   render() {
-    const showPass = <Ionicons name="ios-eye" size={24} />;
-    const hidePass = <Ionicons name="ios-eye-off" size={24} />;
-    let message;
+    // This pass is for show, hide password icon.
+    const showPass = <Ionicons name="ios-eye" size={24} />
+    const hidePass = <Ionicons name="ios-eye-off" size={24} />
+    let message
     if (this.state.showPassword == false) {
-      message = hidePass;
+      message = hidePass
     } else {
-      message = showPass;
+      message = showPass
     }
-    LayoutAnimation.easeInEaseOut();
+    LayoutAnimation.easeInEaseOut()
     return (
       <View style={{ flex: 1 }}>
         <Image
@@ -188,4 +195,4 @@ const styles = StyleSheet.create({
     borderBottomColor: "#8A8F9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-});
+})

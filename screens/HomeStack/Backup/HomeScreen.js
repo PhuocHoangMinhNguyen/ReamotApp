@@ -1,7 +1,15 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Used as a backup plan for HomeStack
+// Status: In development
+
+import React from "react"
+import { View, Text, StyleSheet } from "react-native"
 
 export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    headerShown: false,
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -17,4 +25,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-});
+})

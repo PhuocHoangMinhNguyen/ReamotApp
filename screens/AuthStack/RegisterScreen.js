@@ -1,4 +1,8 @@
-import React from "react";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Register Screen
+// Status:
+
+import React from "react"
 import {
   Dimensions,
   View,
@@ -10,19 +14,19 @@ import {
   Image,
   ImageBackground,
   ScrollView
-} from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import ImagePicker from "react-native-image-picker";
-import firestore from "@react-native-firebase/firestore";
-import storage from "@react-native-firebase/storage";
-import auth from "@react-native-firebase/auth";
-import UserPermissions from "../../utilities/UserPermissions";
-import Toast from "react-native-simple-toast";
+} from "react-native"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import ImagePicker from "react-native-image-picker"
+import firestore from "@react-native-firebase/firestore"
+import storage from "@react-native-firebase/storage"
+import auth from "@react-native-firebase/auth"
+import UserPermissions from "../../utilities/UserPermissions"
+import Toast from "react-native-simple-toast"
 
 export default class RegisterScreen extends React.Component {
   static navigationOptions = {
     headerShown: false
-  };
+  }
 
   state = {
     user: {
@@ -34,7 +38,7 @@ export default class RegisterScreen extends React.Component {
     },
     errorMessage: null,
     showPassword: false
-  };
+  }
 
   handlePassword = () => {
     this.setState({ showPassword: !this.state.showPassword })
@@ -55,48 +59,50 @@ export default class RegisterScreen extends React.Component {
       Toast.show("Please Enter Contact Number", Toast.LONG)
       console.log("Test")
     } else {
-      this.createUser(this.state.user);
+      this.createUser(this.state.user)
     }
   };
 
   createUser = async user => {
-    let remoteUri = null;
-
+    let remoteUri = null
     try {
       await auth()
         .createUserWithEmailAndPassword(user.email, user.password)
-        .catch(error => this.setState({ errorMessage: error.message }));
+        .catch(error => this.setState({ errorMessage: error.message }))
 
+      // If there is no error.
       if (this.state.errorMessage == null) {
         let db = firestore()
           .collection("users")
-          .doc((auth().currentUser || {}).uid);
+          .doc((auth().currentUser || {}).uid)
 
         db.set({
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,
           avatar: null
-        });
+        })
 
+        // If the user choose an avatar,
         if (user.avatar) {
+          // Store the avatar in Firebase Storage
           remoteUri = await this.uploadPhotoAsync(
             user.avatar,
             `users/${(auth().currentUser || {}).uid}`
           );
-
-          db.set({ avatar: remoteUri }, { merge: true });
+          // Then Store the avatar in Cloud Firestore
+          db.set({ avatar: remoteUri }, { merge: true })
         }
       }
     } catch (error) {
-      alert("Error: ", error);
+      alert("Error: ", error)
     }
   };
 
   uploadPhotoAsync = (uri, filename) => {
     return new Promise(async (res, rej) => {
-      const response = await fetch(uri);
-      const file = await response.blob();
+      const response = await fetch(uri)
+      const file = await response.blob()
 
       let upload = storage()
         .ref(filename)
@@ -109,15 +115,15 @@ export default class RegisterScreen extends React.Component {
           rej(err);
         },
         async () => {
-          const url = await upload.snapshot.ref.getDownloadURL();
+          const url = await upload.snapshot.ref.getDownloadURL()
           res(url);
         }
-      );
-    });
-  };
+      )
+    })
+  }
 
   handlePickAvatar = async () => {
-    UserPermissions.getPhotoPermission();
+    UserPermissions.getPhotoPermission()
 
     var options = {
       title: "Select Image",
@@ -131,34 +137,34 @@ export default class RegisterScreen extends React.Component {
     };
 
     let result = await ImagePicker.showImagePicker(options, response => {
-      console.log("Response = ", response);
+      console.log("Response = ", response)
 
       if (response.didCancel) {
-        console.log("User cancelled image picker");
+        console.log("User cancelled image picker")
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
+        console.log("ImagePicker Error: ", response.error)
       } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
-        alert(response.customButton);
+        console.log("User tapped custom button: ", response.customButton)
+        alert(response.customButton)
       } else {
-        let source = response.uri;
+        let source = response.uri
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
           user: { ...this.state.user, avatar: source }
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   render() {
-    const showPass = <Ionicons name="ios-eye" size={24} />;
-    const hidePass = <Ionicons name="ios-eye-off" size={24} />;
+    const showPass = <Ionicons name="ios-eye" size={24} />
+    const hidePass = <Ionicons name="ios-eye-off" size={24} />
     let message;
     if (this.state.showPassword == false) {
-      message = hidePass;
+      message = hidePass
     } else {
-      message = showPass;
+      message = showPass
     }
     return (
       <View style={{ flex: 1 }}>
@@ -275,7 +281,7 @@ export default class RegisterScreen extends React.Component {
           source={require("../../assets/registerBackground.png")}
         />
       </View>
-    );
+    )
   }
 }
 const styles = StyleSheet.create({
@@ -374,4 +380,4 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50
   }
-});
+})

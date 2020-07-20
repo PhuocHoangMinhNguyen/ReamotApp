@@ -1,25 +1,29 @@
-import React from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Toast from "react-native-simple-toast";
-import { ConfirmDialog } from "react-native-simple-dialogs";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
+// Status: In development
+
+import React from "react"
+import { View, Image, Text, StyleSheet, TouchableOpacity, Button } from "react-native"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import Toast from "react-native-simple-toast"
+import { ConfirmDialog } from "react-native-simple-dialogs"
 
 export default class DoctorInfoScreen extends React.Component {
     static navigationOptions = {
         headerShown: false,
-    };
+    }
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             doctor: {},
             dialogVisible: false
-        };
+        }
     }
 
     componentDidMount() {
-        let paramsFromDoctorScreen = this.props.navigation.state.params;
-        this.setState({ doctor: paramsFromDoctorScreen });
+        let paramsFromDoctorScreen = this.props.navigation.state.params
+        this.setState({ doctor: paramsFromDoctorScreen })
     }
 
     handlePress = () => { this.setState({ dialogVisible: true }) }
@@ -80,7 +84,7 @@ export default class DoctorInfoScreen extends React.Component {
                     }}
                 />
             </View >
-        );
+        )
     }
 }
 
@@ -112,4 +116,4 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100
     },
-});
+})

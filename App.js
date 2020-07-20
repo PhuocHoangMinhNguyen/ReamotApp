@@ -1,5 +1,23 @@
-import React from "react";
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Responsible for app structure:
+//    - AuthStack (StackNavigator): RegisterScreen, LoginScreen
+//    - AppContainer:
+//      - HomeStack (StackNavigator): HomeScreen
+//      - CalendarStack (StackNavigator): CalendarScreen
+//      - MedicineStack (StackNavigator):
+//        - MedicineScreen,
+//        - MediInfoScreen,
+//        - NewReminderScreen,
+//        - ChangeReminderScreen,
+//        - BarcodeScan,
+//      - DoctorStack (StackNavigator):
+//        - DoctorScreen,
+//        - DoctorInfoScreen,
+//        - Appointment
+//      - ProfileStack (StackNavigator): AppointmentList, ProfileScreen
+// Status: In development.
 
+import React from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -34,17 +52,24 @@ import Appointment from "./screens/DoctorStack/AppointmentMaker";
 import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
 import AppointmentList from "./screens/ProfileStack/BackEnd/AppointmentList";
 
-// TODO(you): import any additional firebase services that you require for your app, e.g for auth:
-//    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
-//       run linking commands - this happens automatically at build time now
-//    2) rebuild your app via `yarn run run:android` or `yarn run run:ios`
-//    3) import the package here in your JavaScript code: `import '@react-native-firebase/auth';`
-//    4) The Firebase Auth service is now available to use here: `firebase.auth().currentUser`
-
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
   Register: RegisterScreen
 });
+
+const HomeStack = createStackNavigator(
+  {
+    Home: HomeScreen,
+  },
+  { initialRouteName: "Home" }
+)
+
+const CalendarStack = createStackNavigator(
+  {
+    Calendar: CalendarScreen,
+  },
+  { initialRouteName: "Calendar" }
+)
 
 const MedicineStack = createStackNavigator(
   {
@@ -56,14 +81,6 @@ const MedicineStack = createStackNavigator(
   },
   { initialRouteName: "ListMedicine" }
 );
-
-const CalendarStack = createStackNavigator(
-  {
-    Calendar: CalendarScreen,
-    //ShowCalendar: ShowCalendar
-  },
-  { initialRouteName: "Calendar" }
-)
 
 const DoctorStack = createStackNavigator(
   {
@@ -87,7 +104,7 @@ const AppContainer = createStackNavigator(
     default: createBottomTabNavigator(
       {
         Home: {
-          screen: HomeScreen,
+          screen: HomeStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Ionicons name="ios-home" size={24} color={tintColor} />
