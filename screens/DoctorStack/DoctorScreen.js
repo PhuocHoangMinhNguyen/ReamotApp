@@ -38,6 +38,7 @@ export default class DoctorScreen extends React.Component {
         temp.push({
           ...documentSnapshot.data(),
           key: documentSnapshot.id,
+          type: "Doctor"
         })
       })
     })
@@ -48,6 +49,7 @@ export default class DoctorScreen extends React.Component {
         temp.push({
           ...documentSnapshot.data(),
           key: documentSnapshot.id,
+          type: "Pharmacist"
         })
       })
       // put temp data into myArray and doc_phar attributes of state
@@ -62,7 +64,7 @@ export default class DoctorScreen extends React.Component {
   // Click on each item in flatlist will lead user to doctorinfo screen 
   // to show that doctor/pharmacist information with some options.
   handleClick = (dataInfor) => {
-    this.props.navigation.navigate("DoctorInfo", dataInfor);
+    this.props.navigation.navigate("DoctorInfo", dataInfor)
   }
 
   // Information appears on each item.
@@ -70,6 +72,7 @@ export default class DoctorScreen extends React.Component {
     let dataInfor = {
       avatar: item.avatar,
       name: item.name,
+      type: item.type,
     }
     return (
       <TouchableOpacity
@@ -86,7 +89,10 @@ export default class DoctorScreen extends React.Component {
           }
           style={styles.avatar}
         />
-        <Text style={styles.name}>{item.name}</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text>{item.type}</Text>
+        </View>
       </TouchableOpacity>
     )
   }
@@ -155,7 +161,6 @@ const styles = StyleSheet.create({
     marginLeft: 8
   },
   name: {
-    flex: 1,
     fontSize: 15,
     fontWeight: "500",
     color: "#454D65",

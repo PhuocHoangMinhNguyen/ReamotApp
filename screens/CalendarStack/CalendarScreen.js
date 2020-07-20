@@ -83,8 +83,8 @@ export default class CalendarScreen extends React.Component {
           }
           style={styles.image}
         />
-        <View style={styles.name}>
-          <Text>{item.name}</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.name}>{item.name}</Text>
           <Text>{item.time}</Text>
         </View>
       </SafeAreaView>
@@ -158,7 +158,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   name: {
-    flex: 1,
     fontSize: 15,
     fontWeight: "500",
     color: "#454D65",
