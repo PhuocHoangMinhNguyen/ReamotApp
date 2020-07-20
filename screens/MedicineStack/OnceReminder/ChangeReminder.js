@@ -17,19 +17,16 @@ const alarmNotifData = {
     schedule_type: "once",
     channel: "reminder",
     loop_sound: true,
-    //small_icon: "ic_launcher",
     message: "Take your Medicine",
 }
 
 export default class ChangeReminder extends React.Component {
-    _isMounted = false
-
     static navigationOptions = {
         headerShown: false,
-    };
+    }
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             stopAlarm: false,
             // Use to delete
@@ -53,7 +50,6 @@ export default class ChangeReminder extends React.Component {
     }
 
     componentDidMount() {
-        this._isMounted = true
         // Text value from params and put it as state.medicine
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
         this.setState({ medicine: paramsFromMediInfoScreen })
@@ -88,10 +84,6 @@ export default class ChangeReminder extends React.Component {
                 idAN: tempIdAN,
             })
         })
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 
     // delete alarm from reminder collection in firestore

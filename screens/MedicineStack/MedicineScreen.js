@@ -19,7 +19,7 @@ import auth from "@react-native-firebase/auth"
 export default class MedicineScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
-  };
+  }
 
   constructor(props) {
     super(props)
@@ -33,6 +33,7 @@ export default class MedicineScreen extends React.Component {
   }
 
   componentDidMount() {
+    // To take user's medicine based on medicine listed in "prescription" collection.
     firestore().collection("prescription").onSnapshot((queryPrescriptionSnapshot) => {
       let temp = []
       queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
@@ -62,10 +63,13 @@ export default class MedicineScreen extends React.Component {
     })
   }
 
+  // Click on each item in flatlist will lead user to MediInforScreen 
+  // to show that medicine details with reminders.
   handleClick = (dataInfor) => {
     this.props.navigation.navigate("MediInfo", dataInfor)
   }
 
+  // Information appears on each item.
   renderItem = (item) => {
     let dataInfor = {
       image: item.image,
@@ -90,20 +94,21 @@ export default class MedicineScreen extends React.Component {
         />
         <Text style={styles.name}>{item.name}</Text>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
+  // Responsible for SearchBar to work.
   searchFilterFunction(newText) {
     const newData = this.state.medicines.filter(function (item) {
       //applying filter for the inserted text in search bar
       const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
       const textData = newText.toUpperCase()
       return itemData.indexOf(textData) > -1
-    });
+    })
     this.setState({
       myArray: newData,
       text: newText,
-    });
+    })
   }
 
   render() {
@@ -125,7 +130,7 @@ export default class MedicineScreen extends React.Component {
           keyExtractor={(item, index) => index.toString()}
         />
       </SafeAreaView>
-    );
+    )
   }
 }
 

@@ -1,45 +1,4 @@
-July 5rd 2020
-Problem 1: repeat_interval
 
-Problem 2: Modifying Alarm in Change Reminder is having problem (Need closer look into the problem)
- - Doesnt delete the previous alarm before setting a new one (fixed)
- - Doesnt save idAN attribute in Firestore (fixed)
- - fireDate and testDate are not the same
-
-Problem 3: Need to add requirement that the remiders of the same medicine need to be at least one hour gap from each other
-
-Problem 4: Need to add condition if the input time is before the current time.
-
-Main Problem: interval is set as 1, regardless of "repeat_interval" value.
-
-Debug 1: alarm_id cannot be 0 because due to ANModule.java in ReactNativeAN,
-if alarm_id <= 0, it will be set as System.currentTimeMillis();
-
-Debug 2: deleteAlarm() is not working correctly, it takes argument as "id" instead of "alarm_id"
-
-Solution 1: deleteAlarm() fixed
-
-Solution 2: scheduleAlarm() in ChangeReminder somehow fixed
-
---------------------------------------
-July 9th 2020
-Problem: Cannot have 2 alarms at the same time, notifications will be overlapped.
-
---------------------------------------
-July 11th 2020
-Main Problem: Delete Alarm Bugging (Need a closer look)
-    - More details: 
-        - If the new alarm has the same alarm_id as the deleted one, it wont be set.
-        - Instead of deleting the alarm, the package set the active value of the alarm as "off"
-        ==> If the new alarm has the same time as the "off" alarm, the alarm wont be set
-        ==> Already has a new request to fix it on Github. ==> Waiting for response.
-    - Reason: Havent found
-    - Solution:
-        - Solution 1 - Failed: Try to use stopAlarmSound instead of deleteAlarm
-        - Solution 2: Need to update the idAN in Firebase
-
---------------------------------------
-July 12th 2020
-Problem 1: The alarm currently reset after every "loop" starting from the time the alarm is turned off.
-            It should start from the time the alarm is set instead.
-Problem 2: Should implement Click on Notification
+Problem 1: deleteAlarm function in react-native-alarm-notification package wont delete the alarm but set it as Inactive 
+    ==> if alarm_id is the same as pre-set alarm, it wont be set.
+    ==> Cannot be fixed, one work around as setting alarm_id using Math.floor(Math.random() * 1000) function.

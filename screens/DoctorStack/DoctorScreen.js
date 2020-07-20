@@ -61,7 +61,7 @@ export default class DoctorScreen extends React.Component {
     })
   }
 
-  // Click on each item in flatlist will lead user to doctorinfo screen 
+  // Click on each item in flatlist will lead user to DoctorInfoScreen 
   // to show that doctor/pharmacist information with some options.
   handleClick = (dataInfor) => {
     this.props.navigation.navigate("DoctorInfo", dataInfor)

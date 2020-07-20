@@ -10,7 +10,6 @@ import auth from "@react-native-firebase/auth"
 import ViewMoreText from "react-native-view-more-text"
 
 export default class MediInfoScreen extends React.Component {
-  _isMounted = false
 
   static navigationOptions = {
     headerShown: false,
@@ -27,12 +26,13 @@ export default class MediInfoScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true
-    //Get data from Medicine Screen
+    // Take medicine data from MedicineScreen, including image, name, description, and barcode.
+    // => Faster than accessing Cloud Firestore again.
     let paramsFromMedicineScreen = this.props.navigation.state.params
     this.setState({ medicine: paramsFromMedicineScreen })
 
-    // Get Prescription data to know number of times.
+    // Get Prescription data from Cloud Firestore to know number of capsules taken per time, 
+    // and number of times to take medicine per day.
     firestore().collection("prescription").onSnapshot((querySnapshot) => {
       let tempValue = 0
       let tempValue2 = 0
@@ -52,7 +52,7 @@ export default class MediInfoScreen extends React.Component {
       })
     })
 
-    // Get Reminder data
+    // Get Reminder data of that patient and that medicine.
     firestore().collection("reminder").onSnapshot((querySnapshot) => {
       let temp = []
       let counting = 0
@@ -70,10 +70,6 @@ export default class MediInfoScreen extends React.Component {
     })
   }
 
-  componentWillUnmount() {
-    this._isMounted = false
-  }
-
   handleNewReminder = () => {
     this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
   }
@@ -85,18 +81,29 @@ export default class MediInfoScreen extends React.Component {
     })
   }
 
+  // Handle View More Text in medicine's description
   renderViewMore(onPress) {
     return (
       <Text onPress={onPress} style={{ color: '#018ABE' }}>View More</Text>
     )
   }
 
+  // Handle View Less Text in medicine's description
   renderViewLess(onPress) {
     return (
       <Text onPress={onPress} style={{ color: '#018ABE' }}>View less</Text>
     )
   }
 
+  // Information appears on each item of Flatlist.
+  //
+  // If the number of reminder set by that patient for that medicine is lower than
+  // times the patient has to take that medicine per day according to "prescription" document in Firebase,
+  // some emptyItem will be shown.
+  //
+  // If the number of reminder set by that patient for that medicine is equal or largert than
+  // times the patient has to take that medicine per day according to "prescription" document in Firebase,
+  // all emptyItem will be replace by nonEmptyItem
   renderItem = (item) => {
     const itemDetails = item
     const nonEmptyItem =
@@ -118,6 +125,10 @@ export default class MediInfoScreen extends React.Component {
   }
 
   render() {
+    // This is to make the number of element in "reminder" equal to times the patient
+    // has to take that medicine per day according to "prescription" document in Firebase.
+    // If reminder size is lower, fill reminder array with null values.
+    // ==> To support renderItem function above.
     if (this.state.arraySize < this.state.prescription.times) {
       for (let i = this.state.arraySize; i < this.state.prescription.times; i++) {
         this.state.reminder.push("null")

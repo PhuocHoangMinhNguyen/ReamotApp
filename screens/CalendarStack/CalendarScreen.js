@@ -69,7 +69,7 @@ export default class CalendarScreen extends React.Component {
     this.setState({
       show: Platform.OS === 'ios',
       testDate: currentDate,
-    });
+    })
   }
 
   renderItem(item) {
@@ -94,7 +94,7 @@ export default class CalendarScreen extends React.Component {
     }
     return (
       message
-    );
+    )
   }
 
   render() {
@@ -131,7 +131,7 @@ export default class CalendarScreen extends React.Component {
           keyExtractor={(item, index) => index.toString()}
         />
       </View>
-    );
+    )
   }
 }
 

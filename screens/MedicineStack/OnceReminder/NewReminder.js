@@ -21,8 +21,6 @@ const alarmNotifData = {
 }
 
 export default class NewReminder extends React.Component {
-    _isMounted = false
-
     static navigationOptions = {
         headerShown: false,
     };
@@ -30,7 +28,8 @@ export default class NewReminder extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            reminderId: Math.floor(Math.random() * 100).toString(),
+            // Details in Problems.txt file, Problem 1
+            reminderId: Math.floor(Math.random() * 1000).toString(),
             medicine: {},
             alarm: {
                 testDate: new Date(Date.now()),
@@ -42,13 +41,10 @@ export default class NewReminder extends React.Component {
     }
 
     componentDidMount() {
-        this._isMounted = true
-        let paramsFromMediInfoScreen = this.props.navigation.state.params
-        this.setState({ medicine: paramsFromMediInfoScreen })
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false
+        // Take medicine data from MedicineScreen, including image, name, description, and barcode.
+        // => Faster than accessing Cloud Firestore again.
+        let paramsFromMedicineScreen = this.props.navigation.state.params
+        this.setState({ medicine: paramsFromMedicineScreen })
     }
 
     getANid = async (details) => {

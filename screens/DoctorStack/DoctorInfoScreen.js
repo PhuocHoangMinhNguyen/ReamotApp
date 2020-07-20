@@ -23,21 +23,23 @@ export default class DoctorInfoScreen extends React.Component {
     }
 
     componentDidMount() {
-        // Take doctor data from DoctorScreen, including avatar and name.
+        // Take doctor/pharmacist data from DoctorScreen, including avatar, name, and type.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
         this.setState({ doctor: paramsFromDoctorScreen })
+        // If the item chosen has type == "Doctor", 
+        // it will show the make appointment button
         if (paramsFromDoctorScreen.type == "Doctor") {
             this.setState({ show: true })
         }
     }
 
-    // Give doctor access to user's data.
+    // Give doctor/pharmacist access to user's data.
     handleGiveAccessToDoctor = () => { this.setState({ dialogVisible: true }) }
 
-    // Send user to AppointmentScreen to choose appointment time and reason.
+    // Send user to AppointmentMaker to choose appointment time and reason.
     handleSchedule = () => {
-        this.props.navigation.navigate("Appointment", this.props.navigation.state.params)
+        this.props.navigation.navigate("Appointment")
     }
 
     render() {

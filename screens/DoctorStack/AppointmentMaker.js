@@ -7,7 +7,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput } from "rea
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Toast from "react-native-simple-toast"
 import { ConfirmDialog } from "react-native-simple-dialogs"
-import TimePicker from "@react-native-community/datetimepicker"
+import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -31,18 +31,23 @@ export default class AppointmentMaker extends React.Component {
     }
 
     componentDidMount() {
+        // Take doctor/pharmacist data from DoctorScreen, including avatar, name, and type.
+        // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
         this.setState({ doctor: paramsFromDoctorScreen })
     }
 
+    // Show DatePicker
     showModeDate = () => {
         this.setState({ showDate: true })
     }
 
+    // Show TimePicker
     showModeTime = () => {
         this.setState({ showTime: true })
     }
 
+    // When a date is chosen from DatePicker
     onChangeDate = (event, selectedDate) => {
         const { testDate } = this.state
         let currentDate = selectedDate || testDate;
@@ -52,6 +57,7 @@ export default class AppointmentMaker extends React.Component {
         })
     }
 
+    // When a time is chosen from TimePicker
     onChangeTime = (event, selectedTime) => {
         const { testTime } = this.state
         let currentTime = selectedTime || testTime
@@ -61,8 +67,10 @@ export default class AppointmentMaker extends React.Component {
         })
     }
 
+    // Show Dialog
     handlePress = () => { this.setState({ dialogVisible: true }) }
 
+    // If user click yes when the dialog appears
     handleYes = () => {
         const patient = auth().currentUser.email
         this.setState({ dialogVisible: false })
@@ -94,7 +102,7 @@ export default class AppointmentMaker extends React.Component {
                     <Text>{moment(this.state.testDate).format("MMM Do YYYY")}</Text>
                 </View>
                 {this.state.showDate && (
-                    <TimePicker
+                    <DateTimePicker
                         testID="dateTimePicker"
                         timeZoneOffsetInMinutes={0}
                         value={this.state.testDate}
@@ -109,7 +117,7 @@ export default class AppointmentMaker extends React.Component {
                     <Text>{moment(this.state.testTime).format('hh:mm a')}</Text>
                 </View>
                 {this.state.showTime && (
-                    <TimePicker
+                    <DateTimePicker
                         testID="dateTimePicker"
                         timeZoneOffsetInMinutes={0}
                         value={this.state.testTime}
