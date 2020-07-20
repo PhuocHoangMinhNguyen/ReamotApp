@@ -63,6 +63,7 @@ export default class CalendarScreen extends React.Component {
     this.setState({ show: true })
   }
 
+  // When a date is chosen from DatePicker
   onChangeDate = (event, selectedDate) => {
     const { testDate } = this.state;
     let currentDate = selectedDate || testDate;

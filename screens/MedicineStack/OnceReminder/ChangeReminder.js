@@ -9,7 +9,7 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
 import ReactNativeAN from 'react-native-alarm-notification'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import TimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
 // Notification Data Structure.
@@ -28,70 +28,75 @@ export default class ChangeReminder extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            stopAlarm: false,
-            // Use to delete
-            firebaseId: "",
-            idAN: "",
-            alarmID: "",
             medicine: {},
-            alarm: {
-                // testDate is the date shown when time is picked
+            firebase: {
+                firebaseId: "",
+                idAN: "",
+            },
+            timePicker: {
+                // Used for TimePicker
                 testDate: new Date(Date.now()),
-                fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
+                // Used to show TimePicker
                 show: false,
                 // "Changed" is the value to indicate when a new time is picked
                 // change to true when a new time is picked
                 changed: false,
-                // "Initial" is the inial text next to DateTimePicker,
+                // "Initial" is the inial text next to TimePicker,
                 // which is the reminder time value inside firestore before editing.
                 initial: ''
+            },
+            alarm: {
+                // Used for react-native-alarm-notification package
+                fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
             }
         }
     }
 
     componentDidMount() {
-        // Text value from params and put it as state.medicine
+        // Take medicine data from MedicineScreen, including image, name, description, and barcode.
+        // => Faster than accessing Cloud Firestore again.
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
         this.setState({ medicine: paramsFromMediInfoScreen })
 
-        // Text value from params and put it as state.alarm.initial
+        // Take value from params and put it as state.timePicker.initial
         let paramsTime = this.props.navigation.state.params.itemTime
         this.setState({
-            alarm: {
-                ...this.state.alarm,
+            timePicker: {
+                ...this.state.timePicker,
                 initial: paramsTime
             }
         })
 
         // Find the alarm Id of the reminder that is going to be changed.
-        let tempId = ""
         let tempIdAN = ""
         let tempFirebase = ""
         firestore().collection("reminder").onSnapshot((querySnapshot) => {
             querySnapshot.forEach((documentSnapshot) => {
                 if (documentSnapshot.data().medicine == this.state.medicine.name
                     && documentSnapshot.data().patientEmail == auth().currentUser.email
-                    && documentSnapshot.data().times == this.state.alarm.initial) {
+                    && documentSnapshot.data().times == this.state.timePicker.initial) {
                     tempFirebase = documentSnapshot.id
-                    tempId = documentSnapshot.data().alarmId
                     tempIdAN = documentSnapshot.data().idAN
                 }
             })
             // Assign temp to alarmID.
             this.setState({
-                firebaseId: tempFirebase,
-                alarmID: tempId,
-                idAN: tempIdAN,
+                firebase: {
+                    ...this.state.firebase,
+                    firebaseId: tempFirebase,
+                    idAN: tempIdAN,
+                }
             })
         })
     }
 
     // delete alarm from reminder collection in firestore
     deleteAlarm = () => {
+        const { firebaseId, idAN } = this.state.firebase
         // Delete the reminder from "reminder" collection
-        firestore().collection("reminder").doc(this.state.firebaseId).delete()
+        firestore().collection("reminder").doc(firebaseId).delete()
             .then(() => {
-                ReactNativeAN.deleteAlarm(this.state.idAN.toString())
+                ReactNativeAN.deleteAlarm(idAN.toString())
                 Toast.show("Reminder Deleted!")
                 this.props.navigation.goBack()
             })
@@ -99,29 +104,32 @@ export default class ChangeReminder extends React.Component {
 
     showMode = () => {
         this.setState({
-            alarm: {
-                ...this.state.alarm,
+            timePicker: {
+                ...this.state.timePicker,
                 show: true
             }
         })
     }
 
     onChange = (event, selectedDate) => {
-        const { testDate } = this.state.alarm;
+        const { testDate } = this.state.timePicker;
         let currentDate = selectedDate || testDate;
         this.setState({
-            alarm: {
-                ...this.state.alarm,
+            timePicker: {
+                ...this.state.timePicker,
                 show: Platform.OS === 'ios',
                 testDate: currentDate,
-                fireDate: ReactNativeAN.parseDate(currentDate),
                 changed: true,
+            },
+            alarm: {
+                ...this.state.alarm,
+                fireDate: ReactNativeAN.parseDate(currentDate),
             }
         })
     }
 
     render() {
-        const { testDate, show, changed, initial } = this.state.alarm;
+        const { testDate, show, changed, initial } = this.state.timePicker
         let message;
         if (changed == true) {
             message = moment(testDate).format('hh:mm a')
@@ -156,7 +164,7 @@ export default class ChangeReminder extends React.Component {
                             <Text>{message}</Text>
                         </View>
                         {show && (
-                            <DateTimePicker
+                            <TimePicker
                                 testID="dateTimePicker"
                                 timeZoneOffsetInMinutes={0}
                                 value={testDate}
@@ -173,8 +181,8 @@ export default class ChangeReminder extends React.Component {
                                 this.props.navigation.navigate("BarcodeScan", {
                                     medicine: this.props.navigation.state.params.medicine,
                                     itemTime: this.props.navigation.state.params.itemTime,
-                                    firebaseId: this.state.firebaseId,
-                                    idAN: this.state.idAN
+                                    firebaseId: this.state.firebase.firebaseId,
+                                    idAN: this.state.firebase.idAN
                                 })
                             }}
                             title="Stop Alarm Sound"

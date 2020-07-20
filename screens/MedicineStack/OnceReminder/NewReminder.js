@@ -9,7 +9,7 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
 import ReactNativeAN from 'react-native-alarm-notification'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import TimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
 // Notification Data Structure.
@@ -28,13 +28,18 @@ export default class NewReminder extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            // Details in Problems.txt file, Problem 1
-            reminderId: Math.floor(Math.random() * 1000).toString(),
             medicine: {},
-            alarm: {
+            timePicker: {
+                // Used for TimePicker
                 testDate: new Date(Date.now()),
-                fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
+                // Used to show TimePicker
                 show: false
+            },
+            alarm: {
+                // Details in Problems.txt file, Problem 1
+                reminderId: Math.floor(Math.random() * 1000).toString(),
+                // Used for react-native-alarm-notification package
+                fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
             }
         };
         this.scheduleAlarm = this.scheduleAlarm.bind(this)
@@ -47,11 +52,12 @@ export default class NewReminder extends React.Component {
         this.setState({ medicine: paramsFromMedicineScreen })
     }
 
+    // This function called after the alarm is set.
     getANid = async (details) => {
-        const { testDate } = this.state.alarm
+        const { reminderId } = this.state.alarm
         const { name } = this.state.medicine
-        const { reminderId } = this.state
-        // Get the alarm's "id", set it as idAN
+        const { testDate } = this.state.timePicker
+        // Get the alarm's "id", set it as idAN attribute for Cloud Firestore
         const alarm = await ReactNativeAN.getScheduledAlarms()
         let idAN = ""
         for (let i = 0; i < alarm.length; i++) {
@@ -74,8 +80,9 @@ export default class NewReminder extends React.Component {
             })
     }
 
+    // This function called when Schedule Alarm button is clicked
     scheduleAlarm = () => {
-        const { fireDate } = this.state.alarm
+        const { fireDate, reminderId } = this.state.alarm
         const { name } = this.state.medicine
         // Put more detail into Notification Data Structure, then set it as details for ReactNativeAN.
         // alarm_id is the new reminder id from reminderId, to convert from int to string.
@@ -83,37 +90,42 @@ export default class NewReminder extends React.Component {
             ...alarmNotifData,
             fire_date: fireDate,
             title: name,
-            alarm_id: this.state.reminderId,
+            alarm_id: reminderId,
         };
         // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details)
         this.getANid(details)
     };
 
+    // Show TimePicker
     showMode = () => {
         this.setState({
-            alarm: {
-                ...this.state.alarm,
+            timePicker: {
+                ...this.state.timePicker,
                 show: true
             }
         })
     }
 
+    // When a time is chosen from TimePicker
     onChange = (event, selectedDate) => {
-        const { testDate } = this.state.alarm
+        const { testDate } = this.state.timePicker
         let currentDate = selectedDate || testDate
         this.setState({
-            alarm: {
-                ...this.state.alarm,
+            timePicker: {
+                ...this.state.timePicker,
                 show: Platform.OS === 'ios',
                 testDate: currentDate,
+            },
+            alarm: {
+                ...this.state.alarm,
                 fireDate: ReactNativeAN.parseDate(currentDate)
             }
         });
     }
 
     render() {
-        const { testDate, show } = this.state.alarm
+        const { testDate, show } = this.state.timePicker
         return (
             <View style={styles.container}>
                 <TouchableOpacity
@@ -142,7 +154,7 @@ export default class NewReminder extends React.Component {
                             <Text>{moment(testDate).format('hh:mm a')}</Text>
                         </View>
                         {show && (
-                            <DateTimePicker
+                            <TimePicker
                                 testID="dateTimePicker"
                                 timeZoneOffsetInMinutes={0}
                                 value={testDate}

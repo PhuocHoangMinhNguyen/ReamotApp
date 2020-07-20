@@ -3,12 +3,7 @@
 // Status: In development
 
 import React from 'react'
-import {
-    View,
-    StyleSheet,
-    Alert,
-    TouchableOpacity,
-} from 'react-native'
+import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import ReactNativeAN from 'react-native-alarm-notification'
@@ -21,7 +16,6 @@ const alarmNotifData = {
     schedule_type: "once",
     channel: "reminder",
     loop_sound: true,
-    //small_icon: "ic_launcher",
     message: "Take your Medicine",
 };
 
@@ -44,32 +38,32 @@ export default class BarcodeScan extends React.Component {
         }
     }
 
-    _isMounted = false
-
     componentDidMount() {
-        this._isMounted = true
-        // Text value from params and put it as state.medicine
+        // Take medicine data from MedicineScreen, including image, name, description, and barcode.
+        // => Faster than accessing Cloud Firestore again.
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
         this.setState({ medicine: paramsFromMediInfoScreen })
 
+        // Take value from params and put it as state.firebaseId
         let paramsFirebaseId = this.props.navigation.state.params.firebaseId
         this.setState({ firebaseId: paramsFirebaseId })
 
+        // Take value from params and put it as state.idAN
         let paramsIdAN = this.props.navigation.state.params.idAN
         this.setState({ idAN: paramsIdAN })
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false
     }
 
     onBarCodeRead = async (e) => {
         const { name, barcode } = this.state.medicine
         const { firebaseId, barcodeRead, alarmId } = this.state
+        // This to prevent the alarm to be read twice ==> Temporary Solution.
         this.setState({ barcodeRead: !barcodeRead })
         if (this.state.barcodeRead == true) {
+            // If the barcode read is the same as the barcode needed
             if (barcode == e.data) {
-                ReactNativeAN.stopAlarmSound();
+                // Stop Alarm Sound
+                ReactNativeAN.stopAlarmSound()
+                // Remove Notification
                 ReactNativeAN.removeAllFiredNotifications()
                 // Might Need to delete current alarm
                 // ReactNativeAN.deleteAlarm(this.state.idAN.toString());
@@ -114,11 +108,11 @@ export default class BarcodeScan extends React.Component {
                 Alert.alert("Alarm Sound is Stopped")
             } else {
                 Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode)
-                //Alert.alert("It is not the correct barcode");
             }
         }
     }
 
+    // Handle turning on, turning off flash. Currently just change the icon.
     handleTourch(value) {
         if (value === true) {
             this.setState({ flashOn: false })
@@ -126,6 +120,7 @@ export default class BarcodeScan extends React.Component {
             this.setState({ flashOn: true })
         }
     }
+
     render() {
         return (
             <View style={styles.container}>
@@ -143,6 +138,7 @@ export default class BarcodeScan extends React.Component {
         )
     }
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

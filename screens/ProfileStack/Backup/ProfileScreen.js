@@ -36,6 +36,7 @@ export default class ProfileScreen extends React.Component {
     this.unsubscribe()
   }
 
+  // Check Appointment list of that patient.
   handlePress = () => {
     this.props.navigation.navigate("AppointList")
   }
