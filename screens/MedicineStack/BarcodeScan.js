@@ -65,8 +65,9 @@ export default class BarcodeScan extends React.Component {
                 ReactNativeAN.stopAlarmSound()
                 // Remove Notification
                 ReactNativeAN.removeAllFiredNotifications()
-                // Might Need to delete current alarm
-                // ReactNativeAN.deleteAlarm(this.state.idAN.toString());
+
+                // Set a new fireDate 5 minutes later.
+                //
                 // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
                 // It should start from the time the alarm is set instead.
                 const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000))
@@ -74,14 +75,16 @@ export default class BarcodeScan extends React.Component {
                 // 5 minutes = 300.000 miliseconds.
                 // 1 hour = 3.600.000 miliseconds
                 // 24 hours = 86.400.000 miliseconds.
+
                 const details = {
                     ...alarmNotifData,
                     fire_date: fireDates,
                     title: name,
                     alarm_id: alarmId
-                };
+                }
                 ReactNativeAN.scheduleAlarm(details)
-                // Get the NEW alarm's "id", set it as idAN
+
+                // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
                 const alarm = await ReactNativeAN.getScheduledAlarms()
                 let idAN = ""
                 for (let i = 0; i < alarm.length; i++) {
@@ -97,7 +100,9 @@ export default class BarcodeScan extends React.Component {
                 this.props.navigation.navigate("ChangeReminder", {
                     medicine: this.props.navigation.state.params.medicine,
                     itemTime: this.props.navigation.state.params.itemTime,
-                });
+                })
+
+                // When the alarm is turned off, add the medicine into "history" collection
                 firestore().collection("history").add({
                     medicine: name,
                     patientEmail: auth().currentUser.email,

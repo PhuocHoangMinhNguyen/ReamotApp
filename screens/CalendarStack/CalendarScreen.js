@@ -25,7 +25,7 @@ export default class CalendarScreen extends React.Component {
   }
 
   componentDidMount() {
-    // Check from History
+    // Take data from "history" collection
     firestore().collection("history").onSnapshot((querySnapshot) => {
       let temp = [];
       querySnapshot.forEach((documentSnapshot) => {
@@ -38,7 +38,7 @@ export default class CalendarScreen extends React.Component {
       })
       this.setState({ history: temp })
 
-      // Check from Medicine
+      // Take data from "medicine" collection
       let temp2 = [];
       for (let i = 0; i < this.state.history.length; i++) {
         firestore().collection("medicine").onSnapshot((querySnapshot2) => {
@@ -73,6 +73,7 @@ export default class CalendarScreen extends React.Component {
     })
   }
 
+  // Information appears on each item.
   renderItem(item) {
     const correctItem =
       <SafeAreaView style={styles.feedItem}>
