@@ -72,7 +72,7 @@ export default class MedicineScreen extends React.Component {
       name: item.name,
       description: item.description,
       barcode: item.barcode
-    };
+    }
     return (
       <TouchableOpacity
         style={styles.feedItem}

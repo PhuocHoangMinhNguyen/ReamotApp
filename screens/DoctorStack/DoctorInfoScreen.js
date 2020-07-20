@@ -17,7 +17,8 @@ export default class DoctorInfoScreen extends React.Component {
         super(props)
         this.state = {
             doctor: {},
-            dialogVisible: false
+            dialogVisible: false,
+            show: false
         }
     }
 
@@ -26,6 +27,9 @@ export default class DoctorInfoScreen extends React.Component {
         // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
         this.setState({ doctor: paramsFromDoctorScreen })
+        if (paramsFromDoctorScreen.type == "Doctor") {
+            this.setState({ show: true })
+        }
     }
 
     // Give doctor access to user's data.
@@ -62,11 +66,13 @@ export default class DoctorInfoScreen extends React.Component {
                         title="Give access of medical details"
                         onPress={this.handleGiveAccessToDoctor} />
                 </View>
-                <View style={{ marginVertical: 5 }}>
-                    <Button
-                        title="Schedule An Appointment"
-                        onPress={this.handleSchedule} />
-                </View>
+                {this.state.show && (
+                    <View style={{ marginVertical: 5 }}>
+                        <Button
+                            title="Schedule An Appointment"
+                            onPress={this.handleSchedule} />
+                    </View>
+                )}
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
                     title="Alert"

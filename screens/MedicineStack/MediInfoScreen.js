@@ -108,16 +108,14 @@ export default class MediInfoScreen extends React.Component {
       <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
         <Text style={{ fontSize: 18 }}>+ Add Reminder</Text>
       </TouchableOpacity>
-    let message;
+    let message
     if (item == "null") {
       message = emptyItem
     } else {
       message = nonEmptyItem
     }
-    return (
-      message
-    );
-  };
+    return (message)
+  }
 
   render() {
     if (this.state.arraySize < this.state.prescription.times) {
