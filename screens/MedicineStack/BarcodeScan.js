@@ -55,57 +55,59 @@ export default class BarcodeScan extends React.Component {
     onBarCodeRead = async (e) => {
         const { name, barcode } = this.state.medicine
         const { firebaseId, barcodeRead, alarmId } = this.state
-        if (barcode == e.data && barcodeRead == false) {
-            this.setState({ barcodeRead: true })
-            // Stop Alarm Sound
-            ReactNativeAN.stopAlarmSound()
-            // Remove Notification
-            ReactNativeAN.removeAllFiredNotifications()
+        if (barcode == e.data) {
+            if (barcodeRead == false) {
+                this.setState({ barcodeRead: true })
+                // Stop Alarm Sound
+                ReactNativeAN.stopAlarmSound()
+                // Remove Notification
+                ReactNativeAN.removeAllFiredNotifications()
 
-            // Set a new fireDate 5 minutes later.
-            //
-            // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
-            // It should start from the time the alarm is set instead.
-            const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000))
-            // 10 minutes = 600.000 miliseconds
-            // 5 minutes = 300.000 miliseconds.
-            // 1 hour = 3.600.000 miliseconds
-            // 24 hours = 86.400.000 miliseconds.
+                // Set a new fireDate 5 minutes later.
+                //
+                // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
+                // It should start from the time the alarm is set instead.
+                const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000))
+                // 10 minutes = 600.000 miliseconds
+                // 5 minutes = 300.000 miliseconds.
+                // 1 hour = 3.600.000 miliseconds
+                // 24 hours = 86.400.000 miliseconds.
 
-            const details = {
-                ...alarmNotifData,
-                fire_date: fireDates,
-                title: name,
-                alarm_id: alarmId
-            }
-            ReactNativeAN.scheduleAlarm(details)
-
-            // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-            const alarm = await ReactNativeAN.getScheduledAlarms()
-            let idAN = ""
-            for (let i = 0; i < alarm.length; i++) {
-                if (alarm[i].alarmId == details.alarm_id) {
-                    idAN = alarm[i].id
+                const details = {
+                    ...alarmNotifData,
+                    fire_date: fireDates,
+                    title: name,
+                    alarm_id: alarmId
                 }
-            }
-            firestore().collection("reminder").doc(firebaseId)
-                .update({
-                    idAN: idAN,
-                    alarmId: alarmId
-                })
-            this.props.navigation.navigate("ChangeReminder", {
-                medicine: this.props.navigation.state.params.medicine,
-                itemTime: this.props.navigation.state.params.itemTime,
-            })
+                ReactNativeAN.scheduleAlarm(details)
 
-            // When the alarm is turned off, add the medicine into "history" collection
-            firestore().collection("history").add({
-                medicine: name,
-                patientEmail: auth().currentUser.email,
-                time: moment().format('h:mm a'),
-                date: moment().format('MMMM Do YYYY'),
-                status: "taken"
-            })
+                // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
+                const alarm = await ReactNativeAN.getScheduledAlarms()
+                let idAN = ""
+                for (let i = 0; i < alarm.length; i++) {
+                    if (alarm[i].alarmId == details.alarm_id) {
+                        idAN = alarm[i].id
+                    }
+                }
+                firestore().collection("reminder").doc(firebaseId)
+                    .update({
+                        idAN: idAN,
+                        alarmId: alarmId
+                    })
+                this.props.navigation.navigate("ChangeReminder", {
+                    medicine: this.props.navigation.state.params.medicine,
+                    itemTime: this.props.navigation.state.params.itemTime,
+                })
+
+                // When the alarm is turned off, add the medicine into "history" collection
+                firestore().collection("history").add({
+                    medicine: name,
+                    patientEmail: auth().currentUser.email,
+                    time: moment().format('h:mm a'),
+                    date: moment().format('MMMM Do YYYY'),
+                    status: "taken"
+                })
+            }
             Alert.alert("Alarm Sound is Stopped")
         } else {
             Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode)
