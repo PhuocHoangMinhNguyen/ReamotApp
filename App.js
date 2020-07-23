@@ -51,10 +51,11 @@ import Appointment from "./screens/DoctorStack/AppointmentMaker";
 
 import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
 import AppointmentList from "./screens/ProfileStack/BackEnd/AppointmentList";
+import EditProfile from "./screens/ProfileStack/BackEnd/EditProfile";
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
-  Register: RegisterScreen
+  Register: RegisterScreen,
 });
 
 const HomeStack = createStackNavigator(
@@ -62,14 +63,14 @@ const HomeStack = createStackNavigator(
     Home: HomeScreen,
   },
   { initialRouteName: "Home" }
-)
+);
 
 const CalendarStack = createStackNavigator(
   {
     Calendar: CalendarScreen,
   },
   { initialRouteName: "Calendar" }
-)
+);
 
 const MedicineStack = createStackNavigator(
   {
@@ -86,18 +87,19 @@ const DoctorStack = createStackNavigator(
   {
     DoctorScreen: DoctorScreen,
     DoctorInfo: DoctorInfoScreen,
-    Appointment: Appointment
+    Appointment: Appointment,
   },
   { initialRouteName: "DoctorScreen" }
-)
+);
 
 const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
-    AppointList: AppointmentList
+    AppointList: AppointmentList,
+    Edit: EditProfile,
   },
   { initialRouteName: "Profile" }
-)
+);
 
 const AppContainer = createStackNavigator(
   {
@@ -108,63 +110,59 @@ const AppContainer = createStackNavigator(
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Ionicons name="ios-home" size={24} color={tintColor} />
-            )
-          }
+            ),
+          },
         },
         Calendar: {
           screen: CalendarStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Ionicons name="ios-calendar" size={24} color={tintColor} />
-            )
-          }
+            ),
+          },
         },
         Medicine: {
           screen: MedicineStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Material name="pill" size={24} color={tintColor} />
-            )
-          }
+            ),
+          },
         },
         Doctor: {
           screen: DoctorStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
-              <Material
-                name="doctor"
-                size={24}
-                color={tintColor}
-              />
-            )
-          }
+              <Material name="doctor" size={24} color={tintColor} />
+            ),
+          },
         },
         Profile: {
           screen: ProfileStack,
           navigationOptions: {
             tabBarIcon: ({ tintColor }) => (
               <Ionicons name="ios-person" size={24} color={tintColor} />
-            )
-          }
-        }
+            ),
+          },
+        },
       },
       {
         defaultNavigationOptions: {
           tabBarOnPress: ({ navigation, defaultHandler }) => {
             defaultHandler();
-          }
+          },
         },
         tabBarOptions: {
           activeTintColor: "#161F3D",
           inactiveTintColor: "#B8BBC4",
-          showLabel: false
-        }
+          showLabel: false,
+        },
       }
     ),
   },
   {
     mode: "modal",
-    headerMode: "none"
+    headerMode: "none",
   }
 );
 
@@ -173,10 +171,10 @@ export default createAppContainer(
     {
       Loading: LoadingScreen,
       App: AppContainer,
-      Auth: AuthStack
+      Auth: AuthStack,
     },
     {
-      initialRouteName: "Loading"
+      initialRouteName: "Loading",
     }
   )
 );
