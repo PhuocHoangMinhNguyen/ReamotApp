@@ -24,9 +24,7 @@ export default class ProfileScreen extends React.Component {
   componentDidMount() {
     const user = this.props.uid || (auth().currentUser || {}).uid
 
-    this.unsubscribe = firestore()
-      .collection("users")
-      .doc(user)
+    this.unsubscribe = firestore().collection("users").doc(user)
       .onSnapshot(doc => {
         this.setState({ user: doc.data() });
       })

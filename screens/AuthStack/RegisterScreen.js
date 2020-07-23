@@ -48,16 +48,12 @@ export default class RegisterScreen extends React.Component {
     const { name, email, password, phoneNumber } = this.state.user
     if (name.trim == "") {
       Toast.show("Please Enter Full Name", Toast.LONG)
-      console.log("Test")
     } else if (email.trim == "") {
       Toast.show("Please Enter Email Information", Toast.LONG)
-      console.log("Test")
     } else if (password == "") {
       Toast.show("Please Enter A Password", Toast.LONG)
-      console.log("Test")
     } else if (phoneNumber == "") {
       Toast.show("Please Enter Contact Number", Toast.LONG)
-      console.log("Test")
     } else {
       this.createUser(this.state.user)
     }
@@ -66,15 +62,12 @@ export default class RegisterScreen extends React.Component {
   createUser = async user => {
     let remoteUri = null
     try {
-      await auth()
-        .createUserWithEmailAndPassword(user.email, user.password)
+      await auth().createUserWithEmailAndPassword(user.email, user.password)
         .catch(error => this.setState({ errorMessage: error.message }))
 
       // If there is no error.
       if (this.state.errorMessage == null) {
-        let db = firestore()
-          .collection("users")
-          .doc((auth().currentUser || {}).uid)
+        let db = firestore().collection("users").doc((auth().currentUser || {}).uid)
 
         db.set({
           name: user.name,
@@ -104,16 +97,10 @@ export default class RegisterScreen extends React.Component {
       const response = await fetch(uri)
       const file = await response.blob()
 
-      let upload = storage()
-        .ref(filename)
-        .put(file);
+      let upload = storage().ref(filename).put(file);
 
-      upload.on(
-        "state_changed",
-        snapshot => { },
-        err => {
-          rej(err);
-        },
+      upload.on("state_changed", snapshot => { },
+        err => { rej(err) },
         async () => {
           const url = await upload.snapshot.ref.getDownloadURL()
           res(url);
@@ -127,27 +114,21 @@ export default class RegisterScreen extends React.Component {
 
     var options = {
       title: "Select Image",
-      customButtons: [
-        { name: "customOptionKey", title: "Choose Photo from Custom Option" }
-      ],
       storageOptions: {
         skipBackup: true,
         path: "images"
       }
     };
 
-    let result = await ImagePicker.showImagePicker(options, response => {
+    let result = await ImagePicker.showImagePicker(options, (response) => {
       console.log("Response = ", response)
 
       if (response.didCancel) {
         console.log("User cancelled image picker")
       } else if (response.error) {
         console.log("ImagePicker Error: ", response.error)
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton)
-        alert(response.customButton)
       } else {
-        let source = response.uri
+        const source = response.uri
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
