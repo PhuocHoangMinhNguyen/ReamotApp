@@ -47,12 +47,12 @@
     "react-navigation-tabs": "^2.8.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.4",
-    "@babel/runtime": "^7.10.4",
+    "@babel/core": "^7.10.5",
+    "@babel/runtime": "^7.10.5",
     "@react-native-community/cli": "^4.10.1",
     "@react-native-community/eslint-config": "^2.0.0",
     "babel-jest": "^26.1.0",
-    "eslint": "^7.4.0",
+    "eslint": "^7.5.0",
     "jest": "^26.1.0",
     "metro-react-native-babel-preset": "^0.60.0",
     "patch-package": "^6.2.2",
