@@ -62,7 +62,7 @@ export default class RegisterScreen extends React.Component {
   createUser = async user => {
     let remoteUri = null
     try {
-      await auth().createUserWithEmailAndPassword(user.email, user.password)
+      await auth().createUserWithEmailAndPassword(user.email.trim(), user.password)
         .catch(error => this.setState({ errorMessage: error.message }))
 
       // If there is no error.
@@ -70,8 +70,8 @@ export default class RegisterScreen extends React.Component {
         let db = firestore().collection("users").doc((auth().currentUser || {}).uid)
 
         db.set({
-          name: user.name,
-          email: user.email,
+          name: user.name.trim(),
+          email: user.email.trim(),
           phoneNumber: user.phoneNumber,
           avatar: null
         })
