@@ -120,7 +120,7 @@ export default class CalendarScreen extends React.Component {
             testID="dateTimePicker"
             timeZoneOffsetInMinutes={0}
             value={this.state.testDate}
-            mode="day"
+            mode="date"
             is24Hour={false}
             display="default"
             onChange={this.onChangeDate}
