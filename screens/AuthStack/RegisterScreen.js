@@ -73,7 +73,9 @@ export default class RegisterScreen extends React.Component {
           name: user.name.trim(),
           email: user.email.trim(),
           phoneNumber: user.phoneNumber,
-          avatar: null
+          avatar: null,
+          doctorList: null,
+          pharmacistList: null
         })
 
         // If the user choose an avatar,

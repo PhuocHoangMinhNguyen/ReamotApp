@@ -46,7 +46,9 @@ import NewReminderScreen from "./screens/MedicineStack/OnceReminder/NewReminder"
 import ChangeReminderScreen from "./screens/MedicineStack/OnceReminder/ChangeReminder";
 
 import DoctorScreen from "./screens/DoctorStack/DoctorScreen";
+import AddAccess from "./screens/DoctorStack/AddAccess";
 import DoctorInfoScreen from "./screens/DoctorStack/DoctorInfoScreen";
+import AccessedDoctorScreen from "./screens/DoctorStack/AccessedDoctorScreen";
 import Appointment from "./screens/DoctorStack/AppointmentMaker";
 
 import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
@@ -86,7 +88,9 @@ const MedicineStack = createStackNavigator(
 const DoctorStack = createStackNavigator(
   {
     DoctorScreen: DoctorScreen,
+    AddAccess: AddAccess,
     DoctorInfo: DoctorInfoScreen,
+    AccessedDoctorScreen: AccessedDoctorScreen,
     Appointment: Appointment,
   },
   { initialRouteName: "DoctorScreen" }

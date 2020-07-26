@@ -10,7 +10,7 @@ import { ConfirmDialog } from "react-native-simple-dialogs"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-export default class DoctorInfoScreen extends React.Component {
+export default class AccessedDoctorScreen extends React.Component {
     static navigationOptions = {
         headerShown: false,
     }
@@ -20,6 +20,7 @@ export default class DoctorInfoScreen extends React.Component {
         this.state = {
             doctor: {},
             dialogVisible: false,
+            show: false
         }
     }
 
@@ -28,23 +29,32 @@ export default class DoctorInfoScreen extends React.Component {
         // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
         this.setState({ doctor: paramsFromDoctorScreen })
+        // If the item chosen has type == "Doctor", 
+        // it will show the make appointment button
+        if (paramsFromDoctorScreen.type == "Doctor") {
+            this.setState({ show: true })
+        }
     }
 
     // Give doctor/pharmacist access to user's data.
-    handleGiveAccessToDoctor = () => { this.setState({ dialogVisible: true }) }
+    handleRevokeAccessToDoctor = () => { this.setState({ dialogVisible: true }) }
 
+    // Send user to AppointmentMaker to choose appointment time and reason.
+    handleSchedule = () => {
+        this.props.navigation.navigate("Appointment")
+    }
     handleYes = () => {
         const { doctor } = this.state
         if (doctor.type == "Doctor") {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
-                    doctorList: firestore.FieldValue.arrayUnion(doctor.email)
+                    doctorList: firestore.FieldValue.arrayRemove(doctor.email)
                 })
         }
         if (doctor.type == "Pharmacist") {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
-                    pharmacistList: firestore.FieldValue.arrayUnion(doctor.email)
+                    pharmacistList: firestore.FieldValue.arrayRemove(doctor.email)
                 })
         }
         this.setState({ dialogVisible: false })
@@ -74,9 +84,16 @@ export default class DoctorInfoScreen extends React.Component {
                 </View>
                 <View style={{ marginVertical: 5 }}>
                     <Button
-                        title="Give access of medical details"
-                        onPress={this.handleGiveAccessToDoctor} />
+                        title="Revoke access of medical details"
+                        onPress={this.handleRevokeAccessToDoctor} />
                 </View>
+                {this.state.show && (
+                    <View style={{ marginVertical: 5 }}>
+                        <Button
+                            title="Schedule An Appointment"
+                            onPress={this.handleSchedule} />
+                    </View>
+                )}
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
                     title="Alert"

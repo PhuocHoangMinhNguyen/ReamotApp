@@ -1,21 +1,18 @@
-// Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
-// Status: In development
-
-import React from "react"
+import React, { Component } from "react";
 import {
-  View,
-  Text,
-  SafeAreaView,
   StyleSheet,
-  FlatList,
+  Text,
+  View,
+  SafeAreaView,
+  SectionList,
   TouchableOpacity,
-  Image
-} from "react-native"
-import { SearchBar } from "react-native-elements"
+  Image,
+  Button,
+} from "react-native";
+import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 
-export default class DoctorScreen extends React.Component {
+export default class DoctorScreen extends Component {
   static navigationOptions = {
     headerShown: false,
   }
@@ -23,56 +20,94 @@ export default class DoctorScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
-      doc_phar: [],
-      text: "",
-      myArray: [],
+      accessedDoctor: [],
+      accessedPharmacist: [],
     }
   }
 
   componentDidMount() {
-    let temp = []
-    // push doctor data into temp
-    firestore().collection("doctor").onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        temp.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-          type: "Doctor"
-        })
-      })
-    })
+    // check doctor and pharmacist email from "doctorList" and "pharmacistList" from "users" collection
+    // Then use the doctor and pharmacist email to find the infor from "doctor" and "pharmacist" collection
 
-    // push pharmacist data into temp
-    firestore().collection("pharmacist").onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        temp.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-          type: "Pharmacist"
-        })
+    // doctor and pharmacist email from "users" document
+    let tempPharmacistEmail = []
+    let tempDoctorEmail = []
+
+    // doctor and pharmacist info using emails from "users" document
+    let tempAccessedDoctor = []
+    let tempAccessedPharmacist = []
+
+    firestore().collection("users").doc((auth().currentUser || {}).uid)
+      .onSnapshot((documentSnapshot) => {
+        tempPharmacistEmail = documentSnapshot.data().pharmacistList
+        tempDoctorEmail = documentSnapshot.data().doctorList
+
+        // if both tempDoctorEmail and tempPharmacistEmail are null.
+        if (tempDoctorEmail == null && tempPharmacistEmail == null) {
+          // TempDoctorPharmacist is null
+          tempDoctorPharmacist = null
+
+          // If they are not null
+        } else {
+          if (tempDoctorEmail != null) {
+
+            // Accessed Doctor
+            firestore().collection("doctor").onSnapshot((querySnapshot) => {
+              querySnapshot.forEach((documentSnapshot) => {
+                for (let i = 0; i < tempDoctorEmail.length; i++) {
+                  if (tempDoctorEmail[i] == documentSnapshot.data().doctorEmail) {
+                    tempAccessedDoctor.push({
+                      ...documentSnapshot.data(),
+                      key: documentSnapshot.id,
+                      type: "Doctor"
+                    })
+                  }
+                }
+              })
+              this.setState({ accessedDoctor: tempAccessedDoctor })
+            })
+          }
+          if (tempPharmacistEmail != null) {
+            // Accessed Pharmacist
+            firestore().collection("pharmacist").onSnapshot((querySnapshot) => {
+              querySnapshot.forEach((documentSnapshot) => {
+                for (let i = 0; i < tempPharmacistEmail.length; i++) {
+                  if (tempPharmacistEmail[i] == documentSnapshot.data().pharmacistEmail) {
+                    tempAccessedPharmacist.push({
+                      ...documentSnapshot.data(),
+                      key: documentSnapshot.id,
+                      type: "Pharmacist"
+                    })
+                  }
+                }
+              })
+              this.setState({ accessedPharmacist: tempAccessedPharmacist })
+            })
+          }
+        }
       })
-      // put temp data into myArray and doc_phar attributes of state
-      this.setState({
-        doc_phar: temp,
-        myArray: temp,
-        loading: false,
-      })
-    })
   }
 
-  // Click on each item in flatlist will lead user to DoctorInfoScreen 
-  // to show that doctor/pharmacist information with some options.
   handleClick = (dataInfor) => {
-    this.props.navigation.navigate("DoctorInfo", dataInfor)
+    this.props.navigation.navigate("AccessedDoctorScreen", dataInfor)
   }
 
-  // Information appears on each item.
+  addAccess = () => {
+    this.props.navigation.navigate("AddAccess")
+  }
+
   renderItem = (item) => {
+    let emailInfo
+    if (item.type == "Doctor") {
+      emailInfo = item.doctorEmail
+    } else {
+      emailInfo = item.pharmacistEmail
+    }
     let dataInfor = {
       avatar: item.avatar,
       name: item.name,
       type: item.type,
+      email: emailInfo
     }
     return (
       <TouchableOpacity
@@ -97,54 +132,45 @@ export default class DoctorScreen extends React.Component {
     )
   }
 
-  // Responsible for SearchBar to work.
-  searchFilterFunction(newText) {
-    const newData = this.state.doc_phar.filter(function (item) {
-      //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
-      const textData = newText.toUpperCase()
-      return itemData.indexOf(textData) > -1
-    })
-    this.setState({
-      myArray: newData,
-      text: newText,
-    })
-  }
-
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <SearchBar
-            placeholder="Search Doctor/ Pharmacist..."
-            lightTheme
-            round
-            onChangeText={(newText) => this.searchFilterFunction(newText)}
-            value={this.state.text}
-          />
-        </View>
-        <FlatList
-          style={styles.feed}
-          data={this.state.myArray}
+        <SectionList
+          sections={[
+            { title: "Accessed Doctor", data: this.state.accessedDoctor },
+            { title: "Accessed Pharmacist", data: this.state.accessedPharmacist },
+          ]}
+          keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => this.renderItem(item)}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.header}>{title}</Text>
+          )}
         />
+        <View style={styles.button}>
+          <Button title="Give Access to Another Doctor/ Pharmacist" onPress={this.addAccess} />
+        </View>
       </SafeAreaView>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#EBECF4",
+    marginTop: 16,
+    marginHorizontal: 16
+  },
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8
   },
   header: {
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    borderBottomColor: "#D8D9DB",
+    fontSize: 18,
+    backgroundColor: "#fff"
   },
-  feed: {
-    marginHorizontal: 16,
+  title: {
+    fontSize: 24
   },
   feedItem: {
     backgroundColor: "#FFF",
@@ -165,4 +191,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#454D65",
   },
+  button: {
+    marginBottom: 12
+  }
 })
+
