@@ -5,9 +5,9 @@ import firestore from "@react-native-firebase/firestore";
 
 function EditProfile({ navigation }) {
   const [user, setUser] = useState([]);
-  const [updateName, setName] = useState('');
+  const [updateName, setName] = useState();
   const [updatePhoneNumber, setPhoneNumber] = useState();
-  const [updateAddress, setAddress] = useState('');
+  const [updateAddress, setAddress] = useState();
   useEffect(() => {
     const user = [];
     const subscriber = firestore()
@@ -21,19 +21,6 @@ function EditProfile({ navigation }) {
     return () => subscriber();
   }, [auth().currentUser.uid]);
 
-  const updateInformation = () => {
-    firestore()
-      .collection('users')
-      .doc(auth().currentUser.uid)
-      .update({
-        name: updateName,
-        Address: updateAddress,
-        phoneNumber: updatePhoneNumber,
-      })
-      .then(() => {
-        console.log('User updated!');
-      }), navigation.navigate('Profile')
-  };
 
   const update = () => {
     if (updateName != null) {
@@ -89,20 +76,20 @@ function EditProfile({ navigation }) {
           <TextInput
             placeholder= 'name'
             style={styles.input}
-            onChangeText={(val) => setName(val)}
+            onChangeText={(updateName) => setName(updateName)}
           />
           <TextInput
             placeholder= 'phone Number'
             style={styles.input}
-            onChangeText={(val) =>
-              setPhoneNumber(val)
+            onChangeText={(updatePhoneNumber) =>
+              setPhoneNumber(updatePhoneNumber)
             }
           />
           <TextInput
             placeholder= "Address (Optional)"
             style={styles.input}
-            onChangeText={(val) =>
-              setAddress(val)
+            onChangeText={(updateAddress) =>
+              setAddress(updateAddress)
             }            
           />
         </View>
