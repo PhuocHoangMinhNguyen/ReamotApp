@@ -38,8 +38,8 @@ import MediInfoScreen from "./screens/MedicineStack/MediInfoScreen";
 import BarcodeScan from "./screens/MedicineStack/BarcodeScan";
 
 // Schedule Reminder
-//import NewReminderScreen from "./screens/MedicineStack/ScheduleReminder/NewReminder";
-//import ChangeReminderScreen from "./screens/MedicineStack/ScheduleReminder/ChangeReminder";
+// import NewReminderScreen from "./screens/MedicineStack/ScheduleReminder/NewReminder";
+// import ChangeReminderScreen from "./screens/MedicineStack/ScheduleReminder/ChangeReminder";
 
 // Once Reminder
 import NewReminderScreen from "./screens/MedicineStack/OnceReminder/NewReminder";
@@ -51,9 +51,12 @@ import DoctorInfoScreen from "./screens/DoctorStack/DoctorInfoScreen";
 import AccessedDoctorScreen from "./screens/DoctorStack/AccessedDoctorScreen";
 import Appointment from "./screens/DoctorStack/AppointmentMaker";
 
-import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
-import AppointmentList from "./screens/ProfileStack/BackEnd/AppointmentList";
-import EditProfile from "./screens/ProfileStack/BackEnd/EditProfile";
+// import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
+// import AppointmentList from "./screens/ProfileStack/BackEnd/AppointmentList";
+// import EditProfile from "./screens/ProfileStack/BackEnd/EditProfile";
+
+import ProfileScreen from "./screens/ProfileStack/Backup/ProfileScreen";
+import AppointmentList from "./screens/ProfileStack/Backup/AppointmentList";
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
@@ -100,7 +103,7 @@ const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
     AppointList: AppointmentList,
-    Edit: EditProfile,
+    //Edit: EditProfile,
   },
   { initialRouteName: "Profile" }
 );

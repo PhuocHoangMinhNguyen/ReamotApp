@@ -49,9 +49,9 @@ export default class CalendarScreen extends React.Component {
                 time: this.state.history[i].time,
                 date: this.state.history[i].date,
                 key: documentSnapshot2.id,
-              });
+              })
             }
-          });
+          })
           this.setState({ medicine: temp2 })
         })
       }
@@ -128,7 +128,7 @@ export default class CalendarScreen extends React.Component {
         )}
         <FlatList
           style={styles.feed}
-          data={this.state.medicine}
+          data={this.state.appoinemnt}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
         />
