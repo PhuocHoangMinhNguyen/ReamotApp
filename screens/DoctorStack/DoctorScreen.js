@@ -34,8 +34,8 @@ export default class DoctorScreen extends Component {
     let tempDoctorEmail = []
 
     // doctor and pharmacist info using emails from "users" document
-    let tempAccessedDoctor = []
-    let tempAccessedPharmacist = []
+    //let tempAccessedDoctor = []
+    //let tempAccessedPharmacist = []
 
     firestore().collection("users").doc((auth().currentUser || {}).uid)
       .onSnapshot((documentSnapshot) => {
@@ -53,6 +53,7 @@ export default class DoctorScreen extends Component {
 
             // Accessed Doctor
             firestore().collection("doctor").onSnapshot((querySnapshot) => {
+              let tempAccessedDoctor = []
               querySnapshot.forEach((documentSnapshot) => {
                 for (let i = 0; i < tempDoctorEmail.length; i++) {
                   if (tempDoctorEmail[i] == documentSnapshot.data().doctorEmail) {
@@ -70,6 +71,7 @@ export default class DoctorScreen extends Component {
           if (tempPharmacistEmail != null) {
             // Accessed Pharmacist
             firestore().collection("pharmacist").onSnapshot((querySnapshot) => {
+              let tempAccessedPharmacist = []
               querySnapshot.forEach((documentSnapshot) => {
                 for (let i = 0; i < tempPharmacistEmail.length; i++) {
                   if (tempPharmacistEmail[i] == documentSnapshot.data().pharmacistEmail) {

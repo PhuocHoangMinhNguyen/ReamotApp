@@ -59,6 +59,7 @@ export default class AccessedDoctorScreen extends React.Component {
         }
         this.setState({ dialogVisible: false })
         Toast.show("Your request is confirmed !")
+        this.props.navigation.goBack()
     }
 
     render() {

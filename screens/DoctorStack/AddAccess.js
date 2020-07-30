@@ -96,10 +96,17 @@ export default class AddAccess extends React.Component {
 
     // Information appears on each item.
     renderItem = (item) => {
+        let emailInfo
+        if (item.type == "Doctor") {
+            emailInfo = item.doctorEmail
+        } else {
+            emailInfo = item.pharmacistEmail
+        }
         let dataInfor = {
             avatar: item.avatar,
             name: item.name,
             type: item.type,
+            email: emailInfo
         }
         return (
             <TouchableOpacity
