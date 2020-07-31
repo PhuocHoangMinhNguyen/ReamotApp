@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Image,
+  SafeAreaView,
+  TouchableOpacity
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -19,72 +27,66 @@ function ProfileScreen({ navigation }) {
   }, [auth().currentUser.uid]);
 
   return (
-    <View style={styles.container}>
-      <View style={{ marginTop: 64, alignItems: "center" }}>
-        <View style={styles.avatarContainer}>
-          <Image
-            source={
-              user.avatar
-                ? { uri: user.avatar }
-                : require("../../../assets/tempAvatar.jpg")
-            }
-            style={styles.avatar}
-          />
+    <SafeAreaView style={styles.container}>
+      <View style = {{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 10}}>
+        <Image
+          source={
+            user.avatar
+              ? { uri: user.avatar }
+              : require('../../../assets/tempAvatar.jpg')
+          }
+          style={{ height: 140, width: 140, borderRadius: 80 }}
+        />
+        <Text style={styles.text}>
+          Username: {user.name} 
+          {'\n'}Email: {user.email} 
+          {'\n'}Phone Number: {user.phoneNumber} 
+          {'\n'}Address: {user.Address}
+        </Text>
+      </View>
+      <TouchableOpacity onPress = {() => navigation.navigate('Edit')} >
+        <View style={styles.button}>
+          <Text style = {styles.buttonText}> Edit profile </Text>
         </View>
-        <Text>{user.name}</Text>
-        <Text>{user.email}</Text>
-        <Text>{user.phoneNumber}</Text>
-        <Text>{user.Address}</Text>
-      </View>
-      <View style={styles.button}>
-        <Button
-          title="Edit profile"
-          onPress={() => navigation.navigate("Edit")} />
-
-        <Button
-          onPress={() => navigation.navigate("AppointList")}
-          title="Appointment List"
-        />
-      </View>
-      <View style={styles.button}>
-        <Button
-          onPress={() => {
-            auth().signOut();
-          }}
-          title="Log out"
-        />
-      </View>
-    </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('AppointList')} >
+        <View style={styles.button}>
+          <Text style = {styles.buttonText}> Appointment List </Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity  onPress={() => {auth().signOut();}} >
+        <View style={styles.button}>
+          <Text style = {styles.buttonText}> Sign Out </Text>
+        </View>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  profile: {
-    marginTop: 64,
-    alignItems: 'center',
-  },
-  avatarContainer: {
-    shadowColor: '#151734',
-    shadowRadius: 30,
-    shadowOpacity: 0.4,
-  },
-  avatar: {
-    width: 136,
-    height: 136,
-    borderRadius: 68,
-  },
-  name: {
-    marginTop: 24,
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 24,
+    backgroundColor: '#DEE8F1',
   },
   button: {
-    marginVertical: 8,
-    marginHorizontal: 16,
+    borderRadius: 24,
+    paddingVertical: 10,
+    backgroundColor: '#018ABE',
+    margin: 4
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold'
+  },
+  text: {
+    color: 'black',
+    fontSize: 15,
+    marginLeft: 20,
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+    textDecorationStyle: "solid",
+    textDecorationColor: "#000"
   },
 });
 
