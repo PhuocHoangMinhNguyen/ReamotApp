@@ -75,7 +75,7 @@ export default class HomeScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
       <Image style = {{width: 350, height: 350, borderRadius: 180}} 
-      source = {require('../../../picture/GrowingTree.jpg')}/>
+      source = {require('../../../assets/GrowingTree.jpg')}/>
         <FlatList
           style={styles.feed}
           data={this.state.medicines}
