@@ -51,12 +51,13 @@ import DoctorInfoScreen from "./screens/DoctorStack/DoctorInfoScreen";
 import AccessedDoctorScreen from "./screens/DoctorStack/AccessedDoctorScreen";
 import Appointment from "./screens/DoctorStack/AppointmentMaker";
 
-// import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
-// import AppointmentList from "./screens/ProfileStack/BackEnd/AppointmentList";
-// import EditProfile from "./screens/ProfileStack/BackEnd/EditProfile";
+import ProfileScreen from "./screens/ProfileStack/BackEnd/ProfileScreen";
+import AppointmentList from "./screens/ProfileStack/BackEnd/AppointmentList";
+import EditProfile from "./screens/ProfileStack/BackEnd/EditProfile";
 
-import ProfileScreen from "./screens/ProfileStack/Backup/ProfileScreen";
-import AppointmentList from "./screens/ProfileStack/Backup/AppointmentList";
+//import ProfileScreen from "./screens/ProfileStack/Backend/ProfileScreen";
+//import AppointmentList from "./screens/ProfileStack/Backend/AppointmentList";
+
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
@@ -103,7 +104,7 @@ const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
     AppointList: AppointmentList,
-    //Edit: EditProfile,
+    Edit: EditProfile,
   },
   { initialRouteName: "Profile" }
 );
