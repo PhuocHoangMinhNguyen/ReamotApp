@@ -38,8 +38,24 @@ export default class AppointmentList extends React.Component {
     renderItem(item) {
         return (
             <SafeAreaView style={styles.feedItem}>
-                <Text>{item.doctor}</Text>
-            </SafeAreaView>
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={{ color: "#000000", fontSize: 15 }}>Doctor Name: </Text>
+                    <View style={{ flex: 1, alignItems: "center" }}>
+                        <Text>{item.doctor}</Text>
+                    </View>
+                </View>
+                <View style={styles.appoint}>
+                    <Text style={{ color: "#000000", fontSize: 15 }}>Appoiment Time: </Text>
+                    <Text>{item.date}</Text>
+                    <Text>{item.time}</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={{ color: "#000000", fontSize: 15 }}>Reason: </Text>
+                    <View style={{ flex: 1, alignItems: "center" }}>
+                        <Text>{item.reason}</Text>
+                    </View>
+                </View>
+            </SafeAreaView >
         )
     }
 
@@ -66,8 +82,6 @@ export default class AppointmentList extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center"
     },
     back: {
         position: "absolute",
@@ -84,10 +98,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         borderRadius: 5,
         padding: 8,
-        flexDirection: "row",
         marginVertical: 8,
     },
     feed: {
         marginHorizontal: 16,
+        marginTop: 60
+    },
+    appoint: {
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 })
