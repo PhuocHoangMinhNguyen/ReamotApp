@@ -1,5 +1,6 @@
-import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react'
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import auth from "@react-native-firebase/auth"
 
 export default class DrawerMenu extends React.Component {
     render() {
@@ -17,7 +18,7 @@ export default class DrawerMenu extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => { }}>
+                    onPress={() => { auth().signOut() }}>
                     <Text>Log Out</Text>
                 </TouchableOpacity>
             </View>
