@@ -8,6 +8,7 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
@@ -77,7 +78,7 @@ function EditProfile({ navigation }) {
       .collection('users')
       .doc(auth().currentUser.uid)
       .update({
-        avatar: user.avatar
+        avatar: user.avatar,
       })
       .then(() => {
         console.log('User updated!');
@@ -107,60 +108,60 @@ function EditProfile({ navigation }) {
         const source = response.uri;
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        setUser({...this.user, avatar: source})
+        setUser({ ...this.user, avatar: source });
       }
     });
   };
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <View style={{ marginTop: 64, alignItems: 'center' }}>
-          <View style={styles.avatarContainer}>
-            <Image
-              source={
-                user.avatar
-                  ? { uri: user.avatar }
-                  : require('../../../assets/tempAvatar.jpg')
-              }
-              style={styles.avatar}
-            />
-          </View>
-          <View>
-            <Button title="Change avatar" onPress={() => handlePickAvatar()} />
-            <TextInput
-              placeholder="name"
-              style={styles.input}
-              onChangeText={(updateName) => setName(updateName)}
-            />
-            <TextInput
-              placeholder="phone Number"
-              style={styles.input}
-              onChangeText={(updatePhoneNumber) =>
-                setPhoneNumber(updatePhoneNumber)
-              }
-            />
-            <TextInput
-              placeholder="Address (Optional)"
-              style={styles.input}
-              onChangeText={(updateAddress) => setAddress(updateAddress)}
-            />
-          </View>
-          <View style={styles.button}>
-            <Button title="Save profile" onPress={() => update()} />
+      <SafeAreaView>
+        <View style={styles.container}>
+          <View style={{ marginTop: 64, alignItems: 'center' }}>
+            <View style={styles.avatarContainer}>
+              <Image
+                source={
+                  user.avatar
+                    ? { uri: user.avatar }
+                    : require('../../../assets/tempAvatar.jpg')
+                }
+                style={styles.avatar}
+              />
+            </View>
+            <View>
+              <Button
+                title="Change avatar"
+                onPress={() => handlePickAvatar()}
+              />
+              <TextInput
+                placeholder="name"
+                style={styles.input}
+                onChangeText={(updateName) => setName(updateName)}
+              />
+              <TextInput
+                placeholder="phone Number"
+                style={styles.input}
+                onChangeText={(updatePhoneNumber) =>
+                  setPhoneNumber(updatePhoneNumber)
+                }
+              />
+              <TextInput
+                placeholder="Address (Optional)"
+                style={styles.input}
+                onChangeText={(updateAddress) => setAddress(updateAddress)}
+              />
+            </View>
+            <View style={styles.button}>
+              <Button title="Save profile" onPress={() => update()} />
+            </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  avatarContainer: {
-    shadowColor: '#151734',
-    shadowRadius: 30,
-    shadowOpacity: 0.4,
-  },
   avatar: {
     width: 136,
     height: 136,
@@ -174,6 +175,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     width: 200,
+  },
+  name: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: "500",
+    color: "white",
   },
 });
 
