@@ -3,7 +3,7 @@
 // Status: In development
 
 import React from "react"
-import { View, Text, StyleSheet, FlatList, SafeAreaView, Image, TouchableOpacity } from "react-native"
+import { Text, StyleSheet, FlatList, SafeAreaView, Image, TouchableOpacity } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
@@ -74,14 +74,14 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-      <Image style = {{width: 350, height: 350, borderRadius: 180}} 
-      source = {require('../../../assets/GrowingTree.jpg')}/>
+        <Image style={{ width: 350, height: 350, borderRadius: 180 }}
+          source={require('../../../assets/GrowingTree.jpg')} />
         <FlatList
           style={styles.feed}
           data={this.state.medicines}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
-          horizontal = {true}
+          horizontal={true}
         />
       </SafeAreaView>
     );
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     flexDirection: 'column',
     borderWidth: 1,
-    
+
   },
   avatar: {
     width: 36,
