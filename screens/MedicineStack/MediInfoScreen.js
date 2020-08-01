@@ -31,18 +31,21 @@ export default class MediInfoScreen extends React.Component {
     firestore().collection("prescription").onSnapshot((querySnapshot) => {
       let tempValue = 0
       let tempValue2 = 0
+      let tempValue3 = ""
 
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
           && documentSnapshot.data().name == this.props.navigation.state.params.name) {
           tempValue = parseInt(documentSnapshot.data().times, 10)
           tempValue2 = parseInt(documentSnapshot.data().number, 10)
+          tempValue3 = documentSnapshot.data().type
         }
-      });
+      })
       this.setState({
         prescription: {
           times: tempValue,
-          number: tempValue2
+          number: tempValue2,
+          type: tempValue3
         }
       })
     })
@@ -161,7 +164,7 @@ export default class MediInfoScreen extends React.Component {
         <View style={styles.prescription}>
           <Text style={styles.time}>{this.state.prescription.number}</Text>
           <Text style={styles.time}>{this.state.prescription.times} times</Text>
-          <Text style={styles.repeat}>Daily</Text>
+          <Text style={styles.repeat}>{this.state.prescription.type}</Text>
         </View>
 
         <FlatList
