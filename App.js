@@ -1,22 +1,3 @@
-// Author: Phuoc Hoang Minh Nguyen
-// Description: Responsible for app structure:
-//    - AuthStack (StackNavigator): RegisterScreen, LoginScreen
-//    - AppContainer:
-//      - HomeStack (StackNavigator): HomeScreen
-//      - CalendarStack (StackNavigator): CalendarScreen
-//      - MedicineStack (StackNavigator):
-//        - MedicineScreen,
-//        - MediInfoScreen,
-//        - NewReminderScreen,
-//        - ChangeReminderScreen,
-//        - BarcodeScan,
-//      - DoctorStack (StackNavigator):
-//        - DoctorScreen,
-//        - DoctorInfoScreen,
-//        - Appointment
-//      - ProfileStack (StackNavigator): AppointmentList, ProfileScreen
-// Status: In development.
-
 import React from "react"
 import { createAppContainer, createSwitchNavigator } from "react-navigation"
 import { createDrawerNavigator } from "react-navigation-drawer"
