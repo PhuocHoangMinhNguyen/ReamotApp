@@ -24,7 +24,7 @@ import { createDrawerNavigator } from "react-navigation-drawer"
 import LoadingScreen from "./screens/LoadingScreen"
 import AuthStack from "./routes/AuthStack"
 import BottomTabs from "./routes/BottomTabs"
-import DrawerMenu from "./routes/DrawerMenu"
+import DrawerMenu from "./routes/DrawerMenu/DrawerMenu"
 
 const ProfileStack = createDrawerNavigator(
   {

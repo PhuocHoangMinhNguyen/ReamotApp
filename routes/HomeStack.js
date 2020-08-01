@@ -1,11 +1,13 @@
 import { createStackNavigator } from "react-navigation-stack"
-import HomeScreen from "../screens/HomeStack/BackEnd/HomeScreen"
-import ProfileScreen from "../screens/HomeStack/Backup/ProfileScreen"
+import HomeScreen from "../screens/HomeStack/HomeScreen"
+import EditScreen from "../screens/HomeStack/EditScreen"
+import HelpScreen from "../screens/HomeStack/HelpScreen"
 
 export default CalendarStack = createStackNavigator(
     {
         HomeScreen,
-        ProfileScreen
+        EditScreen,
+        HelpScreen
     },
     {
         headerMode: "none"

@@ -52,15 +52,13 @@ export default class HomeScreen extends React.Component {
       barcode: item.barcode
     }
     return (
-      <TouchableOpacity
-        style={styles.feedItem}
-        onPress={() => { }}
-      >
+      <TouchableOpacity style={styles.feedItem}
+        onPress={() => { }}>
         <Image
           source={
             item.image
               ? { uri: item.image }
-              : require("../../../assets/tempAvatar.jpg")
+              : require("../../assets/tempAvatar.jpg")
           }
           style={styles.avatar}
         />
@@ -72,11 +70,14 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        <Image style={{ width: 350, height: 350, borderRadius: 180 }}
+          source={require('../../assets/GrowingTree.jpg')} />
         <FlatList
           style={styles.feed}
           data={this.state.medicines}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
+          horizontal={true}
         />
       </SafeAreaView>
     );
@@ -86,16 +87,23 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#DEE8F1',
+    alignItems: 'center'
   },
   feed: {
     marginHorizontal: 16,
+    paddingVertical: 20
   },
   feedItem: {
-    backgroundColor: "#FFF",
-    borderRadius: 5,
-    padding: 8,
-    flexDirection: "row",
+    backgroundColor: '#004481',
+    borderRadius: 10,
+    padding: 7,
+    margin: 4,
+    width: 90,
     marginVertical: 8,
+    flexDirection: 'column',
+    borderWidth: 1,
+
   },
   avatar: {
     width: 36,
@@ -108,6 +116,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
-    color: "#454D65",
+    color: "white",
   },
 })
