@@ -11,10 +11,14 @@ import ChangeReminderScreen from "../screens/MedicineStack/OnceReminder/ChangeRe
 // import NewReminderScreen from "../screens/MedicineStack/ScheduleReminder/NewReminder";
 // import ChangeReminderScreen from "../screens/MedicineStack/ScheduleReminder/ChangeReminder";
 
-export default MedicineStack = createStackNavigator({
-    MedicineScreen,
-    MediInfoScreen,
-    BarcodeScan,
-    NewReminderScreen,
-    ChangeReminderScreen,
-});
+export default MedicineStack = createStackNavigator(
+    {
+        MedicineScreen,
+        MediInfoScreen,
+        BarcodeScan,
+        NewReminderScreen,
+        ChangeReminderScreen,
+    },
+    {
+        headerMode: "none"
+    });

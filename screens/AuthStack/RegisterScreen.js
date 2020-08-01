@@ -24,10 +24,6 @@ import UserPermissions from "../../utilities/UserPermissions"
 import Toast from "react-native-simple-toast"
 
 export default class RegisterScreen extends React.Component {
-  static navigationOptions = {
-    headerShown: false
-  }
-
   state = {
     user: {
       name: "",

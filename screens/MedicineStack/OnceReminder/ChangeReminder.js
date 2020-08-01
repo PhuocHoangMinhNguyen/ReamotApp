@@ -23,10 +23,6 @@ const alarmNotifData = {
 export default class ChangeReminder extends React.Component {
     _isMounted
 
-    static navigationOptions = {
-        headerShown: false,
-    }
-
     constructor(props) {
         super(props)
         this.state = {

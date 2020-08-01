@@ -20,10 +20,6 @@ const alarmNotifData = {
 };
 
 export default class BarcodeScan extends React.Component {
-    static navigationOptions = {
-        headerShown: false,
-    };
-
     constructor(props) {
         super(props)
         this.handleTourch = this.handleTourch.bind(this)

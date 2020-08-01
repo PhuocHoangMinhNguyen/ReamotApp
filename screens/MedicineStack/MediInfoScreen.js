@@ -10,11 +10,6 @@ import auth from "@react-native-firebase/auth"
 import ViewMoreText from "react-native-view-more-text"
 
 export default class MediInfoScreen extends React.Component {
-
-  static navigationOptions = {
-    headerShown: false,
-  }
-
   constructor(props) {
     super(props)
     this.state = {

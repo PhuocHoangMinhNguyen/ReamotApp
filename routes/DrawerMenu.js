@@ -22,7 +22,7 @@ export default class DrawerMenu extends React.Component {
                     <Text>Log Out</Text>
                 </TouchableOpacity>
             </View>
-        );
+        )
     }
 }
 
@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         paddingHorizontal: 8,
     },
-});
+})

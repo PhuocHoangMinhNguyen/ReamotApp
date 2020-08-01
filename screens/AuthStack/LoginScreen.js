@@ -21,10 +21,6 @@ import Toast from "react-native-simple-toast"
 import Ionicons from "react-native-vector-icons/Ionicons"
 
 export default class LoginScreen extends React.Component {
-  static navigationOptions = {
-    headerShown: false
-  }
-
   state = {
     email: "",
     password: "",

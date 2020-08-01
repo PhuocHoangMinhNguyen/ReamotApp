@@ -13,10 +13,6 @@ import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 
 export default class DoctorScreen extends Component {
-  static navigationOptions = {
-    headerShown: false,
-  }
-
   constructor(props) {
     super(props)
     this.state = {

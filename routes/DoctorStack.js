@@ -5,10 +5,15 @@ import DoctorInfoScreen from "../screens/DoctorStack/DoctorInfoScreen"
 import AccessedDoctorScreen from "../screens/DoctorStack/AccessedDoctorScreen"
 import AppointmentMaker from "../screens/DoctorStack/AppointmentMaker"
 
-export default DoctorStack = createStackNavigator({
-    DoctorScreen,
-    AddAccess,
-    DoctorInfoScreen,
-    AccessedDoctorScreen,
-    AppointmentMaker
-});
+export default DoctorStack = createStackNavigator(
+    {
+        DoctorScreen,
+        AddAccess,
+        DoctorInfoScreen,
+        AccessedDoctorScreen,
+        AppointmentMaker
+    },
+    {
+        headerMode: "none"
+    }
+);
