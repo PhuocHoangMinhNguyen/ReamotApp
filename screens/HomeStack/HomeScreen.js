@@ -103,11 +103,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 7,
     margin: 4,
-    width: 90,
+    width: 120,
     marginVertical: 8,
     flexDirection: 'column',
     borderWidth: 1,
-
   },
   avatar: {
     width: 36,
