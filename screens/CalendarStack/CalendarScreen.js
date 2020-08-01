@@ -128,7 +128,7 @@ export default class CalendarScreen extends React.Component {
         )}
         <FlatList
           style={styles.feed}
-          data={this.state.appoinemnt}
+          data={this.state.medicine}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
         />
