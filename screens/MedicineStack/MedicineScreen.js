@@ -62,7 +62,7 @@ export default class MedicineScreen extends React.Component {
   // Click on each item in flatlist will lead user to MediInforScreen 
   // to show that medicine details with reminders.
   handleClick = (dataInfor) => {
-    this.props.navigation.navigate("MediInfo", dataInfor)
+    this.props.navigation.navigate("MediInfoScreen", dataInfor)
   }
 
   // Information appears on each item.

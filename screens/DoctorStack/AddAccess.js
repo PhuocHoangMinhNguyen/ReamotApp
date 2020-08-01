@@ -87,7 +87,7 @@ export default class AddAccess extends React.Component {
     // Click on each item in flatlist will lead user to DoctorInfoScreen 
     // to show that doctor/pharmacist information with some options.
     handleClick = (dataInfor) => {
-        this.props.navigation.navigate("DoctorInfo", dataInfor)
+        this.props.navigation.navigate("DoctorInfoScreen", dataInfor)
     }
 
     // Information appears on each item.

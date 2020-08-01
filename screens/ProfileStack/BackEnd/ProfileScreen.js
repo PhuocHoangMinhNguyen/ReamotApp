@@ -28,7 +28,7 @@ function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style = {{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 10}}>
+      <View style={{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 10 }}>
         <Image
           source={
             user.avatar
@@ -38,25 +38,25 @@ function ProfileScreen({ navigation }) {
           style={{ height: 140, width: 140, borderRadius: 80 }}
         />
         <Text style={styles.text}>
-          Username: {user.name} 
-          {'\n'}Email: {user.email} 
-          {'\n'}Phone Number: {user.phoneNumber} 
+          Username: {user.name}
+          {'\n'}Email: {user.email}
+          {'\n'}Phone Number: {user.phoneNumber}
           {'\n'}Address: {user.Address}
         </Text>
       </View>
-      <TouchableOpacity onPress = {() => navigation.navigate('Edit')} >
+      <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} >
         <View style={styles.button}>
-          <Text style = {styles.buttonText}> Edit profile </Text>
+          <Text style={styles.buttonText}> Edit profile </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('AppointList')} >
+      <TouchableOpacity onPress={() => navigation.navigate('AppointmentList')} >
         <View style={styles.button}>
-          <Text style = {styles.buttonText}> Appointment List </Text>
+          <Text style={styles.buttonText}> Appointment List </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity  onPress={() => {auth().signOut();}} >
+      <TouchableOpacity onPress={() => { auth().signOut(); }} >
         <View style={styles.button}>
-          <Text style = {styles.buttonText}> Sign Out </Text>
+          <Text style={styles.buttonText}> Sign Out </Text>
         </View>
       </TouchableOpacity>
     </SafeAreaView>

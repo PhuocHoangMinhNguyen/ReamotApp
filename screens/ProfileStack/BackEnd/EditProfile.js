@@ -48,7 +48,7 @@ function EditProfile({ navigation }) {
         .then(() => {
           console.log('User updated!');
         }),
-        navigation.navigate('Profile');
+        navigation.navigate('ProfileScreen');
     }
     if (updateAddress != null) {
       firestore()
@@ -60,7 +60,7 @@ function EditProfile({ navigation }) {
         .then(() => {
           console.log('User updated!');
         }),
-        navigation.navigate('Profile');
+        navigation.navigate('ProfileScreen');
     }
     if (updatePhoneNumber != null) {
       firestore()
@@ -72,7 +72,7 @@ function EditProfile({ navigation }) {
         .then(() => {
           console.log('User updated!');
         }),
-        navigation.navigate('Profile');
+        navigation.navigate('ProfileScreen');
     }
     firestore()
       .collection('users')
@@ -83,7 +83,7 @@ function EditProfile({ navigation }) {
       .then(() => {
         console.log('User updated!');
       }),
-      navigation.navigate('Profile');
+      navigation.navigate('ProfileScreen');
   };
 
   handlePickAvatar = async () => {

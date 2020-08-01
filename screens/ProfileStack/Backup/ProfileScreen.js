@@ -36,7 +36,7 @@ export default class ProfileScreen extends React.Component {
 
   // Check Appointment list of that patient.
   handlePress = () => {
-    this.props.navigation.navigate("AppointList")
+    this.props.navigation.navigate("AppointmentList")
   }
 
   render() {

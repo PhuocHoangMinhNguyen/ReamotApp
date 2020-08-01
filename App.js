@@ -33,7 +33,7 @@ const ProfileStack = createDrawerNavigator(
   {
     drawerPosition: "right",
     drawerWidth: 200,
-    contentComponent: () => <DrawerMenu />
+    contentComponent: props => <DrawerMenu {...props} />
   }
 );
 
