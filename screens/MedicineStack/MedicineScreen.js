@@ -76,9 +76,7 @@ export default class MedicineScreen extends React.Component {
     return (
       <TouchableOpacity
         style={styles.feedItem}
-        onPress={() => {
-          this.handleClick(dataInfor)
-        }}
+        onPress={() => { this.handleClick(dataInfor) }}
       >
         <Image
           source={

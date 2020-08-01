@@ -43,6 +43,10 @@ export default class HomeScreen extends React.Component {
     })
   }
 
+  handleClick = (dataInfor) => {
+    this.props.navigation.navigate("MedicationInformation", dataInfor)
+  }
+
   // Information appears on each item.
   renderItem = (item) => {
     let dataInfor = {
@@ -53,7 +57,7 @@ export default class HomeScreen extends React.Component {
     }
     return (
       <TouchableOpacity style={styles.feedItem}
-        onPress={() => { }}>
+        onPress={() => { this.handleClick(dataInfor) }}>
         <Image
           source={
             item.image
