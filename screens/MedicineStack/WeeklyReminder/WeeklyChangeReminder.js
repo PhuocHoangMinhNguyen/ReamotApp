@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to delete their reminder and stop sounding alarm
-// Status: In development
+// Description: Allow patient to delete their weekly reminder and stop sounding alarm
+// Status: Currently working similar to daily reminder
 
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'

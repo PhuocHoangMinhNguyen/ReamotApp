@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to make a new reminder
-// Status: In development
+// Description: Allow patient to make a new weekly reminder
+// Status: Currently working similar to daily reminder
 
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
@@ -74,6 +74,7 @@ export default class WeeklyNewReminder extends React.Component {
                 alarmId: reminderId,
                 idAN: idAN,
                 medicine: name,
+                type: "Weekly",
                 times: moment(testDate).format('hh:mm a'),
                 patientEmail: auth().currentUser.email,
             })

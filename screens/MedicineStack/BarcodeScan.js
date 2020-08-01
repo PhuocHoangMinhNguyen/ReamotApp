@@ -68,6 +68,7 @@ export default class BarcodeScan extends React.Component {
                 // 5 minutes = 300.000 miliseconds.
                 // 1 hour = 3.600.000 miliseconds
                 // 24 hours = 86.400.000 miliseconds.
+                // 7 days = 168 hours = 604.800.000 miliseconds
 
                 const details = {
                     ...alarmNotifData,
@@ -90,10 +91,7 @@ export default class BarcodeScan extends React.Component {
                         idAN: idAN,
                         alarmId: alarmId
                     })
-                this.props.navigation.navigate("ChangeReminder", {
-                    medicine: this.props.navigation.state.params.medicine,
-                    itemTime: this.props.navigation.state.params.itemTime,
-                })
+                this.props.navigation.navigate("MedicineScreen")
 
                 // When the alarm is turned off, add the medicine into "history" collection
                 firestore().collection("history").add({

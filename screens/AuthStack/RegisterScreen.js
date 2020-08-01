@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Register Screen
-// Status: Optimized
+// Status: Need to verify email
 
 import React from "react"
 import {

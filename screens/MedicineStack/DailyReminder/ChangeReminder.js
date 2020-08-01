@@ -1,5 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to delete their reminder and stop sounding alarm
+// Description: Allow patient to delete their daily reminder and stop sounding alarm
 // Status: In development
 
 import React from 'react'

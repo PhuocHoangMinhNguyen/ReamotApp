@@ -1,5 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to make a new reminder
+// Description: Allow patient to make a new daily reminder
 // Status: In development
 
 import React from 'react'
@@ -74,6 +74,7 @@ export default class NewReminder extends React.Component {
                 alarmId: reminderId,
                 idAN: idAN,
                 medicine: name,
+                type: "Daily",
                 times: moment(testDate).format('hh:mm a'),
                 patientEmail: auth().currentUser.email,
             })
