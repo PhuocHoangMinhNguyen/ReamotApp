@@ -51,12 +51,11 @@ export default class MediInfoScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 70,
         flex: 1,
+        backgroundColor: '#DEE8F1',
     },
     back: {
         position: "absolute",
-        marginTop: -70,
         top: 24,
         left: 32,
         width: 32,
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         borderRadius: 5,
         padding: 16,
-        marginVertical: 8,
+        marginTop: 70,
         marginHorizontal: 16,
     },
     description: {

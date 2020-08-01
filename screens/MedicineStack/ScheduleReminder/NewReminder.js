@@ -207,11 +207,9 @@ export default class NewReminder extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 100
     },
     back: {
         position: "absolute",
-        marginTop: -100,
         top: 24,
         left: 32,
         width: 32,
@@ -236,7 +234,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         borderRadius: 5,
         padding: 16,
-        marginVertical: 8,
+        marginTop: 70,
         marginHorizontal: 16
     },
     timePicker: {

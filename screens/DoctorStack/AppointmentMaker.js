@@ -163,7 +163,8 @@ export default class AppointmentMaker extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: '#DEE8F1',
     },
     back: {
         position: "absolute",

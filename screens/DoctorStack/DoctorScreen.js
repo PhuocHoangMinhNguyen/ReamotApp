@@ -133,7 +133,7 @@ export default class DoctorScreen extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <SectionList
+        <SectionList style={styles.feed}
           sections={[
             { title: "Accessed Doctor", data: this.state.accessedDoctor },
             { title: "Accessed Pharmacist", data: this.state.accessedPharmacist },
@@ -155,8 +155,7 @@ export default class DoctorScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 16,
-    marginHorizontal: 16
+    backgroundColor: '#DEE8F1',
   },
   item: {
     backgroundColor: "#f9c2ff",
@@ -165,10 +164,14 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 18,
-    backgroundColor: "#fff"
+    fontWeight: "bold"
   },
   title: {
     fontSize: 24
+  },
+  feed: {
+    marginTop: 16,
+    marginHorizontal: 16,
   },
   feedItem: {
     backgroundColor: "#FFF",
@@ -190,7 +193,8 @@ const styles = StyleSheet.create({
     color: "#454D65",
   },
   button: {
-    marginBottom: 12
+    marginBottom: 16,
+    marginHorizontal: 16
   }
 })
 

@@ -131,7 +131,7 @@ export default class MedicineScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#EBECF4",
+    backgroundColor: '#DEE8F1',
   },
   header: {
     justifyContent: "space-between",
