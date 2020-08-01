@@ -69,14 +69,25 @@ export default class MediInfoScreen extends React.Component {
   }
 
   handleNewReminder = () => {
-    this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
+    if (this.state.prescription.type == "Daily") {
+      this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
+    } else {
+      this.props.navigation.navigate("WeeklyNewReminder", this.props.navigation.state.params)
+    }
   }
 
   handleChangeReminder = (item) => {
-    this.props.navigation.navigate("ChangeReminder", {
-      medicine: this.props.navigation.state.params,
-      itemTime: item.times,
-    })
+    if (this.state.prescription.type == "Daily") {
+      this.props.navigation.navigate("ChangeReminder", {
+        medicine: this.props.navigation.state.params,
+        itemTime: item.times,
+      })
+    } else {
+      this.props.navigation.navigate("WeeklyChangeReminder", {
+        medicine: this.props.navigation.state.params,
+        itemTime: item.times,
+      })
+    }
   }
 
   // Handle View More Text in medicine's description

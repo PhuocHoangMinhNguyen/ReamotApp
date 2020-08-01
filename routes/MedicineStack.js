@@ -6,6 +6,8 @@
 //      - BarcodeScan,
 //      - NewReminder,
 //      - ChangeReminder,
+//      - WeeklyNewReminder,
+//      - WeeklyChangeReminder
 // Status: Currently using "once reminder" instead of "scheduled reminder" 
 //      due to "react-native-alarm-notification" package error.
 
@@ -19,8 +21,8 @@ import NewReminder from "../screens/MedicineStack/DailyReminder/NewReminder";
 import ChangeReminder from "../screens/MedicineStack/DailyReminder/ChangeReminder";
 
 // Weekly Reminder
-// import NewReminder from "../screens/MedicineStack/WeeklyReminder/NewReminder";
-// import ChangeReminder from "../screens/MedicineStack/WeeklyReminder/ChangeReminder";
+import WeeklyNewReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyNewReminder";
+import WeeklyChangeReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder";
 
 export default MedicineStack = createStackNavigator(
     {
@@ -29,6 +31,8 @@ export default MedicineStack = createStackNavigator(
         BarcodeScan,
         NewReminder,
         ChangeReminder,
+        WeeklyNewReminder,
+        WeeklyChangeReminder
     },
     {
         headerMode: "none"
