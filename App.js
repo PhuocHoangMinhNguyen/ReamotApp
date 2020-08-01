@@ -7,7 +7,7 @@ import AuthStack from "./routes/AuthStack"
 import BottomTabs from "./routes/BottomTabs"
 import DrawerMenu from "./routes/DrawerMenu/DrawerMenu"
 
-const ProfileStack = createDrawerNavigator(
+const Drawer = createDrawerNavigator(
   {
     BottomTabs,
   },
@@ -22,8 +22,8 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       Loading: LoadingScreen,
-      App: ProfileStack,
-      Auth: AuthStack,
+      App: Drawer,
+      AuthStack,
     },
     {
       initialRouteName: "Loading",
