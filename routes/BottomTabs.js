@@ -1,3 +1,9 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Application BottomTabNavigator with 5 options,
+//  each option is a "Stack" in "routes" folder, except the last one,
+//  which will open a drawer navigation.
+// Status: Optimized
+
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"

@@ -1,5 +1,9 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
+// Description: 
+//  - Showing doctor or pharmacist details, who has access to user medical details
+//  - Show options to:
+//      - Revoke access to user medical details.
+//      - Make Appointment (if the chosen one is a doctor, not pharmacist)
 // Status: In development
 
 import React from "react"

@@ -1,3 +1,7 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Application Structure, using JS files inside routes.
+// Status: Optimized
+
 import React from "react"
 import { createAppContainer, createSwitchNavigator } from "react-navigation"
 import { createDrawerNavigator } from "react-navigation-drawer"

@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
-// Status: In development
+// Description: Show user information including avatar, user name, and user email.
+// Status: Optimized
 
 import React from "react"
 import { View, Text, StyleSheet, Image } from "react-native"

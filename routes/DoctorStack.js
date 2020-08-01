@@ -1,3 +1,12 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Includes:
+//      - DoctorScreen
+//      - AddAccess
+//      - DoctorInfoScreen,
+//      - AccessedDoctorScreen,
+//      - AppointmentMaker
+// Status: Optimized
+
 import { createStackNavigator } from "react-navigation-stack"
 import DoctorScreen from "../screens/DoctorStack/DoctorScreen"
 import AddAccess from "../screens/DoctorStack/AddAccess"

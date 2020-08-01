@@ -1,3 +1,14 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Includes:
+//      - MedicineScreen
+//      - MedicineScreen,
+//      - MediInfoScreen,
+//      - BarcodeScan,
+//      - NewReminder,
+//      - ChangeReminder,
+// Status: Currently using "once reminder" instead of "scheduled reminder" 
+//      due to "react-native-alarm-notification" package error.
+
 import { createStackNavigator } from "react-navigation-stack"
 import MedicineScreen from "../screens/MedicineStack/MedicineScreen";
 import MediInfoScreen from "../screens/MedicineStack/MediInfoScreen";

@@ -1,5 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
+// Description: Showing doctor or pharmacist details, 
+// who doesn't have access to user medical details
 // Status: In development
 
 import React from "react"
