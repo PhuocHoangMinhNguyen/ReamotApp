@@ -51,7 +51,7 @@ export default BottomTabs = createStackNavigator(
                     },
                 },
                 Profile: {
-                    screen: DoctorStack,
+                    screen: HomeStack,
                     navigationOptions: {
                         tabBarIcon: ({ tintColor }) => (
                             <Ionicons name="reorder-three" size={24} color={tintColor} />

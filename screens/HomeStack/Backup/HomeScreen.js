@@ -8,10 +8,6 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
 export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    headerShown: false,
-  }
-
   constructor(props) {
     super(props)
     this.state = {
