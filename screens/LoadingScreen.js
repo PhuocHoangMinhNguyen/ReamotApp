@@ -14,7 +14,7 @@ export default class LoadingScreen extends React.Component {
   componentDidMount() {
     auth().onAuthStateChanged(user => {
       this.props.navigation.navigate(user ? (user.emailVerified ? "App" : "Verify") : "AuthStack")
-    });
+    })
   }
 
   render() {
@@ -33,4 +33,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   }
-});
+})
