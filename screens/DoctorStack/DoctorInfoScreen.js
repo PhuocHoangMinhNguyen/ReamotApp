@@ -70,7 +70,7 @@ export default class DoctorInfoScreen extends React.Component {
                         <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
                     </View>
                 </View>
-                <View style={{ marginVertical: 5 }}>
+                <View style={styles.button}>
                     <Button
                         title="Give access of medical details"
                         onPress={this.handleGiveAccessToDoctor} />
@@ -100,8 +100,6 @@ export default class DoctorInfoScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: '#DEE8F1',
     },
     back: {
@@ -121,9 +119,14 @@ const styles = StyleSheet.create({
         padding: 16,
         marginVertical: 8,
         marginHorizontal: 16,
+        marginTop: 70,
+        alignItems: "center"
     },
     image: {
         width: 100,
         height: 100
     },
+    button: {
+        marginHorizontal: 16
+    }
 })
