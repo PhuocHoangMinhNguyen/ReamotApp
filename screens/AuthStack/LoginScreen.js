@@ -113,8 +113,13 @@ export default class LoginScreen extends React.Component {
             <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign in</Text>
           </TouchableOpacity>
 
+          <TouchableOpacity style={{ alignItems: "center", marginVertical: 24 }}
+            onPress={() => this.props.navigation.navigate("ForgotPasswordScreen")}>
+            <Text style={{ textDecorationLine: "underline" }}>Forgot Password?</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 32 }}
+            style={{ alignSelf: "center" }}
             onPress={() => this.props.navigation.navigate("RegisterScreen")}
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>
