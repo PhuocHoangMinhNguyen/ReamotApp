@@ -61,6 +61,8 @@ export default class RegisterScreen extends React.Component {
       await auth().createUserWithEmailAndPassword(user.email.trim(), user.password)
         .catch(error => this.setState({ errorMessage: error.message }))
 
+      await auth().currentUser.sendEmailVerification()
+
       // If there is no error.
       if (this.state.errorMessage == null) {
         let db = firestore().collection("users").doc((auth().currentUser || {}).uid)
@@ -86,7 +88,7 @@ export default class RegisterScreen extends React.Component {
         }
       }
     } catch (error) {
-      alert("Error: ", error)
+      alert("Error: ", error.toString())
     }
   };
 

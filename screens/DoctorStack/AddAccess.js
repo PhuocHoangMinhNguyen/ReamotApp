@@ -34,8 +34,12 @@ export default class AddAccess extends React.Component {
 
         firestore().collection("users").doc((auth().currentUser || {}).uid)
             .onSnapshot((documentSnapshot) => {
-                tempPharmacistEmail = documentSnapshot.data().pharmacistList
-                tempDoctorEmail = documentSnapshot.data().doctorList
+                if (documentSnapshot.data().pharmacistList != null) {
+                    tempPharmacistEmail = documentSnapshot.data().pharmacistList
+                }
+                if (documentSnapshot.data().doctorList != null) {
+                    tempDoctorEmail = documentSnapshot.data().doctorList
+                }
             })
 
         let temp = []

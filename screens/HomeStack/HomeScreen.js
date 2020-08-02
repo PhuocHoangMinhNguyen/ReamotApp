@@ -6,6 +6,7 @@ import React from "react"
 import { Text, StyleSheet, FlatList, SafeAreaView, Image, TouchableOpacity } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
+import Toast from "react-native-simple-toast"
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -17,7 +18,12 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    // To take user's medicine based on medicine listed in "prescription" collection.
+    // To take user's medicine based on medicine listed in "prescription" collection.\
+    if (auth().currentUser.emailVerified) {
+      Toast.show("True")
+    } else {
+      Toast.show("False")
+    }
     firestore().collection("prescription").onSnapshot((queryPrescriptionSnapshot) => {
       let temp = []
       queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
