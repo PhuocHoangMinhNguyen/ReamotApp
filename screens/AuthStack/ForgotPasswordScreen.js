@@ -1,8 +1,26 @@
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import auth from "@react-native-firebase/auth"
+import Toast from "react-native-simple-toast"
 
 export default class ForgotPasswordScreen extends React.Component {
+    state = {
+        forgottenEmail: ""
+    }
+
+    handleChangePassword = () => {
+        const emailTrim = this.state.forgottenEmail.trim()
+        if (emailTrim == "") {
+            this.props.navigation.navigate("LoginScreen")
+            Toast.show("Please Enter Email Address to Change Password")
+        } else {
+            auth().sendPasswordResetEmail(emailTrim).then(
+                Toast.show("Please Check your Email...")
+            )
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -15,9 +33,14 @@ export default class ForgotPasswordScreen extends React.Component {
                 <View style={styles.smallerContainer}>
                     <Text>Please enter the email address used to sign up for Reamot</Text>
                     <View style={styles.textInputContainer}>
-                        <TextInput defaultValue="Email Address" />
+                        <TextInput
+                            placeholder="Email Address"
+                            autoCapitalize="none"
+                            onChangeText={newEmail => this.setState({ forgottenEmail: newEmail })}
+                            value={this.state.forgottenEmail}
+                        />
                     </View>
-                    <TouchableOpacity style={styles.submitButton} onPress={() => { }}>
+                    <TouchableOpacity style={styles.submitButton} onPress={this.handleChangePassword}>
                         <Text style={styles.submitText}>Submit</Text>
                     </TouchableOpacity>
                 </View>
@@ -30,7 +53,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
-        //alignItems: "center",
         backgroundColor: '#DEE8F1',
     },
     smallerContainer: {
