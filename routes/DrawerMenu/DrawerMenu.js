@@ -53,7 +53,7 @@ export default class DrawerMenu extends React.Component {
                         this.props.navigation.closeDrawer()
                     }}>
                     <Ionicons name="help" size={20} color={"#161F3D"} />
-                    <Text>  Help</Text>
+                    <Text>  FAQ</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
