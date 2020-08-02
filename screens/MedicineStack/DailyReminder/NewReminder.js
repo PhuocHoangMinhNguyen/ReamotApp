@@ -21,8 +21,6 @@ const alarmNotifData = {
 }
 
 export default class NewReminder extends React.Component {
-    _isMounted
-
     constructor(props) {
         super(props)
         this.state = {
@@ -44,15 +42,10 @@ export default class NewReminder extends React.Component {
     }
 
     componentDidMount() {
-        this._isMounted = true
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMedicineScreen = this.props.navigation.state.params
         this.setState({ medicine: paramsFromMedicineScreen })
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false
     }
 
     // This function called after the alarm is set.

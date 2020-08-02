@@ -22,6 +22,7 @@ import storage from "@react-native-firebase/storage"
 import auth from "@react-native-firebase/auth"
 import UserPermissions from "../../utilities/UserPermissions"
 import Toast from "react-native-simple-toast"
+import CheckBox from "@react-native-community/checkbox"
 
 export default class RegisterScreen extends React.Component {
   state = {
@@ -33,7 +34,8 @@ export default class RegisterScreen extends React.Component {
       avatar: null
     },
     errorMessage: null,
-    showPassword: false
+    showPassword: false,
+    toggleCheckBox: false,
   }
 
   handlePassword = () => {
@@ -50,6 +52,8 @@ export default class RegisterScreen extends React.Component {
       Toast.show("Please Enter A Password", Toast.LONG)
     } else if (phoneNumber == "") {
       Toast.show("Please Enter Contact Number", Toast.LONG)
+    } else if (this.state.toggleCheckBox == false) {
+      Toast.show("Please Aggree to Terms of Services", Toast.LONG)
     } else {
       this.createUser(this.state.user)
     }
@@ -137,6 +141,8 @@ export default class RegisterScreen extends React.Component {
       }
     })
   }
+
+  showTermsOfServices() { }
 
   render() {
     const showPass = <Ionicons name="ios-eye" size={24} />
@@ -247,8 +253,21 @@ export default class RegisterScreen extends React.Component {
             <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
           </TouchableOpacity>
 
+          <View style={styles.termsOfServicesContainer}>
+            <CheckBox
+              value={this.state.toggleCheckBox}
+              onValueChange={(newValue) => this.setState({ toggleCheckBox: newValue })}
+            />
+            <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1 }}>
+              <Text>I agree to Reamot</Text>
+              <TouchableOpacity onPress={this.showTermsOfServices}>
+                <Text style={styles.termsOfServices}>Terms of Services</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
           <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 16 }}
+            style={{ alignSelf: "center", marginTop: 12 }}
             onPress={() => this.props.navigation.navigate("LoginScreen")}
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>
@@ -360,5 +379,14 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50
+  },
+  termsOfServicesContainer: {
+    marginTop: 12,
+    marginHorizontal: 30,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  termsOfServices: {
+    textDecorationLine: "underline"
   }
 })

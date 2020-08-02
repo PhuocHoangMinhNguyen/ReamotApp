@@ -12,27 +12,31 @@ export default class HomeScreen extends React.Component {
     super(props)
     this.state = {
       medicines: [],
-      medicineNameList: [],
+      reminder: [],
     };
   }
 
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.\
-    firestore().collection("prescription").onSnapshot((queryPrescriptionSnapshot) => {
+    firestore().collection("reminder").onSnapshot((queryReminderSnapshot) => {
       let temp = []
-      queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
-        if (documentPrescriptionSnapshot.data().patientEmail == auth().currentUser.email) {
-          temp.push(documentPrescriptionSnapshot.data().name)
+      queryReminderSnapshot.forEach((documentReminderSnapshot) => {
+        if (documentReminderSnapshot.data().patientEmail == auth().currentUser.email) {
+          temp.push({
+            ...documentReminderSnapshot.data(),
+            key: documentReminderSnapshot.id
+          })
         }
       })
-      this.setState({ medicineNameList: temp })
+      this.setState({ reminder: temp })
       let temp2 = [];
-      for (let i = 0; i < this.state.medicineNameList.length; i++) {
+      for (let i = 0; i < this.state.reminder.length; i++) {
         firestore().collection("medicine").onSnapshot((queryMedicineSnapshot) => {
           queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
-            if (documentMedicineSnapshot.data().name == this.state.medicineNameList[i]) {
+            if (documentMedicineSnapshot.data().name == this.state.reminder[i].medicine) {
               temp2.push({
                 ...documentMedicineSnapshot.data(),
+                time: this.state.reminder[i].times,
                 key: documentMedicineSnapshot.id,
               });
             }
@@ -53,7 +57,8 @@ export default class HomeScreen extends React.Component {
       image: item.image,
       name: item.name,
       description: item.description,
-      barcode: item.barcode
+      barcode: item.barcode,
+      times: item.time
     }
     return (
       <TouchableOpacity style={styles.feedItem}
@@ -67,6 +72,7 @@ export default class HomeScreen extends React.Component {
           style={styles.avatar}
         />
         <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.name}>{item.time}</Text>
       </TouchableOpacity>
     )
   }

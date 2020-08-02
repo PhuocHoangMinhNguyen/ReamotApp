@@ -11,6 +11,7 @@
     "prepare": "patch-package"
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.4.2",
     "@react-native-community/cli-platform-android": "^4.9.0",
     "@react-native-community/cli-platform-ios": "^4.10.1",
     "@react-native-community/datetimepicker": "^2.6.1",
