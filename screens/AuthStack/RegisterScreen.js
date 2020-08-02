@@ -249,10 +249,6 @@ export default class RegisterScreen extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-            <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
-          </TouchableOpacity>
-
           <View style={styles.termsOfServicesContainer}>
             <CheckBox
               value={this.state.toggleCheckBox}
@@ -265,6 +261,10 @@ export default class RegisterScreen extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
+
+          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+            <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={{ alignSelf: "center", marginTop: 12 }}
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     color: "#FFF"
   },
   form: {
-    marginBottom: 20,
+    //marginBottom: 20,
     marginHorizontal: 30
   },
   inputTitle: {
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     borderRadius: 50
   },
   termsOfServicesContainer: {
-    marginTop: 12,
+    marginVertical: 12,
     marginHorizontal: 30,
     flexDirection: "row",
     alignItems: "center",
