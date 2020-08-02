@@ -15,16 +15,16 @@ class UserPermissions {
       if (status !== "granted") {
         alert(
           "We need permission to use your camera roll if you'd like to incude a photo."
-        );
+        )
       }
     }
 
     if (Platform.OS === "android") {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-      );
+      )
     }
-  };
+  }
 }
 
 export default new UserPermissions()
