@@ -8,9 +8,15 @@ export default class VerificationScreen extends React.Component {
     render() {
         return (
             <View style={styles.view}>
-                <Text style={styles.text}>A Verification Email was sent to your Email Address</Text>
+                <View style={{ alignItems: "center" }}>
+                    <Text style={styles.text}>A Verification Email was sent to your Email Address</Text>
+                </View>
+                <Image style={styles.image}
+                    source={require('../assets/GrowingTree.jpg')} />
                 <View style={styles.refreshing}>
-                    <Text style={styles.text}>Refresh after Verifying your account</Text>
+                    <View style={{ justifyContent: "center" }}>
+                        <Text style={styles.text}>Refresh after Verifying your account</Text>
+                    </View>
                     <TouchableOpacity
                         onPress={() => {
                             auth().currentUser.reload()
@@ -21,9 +27,12 @@ export default class VerificationScreen extends React.Component {
                             }
                         }}
                     >
-                        <Ionicons name="reload" size={50} />
+                        <Ionicons name="reload" size={30} />
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={styles.signOut} onPress={() => auth().signOut()}>
+                    <Text style={styles.signOutText}>Login to another Account</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -33,12 +42,27 @@ const styles = StyleSheet.create({
     view: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        backgroundColor: '#DEE8F1',
     },
     text: {
-        fontWeight: "bold"
+        fontWeight: "bold",
     },
     refreshing: {
-
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        marginBottom: 16
+    },
+    image: {
+        width: 350,
+        height: 350,
+        borderRadius: 180,
+        marginVertical: 16
+    },
+    signOut: {
+        alignItems: "center"
+    },
+    signOutText: {
+        color: "#1565C0",
+        textDecorationLine: "underline"
     }
 })
