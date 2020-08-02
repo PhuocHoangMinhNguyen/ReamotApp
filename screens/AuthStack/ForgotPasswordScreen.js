@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 
 export default class ForgotPasswordScreen extends React.Component {
@@ -12,7 +12,15 @@ export default class ForgotPasswordScreen extends React.Component {
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
-                <Text>Forgot Password</Text>
+                <View style={styles.smallerContainer}>
+                    <Text>Please enter the email address used to sign up for Reamot</Text>
+                    <View style={styles.textInputContainer}>
+                        <TextInput defaultValue="Email Address" />
+                    </View>
+                    <TouchableOpacity style={styles.submitButton} onPress={() => { }}>
+                        <Text style={styles.submitText}>Submit</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -22,7 +30,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        //alignItems: "center",
+        backgroundColor: '#DEE8F1',
+    },
+    smallerContainer: {
+        marginHorizontal: 30
     },
     back: {
         position: "absolute",
@@ -35,4 +47,22 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
+    textInputContainer: {
+        backgroundColor: "#FFF",
+        marginTop: 12,
+        borderRadius: 4,
+    },
+    submitButton: {
+        alignSelf: "flex-end",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 100,
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginTop: 12
+    },
+    submitText: {
+        color: "#FFF"
+    }
 })
