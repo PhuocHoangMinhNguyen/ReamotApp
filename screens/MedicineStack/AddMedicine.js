@@ -5,6 +5,7 @@ import UserPermissions from "../../utilities/UserPermissions"
 import ImagePicker from "react-native-image-picker"
 import firestore from "@react-native-firebase/firestore"
 import CheckBox from "@react-native-community/checkbox"
+import Toast from "react-native-simple-toast"
 
 export default class AddMedicine extends React.Component {
     state = {
@@ -18,7 +19,7 @@ export default class AddMedicine extends React.Component {
         }
     }
 
-    handlePickAvatar = async () => {
+    handlePickImage = async () => {
         UserPermissions.getPhotoPermission()
 
         var options = {
@@ -47,6 +48,22 @@ export default class AddMedicine extends React.Component {
         })
     }
 
+    addMedicine = () => {
+        const { name, image } = this.state.medicine
+        const { dailyType, weeklyType } = this.state.reminder
+        /*
+        firestore().collection("history").add({
+            medicine: name,
+            patientEmail: auth().currentUser.email,
+            time: moment().format('h:mm a'),
+            date: moment().format('MMMM Do YYYY'),
+            status: "taken"
+        })
+        */
+        this.props.navigation.goBack()
+        Toast.show("A new medicine is added !")
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -62,7 +79,7 @@ export default class AddMedicine extends React.Component {
                 <View style={styles.cover}>
                     <TouchableOpacity
                         style={styles.imagePlaceholder}
-                        onPress={this.handlePickAvatar}
+                        onPress={this.handlePickImage}
                     >
                         <Image
                             source={{ uri: this.state.medicine.image }}
@@ -130,6 +147,9 @@ export default class AddMedicine extends React.Component {
                         </View>
                     </View>
                 </View>
+                <TouchableOpacity style={styles.button} onPress={this.addMedicine}>
+                    <Text style={styles.buttonText}>Add Medicine</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -187,5 +207,19 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-evenly"
-    }
+    },
+    button: {
+        alignSelf: "flex-end",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 110,
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginVertical: 12,
+        marginEnd: 30
+    },
+    buttonText: {
+        color: "#FFF"
+    },
 })
