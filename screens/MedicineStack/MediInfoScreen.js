@@ -27,6 +27,9 @@ export default class MediInfoScreen extends React.Component {
       reminder: [],
       arraySize: 0,
       medicinePills: "",
+      text: "",
+      firebaseID: "",
+      add: "",
     }
   }
 
@@ -39,13 +42,19 @@ export default class MediInfoScreen extends React.Component {
     // Get Medicine Number of Pills
     firestore().collection("medicinePills").onSnapshot(querySnapshot => {
       let temp = ""
+      let tempID = ""
       querySnapshot.forEach(documentSnapshot => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
           && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
           temp = documentSnapshot.data().pills
+          tempID = documentSnapshot.id
         }
       })
-      this.setState({ medicinePills: temp })
+      this.setState({
+        medicinePills: temp,
+        text: temp,
+        firebaseID: tempID
+      })
     })
 
     // Get Prescription data from Cloud Firestore to know number of capsules taken per time, 
@@ -127,7 +136,6 @@ export default class MediInfoScreen extends React.Component {
   }
 
   addMedicinePills = () => {
-    console.log("Medicine Pills: " + this.state.medicinePills)
     if (this.state.medicinePills < 0) {
       Toast.show("Please enter number of capsules")
     } else {
@@ -140,7 +148,14 @@ export default class MediInfoScreen extends React.Component {
   }
 
   updateMedicinePills = () => {
-
+    if (this.state.medicinePills < 0) {
+      Toast.show("Please enter number of capsules")
+    } else {
+      const value = parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10)
+      firestore().collection("medicinePills").doc(this.state.firebaseID).update({
+        pills: value.toString()
+      })
+    }
   }
 
   // Information appears on each item of Flatlist.
@@ -187,26 +202,62 @@ export default class MediInfoScreen extends React.Component {
 
     const normal =
       <View style={styles.capsules}>
-        <Text>{this.state.medicinePills}</Text>
-        <TouchableOpacity style={styles.showPicker} onPress={this.addMedicinePills}>
-          <Text style={{ color: "#FFF" }}>Edit</Text>
+        <Text>{this.state.medicinePills} left</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text>Add some more: </Text>
+          <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+            placeholder="   "
+            autoCapitalize="none"
+            keyboardType="numeric"
+            onChangeText={addPills => this.setState({ add: addPills })}
+            value={this.state.add}
+          />
+          <Text>capsule(s)</Text>
+        </View>
+        <TouchableOpacity style={styles.showPicker} onPress={this.updateMedicinePills}>
+          <Text style={{ color: "#FFF" }}>Refill</Text>
         </TouchableOpacity>
       </View>
     const lessThan10 =
       <View style={styles.capsules}>
-        <Text>{this.state.medicinePills}</Text>
-        <TouchableOpacity style={styles.showPicker} onPress={this.addMedicinePills}>
-          <Text style={{ color: "#FFF" }}>Edit</Text>
+        <Text style={{ color: "#FF0000", fontWeight: "bold" }}>{this.state.medicinePills} left</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text>Add some more: </Text>
+          <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+            placeholder="   "
+            autoCapitalize="none"
+            keyboardType="numeric"
+            onChangeText={addPills => this.setState({ add: addPills })}
+            value={this.state.add}
+          />
+          <Text>capsule(s)</Text>
+        </View>
+        <TouchableOpacity style={styles.showPicker} onPress={this.updateMedicinePills}>
+          <Text style={{ color: "#FFF" }}>Refill</Text>
         </TouchableOpacity>
       </View>
     const none =
-      <View style={styles.prescription}>
-        <Text>{this.state.medicinePills}</Text>
+      <View style={styles.capsules}>
+        <Text style={{ color: "#FF0000", fontWeight: "bold" }}>{this.state.medicinePills} left</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={{ color: "#FF0000", fontWeight: "bold" }}>Time to refill: </Text>
+          <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+            placeholder="   "
+            autoCapitalize="none"
+            keyboardType="numeric"
+            onChangeText={addPills => this.setState({ add: addPills })}
+            value={this.state.add}
+          />
+          <Text style={{ color: "#FF0000", fontWeight: "bold" }}>capsule(s)</Text>
+        </View>
+        <TouchableOpacity style={styles.showPicker} onPress={this.updateMedicinePills}>
+          <Text style={{ color: "#FFF" }}>Refill</Text>
+        </TouchableOpacity>
       </View>
     const empty =
       <View style={styles.capsules}>
-        <TextInput
-          placeholder="Number of Capsules in the package"
+        <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+          placeholder="Number of Capsules in the container"
           autoCapitalize="none"
           keyboardType="numeric"
           onChangeText={pills => this.setState({ medicinePills: pills })}
@@ -218,13 +269,16 @@ export default class MediInfoScreen extends React.Component {
       </View>
 
     let message
-    if (this.state.medicinePills == "") {
+    if (this.state.text == "") {
       message = empty
-    } else if (parseInt(this.state.medicinePills) == 0) {
+    }
+    if (parseInt(this.state.text) == 0) {
       message = none
-    } else if (parseInt(this.state.medicinePills) < 10) {
+    }
+    if (parseInt(this.state.text) <= 10 && parseInt(this.state.text) > 0) {
       message = lessThan10
-    } else {
+    }
+    if (parseInt(this.state.text) > 10) {
       message = normal
     }
     return (
@@ -259,7 +313,7 @@ export default class MediInfoScreen extends React.Component {
         {message}
 
         <View style={styles.prescription}>
-          <Text style={styles.time}>{this.state.prescription.number}</Text>
+          <Text style={styles.time}>{this.state.prescription.number} capsule</Text>
           <Text style={styles.time}>{this.state.prescription.times} times</Text>
           <Text style={styles.repeat}>{this.state.prescription.type}</Text>
         </View>
