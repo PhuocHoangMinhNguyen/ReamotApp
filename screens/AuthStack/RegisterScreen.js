@@ -154,7 +154,7 @@ export default class RegisterScreen extends React.Component {
       message = showPass
     }
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <TouchableOpacity
           style={styles.back}
           onPress={() => this.props.navigation.goBack()}
@@ -307,7 +307,6 @@ const styles = StyleSheet.create({
     color: "#FFF"
   },
   form: {
-    //marginBottom: 20,
     marginHorizontal: 30
   },
   inputTitle: {
