@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     information: {
         backgroundColor: "#FFF",
         borderRadius: 5,
-        padding: 16,
+        padding: 10,
         marginTop: 70,
         marginBottom: 12,
         marginHorizontal: 16

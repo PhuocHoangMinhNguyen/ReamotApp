@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     timePicker: {
         backgroundColor: "#FFF",
         borderRadius: 5,
-        padding: 16,
+        padding: 10,
         marginHorizontal: 16,
         marginVertical: 8,
         flexDirection: "row",

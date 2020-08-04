@@ -194,7 +194,7 @@ export default class MediInfoScreen extends React.Component {
           placeholder="Number of Capsules in the package"
           autoCapitalize="none"
           keyboardType="numeric"
-          onChangeText={medicinePills => this.setState({ medicinePills: parseInt(medicinePills, 10) })}
+          onChangeText={pills => this.setState({ medicinePills: parseInt(pills, 10) })}
           value={this.state.medicinePills}
         />
         <Button title="Edit" onPress={() => this.addMedicinePills()} />
