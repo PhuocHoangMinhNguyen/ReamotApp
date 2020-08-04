@@ -3,7 +3,7 @@
 // Status: In development
 
 import React from "react"
-import { Text, StyleSheet, FlatList, SafeAreaView, Image, TouchableOpacity } from "react-native"
+import { Text, StyleSheet, FlatList, SafeAreaView, Image, TouchableOpacity, View } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
@@ -86,7 +86,12 @@ export default class HomeScreen extends React.Component {
   render() {
     let message
     if (this.state.medicines.length == 0) {
-      message = <Text>You have no active reminder</Text>
+      message =
+        <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
+          <Text style={styles.emptyText}>You have no active reminder</Text>
+          <Text>Please add a medicine,</Text>
+          <Text>or contact your doctor for a prescription</Text>
+        </View>
     } else {
       message =
         <FlatList
@@ -139,5 +144,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     color: "white",
+  },
+  emptyText: {
+    fontWeight: "bold",
+    fontSize: 20
   },
 })
