@@ -396,7 +396,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   time: {
-    fontSize: 18
+    fontSize: 18,
+    alignSelf: "center"
   },
   repeat: {
     fontSize: 18

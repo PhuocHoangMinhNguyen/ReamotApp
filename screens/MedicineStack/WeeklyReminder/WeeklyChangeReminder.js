@@ -184,17 +184,23 @@ export default class WeeklyChangeReminder extends React.Component {
                             />
                         )}
                     </View>
-                    <TouchableOpacity style={styles.button}
-                        onPress={() => {
-                            // To stop alarm sound, go to BarcodeScan
-                            this.props.navigation.navigate("BarcodeScan", {
-                                medicine: this.props.navigation.state.params.medicine,
-                                itemTime: this.props.navigation.state.params.itemTime,
-                                firebaseId: this.state.firebase.firebaseId,
-                            })
-                        }}>
-                        <Text style={{ color: "#FFF" }}>Stop Alarm Sound</Text>
-                    </TouchableOpacity>
+                    <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                        <TouchableOpacity style={styles.button}
+                            onPress={() => {
+                                // To stop alarm sound, go to BarcodeScan
+                                this.props.navigation.navigate("BarcodeScan", {
+                                    medicine: this.props.navigation.state.params.medicine,
+                                    itemTime: this.props.navigation.state.params.itemTime,
+                                    firebaseId: this.state.firebase.firebaseId,
+                                })
+                            }}>
+                            <Text style={{ color: "#FFF" }}>Take Medicine</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button}
+                            onPress={() => { }}>
+                            <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
+                        </TouchableOpacity>
+                    </View>
                     <TouchableOpacity style={styles.button} onPress={this.deleteAlarm}>
                         <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
                     </TouchableOpacity>
@@ -255,7 +261,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#1565C0",
         borderRadius: 4,
         marginVertical: 12,
-        marginHorizontal: 16
+        marginHorizontal: 16,
+        padding: 20
     },
     showPicker: {
         backgroundColor: "#1565C0",
