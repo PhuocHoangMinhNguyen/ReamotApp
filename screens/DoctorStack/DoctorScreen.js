@@ -134,8 +134,15 @@ export default class DoctorScreen extends Component {
   }
 
   render() {
-    return (
-      <SafeAreaView style={styles.container}>
+    let message
+    if (this.state.accessedDoctor.length == 0 && this.state.accessedPharmacist.length == 0) {
+      message =
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text style={styles.emptyText}>You have no accessed doctor</Text>
+          <Text style={styles.emptyText}>and accessed pharmacist</Text>
+        </View>
+    } else {
+      message =
         <SectionList style={styles.feed}
           sections={[
             { title: "Accessed Doctor", data: this.state.accessedDoctor },
@@ -147,6 +154,10 @@ export default class DoctorScreen extends Component {
             <Text style={styles.header}>{title}</Text>
           )}
         />
+    }
+    return (
+      <SafeAreaView style={styles.container}>
+        {message}
         <TouchableOpacity style={styles.button} onPress={this.addAccess}>
           <Text style={{ color: "#FFF" }}>Give Access to Another Doctor/ Pharmacist</Text>
         </TouchableOpacity>
@@ -203,6 +214,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginVertical: 12,
     marginHorizontal: 16
-  }
+  },
+  emptyText: {
+    fontWeight: "bold",
+    fontSize: 20
+  },
 })
 
