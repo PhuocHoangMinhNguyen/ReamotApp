@@ -76,16 +76,6 @@ export default class DrawerMenu extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    avatarContainer: {
-        shadowColor: "#151734",
-        shadowRadius: 30,
-        shadowOpacity: 0.4
-    },
-    avatar: {
-        width: 136,
-        height: 136,
-        borderRadius: 68
-    },
     name: {
         marginTop: 24,
         fontSize: 16,

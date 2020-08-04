@@ -334,12 +334,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   button: {
-    marginHorizontal: 30,
-    backgroundColor: "#018ABE",
-    borderRadius: 4,
-    height: 52,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "center"
+    height: 50,
+    backgroundColor: "#1565C0",
+    borderRadius: 4,
+    marginHorizontal: 30
   },
   errorMessage: {
     marginTop: 36,

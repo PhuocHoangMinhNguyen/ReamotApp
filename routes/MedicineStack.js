@@ -13,6 +13,7 @@
 
 import { createStackNavigator } from "react-navigation-stack"
 import MedicineScreen from "../screens/MedicineStack/MedicineScreen";
+import AddMedicine from "../screens/MedicineStack/AddMedicine";
 import MediInfoScreen from "../screens/MedicineStack/MediInfoScreen";
 import BarcodeScan from "../screens/MedicineStack/BarcodeScan";
 
@@ -27,6 +28,7 @@ import WeeklyChangeReminder from "../screens/MedicineStack/WeeklyReminder/Weekly
 export default MedicineStack = createStackNavigator(
     {
         MedicineScreen,
+        AddMedicine,
         MediInfoScreen,
         BarcodeScan,
         NewReminder,

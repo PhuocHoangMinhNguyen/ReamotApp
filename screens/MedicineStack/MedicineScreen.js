@@ -105,6 +105,10 @@ export default class MedicineScreen extends React.Component {
     })
   }
 
+  addItem = () => {
+    this.props.navigation.navigate("AddMedicine")
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -123,6 +127,9 @@ export default class MedicineScreen extends React.Component {
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
         />
+        <TouchableOpacity style={styles.addMedicine} onPress={this.addItem}>
+          <Text style={styles.add}>Add Medicine</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     )
   }
@@ -161,4 +168,18 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#454D65",
   },
+  add: {
+    color: "#FFF"
+  },
+  addMedicine: {
+    alignSelf: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 100,
+    height: 40,
+    backgroundColor: "#1565C0",
+    borderRadius: 4,
+    marginVertical: 12,
+    marginEnd: 16
+  }
 })

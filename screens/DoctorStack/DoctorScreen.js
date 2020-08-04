@@ -148,9 +148,9 @@ export default class DoctorScreen extends Component {
             <Text style={styles.header}>{title}</Text>
           )}
         />
-        <View style={styles.button}>
-          <Button title="Give Access to Another Doctor/ Pharmacist" onPress={this.addAccess} />
-        </View>
+        <TouchableOpacity style={styles.button} onPress={this.addAccess}>
+          <Text style={{ color: "#FFF" }}>Give Access to Another Doctor/ Pharmacist</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -197,7 +197,12 @@ const styles = StyleSheet.create({
     color: "#454D65",
   },
   button: {
-    marginBottom: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+    backgroundColor: "#1565C0",
+    borderRadius: 4,
+    marginVertical: 12,
     marginHorizontal: 16
   }
 })

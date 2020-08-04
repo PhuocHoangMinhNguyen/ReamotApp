@@ -3,7 +3,7 @@
 // Status: Optimized in function, need more design
 
 import React from "react"
-import { StyleSheet, FlatList, Image, View, Text, Button, SafeAreaView } from "react-native"
+import { StyleSheet, FlatList, Image, View, Text, TouchableOpacity, SafeAreaView } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import DatePicker from '@react-native-community/datetimepicker'
@@ -107,14 +107,9 @@ export default class CalendarScreen extends React.Component {
             {moment(this.state.testDate).format("MMMM Do YYYY")}
           </Text>
         </View>
-        <View style={styles.button}>
-          <View />
-          <Button
-            onPress={this.showMode}
-            title="Show Calendar"
-            color="#018ABE"
-          />
-        </View>
+        <TouchableOpacity style={styles.button} onPress={this.showMode}>
+          <Text style={styles.buttonText}>Show Calendar</Text>
+        </TouchableOpacity>
         {this.state.show && (
           <DatePicker
             testID="dateTimePicker"
@@ -165,10 +160,18 @@ const styles = StyleSheet.create({
     color: "#454D65",
   },
   button: {
-    marginTop: 15,
-    marginHorizontal: 30,
-    flexDirection: "row",
-    justifyContent: "space-between"
+    alignSelf: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 110,
+    height: 40,
+    backgroundColor: "#1565C0",
+    borderRadius: 4,
+    marginVertical: 12,
+    marginEnd: 16
+  },
+  buttonText: {
+    color: "#FFF"
   },
   testDateContainer: {
     alignItems: "center",

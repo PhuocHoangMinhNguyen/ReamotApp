@@ -168,12 +168,12 @@ const styles = StyleSheet.create({
     color: "#161F3D"
   },
   button: {
-    marginHorizontal: 30,
-    backgroundColor: "#018ABE",
-    borderRadius: 4,
-    height: 52,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "center"
+    height: 50,
+    backgroundColor: "#1565C0",
+    borderRadius: 4,
+    marginHorizontal: 30
   },
   errorMessage: {
     height: 72,
