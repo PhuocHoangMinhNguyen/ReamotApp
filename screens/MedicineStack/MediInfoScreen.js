@@ -9,7 +9,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Button,
   FlatList,
   TextInput
 } from "react-native"
@@ -17,6 +16,7 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import ViewMoreText from "react-native-view-more-text"
+import Toast from "react-native-simple-toast"
 
 export default class MediInfoScreen extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class MediInfoScreen extends React.Component {
       prescription: {},
       reminder: [],
       arraySize: 0,
-      medicinePills: -1
+      medicinePills: -1,
     }
   }
 
@@ -39,12 +39,10 @@ export default class MediInfoScreen extends React.Component {
     // Get Medicine Number of Pills
     firestore().collection("medicinePills").onSnapshot(querySnapshot => {
       let temp = -1
-      let found = false
       querySnapshot.forEach(documentSnapshot => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
           && documentSnapshot.data().name == this.props.navigation.state.params.name) {
-          temp = parseInt(documentSnapshot.data().pills, 10);
-          found = true
+          temp = parseInt(documentSnapshot.data().pills, 10)
         }
       })
       this.setState({ medicinePills: temp })
@@ -129,7 +127,15 @@ export default class MediInfoScreen extends React.Component {
   }
 
   addMedicinePills = () => {
-
+    if (this.state.medicinePills < 0) {
+      Toast.show("Please enter number of capsules")
+    } else {
+      firestore().collection("medicinePills").add({
+        medicine: this.state.medicine.name,
+        patientEmail: auth().currentUser.email,
+        pills: this.state.medicinePills
+      })
+    }
   }
 
   updateMedicinePills = () => {
@@ -150,7 +156,9 @@ export default class MediInfoScreen extends React.Component {
     const nonEmptyItem =
       <View style={styles.prescription}>
         <Text style={styles.time}>{item.times}</Text>
-        <Button title="Edit" onPress={() => this.handleChangeReminder(itemDetails)} />
+        <TouchableOpacity style={styles.showPicker} onPress={() => this.handleChangeReminder(itemDetails)}>
+          <Text style={{ color: "#FFF" }}>Edit</Text>
+        </TouchableOpacity>
       </View>
     const emptyItem =
       <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
@@ -189,7 +197,7 @@ export default class MediInfoScreen extends React.Component {
         <Text>{this.state.medicinePills}</Text>
       </View>
     const empty =
-      <View style={styles.prescription}>
+      <View style={styles.capsules}>
         <TextInput
           placeholder="Number of Capsules in the package"
           autoCapitalize="none"
@@ -197,7 +205,9 @@ export default class MediInfoScreen extends React.Component {
           onChangeText={pills => this.setState({ medicinePills: parseInt(pills, 10) })}
           value={this.state.medicinePills}
         />
-        <Button title="Edit" onPress={() => this.addMedicinePills()} />
+        <TouchableOpacity style={styles.showPicker} onPress={this.addMedicinePills}>
+          <Text style={{ color: "#FFF" }}>Edit</Text>
+        </TouchableOpacity>
       </View>
 
     let message
@@ -299,7 +309,7 @@ const styles = StyleSheet.create({
   reminder: {
     backgroundColor: "#FFF",
     borderRadius: 5,
-    padding: 16,
+    padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
     flexDirection: "row",
@@ -308,11 +318,21 @@ const styles = StyleSheet.create({
   prescription: {
     backgroundColor: "#FFF",
     borderRadius: 5,
-    padding: 16,
+    padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
     flexDirection: "row",
     justifyContent: "space-between"
+  },
+  capsules: {
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   time: {
     fontSize: 18
@@ -320,4 +340,12 @@ const styles = StyleSheet.create({
   repeat: {
     fontSize: 18
   },
+  showPicker: {
+    backgroundColor: "#1565C0",
+    borderRadius: 4,
+    height: 40,
+    width: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  }
 })
