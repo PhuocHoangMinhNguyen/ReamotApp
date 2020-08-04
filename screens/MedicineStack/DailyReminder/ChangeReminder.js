@@ -157,11 +157,13 @@ export default class ChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
-                <View style={{ flex: 1, padding: 20 }}>
+                <View style={{ flex: 1 }}>
                     <View>
                         <View style={styles.timePicker}>
-                            <Button onPress={this.showMode} title="Show time picker!" />
-                            <Text>{message}</Text>
+                            <TouchableOpacity style={styles.showPicker} onPress={this.showMode}>
+                                <Text style={{ color: "#FFF" }}>Show time picker!</Text>
+                            </TouchableOpacity>
+                            <Text style={{ alignSelf: "center" }}>{message}</Text>
                         </View>
                         {show && (
                             <TimePicker
@@ -175,27 +177,20 @@ export default class ChangeReminder extends React.Component {
                             />
                         )}
                     </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={() => {
-                                // To stop alarm sound, go to BarcodeScan
-                                this.props.navigation.navigate("BarcodeScan", {
-                                    medicine: this.props.navigation.state.params.medicine,
-                                    itemTime: this.props.navigation.state.params.itemTime,
-                                    firebaseId: this.state.firebase.firebaseId,
-                                })
-                            }}
-                            title="Stop Alarm Sound"
-                            color="#018ABE"
-                        />
-                    </View>
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            onPress={this.deleteAlarm}
-                            title="Delete Alarm"
-                            color="#018ABE"
-                        />
-                    </View>
+                    <TouchableOpacity style={styles.button}
+                        onPress={() => {
+                            // To stop alarm sound, go to BarcodeScan
+                            this.props.navigation.navigate("BarcodeScan", {
+                                medicine: this.props.navigation.state.params.medicine,
+                                itemTime: this.props.navigation.state.params.itemTime,
+                                firebaseId: this.state.firebase.firebaseId,
+                            })
+                        }}>
+                        <Text style={{ color: "#FFF" }}>Stop Alarm Sound</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={this.deleteAlarm}>
+                        <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -210,7 +205,7 @@ const styles = StyleSheet.create({
     back: {
         position: "absolute",
         top: 24,
-        left: 32,
+        left: 24,
         width: 32,
         height: 32,
         borderRadius: 16,
@@ -234,14 +229,33 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 16,
         marginTop: 70,
+        marginBottom: 12,
         marginHorizontal: 16
     },
     timePicker: {
         backgroundColor: "#FFF",
         borderRadius: 5,
         padding: 16,
+        marginHorizontal: 16,
         marginVertical: 8,
         flexDirection: "row",
         justifyContent: "space-between"
     },
+    button: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginVertical: 12,
+        marginHorizontal: 16
+    },
+    showPicker: {
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        height: 40,
+        width: 120,
+        alignItems: "center",
+        justifyContent: "center",
+    }
 })
