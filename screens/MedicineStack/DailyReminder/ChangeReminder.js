@@ -177,7 +177,7 @@ export default class ChangeReminder extends React.Component {
                             />
                         )}
                     </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
                         <TouchableOpacity style={styles.button}
                             onPress={() => {
                                 // To stop alarm sound, go to BarcodeScan
@@ -254,7 +254,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#1565C0",
         borderRadius: 4,
         marginVertical: 12,
-        marginHorizontal: 16
+        marginHorizontal: 16,
+        padding: 20
     },
     showPicker: {
         backgroundColor: "#1565C0",
