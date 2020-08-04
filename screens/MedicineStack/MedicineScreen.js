@@ -110,6 +110,23 @@ export default class MedicineScreen extends React.Component {
   }
 
   render() {
+    let message
+    if (this.state.medicineNameList.length == 0) {
+      message =
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text style={styles.emptyText}>You are not currently on medication</Text>
+          <Text>Please add a medicine,</Text>
+          <Text>or contact your doctor for a prescription</Text>
+        </View>
+    } else {
+      message =
+        <FlatList
+          style={styles.feed}
+          data={this.state.myArray}
+          renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={(item, index) => index.toString()}
+        />
+    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -121,12 +138,7 @@ export default class MedicineScreen extends React.Component {
             value={this.state.text}
           />
         </View>
-        <FlatList
-          style={styles.feed}
-          data={this.state.myArray}
-          renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        {message}
         <TouchableOpacity style={styles.addMedicine} onPress={this.addItem}>
           <Text style={styles.add}>Add Medicine</Text>
         </TouchableOpacity>
@@ -181,5 +193,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginVertical: 12,
     marginEnd: 16
-  }
+  },
+  emptyText: {
+    fontWeight: "bold",
+    fontSize: 20
+  },
 })
