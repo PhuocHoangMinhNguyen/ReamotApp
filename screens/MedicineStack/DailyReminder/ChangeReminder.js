@@ -132,8 +132,54 @@ export default class ChangeReminder extends React.Component {
 
     handleMiss = () => { this.setState({ dialogVisible: true }) }
 
-    handleYes = () => {
+    handleYes = async () => {
+        // Stop Alarm Sound
+        ReactNativeAN.stopAlarmSound()
+        // Remove Notification
+        ReactNativeAN.removeAllFiredNotifications()
 
+        // Set a new fireDate 5 minutes later.
+        //
+        // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
+        // It should start from the time the alarm is set instead.
+        const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000))
+        // 10 minutes = 600.000 miliseconds
+        // 5 minutes = 300.000 miliseconds.
+        // 1 hour = 3.600.000 miliseconds
+        // 24 hours = 86.400.000 miliseconds.
+        // 7 days = 168 hours = 604.800.000 miliseconds
+
+        const details = {
+            ...alarmNotifData,
+            fire_date: fireDates,
+            title: name,
+            alarm_id: alarmId
+        }
+        ReactNativeAN.scheduleAlarm(details)
+
+        // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
+        const alarm = await ReactNativeAN.getScheduledAlarms()
+        let idAN = ""
+        for (let i = 0; i < alarm.length; i++) {
+            if (alarm[i].alarmId == details.alarm_id) {
+                idAN = alarm[i].id
+            }
+        }
+        firestore().collection("reminder").doc(firebaseId)
+            .update({
+                idAN: idAN,
+                alarmId: alarmId
+            })
+        this.props.navigation.navigate("MedicineScreen")
+
+        // When the alarm is turned off, add the medicine into "history" collection
+        firestore().collection("history").add({
+            medicine: name,
+            patientEmail: auth().currentUser.email,
+            time: moment().format('h:mm a'),
+            date: moment().format('MMMM Do YYYY'),
+            status: "missed"
+        })
     }
 
     render() {
@@ -198,7 +244,7 @@ export default class ChangeReminder extends React.Component {
                             <Text style={{ color: "#FFF" }}>Take Medicine</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button}
-                            onPress={() => { this.handleMiss }}>
+                            onPress={this.handleMiss}>
                             <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
                         </TouchableOpacity>
                     </View>
