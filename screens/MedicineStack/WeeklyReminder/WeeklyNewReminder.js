@@ -35,7 +35,7 @@ export default class WeeklyNewReminder extends React.Component {
             },
             alarm: {
                 // Details in Problems.txt file, Problem 1
-                reminderId: Math.floor(Math.random() * 1000).toString(),
+                reminderId: Math.floor(Math.random() * 10000).toString(),
                 // Used for react-native-alarm-notification package
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
             }

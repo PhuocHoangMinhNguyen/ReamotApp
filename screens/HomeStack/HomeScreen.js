@@ -30,19 +30,25 @@ export default class HomeScreen extends React.Component {
       })
       this.setState({ reminder: temp })
       let temp2 = [];
-      for (let i = 0; i < this.state.reminder.length; i++) {
-        firestore().collection("medicine").onSnapshot((queryMedicineSnapshot) => {
-          queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
-            if (documentMedicineSnapshot.data().name == this.state.reminder[i].medicine) {
-              temp2.push({
-                ...documentMedicineSnapshot.data(),
-                time: this.state.reminder[i].times,
-                key: documentMedicineSnapshot.id,
-              });
-            }
-          });
-          this.setState({ medicines: temp2 })
-        })
+      // Problem: Because setstate is inside for loop, if reminder.length == 0
+      // this.state.medicines wont be update.
+      if (this.state.reminder.length == 0) {
+        this.setState({ medicines: [] })
+      } else {
+        for (let i = 0; i < this.state.reminder.length; i++) {
+          firestore().collection("medicine").onSnapshot((queryMedicineSnapshot) => {
+            queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
+              if (documentMedicineSnapshot.data().name == this.state.reminder[i].medicine) {
+                temp2.push({
+                  ...documentMedicineSnapshot.data(),
+                  time: this.state.reminder[i].times,
+                  key: documentMedicineSnapshot.id,
+                });
+              }
+            });
+            this.setState({ medicines: temp2 })
+          })
+        }
       }
     })
   }
@@ -78,10 +84,11 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Image style={{ width: 350, height: 350, borderRadius: 180 }}
-          source={require('../../assets/GrowingTree.jpg')} />
+    let message
+    if (this.state.medicines.length == 0) {
+      message = <Text>You have no active reminder</Text>
+    } else {
+      message =
         <FlatList
           style={styles.feed}
           data={this.state.medicines}
@@ -89,6 +96,12 @@ export default class HomeScreen extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           horizontal={true}
         />
+    }
+    return (
+      <SafeAreaView style={styles.container}>
+        <Image style={{ width: 350, height: 350, borderRadius: 180 }}
+          source={require('../../assets/GrowingTree.jpg')} />
+        {message}
       </SafeAreaView>
     );
   }
