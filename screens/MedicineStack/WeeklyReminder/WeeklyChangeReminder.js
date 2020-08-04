@@ -11,6 +11,7 @@ import Toast from "react-native-simple-toast"
 import ReactNativeAN from 'react-native-alarm-notification'
 import TimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
+import { ConfirmDialog } from "react-native-simple-dialogs"
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -47,7 +48,8 @@ export default class WeeklyChangeReminder extends React.Component {
             alarm: {
                 // Used for react-native-alarm-notification package
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
-            }
+            },
+            dialogVisible: false,
         }
     }
 
@@ -135,6 +137,12 @@ export default class WeeklyChangeReminder extends React.Component {
         })
     }
 
+    handleMiss = () => { this.setState({ dialogVisible: true }) }
+
+    handleYes = () => {
+
+    }
+
     render() {
         const { testDate, show, changed, initial } = this.state.timePicker
         let message;
@@ -197,7 +205,7 @@ export default class WeeklyChangeReminder extends React.Component {
                             <Text style={{ color: "#FFF" }}>Take Medicine</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button}
-                            onPress={() => { }}>
+                            onPress={() => { this.handleMiss }}>
                             <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
                         </TouchableOpacity>
                     </View>
@@ -205,6 +213,23 @@ export default class WeeklyChangeReminder extends React.Component {
                         <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
                     </TouchableOpacity>
                 </View>
+                <ConfirmDialog
+                    visible={this.state.dialogVisible}
+                    title="Alert"
+                    message="Are you sure?"
+                    onTouchOutside={() => this.setState({ dialogVisible: false })}
+                    positiveButton={{
+                        title: "YES",
+                        onPress: () => { this.handleYes() }
+                    }}
+                    negativeButton={{
+                        title: "NO",
+                        onPress: () => {
+                            this.setState({ dialogVisible: false })
+                            Toast.show("Your request is canceled !")
+                        }
+                    }}
+                />
             </View>
         )
     }
