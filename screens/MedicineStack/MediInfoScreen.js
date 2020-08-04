@@ -26,7 +26,7 @@ export default class MediInfoScreen extends React.Component {
       prescription: {},
       reminder: [],
       arraySize: 0,
-      medicinePills: -1,
+      medicinePills: "",
     }
   }
 
@@ -38,11 +38,11 @@ export default class MediInfoScreen extends React.Component {
 
     // Get Medicine Number of Pills
     firestore().collection("medicinePills").onSnapshot(querySnapshot => {
-      let temp = -1
+      let temp = ""
       querySnapshot.forEach(documentSnapshot => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
-          && documentSnapshot.data().name == this.props.navigation.state.params.name) {
-          temp = parseInt(documentSnapshot.data().pills, 10)
+          && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
+          temp = documentSnapshot.data().pills
         }
       })
       this.setState({ medicinePills: temp })
@@ -127,6 +127,7 @@ export default class MediInfoScreen extends React.Component {
   }
 
   addMedicinePills = () => {
+    console.log("Medicine Pills: " + this.state.medicinePills)
     if (this.state.medicinePills < 0) {
       Toast.show("Please enter number of capsules")
     } else {
@@ -185,12 +186,18 @@ export default class MediInfoScreen extends React.Component {
     }
 
     const normal =
-      <View style={styles.prescription}>
+      <View style={styles.capsules}>
         <Text>{this.state.medicinePills}</Text>
+        <TouchableOpacity style={styles.showPicker} onPress={this.addMedicinePills}>
+          <Text style={{ color: "#FFF" }}>Edit</Text>
+        </TouchableOpacity>
       </View>
     const lessThan10 =
-      <View style={styles.prescription}>
+      <View style={styles.capsules}>
         <Text>{this.state.medicinePills}</Text>
+        <TouchableOpacity style={styles.showPicker} onPress={this.addMedicinePills}>
+          <Text style={{ color: "#FFF" }}>Edit</Text>
+        </TouchableOpacity>
       </View>
     const none =
       <View style={styles.prescription}>
@@ -202,7 +209,7 @@ export default class MediInfoScreen extends React.Component {
           placeholder="Number of Capsules in the package"
           autoCapitalize="none"
           keyboardType="numeric"
-          onChangeText={pills => this.setState({ medicinePills: parseInt(pills, 10) })}
+          onChangeText={pills => this.setState({ medicinePills: pills })}
           value={this.state.medicinePills}
         />
         <TouchableOpacity style={styles.showPicker} onPress={this.addMedicinePills}>
@@ -211,11 +218,11 @@ export default class MediInfoScreen extends React.Component {
       </View>
 
     let message
-    if (this.state.medicinePills == 0) {
-      message = none
-    } else if (this.state.medicinePills == -1) {
+    if (this.state.medicinePills == "") {
       message = empty
-    } else if (this.state.medicinePills < 10) {
+    } else if (parseInt(this.state.medicinePills) == 0) {
+      message = none
+    } else if (parseInt(this.state.medicinePills) < 10) {
       message = lessThan10
     } else {
       message = normal
