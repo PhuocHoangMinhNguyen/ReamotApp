@@ -51,6 +51,7 @@ export default class CalendarScreen extends React.Component {
                   ...documentSnapshot2.data(),
                   time: this.state.history[i].time,
                   date: this.state.history[i].date,
+                  status: this.state.history[i].status,
                   key: documentSnapshot2.id,
                 })
               }
@@ -80,7 +81,7 @@ export default class CalendarScreen extends React.Component {
   // Information appears on each item.
   renderItem(item) {
     const correctItem =
-      <SafeAreaView style={styles.feedItem}>
+      <SafeAreaView style={item.status == "taken" ? styles.feedItem : styles.missedItem}>
         <Image
           source={
             item.image
@@ -90,8 +91,8 @@ export default class CalendarScreen extends React.Component {
           style={styles.image}
         />
         <View style={{ flex: 1 }}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text>{item.time}</Text>
+          <Text style={item.status == "taken" ? styles.name : styles.missedName}>{item.name}</Text>
+          <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.time}</Text>
         </View>
       </SafeAreaView>
     let message
@@ -148,6 +149,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 8,
   },
+  missedItem: {
+    backgroundColor: "#FF0000",
+    borderRadius: 5,
+    padding: 8,
+    flexDirection: "row",
+    marginVertical: 8,
+  },
   image: {
     width: 50,
     height: 50,
@@ -162,6 +170,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     color: "#454D65",
+  },
+  missedName: {
+    color: "#FFF",
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  missedTime: {
+    color: "#FFF",
   },
   button: {
     alignSelf: "flex-end",
