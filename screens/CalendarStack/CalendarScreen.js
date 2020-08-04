@@ -183,5 +183,6 @@ const styles = StyleSheet.create({
   },
   testDate: {
     fontSize: 24,
+    fontWeight: "bold"
   }
 })
