@@ -158,6 +158,7 @@ export default class RegisterScreen extends React.Component {
           onPress={() => this.props.navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={32} color="#FFF" />
+          <StatusBar barStyle="light-content" />
         </TouchableOpacity>
         <StatusBar barStyle="light-content" />
         <View
