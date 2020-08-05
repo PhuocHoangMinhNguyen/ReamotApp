@@ -34,11 +34,6 @@ export default class ProfileScreen extends React.Component {
     this.unsubscribe()
   }
 
-  // Check Appointment list of that patient.
-  handlePress = () => {
-    this.props.navigation.navigate("AppointmentList")
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -54,20 +49,6 @@ export default class ProfileScreen extends React.Component {
             />
           </View>
           <Text style={styles.name}>{this.state.user.name}</Text>
-        </View>
-        <View style={styles.button}>
-          <Button
-            onPress={this.handlePress}
-            title="Appointment List"
-          />
-        </View>
-        <View style={styles.button}>
-          <Button
-            onPress={() => {
-              auth().signOut()
-            }}
-            title="Log out"
-          />
         </View>
       </View>
     );

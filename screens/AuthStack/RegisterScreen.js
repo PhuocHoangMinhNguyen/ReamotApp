@@ -161,23 +161,14 @@ export default class RegisterScreen extends React.Component {
           <StatusBar barStyle="light-content" />
         </TouchableOpacity>
         <StatusBar barStyle="light-content" />
-        <View
-          style={{
-            alignItems: "center",
-            width: "100%"
-          }}
-        >
+        <View style={{ alignItems: "center", width: "100%" }} >
           <Text style={styles.greeting}>
             {"Hello!\nSign up to get started."}
           </Text>
-          <TouchableOpacity
-            style={styles.avatarPlaceholder}
-            onPress={this.handlePickAvatar}
-          >
-            <Image
-              source={{ uri: this.state.user.avatar }}
-              style={styles.avatar}
-            />
+          <TouchableOpacity style={styles.avatarPlaceholder}
+            onPress={this.handlePickAvatar}>
+            <Image source={{ uri: this.state.user.avatar }}
+              style={styles.avatar} />
             <Ionicons
               name="ios-add"
               size={40}
