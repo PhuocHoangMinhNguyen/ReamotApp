@@ -142,8 +142,6 @@ export default class RegisterScreen extends React.Component {
     })
   }
 
-  showTermsOfServices() { }
-
   render() {
     const showPass = <Ionicons name="ios-eye" size={24} />
     const hidePass = <Ionicons name="ios-eye-off" size={24} />
@@ -256,7 +254,7 @@ export default class RegisterScreen extends React.Component {
             />
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1 }}>
               <Text>I agree to Reamot</Text>
-              <TouchableOpacity onPress={this.showTermsOfServices}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate("Terms")}>
                 <Text style={styles.termsOfServices}>Terms of Services</Text>
               </TouchableOpacity>
             </View>
