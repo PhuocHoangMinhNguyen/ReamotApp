@@ -61,7 +61,8 @@ export default class EditScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Edit Profile</Text>
-        <TouchableOpacity onPress={this.handlePickAvatar}>
+        <TouchableOpacity style={styles.opacity}
+          onPress={this.handlePickAvatar}>
           <Image style={styles.avatar}
             source={
               this.state.user.avatar
@@ -145,13 +146,16 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 20,
     marginTop: 60,
+    marginBottom: 40,
+  },
+  opacity: {
+    alignSelf: "flex-start",
+    marginLeft: 40,
   },
   avatar: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    marginTop: 40,
-    marginLeft: 40,
   },
   name: {
     alignSelf: "flex-end",
@@ -188,8 +192,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: "absolute",
-    top: 150,
-    left: 150,
+    top: 110,
+    left: 110,
     width: 35,
     height: 35,
     backgroundColor: "white",
