@@ -52,8 +52,8 @@ export default class RegisterScreen extends React.Component {
       Toast.show("Please Enter A Password", Toast.LONG)
     } else if (phoneNumber == "") {
       Toast.show("Please Enter Contact Number", Toast.LONG)
-    } else if (this.state.toggleCheckBox == true) {
-      Toast.show("Please Aggree to Terms of Services", Toast.LONG)
+    } else if (this.state.toggleCheckBox == false) {
+      Toast.show("Please Agree to Terms of Services", Toast.LONG)
     } else {
       this.createUser(this.state.user)
     }
