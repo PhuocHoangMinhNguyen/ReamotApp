@@ -52,7 +52,7 @@ export default class DrawerMenu extends React.Component {
                         this.props.navigation.navigate("AppointmentList")
                         this.props.navigation.closeDrawer()
                     }}>
-                    <Ionicons name="lock-open-outline" size={20} color={"#161F3D"} />
+                    <Ionicons name="list" size={20} color={"#161F3D"} />
                     <Text>  Appointment List</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
