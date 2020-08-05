@@ -25,7 +25,6 @@ export default class MediInfoScreen extends React.Component {
       medicine: {},
       prescription: {},
       reminder: [],
-      arraySize: 0,
       medicinePills: "",
       text: "",
       firebaseID: "",
@@ -84,18 +83,16 @@ export default class MediInfoScreen extends React.Component {
     // Get Reminder data of that patient and that medicine.
     firestore().collection("reminder").onSnapshot((querySnapshot) => {
       let temp = []
-      let counting = 0
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
           && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
-          });
-          counting++
+          })
         }
       })
-      this.setState({ reminder: temp, arraySize: counting })
+      this.setState({ reminder: temp })
     })
   }
 
@@ -192,10 +189,11 @@ export default class MediInfoScreen extends React.Component {
   render() {
     // This is to make the number of element in "reminder" equal to times the patient
     // has to take that medicine per day according to "prescription" document in Firebase.
-    // If reminder size is lower, fill reminder array with null values.
+    // If reminder.length is lower, fill reminder array with null values.
     // ==> To support renderItem function above.
-    if (this.state.arraySize < this.state.prescription.times) {
-      for (let i = this.state.arraySize; i < this.state.prescription.times; i++) {
+
+    if (this.state.reminder.length < this.state.prescription.times) {
+      for (let i = this.state.reminder.length; i < this.state.prescription.times; i++) {
         this.state.reminder.push("null")
       }
     }
