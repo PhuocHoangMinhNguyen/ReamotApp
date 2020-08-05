@@ -3,16 +3,11 @@
 // Status: In development
 
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, SafeAreaView } from "react-native"
-import Ionicons from "react-native-vector-icons/Ionicons"
+import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
 export default class AppointmentList extends React.Component {
-    static navigationOptions = {
-        headerShown: false,
-    }
-
     constructor(props) {
         super(props)
         this.state = {
@@ -62,12 +57,7 @@ export default class AppointmentList extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity
-                    style={styles.back}
-                    onPress={() => this.props.navigation.goBack()}
-                >
-                    <Ionicons name="arrow-back" size={32} color="#FFF" />
-                </TouchableOpacity>
+                <Text style={styles.header}>Your Appointment List</Text>
                 <FlatList
                     style={styles.feed}
                     data={this.state.appointmentList}
@@ -82,11 +72,12 @@ export default class AppointmentList extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#DEE8F1',
     },
     back: {
         position: "absolute",
-        top: 24,
-        left: 32,
+        top: 20,
+        left: 20,
         width: 32,
         height: 32,
         borderRadius: 16,
@@ -101,11 +92,17 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
     feed: {
-        marginHorizontal: 16,
-        marginTop: 60
+        marginHorizontal: 30,
+        marginTop: 20
     },
     appoint: {
         flexDirection: "row",
         justifyContent: "space-between",
+    },
+    header: {
+        alignSelf: "center",
+        color: "#000000",
+        fontSize: 20,
+        marginTop: 50
     },
 })

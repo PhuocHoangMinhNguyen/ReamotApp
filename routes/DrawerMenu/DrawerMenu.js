@@ -49,6 +49,15 @@ export default class DrawerMenu extends React.Component {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => {
+                        this.props.navigation.navigate("AppointmentList")
+                        this.props.navigation.closeDrawer()
+                    }}>
+                    <Ionicons name="lock-open-outline" size={20} color={"#161F3D"} />
+                    <Text>  Appointment List</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
                         this.props.navigation.navigate("HelpScreen")
                         this.props.navigation.closeDrawer()
                     }}>
