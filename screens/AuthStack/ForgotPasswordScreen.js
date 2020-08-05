@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
@@ -31,7 +31,14 @@ export default class ForgotPasswordScreen extends React.Component {
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
                 <View style={styles.smallerContainer}>
-                    <Text>Please enter the email address used to sign up for Reamot</Text>
+                    <View style={{ alignItems: "center" }}>
+                        <Image style={styles.image}
+                            source={require('../../assets/confusedMan.png')} />
+                        <Text style={styles.text}>Did someone forget their password?</Text>
+                        <Text>That's ok...</Text>
+                        <Text>Just enter a your email address and</Text>
+                        <Text>we will help you set a new password in no time</Text>
+                    </View>
                     <View style={styles.textInputContainer}>
                         <TextInput
                             placeholder="Email Address"
@@ -56,7 +63,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#DEE8F1',
     },
     smallerContainer: {
-        marginHorizontal: 30
+        marginHorizontal: 30,
+        marginTop: -100
     },
     back: {
         position: "absolute",
@@ -86,5 +94,13 @@ const styles = StyleSheet.create({
     },
     submitText: {
         color: "#FFF"
-    }
+    },
+    image: {
+        width: 250,
+        height: 250
+    },
+    text: {
+        fontWeight: "bold",
+        fontSize: 16
+    },
 })
