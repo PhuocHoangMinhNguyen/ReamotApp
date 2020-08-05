@@ -102,10 +102,10 @@ export default class BarcodeScan extends React.Component {
                     status: "taken"
                 })
                 // Problem: Keep minus pills by 1 repeatly
-                /*
                 let temporaryID
                 let firebasePills
-                firestore().collection("medicinePills").onSnapshot(querySnapshot => {
+                const mPills = firestore().collection("medicinePills")
+                mPills.get().then(querySnapshot => {
                     querySnapshot.forEach(documentSnapshot => {
                         if (documentSnapshot.data().medicine == this.state.medicine.name
                             && documentSnapshot.data().patientEmail == auth().currentUser.email) {
@@ -114,11 +114,10 @@ export default class BarcodeScan extends React.Component {
                         }
                     })
                     const value = parseInt(firebasePills, 10) - 1
-                    firestore().collection("medicinePills").doc(temporaryID).update({
+                    mPills.doc(temporaryID).update({
                         pills: value.toString()
                     })
                 })
-                */
             }
             Alert.alert("Alarm Sound is Stopped")
         } else {
