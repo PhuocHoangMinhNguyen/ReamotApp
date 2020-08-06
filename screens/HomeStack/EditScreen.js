@@ -7,20 +7,21 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native';
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserPermissions from "../../utilities/UserPermissions";
-import { ScrollView } from 'react-native-gesture-handler';
 
 export default class EditScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       user: {
+        avatar: null,
         name: "",
         phoneNumber: "",
         address: ""
@@ -44,17 +45,43 @@ export default class EditScreen extends React.Component {
   }
 
   handlePickAvatar = async () => {
+    UserPermissions.getPhotoPermission()
 
+    var options = {
+      title: "Select Image",
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
+
+    let result = await ImagePicker.showImagePicker(options, (response) => {
+      console.log("Response = ", response)
+
+      if (response.didCancel) {
+        console.log("User cancelled image picker")
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error)
+      } else {
+        const source = response.uri
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          user: { ...this.state.user, avatar: source }
+        })
+      }
+    })
   }
 
   editProfile = () => {
-    const { name, phoneNumber, address } = this.state.user.address
-    const user = this.props.uid || (auth().currentUser || {}).uid
-    firestore().collection("users").doc(user).update({
-      name: name,
-      phoneNumber: phoneNumber,
-      address: address,
-    })
+    const { name, phoneNumber, address, avatar } = this.state.user
+    firestore().collection("users").doc((auth().currentUser || {}).uid)
+      .update({
+        avatar: avatar,
+        name: name,
+        phoneNumber: phoneNumber,
+        address: address,
+      })
   }
 
   render() {
@@ -76,7 +103,7 @@ export default class EditScreen extends React.Component {
             style={styles.icon}
           />
         </TouchableOpacity>
-        <ScrollView>
+        <View>
           <Text style={styles.name}>{this.state.user.name}</Text>
           <View style={styles.form}>
             <View>
@@ -116,7 +143,7 @@ export default class EditScreen extends React.Component {
               <Text style={{ color: "#FFF" }}>Save profile</Text>
             </View>
           </TouchableOpacity>
-        </ScrollView>
+        </View>
         <ImageBackground
           style={[styles.fixed, styles.containter, { zIndex: -1 }]}
           source={require("../../assets/registerBackground.png")}
@@ -161,7 +188,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginEnd: 30,
     marginTop: -30,
-    fontSize: 26,
+    fontSize: 20,
     color: "#000000"
   },
   form: {
