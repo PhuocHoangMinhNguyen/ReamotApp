@@ -4,22 +4,10 @@
 
 import { createStackNavigator } from "react-navigation-stack"
 import HomeScreen from "../screens/HomeStack/HomeScreen"
-import EditScreen from "../screens/HomeStack/EditScreen"
-import HelpScreen from "../screens/HomeStack/HelpScreen"
-import TermsOfServices from "../screens/HomeStack/TermsOfServices"
-import ChangePassword from "../screens/HomeStack/ChangePassword"
 import MedicationInformation from "../screens/HomeStack/MedicationInformation"
-import AppointmentList from "../screens/HomeStack/AppointmentList"
 
-export default CalendarStack = createStackNavigator(
+export default HomeStack = createStackNavigator(
     {
-        // Drawer Menu
-        EditScreen,
-        ChangePassword,
-        AppointmentList,
-        HelpScreen,
-        TermsOfServices,
-
         // HomeStack
         HomeScreen,
         MedicationInformation

@@ -15,6 +15,7 @@ import HomeStack from "./HomeStack"
 import CalendarStack from "./CalendarStack"
 import MedicineStack from "./MedicineStack"
 import DoctorStack from "./DoctorStack"
+import MoreStack from "./MoreStack"
 
 export default BottomTabs = createStackNavigator(
     {
@@ -57,7 +58,7 @@ export default BottomTabs = createStackNavigator(
                     },
                 },
                 Profile: {
-                    screen: HomeStack,
+                    screen: MoreStack,
                     navigationOptions: {
                         tabBarIcon: ({ tintColor }) => (
                             <Ionicons name="reorder-three" size={24} color={tintColor} />
