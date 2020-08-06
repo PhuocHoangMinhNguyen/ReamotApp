@@ -3,7 +3,7 @@
 // Status: In development
 
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -30,6 +30,7 @@ export default class ChangeReminder extends React.Component {
             firebase: {
                 firebaseId: "",
                 idAN: "",
+                alarmId: Math.floor(Math.random() * 10000).toString(),
             },
             timePicker: {
                 // Used for TimePicker
@@ -133,6 +134,8 @@ export default class ChangeReminder extends React.Component {
     handleMiss = () => { this.setState({ dialogVisible: true }) }
 
     handleYes = async () => {
+        const { name } = this.state.medicine
+        const { firebaseId, alarmId } = this.state.firebase
         // Stop Alarm Sound
         ReactNativeAN.stopAlarmSound()
         // Remove Notification
