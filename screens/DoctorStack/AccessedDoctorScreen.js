@@ -50,11 +50,19 @@ export default class AccessedDoctorScreen extends React.Component {
                 .update({
                     doctorList: firestore.FieldValue.arrayRemove(doctor.email)
                 })
+            firestore().collection("doctor").doc(doctor.id)
+                .update({
+                    patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
+                })
         }
         if (doctor.type == "Pharmacist") {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     pharmacistList: firestore.FieldValue.arrayRemove(doctor.email)
+                })
+            firestore().collection("pharmacist").doc(doctor.id)
+                .update({
+                    patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
                 })
         }
         this.setState({ dialogVisible: false })

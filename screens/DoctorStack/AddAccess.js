@@ -106,7 +106,8 @@ export default class AddAccess extends React.Component {
             avatar: item.avatar,
             name: item.name,
             type: item.type,
-            email: emailInfo
+            email: emailInfo,
+            id: item.key
         }
         return (
             <TouchableOpacity

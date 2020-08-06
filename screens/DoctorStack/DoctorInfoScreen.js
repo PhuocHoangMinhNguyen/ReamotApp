@@ -37,11 +37,19 @@ export default class DoctorInfoScreen extends React.Component {
                 .update({
                     doctorList: firestore.FieldValue.arrayUnion(doctor.email)
                 })
+            firestore().collection("doctor").doc(doctor.id)
+                .update({
+                    patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
+                })
         }
         if (doctor.type == "Pharmacist") {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     pharmacistList: firestore.FieldValue.arrayUnion(doctor.email)
+                })
+            firestore().collection("pharmacist").doc(doctor.id)
+                .update({
+                    patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
                 })
         }
         this.setState({ dialogVisible: false })
