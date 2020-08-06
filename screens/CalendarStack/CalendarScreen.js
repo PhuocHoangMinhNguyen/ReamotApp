@@ -39,7 +39,7 @@ export default class CalendarScreen extends React.Component {
       this.setState({ history: temp })
 
       // Take data from "medicine" collection
-      let temp2 = [];
+      let temp2 = []
       if (this.state.history.length == 0) {
         this.setState({ medicines: [] })
       } else {
@@ -52,7 +52,6 @@ export default class CalendarScreen extends React.Component {
                   time: this.state.history[i].time,
                   date: this.state.history[i].date,
                   status: this.state.history[i].status,
-                  key: documentSnapshot2.id,
                 })
               }
             })
@@ -82,14 +81,8 @@ export default class CalendarScreen extends React.Component {
   renderItem(item) {
     const correctItem =
       <SafeAreaView style={item.status == "taken" ? styles.feedItem : styles.missedItem}>
-        <Image
-          source={
-            item.image
-              ? { uri: item.image }
-              : require("../../assets/tempAvatar.jpg")
-          }
-          style={styles.image}
-        />
+        <Image style={styles.image}
+          source={item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")} />
         <View style={{ flex: 1 }}>
           <Text style={item.status == "taken" ? styles.name : styles.missedName}>{item.name}</Text>
           <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.time}</Text>
