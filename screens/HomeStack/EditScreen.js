@@ -10,11 +10,15 @@ import {
   Dimensions,
   ScrollView
 } from 'react-native';
+
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
+
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserPermissions from "../../utilities/UserPermissions";
+import Toast from "react-native-simple-toast"
 
 export default class EditScreen extends React.Component {
   constructor(props) {
@@ -73,15 +77,43 @@ export default class EditScreen extends React.Component {
     })
   }
 
-  editProfile = () => {
+  editProfile = async () => {
     const { name, phoneNumber, address, avatar } = this.state.user
-    firestore().collection("users").doc((auth().currentUser || {}).uid)
-      .update({
-        avatar: avatar,
-        name: name,
-        phoneNumber: phoneNumber,
-        address: address,
-      })
+    let remoteUri = null
+    let db = firestore().collection("users").doc((auth().currentUser || {}).uid)
+    db.update({
+      avatar: null,
+      name: name,
+      phoneNumber: phoneNumber,
+      address: address,
+    })
+    if (this.state.user.avatar) {
+      // Store the avatar in Firebase Storage
+      remoteUri = await this.uploadPhotoAsync(
+        this.state.user.avatar,
+        `users/${(auth().currentUser || {}).uid}`
+      );
+      // Then Store the avatar in Cloud Firestore
+      db.set({ avatar: remoteUri }, { merge: true })
+    }
+    Toast.show("Your Account Details is editted !")
+  }
+
+  uploadPhotoAsync = (uri, filename) => {
+    return new Promise(async (res, rej) => {
+      const response = await fetch(uri)
+      const file = await response.blob()
+
+      let upload = storage().ref(filename).put(file);
+
+      upload.on("state_changed", snapshot => { },
+        err => { rej(err) },
+        async () => {
+          const url = await upload.snapshot.ref.getDownloadURL()
+          res(url);
+        }
+      )
+    })
   }
 
   render() {
