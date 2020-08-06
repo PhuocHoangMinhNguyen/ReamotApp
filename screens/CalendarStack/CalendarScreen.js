@@ -52,6 +52,7 @@ export default class CalendarScreen extends React.Component {
                   time: this.state.history[i].time,
                   date: this.state.history[i].date,
                   status: this.state.history[i].status,
+                  key: this.state.history[i].key,
                 })
               }
             })
@@ -60,6 +61,7 @@ export default class CalendarScreen extends React.Component {
         }
       }
     })
+
   }
 
   // Show DatePicker
@@ -69,7 +71,7 @@ export default class CalendarScreen extends React.Component {
 
   // When a date is chosen from DatePicker
   onChangeDate = (event, selectedDate) => {
-    const { testDate } = this.state;
+    const { testDate } = this.state
     let currentDate = selectedDate || testDate;
     this.setState({
       show: Platform.OS === 'ios',
@@ -86,15 +88,14 @@ export default class CalendarScreen extends React.Component {
         <View style={{ flex: 1 }}>
           <Text style={item.status == "taken" ? styles.name : styles.missedName}>{item.name}</Text>
           <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.time}</Text>
+          <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.date}</Text>
         </View>
       </SafeAreaView>
-    let message
     if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
-      message = correctItem
+      return correctItem
+    } else {
+      return <Text style={{ height: 0.1 }}></Text>
     }
-    return (
-      message
-    )
   }
 
   render() {
@@ -123,7 +124,6 @@ export default class CalendarScreen extends React.Component {
           style={styles.feed}
           data={this.state.medicine}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()}
         />
       </View>
     )
