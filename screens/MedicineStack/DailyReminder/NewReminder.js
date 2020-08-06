@@ -154,12 +154,8 @@ export default class NewReminder extends React.Component {
                         </View>
                         {show && (
                             <TimePicker
-                                testID="dateTimePicker"
-                                timeZoneOffsetInMinutes={0}
                                 value={testDate}
                                 mode="time"
-                                is24Hour={false}
-                                display="default"
                                 onChange={this.onChange}
                             />
                         )}

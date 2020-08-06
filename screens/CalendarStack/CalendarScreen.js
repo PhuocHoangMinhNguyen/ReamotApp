@@ -111,12 +111,7 @@ export default class CalendarScreen extends React.Component {
         </TouchableOpacity>
         {this.state.show && (
           <DatePicker
-            testID="dateTimePicker"
-            timeZoneOffsetInMinutes={0}
             value={this.state.testDate}
-            mode="date"
-            is24Hour={false}
-            display="default"
             onChange={this.onChangeDate}
           />
         )}

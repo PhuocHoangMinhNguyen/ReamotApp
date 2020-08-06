@@ -100,12 +100,7 @@ export default class AppointmentMaker extends React.Component {
                 </View>
                 {this.state.showDate && (
                     <DateTimePicker
-                        testID="dateTimePicker"
-                        timeZoneOffsetInMinutes={0}
                         value={this.state.testDate}
-                        mode="day"
-                        is24Hour={false}
-                        display="default"
                         onChange={this.onChangeDate}
                     />
                 )}
@@ -115,12 +110,8 @@ export default class AppointmentMaker extends React.Component {
                 </View>
                 {this.state.showTime && (
                     <DateTimePicker
-                        testID="dateTimePicker"
-                        timeZoneOffsetInMinutes={0}
                         value={this.state.testTime}
                         mode="time"
-                        is24Hour={false}
-                        display="default"
                         onChange={this.onChangeTime}
                     />
                 )}
