@@ -87,10 +87,10 @@ export default class EditScreen extends React.Component {
       phoneNumber: phoneNumber,
       address: address,
     })
-    if (this.state.user.avatar) {
+    if (avatar) {
       // Store the avatar in Firebase Storage
       remoteUri = await this.uploadPhotoAsync(
-        this.state.user.avatar,
+        avatar,
         `users/${(auth().currentUser || {}).uid}`
       );
       // Then Store the avatar in Cloud Firestore
