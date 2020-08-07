@@ -71,6 +71,12 @@ export default class AccessedDoctorScreen extends React.Component {
     }
 
     render() {
+        let header
+        if (this.state.doctor.type == "Doctor") {
+            header = <Text style={styles.header}>Doctor Information</Text>
+        } else {
+            header = <Text style={styles.header}>Pharmacist Information</Text>
+        }
         return (
             <View style={styles.container}>
                 <TouchableOpacity
@@ -79,6 +85,7 @@ export default class AccessedDoctorScreen extends React.Component {
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
+                {header}
                 <View style={styles.information}>
                     <Image
                         source={
@@ -137,14 +144,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
+    header: {
+        alignSelf: "center",
+        color: "#000000",
+        fontSize: 20,
+        marginTop: 50
+    },
     information: {
         backgroundColor: "#FFF",
         alignItems: "center",
         borderRadius: 5,
         padding: 16,
-        marginBottom: 8,
+        marginVertical: 12,
         marginHorizontal: 30,
-        marginTop: 70,
     },
     image: {
         width: 100,
