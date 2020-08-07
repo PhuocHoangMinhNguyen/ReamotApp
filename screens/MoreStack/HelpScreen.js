@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         marginRight: 70,
         marginVertical: 8,
+        padding: 10,
     },
     answerSection: {
         flexDirection: "row",
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
         marginLeft: 70,
         marginRight: 30,
         marginVertical: 8,
+        padding: 10,
     },
     answerText: {
         color: "#FFF"
