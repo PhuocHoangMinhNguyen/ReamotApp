@@ -104,6 +104,9 @@ export default class HomeScreen extends React.Component {
     }
     return (
       <SafeAreaView style={styles.container}>
+        <View style={styles.titleView}>
+          <Text style={styles.title}>Add Medication</Text>
+        </View>
         <Image style={{ width: 350, height: 350, borderRadius: 180 }}
           source={require('../../assets/GrowingTree.jpg')} />
         {message}
@@ -146,6 +149,14 @@ const styles = StyleSheet.create({
     color: "white",
   },
   emptyText: {
+    fontWeight: "bold",
+    fontSize: 20
+  },
+  titleView: {
+    marginTop: 30,
+    alignItems: "center"
+  },
+  title: {
     fontWeight: "bold",
     fontSize: 20
   },

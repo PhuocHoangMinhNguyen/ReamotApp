@@ -88,7 +88,6 @@ export default class CalendarScreen extends React.Component {
         <View style={{ flex: 1 }}>
           <Text style={item.status == "taken" ? styles.name : styles.missedName}>{item.name}</Text>
           <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.time}</Text>
-          <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.date}</Text>
         </View>
       </SafeAreaView>
     if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
@@ -175,7 +174,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: "#1565C0",
     borderRadius: 4,
-    marginVertical: 12,
+    marginVertical: 16,
     marginEnd: 16
   },
   buttonText: {
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
   },
   testDateContainer: {
     alignItems: "center",
-    marginTop: 12
+    marginTop: 30
   },
   testDate: {
     fontSize: 24,

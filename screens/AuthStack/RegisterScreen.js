@@ -57,7 +57,7 @@ export default class RegisterScreen extends React.Component {
     } else {
       this.createUser(this.state.user)
     }
-  };
+  }
 
   createUser = async user => {
     let remoteUri = null
@@ -107,7 +107,7 @@ export default class RegisterScreen extends React.Component {
         err => { rej(err) },
         async () => {
           const url = await upload.snapshot.ref.getDownloadURL()
-          res(url);
+          res(url)
         }
       )
     })

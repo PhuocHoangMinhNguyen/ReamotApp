@@ -4,6 +4,7 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import UserPermissions from "../../utilities/UserPermissions"
 import ImagePicker from "react-native-image-picker"
 import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth"
 import CheckBox from "@react-native-community/checkbox"
 import Toast from "react-native-simple-toast"
 
@@ -11,7 +12,10 @@ export default class AddMedicine extends React.Component {
     state = {
         medicine: {
             name: "",
-            image: null
+            image: null,
+            number: "",
+            times: "",
+            note: null
         },
         reminder: {
             dailyType: false,
@@ -48,20 +52,71 @@ export default class AddMedicine extends React.Component {
         })
     }
 
-    addMedicine = () => {
-        const { name, image } = this.state.medicine
+    handleAdd = () => {
+        const { name, number, times } = this.state.medicine
         const { dailyType, weeklyType } = this.state.reminder
-        /*
-        firestore().collection("history").add({
-            medicine: name,
-            patientEmail: auth().currentUser.email,
-            time: moment().format('h:mm a'),
-            date: moment().format('MMMM Do YYYY'),
-            status: "taken"
-        })
-        */
+        if (name.trim == "") {
+            Toast.show("Please Enter Medicine Name", Toast.LONG)
+        } else if (number == "") {
+            Toast.show("Please enter number of capsules for each time you take medicine", Toast.LONG)
+        } else if (times == "") {
+            Toast.show("Please enter number of times you have to take medicine per day/week", Toast.LONG)
+        } else if (dailyType == false && weeklyType == false) {
+            Toast.show("Please Choose a Reminder Type", Toast.LONG)
+        } else {
+            this.addMedicine()
+        }
+    }
+
+    addMedicine = () => {
+        const { name, image, note, number, times } = this.state.medicine
+        const { dailyType, weeklyType } = this.state.reminder
+
+        if (dailyType == true) {
+            firestore().collection("prescription").add({
+                medicine: name,
+                patientEmail: auth().currentUser.email,
+                note: note,
+                number: number,
+                times: times,
+                type: "Daily"
+            })
+        }
+
+        if (weeklyType == true) {
+            firestore().collection("prescription").add({
+                medicine: name,
+                patientEmail: auth().currentUser.email,
+                note: note,
+                number: number,
+                times: times,
+                type: "Weekly"
+            })
+        }
+
+        if (image) {
+
+        }
+
         this.props.navigation.goBack()
         Toast.show("A new medicine is added !")
+    }
+
+    uploadPhotoAsync = (uri, filename) => {
+        return new Promise(async (res, rej) => {
+            const response = await fetch(uri)
+            const file = await response.blob()
+
+            let upload = storage().ref(filename).put(file);
+
+            upload.on("state_changed", snapshot => { },
+                err => { rej(err) },
+                async () => {
+                    const url = await upload.snapshot.ref.getDownloadURL()
+                    res(url)
+                }
+            )
+        })
     }
 
     render() {
@@ -147,7 +202,33 @@ export default class AddMedicine extends React.Component {
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={this.addMedicine}>
+                <View style={styles.numberTimes}>
+                    <View style={styles.number}>
+                        <TextInput
+                            placeholder="Number"
+                            keyboardType="numeric"
+                            onChangeText={number => this.setState({ medicine: { ...this.state.medicine, number: number } })}
+                            value={this.state.medicine.number}
+                        />
+                    </View>
+                    <View style={styles.times}>
+                        <TextInput
+                            placeholder="Times"
+                            keyboardType="numeric"
+                            onChangeText={times => this.setState({ medicine: { ...this.state.medicine, times: times } })}
+                            value={this.state.medicine.times}
+                        />
+                    </View>
+                </View>
+                <View style={styles.note}>
+                    <TextInput
+                        placeholder="Note"
+                        autoCapitalize="none"
+                        onChangeText={note => this.setState({ medicine: { ...this.state.medicine, note: note } })}
+                        value={this.state.medicine.note}
+                    />
+                </View>
+                <TouchableOpacity style={styles.button} onPress={this.handleAdd}>
                     <Text style={styles.buttonText}>Add Medicine</Text>
                 </TouchableOpacity>
             </View>
@@ -221,5 +302,27 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: "#FFF"
+    },
+    number: {
+        backgroundColor: "#FFF",
+        borderRadius: 4,
+        flex: 1,
+        marginRight: 8
+    },
+    times: {
+        backgroundColor: "#FFF",
+        borderRadius: 4,
+        flex: 1,
+        marginLeft: 8
+    },
+    numberTimes: {
+        flexDirection: "row",
+        marginHorizontal: 30,
+        marginVertical: 12,
+    },
+    note: {
+        backgroundColor: "#FFF",
+        borderRadius: 4,
+        marginHorizontal: 30
     },
 })
