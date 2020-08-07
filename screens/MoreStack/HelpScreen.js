@@ -5,7 +5,40 @@ export default class HelpScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Help Screen</Text>
+                <View style={styles.questionSection}>
+                    <Text></Text>
+                </View>
+                <View style={styles.answerSection}>
+                    <Text style={styles.answerText}></Text>
+                </View>
+
+                <View style={styles.questionSection}>
+                    <Text>Why do I need this app?</Text>
+                </View>
+                <View style={styles.answerSection}>
+                    <Text style={styles.answerText}></Text>
+                </View>
+
+                <View style={styles.questionSection}>
+                    <Text></Text>
+                </View>
+                <View style={styles.answerSection}>
+                    <Text style={styles.answerText}></Text>
+                </View>
+
+                <View style={styles.questionSection}>
+                    <Text></Text>
+                </View>
+                <View style={styles.answerSection}>
+                    <Text style={styles.answerText}></Text>
+                </View>
+
+                <View style={styles.questionSection}>
+                    <Text></Text>
+                </View>
+                <View style={styles.answerSection}>
+                    <Text style={styles.answerText}></Text>
+                </View>
             </View>
         )
     }
@@ -16,25 +49,23 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#DEE8F1',
     },
-    margin: {
-        marginHorizontal: 30,
-        marginVertical: 10
+    questionSection: {
+        flexDirection: "row",
+        backgroundColor: "#FFF",
+        borderRadius: 4,
+        marginLeft: 30,
+        marginRight: 70,
+        marginVertical: 8,
     },
-    marginBold: {
-        marginHorizontal: 30,
-        marginVertical: 10,
-        fontWeight: "bold"
+    answerSection: {
+        flexDirection: "row",
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginLeft: 70,
+        marginRight: 30,
+        marginVertical: 8,
     },
-    marginHeader: {
-        marginHorizontal: 30,
-        marginTop: 50,
-        marginBottom: 10,
-        fontWeight: "bold",
-        fontSize: 22
-    },
-    marginBottom: {
-        marginHorizontal: 30,
-        marginTop: 10,
-        marginBottom: 300,
+    answerText: {
+        color: "#FFF"
     }
 })

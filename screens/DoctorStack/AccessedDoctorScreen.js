@@ -41,7 +41,7 @@ export default class AccessedDoctorScreen extends React.Component {
 
     // Send user to AppointmentMaker to choose appointment time and reason.
     handleSchedule = () => {
-        this.props.navigation.navigate("AppointmentMaker")
+        this.props.navigation.navigate("AppointmentMaker", this.state.doctor)
     }
     handleYes = () => {
         const { doctor } = this.state
