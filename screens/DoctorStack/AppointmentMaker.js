@@ -94,6 +94,7 @@ export default class AppointmentMaker extends React.Component {
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
+                <View style={{ marginTop: 70 }}></View>
                 <View style={styles.timePicker}>
                     <TouchableOpacity style={styles.pickerButton} onPress={this.showModeDate}>
                         <Text style={{ color: "#FFF" }}>Choose a Day!</Text>
@@ -157,7 +158,6 @@ export default class AppointmentMaker extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
         backgroundColor: '#DEE8F1',
     },
     back: {
@@ -194,7 +194,8 @@ const styles = StyleSheet.create({
     inputTitle: {
         color: "#8A8F9E",
         fontSize: 12,
-        textTransform: "uppercase"
+        textTransform: "uppercase",
+        fontWeight: "bold"
     },
     input: {
         borderBottomColor: "#8A8F9E",
@@ -205,7 +206,10 @@ const styles = StyleSheet.create({
     },
     reason: {
         marginHorizontal: 30,
-        marginVertical: 8
+        marginVertical: 8,
+        backgroundColor: "#FFF",
+        padding: 10,
+        borderRadius: 4
     },
     pickerButton: {
         backgroundColor: "#1565C0",
