@@ -91,17 +91,13 @@ export default class AccessedDoctorScreen extends React.Component {
                         <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
                     </View>
                 </View>
-                <View style={{ marginVertical: 5 }}>
-                    <Button
-                        title="Revoke access of medical details"
-                        onPress={this.handleRevokeAccessToDoctor} />
-                </View>
+                <TouchableOpacity style={styles.button} onPress={this.handleRevokeAccessToDoctor}>
+                    <Text style={{ color: "#FFF" }}>Revoke access of medical details</Text>
+                </TouchableOpacity>
                 {this.state.show && (
-                    <View style={{ marginVertical: 5 }}>
-                        <Button
-                            title="Schedule An Appointment"
-                            onPress={this.handleSchedule} />
-                    </View>
+                    <TouchableOpacity style={styles.button} onPress={this.handleSchedule}>
+                        <Text style={{ color: "#FFF" }}>Schedule An Appointment</Text>
+                    </TouchableOpacity>
                 )}
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
@@ -128,8 +124,6 @@ export default class AccessedDoctorScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: '#DEE8F1',
     },
     back: {
@@ -145,13 +139,24 @@ const styles = StyleSheet.create({
     },
     information: {
         backgroundColor: "#FFF",
+        alignItems: "center",
         borderRadius: 5,
         padding: 16,
-        marginVertical: 8,
-        marginHorizontal: 16,
+        marginBottom: 8,
+        marginHorizontal: 30,
+        marginTop: 70,
     },
     image: {
         width: 100,
         height: 100
+    },
+    button: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginVertical: 12,
+        marginHorizontal: 30
     },
 })

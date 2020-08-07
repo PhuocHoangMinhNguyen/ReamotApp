@@ -78,11 +78,9 @@ export default class DoctorInfoScreen extends React.Component {
                         <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
                     </View>
                 </View>
-                <View style={styles.button}>
-                    <Button
-                        title="Give access of medical details"
-                        onPress={this.handleGiveAccessToDoctor} />
-                </View>
+                <TouchableOpacity style={styles.button} onPress={this.handleGiveAccessToDoctor}>
+                    <Text style={{ color: "#FFF" }}>Give access of medical details</Text>
+                </TouchableOpacity>
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
                     title="Alert"
@@ -125,8 +123,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         borderRadius: 5,
         padding: 16,
-        marginVertical: 8,
-        marginHorizontal: 16,
+        marginBottom: 8,
+        marginHorizontal: 30,
         marginTop: 70,
         alignItems: "center"
     },
@@ -135,6 +133,12 @@ const styles = StyleSheet.create({
         height: 100
     },
     button: {
-        marginHorizontal: 16
-    }
+        justifyContent: "center",
+        alignItems: "center",
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginVertical: 12,
+        marginHorizontal: 30
+    },
 })
