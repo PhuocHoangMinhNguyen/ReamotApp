@@ -1,10 +1,10 @@
 import React from "react"
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, ScrollView } from "react-native"
 
 export default class HelpScreen extends React.Component {
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View style={styles.questionSection}>
                     <Text style={styles.questionText}>About Us</Text>
                 </View>
@@ -47,7 +47,7 @@ export default class HelpScreen extends React.Component {
                 <View style={styles.answerSection}>
                     <Text style={styles.answerText}></Text>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
