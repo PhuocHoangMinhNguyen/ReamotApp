@@ -310,14 +310,14 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: 70,
         marginBottom: 12,
-        marginHorizontal: 16
+        marginHorizontal: 30
     },
     timePicker: {
         backgroundColor: "#FFF",
         borderRadius: 5,
         padding: 16,
         marginVertical: 8,
-        marginHorizontal: 16,
+        marginHorizontal: 30,
         flexDirection: "row",
         justifyContent: "space-between"
     },
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#1565C0",
         borderRadius: 4,
         marginVertical: 12,
-        marginHorizontal: 16,
+        marginHorizontal: 30,
         padding: 20
     },
     showPicker: {
