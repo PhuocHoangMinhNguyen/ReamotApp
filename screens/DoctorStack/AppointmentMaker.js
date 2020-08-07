@@ -95,8 +95,10 @@ export default class AppointmentMaker extends React.Component {
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
                 <View style={styles.timePicker}>
-                    <Button onPress={this.showModeDate} title="Choose a day!" />
-                    <Text>{moment(this.state.testDate).format("MMM Do YYYY")}</Text>
+                    <TouchableOpacity style={styles.pickerButton} onPress={this.showModeDate}>
+                        <Text style={{ color: "#FFF" }}>Choose a Day!</Text>
+                    </TouchableOpacity>
+                    <Text style={{ alignSelf: "center" }}>{moment(this.state.testDate).format("MMM Do YYYY")}</Text>
                 </View>
                 {this.state.showDate && (
                     <DateTimePicker
@@ -105,8 +107,10 @@ export default class AppointmentMaker extends React.Component {
                     />
                 )}
                 <View style={styles.timePicker}>
-                    <Button onPress={this.showModeTime} title="Choose a Time!" />
-                    <Text>{moment(this.state.testTime).format('hh:mm a')}</Text>
+                    <TouchableOpacity style={styles.pickerButton} onPress={this.showModeTime}>
+                        <Text style={{ color: "#FFF" }}>Choose a Time!</Text>
+                    </TouchableOpacity>
+                    <Text style={{ alignSelf: "center" }}>{moment(this.state.testTime).format('hh:mm a')}</Text>
                 </View>
                 {this.state.showTime && (
                     <DateTimePicker
@@ -125,11 +129,9 @@ export default class AppointmentMaker extends React.Component {
                         value={this.state.reason}
                     />
                 </View>
-                <View style={styles.button}>
-                    <Button
-                        title="Set Appointment"
-                        onPress={this.handlePress} />
-                </View>
+                <TouchableOpacity style={styles.button} onPress={this.handlePress}>
+                    <Text style={{ color: "#FFF" }}>Set Appointment</Text>
+                </TouchableOpacity>
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
                     title="Alert"
@@ -172,16 +174,22 @@ const styles = StyleSheet.create({
     timePicker: {
         backgroundColor: "#FFF",
         borderRadius: 5,
-        padding: 16,
+        padding: 10,
         marginVertical: 8,
-        marginHorizontal: 16,
+        marginHorizontal: 30,
         flexDirection: "row",
         justifyContent: "space-between"
     },
     button: {
-        alignItems: "flex-end",
-        marginVertical: 8,
-        marginHorizontal: 16
+        alignSelf: "flex-end",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginVertical: 12,
+        marginEnd: 30,
+        width: 120
     },
     inputTitle: {
         color: "#8A8F9E",
@@ -196,7 +204,15 @@ const styles = StyleSheet.create({
         color: "#161F3D"
     },
     reason: {
-        marginHorizontal: 16,
+        marginHorizontal: 30,
         marginVertical: 8
+    },
+    pickerButton: {
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        padding: 5,
+        height: 35,
+        justifyContent: "center",
+        alignItems: "center",
     }
 })
