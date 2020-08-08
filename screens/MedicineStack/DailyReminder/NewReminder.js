@@ -107,7 +107,14 @@ export default class NewReminder extends React.Component {
     // When a time is chosen from TimePicker
     onChange = (event, selectedDate) => {
         const { testDate } = this.state.timePicker
-        let currentDate = selectedDate || testDate
+        let currentDate
+        if (selectedDate < Date.now()) {
+            const difference = Date.now() - selectedDate
+            const correctDate = new Date(Date.now() + difference)
+            currentDate = correctDate || testDate
+        } else {
+            currentDate = selectedDate || testDate
+        }
         this.setState({
             timePicker: {
                 ...this.state.timePicker,
