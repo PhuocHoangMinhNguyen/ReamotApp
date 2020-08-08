@@ -37,7 +37,7 @@ export default class NewReminder extends React.Component {
                 // Used for react-native-alarm-notification package
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
             }
-        };
+        }
         this.scheduleAlarm = this.scheduleAlarm.bind(this)
     }
 
