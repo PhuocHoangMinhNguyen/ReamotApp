@@ -63,7 +63,7 @@ export default class BarcodeScan extends React.Component {
                 //
                 // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
                 // It should start from the time the alarm is set instead.
-                const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 300000))
+                const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 86400000))
                 // 10 minutes = 600.000 miliseconds
                 // 5 minutes = 300.000 miliseconds.
                 // 1 hour = 3.600.000 miliseconds
