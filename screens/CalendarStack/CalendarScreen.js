@@ -29,7 +29,7 @@ export default class CalendarScreen extends React.Component {
   componentDidMount() {
     // Take data from "history" collection
     this.unsubscribe = firestore().collection("history").onSnapshot((querySnapshot) => {
-      let temp = [];
+      let temp = []
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
           temp.push({

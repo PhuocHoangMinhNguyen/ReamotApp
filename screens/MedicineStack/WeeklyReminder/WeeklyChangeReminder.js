@@ -30,6 +30,7 @@ export default class WeeklyChangeReminder extends React.Component {
             firebase: {
                 firebaseId: "",
                 idAN: "",
+                alarmId: Math.floor(Math.random() * 10000).toString(),
             },
             timePicker: {
                 // Used for TimePicker

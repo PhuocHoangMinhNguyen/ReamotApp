@@ -14,66 +14,85 @@ export default class HomeScreen extends React.Component {
     this.state = {
       historymedicines: [],
       remindermedicines: [],
+      tempHistory: [],
+      tempReminder: [],
     }
   }
 
+  unsubscribe1 = null
+  unsubscribe2 = null
+
   componentDidMount() {
-    let tempHistory = []
-    firestore().collection("history").onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email
-          && documentSnapshot.data().date == moment(this.state.testDate).format("MMMM Do YYYY")) {
+    this.unsubscribe1 = firestore().collection("history").onSnapshot((queryHistorySnapshot) => {
+      let tempHistory = []
+      queryHistorySnapshot.forEach((documentHistorySnapshot) => {
+        if (documentHistorySnapshot.data().patientEmail == auth().currentUser.email
+          && documentHistorySnapshot.data().date == moment(this.state.testDate).format("MMMM Do YYYY")) {
           tempHistory.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id
+            ...documentHistorySnapshot.data(),
+            key: documentHistorySnapshot.id
           })
         }
       })
-      console.log(tempHistory)
+      this.setState({ tempHistory: tempHistory })
       let tempHis = []
-      for (let i = 0; i < tempHistory.length; i++) {
-        firestore().collection("medicine").onSnapshot((querySnapshot) => {
-          querySnapshot.forEach((documentSnapshot) => {
-            if (documentSnapshot.data().name == tempHistory[i].medicine) {
-              tempHis.push({
-                ...documentSnapshot.data(),
-                time: tempHistory[i].time,
-                status: tempHistory[i].status,
-                key: documentSnapshot.id,
-              })
-            }
+      if (this.state.tempHistory.length == 0) {
+        this.setState({ historymedicines: [] })
+      } else {
+        for (let i = 0; i < this.state.tempHistory.length; i++) {
+          firestore().collection("medicine").onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((documentSnapshot) => {
+              if (documentSnapshot.data().name == this.state.tempHistory[i].medicine) {
+                tempHis.push({
+                  ...documentSnapshot.data(),
+                  time: this.state.tempHistory[i].time,
+                  status: this.state.tempHistory[i].status,
+                  key: this.state.tempHistory[i].key,
+                })
+              }
+            })
+            this.setState({ historymedicines: tempHis })
           })
-          this.setState({ historymedicines: tempHis })
-        })
+        }
       }
     })
 
-    let tempReminder = []
-    firestore().collection("reminder").onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
+    this.unsubscribe2 = firestore().collection("reminder").onSnapshot((queryReminderSnapshot) => {
+      let tempReminder = []
+      queryReminderSnapshot.forEach((documentReminderSnapshot) => {
+        if (documentReminderSnapshot.data().patientEmail == auth().currentUser.email) {
           tempReminder.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id
+            ...documentReminderSnapshot.data(),
+            key: documentReminderSnapshot.id
           })
         }
       })
+      this.setState({ tempReminder: tempReminder })
       let tempRem = []
-      for (let i = 0; i < tempReminder.length; i++) {
-        firestore().collection("medicine").onSnapshot((querySnapshot) => {
-          querySnapshot.forEach((documentSnapshot) => {
-            if (documentSnapshot.data().name == tempReminder[i].medicine) {
-              tempRem.push({
-                ...documentSnapshot.data(),
-                time: tempReminder[i].times,
-                key: documentSnapshot.id,
-              })
-            }
+      if (this.state.tempReminder.length == 0) {
+        this.setState({ remindermedicines: [] })
+      } else {
+        for (let i = 0; i < this.state.tempReminder.length; i++) {
+          firestore().collection("medicine").onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((documentSnapshot) => {
+              if (documentSnapshot.data().name == this.state.tempReminder[i].medicine) {
+                tempRem.push({
+                  ...documentSnapshot.data(),
+                  time: this.state.tempReminder[i].times,
+                  key: this.state.tempReminder[i].key,
+                })
+              }
+            })
+            this.setState({ remindermedicines: tempRem })
           })
-          this.setState({ remindermedicines: tempRem })
-        })
+        }
       }
     })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe1()
+    this.unsubscribe2()
   }
 
   handleClick = (dataInfor) => {
@@ -143,7 +162,6 @@ export default class HomeScreen extends React.Component {
           style={styles.feed}
           data={this.state.historymedicines}
           renderItem={({ item }) => this.renderItemHistory(item)}
-          keyExtractor={(item, index) => index.toString()}
           horizontal={true}
         />
         <View style={styles.chapterView}>
@@ -153,7 +171,6 @@ export default class HomeScreen extends React.Component {
           style={styles.feed}
           data={this.state.remindermedicines}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()}
           horizontal={true}
         />
       </View>
