@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   feedItem: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#FFD700',
     borderRadius: 10,
     padding: 7,
     margin: 4,
@@ -214,8 +214,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    marginRight: 16,
-    marginLeft: 8
   },
   name: {
     flex: 1,
