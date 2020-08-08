@@ -193,7 +193,7 @@ export default class WeeklyChangeReminder extends React.Component {
 
     render() {
         const { testDate, show, changed, initial } = this.state.timePicker
-        let message;
+        let message
         if (changed == true) {
             message = moment(testDate).format('hh:mm a')
         } else {

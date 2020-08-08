@@ -16,6 +16,7 @@ export default class HomeScreen extends React.Component {
       remindermedicines: [],
       tempHistory: [],
       tempReminder: [],
+      missedMedicines: [],
     }
   }
 
@@ -36,6 +37,7 @@ export default class HomeScreen extends React.Component {
       })
       this.setState({ tempHistory: tempHistory })
       let tempHis = []
+      let tempMissed = []
       if (this.state.tempHistory.length == 0) {
         this.setState({ historymedicines: [] })
       } else {
@@ -49,9 +51,20 @@ export default class HomeScreen extends React.Component {
                   status: this.state.tempHistory[i].status,
                   key: this.state.tempHistory[i].key,
                 })
+                if (this.state.tempHistory[i].status == "missed") {
+                  tempMissed.push({
+                    ...documentSnapshot.data(),
+                    time: this.state.tempHistory[i].time,
+                    status: this.state.tempHistory[i].status,
+                    key: this.state.tempHistory[i].key,
+                  })
+                }
               }
             })
-            this.setState({ historymedicines: tempHis })
+            this.setState({
+              historymedicines: tempHis,
+              missedMedicines: tempMissed,
+            })
           })
         }
       }
@@ -175,13 +188,34 @@ export default class HomeScreen extends React.Component {
         />
       </View>
     }
+    let image
+    const value = (this.state.remindermedicines.length + this.state.historymedicines.length - this.state.missedMedicines.length)
+      * 100 / (this.state.remindermedicines.length + this.state.historymedicines.length)
+    if (value == 0) {
+      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+        source={require('../../assets/growing_0.png')} />
+    } else if (value > 0 && value < 25) {
+      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+        source={require('../../assets/growing_0_to_25.png')} />
+    } else if (value >= 25 && value < 50) {
+      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+        source={require('../../assets/growing_25_to_50.png')} />
+    } else if (value >= 50 && value < 75) {
+      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+        source={require('../../assets/growing_50_to_75.png')} />
+    } else if (value >= 75 && value < 100) {
+      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+        source={require('../../assets/growing_75_to_100.png')} />
+    } else {
+      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+        source={require('../../assets/GrowingTree.jpg')} />
+    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.titleView}>
           <Text style={styles.title}>Add Medication</Text>
         </View>
-        <Image style={{ width: 220, height: 220, borderRadius: 110 }}
-          source={require('../../assets/GrowingTree.jpg')} />
+        {image}
         {message}
       </SafeAreaView>
     )
