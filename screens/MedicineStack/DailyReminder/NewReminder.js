@@ -88,11 +88,11 @@ export default class NewReminder extends React.Component {
             fire_date: fireDate,
             title: name,
             alarm_id: reminderId,
-        };
+        }
         // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details)
         this.getANid(details)
-    };
+    }
 
     // Show TimePicker
     showMode = () => {
@@ -118,7 +118,7 @@ export default class NewReminder extends React.Component {
                 ...this.state.alarm,
                 fireDate: ReactNativeAN.parseDate(currentDate)
             }
-        });
+        })
     }
 
     render() {
