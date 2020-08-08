@@ -25,12 +25,14 @@ export default class MedicineScreen extends React.Component {
       text: "",
       myArray: [],
       medicineNameList: [],
-    };
+    }
   }
+
+  unsubscribe = null
 
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.
-    firestore().collection("prescription").onSnapshot((queryPrescriptionSnapshot) => {
+    this.unsubscribe = firestore().collection("prescription").onSnapshot((queryPrescriptionSnapshot) => {
       let temp = []
       queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
         if (documentPrescriptionSnapshot.data().patientEmail == auth().currentUser.email) {
@@ -57,6 +59,10 @@ export default class MedicineScreen extends React.Component {
         })
       }
     })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   // Click on each item in flatlist will lead user to MediInforScreen 

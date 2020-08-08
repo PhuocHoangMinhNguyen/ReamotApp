@@ -24,6 +24,8 @@ export default class DoctorScreen extends Component {
     }
   }
 
+  unsubscribe = null
+
   componentDidMount() {
     // check doctor and pharmacist email from "doctorList" and "pharmacistList" from "users" collection
     // Then use the doctor and pharmacist email to find the infor from "doctor" and "pharmacist" collection
@@ -36,7 +38,7 @@ export default class DoctorScreen extends Component {
     //let tempAccessedDoctor = []
     //let tempAccessedPharmacist = []
 
-    firestore().collection("users").doc((auth().currentUser || {}).uid)
+    this.unsubscribe = firestore().collection("users").doc((auth().currentUser || {}).uid)
       .onSnapshot((documentSnapshot) => {
         tempPharmacistEmail = documentSnapshot.data().pharmacistList
         tempDoctorEmail = documentSnapshot.data().doctorList
@@ -87,6 +89,10 @@ export default class DoctorScreen extends Component {
           }
         }
       })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   handleClick = (dataInfor) => {

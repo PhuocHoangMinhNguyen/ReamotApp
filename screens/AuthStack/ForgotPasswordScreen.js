@@ -12,12 +12,11 @@ export default class ForgotPasswordScreen extends React.Component {
     handleChangePassword = () => {
         const emailTrim = this.state.forgottenEmail.trim()
         if (emailTrim == "") {
-            this.props.navigation.navigate("LoginScreen")
             Toast.show("Please Enter Email Address to Change Password")
         } else {
             auth().sendPasswordResetEmail(emailTrim).then(
-                Toast.show("Please Check your Email...")
-            )
+                this.props.navigation.navigate("LoginScreen")
+            ).then(Toast.show("Please Check your Email..."))
         }
     }
 

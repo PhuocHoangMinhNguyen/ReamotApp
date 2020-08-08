@@ -52,6 +52,8 @@ export default class ChangeReminder extends React.Component {
         }
     }
 
+    unsubscribe = null
+
     componentDidMount() {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
@@ -70,7 +72,7 @@ export default class ChangeReminder extends React.Component {
         // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
         let tempFirebase = ""
-        firestore().collection("reminder").onSnapshot((querySnapshot) => {
+        this.unsubscribe = firestore().collection("reminder").onSnapshot((querySnapshot) => {
             querySnapshot.forEach((documentSnapshot) => {
                 if (documentSnapshot.data().medicine == this.state.medicine.name
                     && documentSnapshot.data().patientEmail == auth().currentUser.email
@@ -88,6 +90,10 @@ export default class ChangeReminder extends React.Component {
                 }
             })
         })
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe()
     }
 
     // delete alarm from "reminder" collection in firestore
@@ -214,43 +220,42 @@ export default class ChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
-                <View style={{ flex: 1 }}>
-                    <View>
-                        <View style={styles.timePicker}>
-                            <TouchableOpacity style={styles.showPicker} onPress={this.showMode}>
-                                <Text style={{ color: "#FFF" }}>Show time picker!</Text>
-                            </TouchableOpacity>
-                            <Text style={{ alignSelf: "center" }}>{message}</Text>
-                        </View>
-                        {show && (
-                            <TimePicker
-                                value={testDate}
-                                mode="time"
-                                onChange={this.onChange}
-                            />
-                        )}
-                    </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-                        <TouchableOpacity style={styles.button}
-                            onPress={() => {
-                                // To stop alarm sound, go to BarcodeScan
-                                this.props.navigation.navigate("BarcodeScan", {
-                                    medicine: this.props.navigation.state.params.medicine,
-                                    itemTime: this.props.navigation.state.params.itemTime,
-                                    firebaseId: this.state.firebase.firebaseId,
-                                })
-                            }}>
-                            <Text style={{ color: "#FFF" }}>Take Medicine</Text>
+
+                <View>
+                    <View style={styles.timePicker}>
+                        <TouchableOpacity style={styles.showPicker} onPress={this.showMode}>
+                            <Text style={{ color: "#FFF" }}>Show time picker!</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button}
-                            onPress={this.handleMiss}>
-                            <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
-                        </TouchableOpacity>
+                        <Text style={{ alignSelf: "center" }}>{message}</Text>
                     </View>
-                    <TouchableOpacity style={styles.button} onPress={this.deleteAlarm}>
-                        <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
+                    {show && (
+                        <TimePicker
+                            value={testDate}
+                            mode="time"
+                            onChange={this.onChange}
+                        />
+                    )}
+                </View>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 30 }}>
+                    <TouchableOpacity style={styles.button2}
+                        onPress={() => {
+                            // To stop alarm sound, go to BarcodeScan
+                            this.props.navigation.navigate("BarcodeScan", {
+                                medicine: this.props.navigation.state.params.medicine,
+                                itemTime: this.props.navigation.state.params.itemTime,
+                                firebaseId: this.state.firebase.firebaseId,
+                            })
+                        }}>
+                        <Text style={{ color: "#FFF" }}>Take Medicine</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2}
+                        onPress={this.handleMiss}>
+                        <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={styles.button} onPress={this.deleteAlarm}>
+                    <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
+                </TouchableOpacity>
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
                     title="Alert"
@@ -322,6 +327,15 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginVertical: 12,
         marginHorizontal: 30,
+        padding: 20
+    },
+    button2: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginVertical: 12,
         padding: 20
     },
     showPicker: {

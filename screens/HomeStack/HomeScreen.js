@@ -13,12 +13,14 @@ export default class HomeScreen extends React.Component {
     this.state = {
       medicines: [],
       reminder: [],
-    };
+    }
   }
+
+  unsubscribe = null
 
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.\
-    firestore().collection("reminder").onSnapshot((queryReminderSnapshot) => {
+    this.unsubscribe = firestore().collection("reminder").onSnapshot((queryReminderSnapshot) => {
       let temp = []
       queryReminderSnapshot.forEach((documentReminderSnapshot) => {
         if (documentReminderSnapshot.data().patientEmail == auth().currentUser.email) {
@@ -51,6 +53,10 @@ export default class HomeScreen extends React.Component {
         }
       }
     })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   handleClick = (dataInfor) => {

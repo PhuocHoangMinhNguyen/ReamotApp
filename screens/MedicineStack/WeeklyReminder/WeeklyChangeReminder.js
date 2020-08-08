@@ -22,8 +22,6 @@ const alarmNotifData = {
 }
 
 export default class WeeklyChangeReminder extends React.Component {
-    _isMounted
-
     constructor(props) {
         super(props)
         this.state = {
@@ -53,8 +51,9 @@ export default class WeeklyChangeReminder extends React.Component {
         }
     }
 
+    unsubscribe = null
+
     componentDidMount() {
-        this._isMounted = true
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
@@ -72,7 +71,7 @@ export default class WeeklyChangeReminder extends React.Component {
         // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
         let tempFirebase = ""
-        firestore().collection("reminder").onSnapshot((querySnapshot) => {
+        this.unsubscribe = firestore().collection("reminder").onSnapshot((querySnapshot) => {
             querySnapshot.forEach((documentSnapshot) => {
                 if (documentSnapshot.data().medicine == this.state.medicine.name
                     && documentSnapshot.data().patientEmail == auth().currentUser.email
@@ -93,7 +92,7 @@ export default class WeeklyChangeReminder extends React.Component {
     }
 
     componentWillUnmount() {
-        this._isMounted = false
+        this.unsubscribe()
     }
 
     // delete alarm from "reminder" collection in firestore
@@ -140,6 +139,8 @@ export default class WeeklyChangeReminder extends React.Component {
     handleMiss = () => { this.setState({ dialogVisible: true }) }
 
     handleYes = async () => {
+        const { name } = this.state.medicine
+        const { firebaseId, alarmId } = this.state.firebase
         // Stop Alarm Sound
         ReactNativeAN.stopAlarmSound()
         // Remove Notification
@@ -234,8 +235,8 @@ export default class WeeklyChangeReminder extends React.Component {
                             />
                         )}
                     </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-                        <TouchableOpacity style={styles.button}
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 30 }}>
+                        <TouchableOpacity style={styles.button2}
                             onPress={() => {
                                 // To stop alarm sound, go to BarcodeScan
                                 this.props.navigation.navigate("BarcodeScan", {
@@ -246,7 +247,7 @@ export default class WeeklyChangeReminder extends React.Component {
                             }}>
                             <Text style={{ color: "#FFF" }}>Take Medicine</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button}
+                        <TouchableOpacity style={styles.button2}
                             onPress={this.handleMiss}>
                             <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
                         </TouchableOpacity>
@@ -329,6 +330,15 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginVertical: 12,
         marginHorizontal: 30,
+        padding: 20
+    },
+    button2: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: 40,
+        backgroundColor: "#1565C0",
+        borderRadius: 4,
+        marginVertical: 12,
         padding: 20
     },
     showPicker: {

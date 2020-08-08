@@ -24,9 +24,11 @@ export default class CalendarScreen extends React.Component {
     }
   }
 
+  unsubscribe = null
+
   componentDidMount() {
     // Take data from "history" collection
-    firestore().collection("history").onSnapshot((querySnapshot) => {
+    this.unsubscribe = firestore().collection("history").onSnapshot((querySnapshot) => {
       let temp = [];
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
@@ -61,7 +63,10 @@ export default class CalendarScreen extends React.Component {
         }
       }
     })
+  }
 
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   // Show DatePicker

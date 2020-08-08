@@ -133,7 +133,7 @@ export default class MediInfoScreen extends React.Component {
   }
 
   addMedicinePills = () => {
-    if (this.state.medicinePills < 0) {
+    if (this.state.medicinePills == "") {
       Toast.show("Please enter number of capsules")
     } else {
       firestore().collection("medicinePills").add({
@@ -145,7 +145,7 @@ export default class MediInfoScreen extends React.Component {
   }
 
   updateMedicinePills = () => {
-    if (this.state.medicinePills < 0) {
+    if (this.state.add == "") {
       Toast.show("Please enter number of capsules")
     } else {
       const value = parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10)
@@ -269,6 +269,9 @@ export default class MediInfoScreen extends React.Component {
     let message
     if (this.state.text == "") {
       message = empty
+    }
+    if (parseInt(this.state.text) < 0) {
+      message = <Text>{this.state.text}</Text>
     }
     if (parseInt(this.state.text) == 0) {
       message = none
