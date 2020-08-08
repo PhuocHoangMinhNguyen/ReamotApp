@@ -6,57 +6,74 @@ import React from "react"
 import { Text, StyleSheet, FlatList, SafeAreaView, Image, TouchableOpacity, View } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
+import moment from "moment"
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      medicines: [],
-      reminder: [],
+      historymedicines: [],
+      remindermedicines: [],
     }
   }
 
-  unsubscribe = null
-
   componentDidMount() {
-    // To take user's medicine based on medicine listed in "prescription" collection.\
-    this.unsubscribe = firestore().collection("reminder").onSnapshot((queryReminderSnapshot) => {
-      let temp = []
-      queryReminderSnapshot.forEach((documentReminderSnapshot) => {
-        if (documentReminderSnapshot.data().patientEmail == auth().currentUser.email) {
-          temp.push({
-            ...documentReminderSnapshot.data(),
-            key: documentReminderSnapshot.id
+    let tempHistory = []
+    firestore().collection("history").onSnapshot((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        if (documentSnapshot.data().patientEmail == auth().currentUser.email
+          && documentSnapshot.data().date == moment(this.state.testDate).format("MMMM Do YYYY")) {
+          tempHistory.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id
           })
         }
       })
-      this.setState({ reminder: temp })
-      let temp2 = [];
-      // Problem: Because setstate is inside for loop, if reminder.length == 0
-      // this.state.medicines wont be update.
-      if (this.state.reminder.length == 0) {
-        this.setState({ medicines: [] })
-      } else {
-        for (let i = 0; i < this.state.reminder.length; i++) {
-          firestore().collection("medicine").onSnapshot((queryMedicineSnapshot) => {
-            queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
-              if (documentMedicineSnapshot.data().name == this.state.reminder[i].medicine) {
-                temp2.push({
-                  ...documentMedicineSnapshot.data(),
-                  time: this.state.reminder[i].times,
-                  key: documentMedicineSnapshot.id,
-                });
-              }
-            });
-            this.setState({ medicines: temp2 })
+      console.log(tempHistory)
+      let tempHis = []
+      for (let i = 0; i < tempHistory.length; i++) {
+        firestore().collection("medicine").onSnapshot((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            if (documentSnapshot.data().name == tempHistory[i].medicine) {
+              tempHis.push({
+                ...documentSnapshot.data(),
+                time: tempHistory[i].time,
+                status: tempHistory[i].status,
+                key: documentSnapshot.id,
+              })
+            }
           })
-        }
+          this.setState({ historymedicines: tempHis })
+        })
       }
     })
-  }
 
-  componentWillUnmount() {
-    this.unsubscribe()
+    let tempReminder = []
+    firestore().collection("reminder").onSnapshot((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
+          tempReminder.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id
+          })
+        }
+      })
+      let tempRem = []
+      for (let i = 0; i < tempReminder.length; i++) {
+        firestore().collection("medicine").onSnapshot((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            if (documentSnapshot.data().name == tempReminder[i].medicine) {
+              tempRem.push({
+                ...documentSnapshot.data(),
+                time: tempReminder[i].times,
+                key: documentSnapshot.id,
+              })
+            }
+          })
+          this.setState({ remindermedicines: tempRem })
+        })
+      }
+    })
   }
 
   handleClick = (dataInfor) => {
@@ -75,23 +92,42 @@ export default class HomeScreen extends React.Component {
     return (
       <TouchableOpacity style={styles.feedItem}
         onPress={() => { this.handleClick(dataInfor) }}>
-        <Image
+        <Image style={styles.avatar}
           source={
-            item.image
-              ? { uri: item.image }
-              : require("../../assets/tempAvatar.jpg")
+            item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
           }
-          style={styles.avatar}
         />
         <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.name}>{item.time}</Text>
+        <Text style={styles.time}>{item.time}</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  renderItemHistory = (item) => {
+    let dataInfor = {
+      image: item.image,
+      name: item.name,
+      description: item.description,
+      barcode: item.barcode,
+      times: item.time
+    }
+    return (
+      <TouchableOpacity style={item.status == "taken" ? styles.feedTaken : styles.feedMissed}
+        onPress={() => { this.handleClick(dataInfor) }}>
+        <Image style={styles.avatar}
+          source={
+            item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
+          }
+        />
+        <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.name}</Text>
+        <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{item.time}</Text>
       </TouchableOpacity>
     )
   }
 
   render() {
     let message
-    if (this.state.medicines.length == 0) {
+    if (this.state.historymedicines.length == 0 && this.state.remindermedicines.length == 0) {
       message =
         <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
           <Text style={styles.emptyText}>You have no active reminder</Text>
@@ -99,25 +135,39 @@ export default class HomeScreen extends React.Component {
           <Text>or contact your doctor for a prescription</Text>
         </View>
     } else {
-      message =
+      message = <View style={{ flex: 1 }}>
+        <View style={styles.chapterView}>
+          <Text style={styles.chapter}>Medicines Taken</Text>
+        </View>
         <FlatList
           style={styles.feed}
-          data={this.state.medicines}
+          data={this.state.historymedicines}
+          renderItem={({ item }) => this.renderItemHistory(item)}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal={true}
+        />
+        <View style={styles.chapterView}>
+          <Text style={styles.chapter}>Upcoming Reminders</Text>
+        </View>
+        <FlatList
+          style={styles.feed}
+          data={this.state.remindermedicines}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
           horizontal={true}
         />
+      </View>
     }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.titleView}>
           <Text style={styles.title}>Add Medication</Text>
         </View>
-        <Image style={{ width: 350, height: 350, borderRadius: 180 }}
+        <Image style={{ width: 220, height: 220, borderRadius: 110 }}
           source={require('../../assets/GrowingTree.jpg')} />
         {message}
       </SafeAreaView>
-    );
+    )
   }
 }
 
@@ -128,15 +178,34 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   feed: {
-    marginHorizontal: 16,
-    paddingVertical: 20
+    marginHorizontal: 8,
   },
   feedItem: {
+    backgroundColor: 'yellow',
+    borderRadius: 10,
+    padding: 7,
+    margin: 4,
+    width: 115,
+    marginVertical: 8,
+    flexDirection: 'column',
+    borderWidth: 1,
+  },
+  feedTaken: {
     backgroundColor: '#004481',
     borderRadius: 10,
     padding: 7,
     margin: 4,
-    width: 120,
+    width: 115,
+    marginVertical: 8,
+    flexDirection: 'column',
+    borderWidth: 1,
+  },
+  feedMissed: {
+    backgroundColor: '#FF0000',
+    borderRadius: 10,
+    padding: 7,
+    margin: 4,
+    width: 115,
     marginVertical: 8,
     flexDirection: 'column',
     borderWidth: 1,
@@ -152,6 +221,34 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
+  },
+  nameMissed: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: "500",
+    color: "white",
+  },
+  nameTaken: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: "500",
+    color: "white",
+  },
+  time: {
+    marginBottom: 10,
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  timeTaken: {
+    marginBottom: 10,
+    fontSize: 15,
+    fontWeight: "500",
+    color: "white",
+  },
+  timeMissed: {
+    marginBottom: 10,
+    fontSize: 15,
+    fontWeight: "500",
     color: "white",
   },
   emptyText: {
@@ -165,5 +262,13 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     fontSize: 20
+  },
+  chapterView: {
+    marginVertical: 6,
+    marginLeft: 12
+  },
+  chapter: {
+    fontWeight: "bold",
+    fontSize: 16
   },
 })

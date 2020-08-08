@@ -5,6 +5,7 @@
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { ScrollView } from "react-native-gesture-handler"
 
 export default class MediInfoScreen extends React.Component {
     constructor(props) {
@@ -23,7 +24,7 @@ export default class MediInfoScreen extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -44,7 +45,7 @@ export default class MediInfoScreen extends React.Component {
                     </View>
                     <Text style={styles.description}>{this.state.medicine.description}</Text>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
