@@ -119,11 +119,13 @@ export default class MediInfoScreen extends React.Component {
       this.props.navigation.navigate("ChangeReminder", {
         medicine: this.props.navigation.state.params,
         itemTime: item.times,
+        number: this.state.prescription.number
       })
     } else {
       this.props.navigation.navigate("WeeklyChangeReminder", {
         medicine: this.props.navigation.state.params,
         itemTime: item.times,
+        number: this.state.prescription.number
       })
     }
   }

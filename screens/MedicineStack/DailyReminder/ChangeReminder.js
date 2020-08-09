@@ -49,6 +49,7 @@ export default class ChangeReminder extends React.Component {
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
             },
             dialogVisible: false,
+            number: 0
         }
     }
 
@@ -68,6 +69,9 @@ export default class ChangeReminder extends React.Component {
                 initial: paramsTime
             }
         })
+
+        let paramsNumber = this.props.navigation.state.params.number
+        this.setState({ number: paramsNumber })
 
         // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
@@ -228,6 +232,7 @@ export default class ChangeReminder extends React.Component {
                                 medicine: this.props.navigation.state.params.medicine,
                                 itemTime: this.props.navigation.state.params.itemTime,
                                 firebaseId: this.state.firebase.firebaseId,
+                                number: this.props.navigation.state.params.number,
                             })
                         }}>
                         <Text style={{ color: "#FFF" }}>Take Medicine</Text>

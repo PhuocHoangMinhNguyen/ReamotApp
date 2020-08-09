@@ -34,6 +34,7 @@ export default class BarcodeScan extends React.Component {
             flashOn: false,
             // Details in Problems.txt file, Problem 1
             alarmId: Math.floor(Math.random() * 10000).toString(),
+            number: 0
         }
     }
 
@@ -46,6 +47,9 @@ export default class BarcodeScan extends React.Component {
         // Take value from params and put it as state.firebaseId
         let paramsFirebaseId = this.props.navigation.state.params.firebaseId
         this.setState({ firebaseId: paramsFirebaseId })
+
+        let paramsNumber = this.props.navigation.state.params.number
+        this.setState({ number: paramsNumber })
     }
 
     onBarCodeRead = async (e) => {
@@ -114,7 +118,7 @@ export default class BarcodeScan extends React.Component {
                         }
                     })
                     // Need to minute the correct number of pills, not just one
-                    const value = parseInt(firebasePills, 10) - 1
+                    const value = parseInt(firebasePills, 10) - this.state.number
                     mPills.doc(temporaryID).update({
                         pills: value.toString()
                     })
