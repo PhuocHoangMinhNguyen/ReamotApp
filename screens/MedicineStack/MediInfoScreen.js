@@ -32,6 +32,10 @@ export default class MediInfoScreen extends React.Component {
     }
   }
 
+  unsubscribe1 = null
+  unsubscribe2 = null
+  unsubscribe3 = null
+
   componentDidMount() {
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
     // => Faster than accessing Cloud Firestore again.
@@ -39,7 +43,7 @@ export default class MediInfoScreen extends React.Component {
     this.setState({ medicine: paramsFromMedicineScreen })
 
     // Get Medicine Number of Pills
-    firestore().collection("medicinePills").onSnapshot(querySnapshot => {
+    this.unsubscribe1 = firestore().collection("medicinePills").onSnapshot(querySnapshot => {
       let temp = ""
       let tempID = ""
       querySnapshot.forEach(documentSnapshot => {
@@ -58,7 +62,7 @@ export default class MediInfoScreen extends React.Component {
 
     // Get Prescription data from Cloud Firestore to know number of capsules taken per time, 
     // and number of times to take medicine per day.
-    firestore().collection("prescription").onSnapshot((querySnapshot) => {
+    this.unsubscribe2 = firestore().collection("prescription").onSnapshot((querySnapshot) => {
       let tempValue = 0
       let tempValue2 = 0
       let tempValue3 = ""
@@ -81,7 +85,7 @@ export default class MediInfoScreen extends React.Component {
     })
 
     // Get Reminder data of that patient and that medicine.
-    firestore().collection("reminder").onSnapshot((querySnapshot) => {
+    this.unsubscribe3 = firestore().collection("reminder").onSnapshot((querySnapshot) => {
       let temp = []
       querySnapshot.forEach((documentSnapshot) => {
         if (documentSnapshot.data().patientEmail == auth().currentUser.email
@@ -94,6 +98,12 @@ export default class MediInfoScreen extends React.Component {
       })
       this.setState({ reminder: temp })
     })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe1()
+    this.unsubscribe2()
+    this.unsubscribe3()
   }
 
   handleNewReminder = () => {

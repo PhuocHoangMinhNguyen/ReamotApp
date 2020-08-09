@@ -189,7 +189,7 @@ export default class HomeScreen extends React.Component {
       </View>
     }
     let image
-    const value = (this.state.remindermedicines.length + this.state.historymedicines.length - this.state.missedMedicines.length)
+    const value = (this.state.historymedicines.length - this.state.missedMedicines.length)
       * 100 / (this.state.remindermedicines.length + this.state.historymedicines.length)
     if (value == 0) {
       image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}

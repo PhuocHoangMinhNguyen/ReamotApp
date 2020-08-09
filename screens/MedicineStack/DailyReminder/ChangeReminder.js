@@ -220,22 +220,6 @@ export default class ChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
-
-                <View>
-                    <View style={styles.timePicker}>
-                        <TouchableOpacity style={styles.showPicker} onPress={this.showMode}>
-                            <Text style={{ color: "#FFF" }}>Show time picker!</Text>
-                        </TouchableOpacity>
-                        <Text style={{ alignSelf: "center" }}>{message}</Text>
-                    </View>
-                    {show && (
-                        <TimePicker
-                            value={testDate}
-                            mode="time"
-                            onChange={this.onChange}
-                        />
-                    )}
-                </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 30 }}>
                     <TouchableOpacity style={styles.button2}
                         onPress={() => {

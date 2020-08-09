@@ -220,43 +220,26 @@ export default class WeeklyChangeReminder extends React.Component {
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                 </View>
-                <View style={{ flex: 1 }}>
-                    <View>
-                        <View style={styles.timePicker}>
-                            <TouchableOpacity style={styles.showPicker} onPress={this.showMode}>
-                                <Text style={{ color: "#FFF" }}>Show time picker!</Text>
-                            </TouchableOpacity>
-                            <Text style={{ alignSelf: "center" }}>{message}</Text>
-                        </View>
-                        {show && (
-                            <TimePicker
-                                value={testDate}
-                                mode="time"
-                                onChange={this.onChange}
-                            />
-                        )}
-                    </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 30 }}>
-                        <TouchableOpacity style={styles.button2}
-                            onPress={() => {
-                                // To stop alarm sound, go to BarcodeScan
-                                this.props.navigation.navigate("BarcodeScan", {
-                                    medicine: this.props.navigation.state.params.medicine,
-                                    itemTime: this.props.navigation.state.params.itemTime,
-                                    firebaseId: this.state.firebase.firebaseId,
-                                })
-                            }}>
-                            <Text style={{ color: "#FFF" }}>Take Medicine</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button2}
-                            onPress={this.handleMiss}>
-                            <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity style={styles.button} onPress={this.deleteAlarm}>
-                        <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 30 }}>
+                    <TouchableOpacity style={styles.button2}
+                        onPress={() => {
+                            // To stop alarm sound, go to BarcodeScan
+                            this.props.navigation.navigate("BarcodeScan", {
+                                medicine: this.props.navigation.state.params.medicine,
+                                itemTime: this.props.navigation.state.params.itemTime,
+                                firebaseId: this.state.firebase.firebaseId,
+                            })
+                        }}>
+                        <Text style={{ color: "#FFF" }}>Take Medicine</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2}
+                        onPress={this.handleMiss}>
+                        <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={styles.button} onPress={this.deleteAlarm}>
+                    <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
+                </TouchableOpacity>
                 <ConfirmDialog
                     visible={this.state.dialogVisible}
                     title="Alert"
