@@ -113,6 +113,7 @@ export default class BarcodeScan extends React.Component {
                             firebasePills = documentSnapshot.data().pills
                         }
                     })
+                    // Need to minute the correct number of pills, not just one
                     const value = parseInt(firebasePills, 10) - 1
                     mPills.doc(temporaryID).update({
                         pills: value.toString()

@@ -108,12 +108,17 @@ export default class NewReminder extends React.Component {
     onChange = (event, selectedDate) => {
         const { testDate } = this.state.timePicker
         let currentDate
-        if (selectedDate < Date.now()) {
-            const difference = Date.now() - selectedDate
-            const correctDate = new Date(Date.now() + difference)
-            currentDate = correctDate || testDate
+        if (selectedDate < new Date(Date.now())) {
+            const difference = new Date(Date.now()) - selectedDate
+            currentDate = new Date(Date.now() + (86400000 - difference)) || testDate
         } else {
-            currentDate = selectedDate || testDate
+            //console.log("Date now: " + moment(Date.now()).format())
+            if (selectedDate - new Date(Date.now()) > 86400000) {
+                const difference = selectedDate - new Date(Date.now())
+                currentDate = new Date(Date.now() + (difference - 86400000)) || testDate
+            } else {
+                currentDate = selectedDate || testDate
+            }
         }
         this.setState({
             timePicker: {
@@ -163,6 +168,7 @@ export default class NewReminder extends React.Component {
                             <TimePicker
                                 value={testDate}
                                 mode="time"
+                                //is24Hour={true}
                                 onChange={this.onChange}
                             />
                         )}

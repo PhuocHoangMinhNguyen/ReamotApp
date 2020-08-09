@@ -121,18 +121,60 @@ export default class HomeScreen extends React.Component {
       barcode: item.barcode,
       times: item.time
     }
-    return (
-      <TouchableOpacity style={styles.feedItem}
-        onPress={() => { this.handleClick(dataInfor) }}>
-        <Image style={styles.avatar}
-          source={
-            item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
+    // Item Time
+    const hour = item.time.substring(0, 2)
+    const minute = item.time.substring(3, 5)
+    const morning_afternoon = item.time.substring(6, 8)
+
+    // Current Time
+    const hourNow = moment().format('hh:mm a').substring(0, 2)
+    const minuteNow = moment().format('hh:mm a').substring(3, 5)
+    const morning_afternoonNow = moment().format('hh:mm a').substring(6, 8)
+
+    let accepted = false
+
+    if (morning_afternoonNow == "am") {
+      if (morning_afternoon == "am") {
+        if (hour > hourNow) {
+          accepted = true
+        }
+        if (hour == hourNow) {
+          if (minute > minuteNow) {
+            accepted = true
           }
-        />
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.time}>{item.time}</Text>
-      </TouchableOpacity>
-    )
+        }
+      } else {
+        accepted = true
+      }
+    } else {
+      if (morning_afternoon == "pm") {
+        if (hour > hourNow) {
+          accepted = true
+        }
+        if (hour == hourNow) {
+          if (minute > minuteNow) {
+            accepted = true
+          }
+        }
+      }
+    }
+
+    if (accepted == true) {
+      return (
+        <TouchableOpacity style={styles.feedItem}
+          onPress={() => { this.handleClick(dataInfor) }}>
+          <Image style={styles.avatar}
+            source={
+              item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
+            }
+          />
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.time}>{item.time}</Text>
+        </TouchableOpacity>
+      )
+    } else {
+      return <Text></Text>
+    }
   }
 
   renderItemHistory = (item) => {
@@ -189,8 +231,45 @@ export default class HomeScreen extends React.Component {
       </View>
     }
     let image
+
+    // Current Time
+    const hourNow = moment().format('hh:mm a').substring(0, 2)
+    const minuteNow = moment().format('hh:mm a').substring(3, 5)
+    const morning_afternoonNow = moment().format('hh:mm a').substring(6, 8)
+    let counting = 0
+    for (let i = 0; i < this.state.remindermedicines.length; i++) {
+      // Item Time
+      const hour = this.state.remindermedicines[i].time.substring(0, 2)
+      const minute = this.state.remindermedicines[i].time.substring(3, 5)
+      const morning_afternoon = this.state.remindermedicines[i].time.substring(6, 8)
+      if (morning_afternoonNow == "am") {
+        if (morning_afternoon == "am") {
+          if (hour > hourNow) {
+            counting++
+          }
+          if (hour == hourNow) {
+            if (minute > minuteNow) {
+              counting++
+            }
+          }
+        } else {
+          counting++
+        }
+      } else {
+        if (morning_afternoon == "pm") {
+          if (hour > hourNow) {
+            counting++
+          }
+          if (hour == hourNow) {
+            if (minute > minuteNow) {
+              counting++
+            }
+          }
+        }
+      }
+    }
     const value = (this.state.historymedicines.length - this.state.missedMedicines.length)
-      * 100 / (this.state.remindermedicines.length + this.state.historymedicines.length)
+      * 100 / (counting + this.state.historymedicines.length)
     if (value == 0) {
       image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
         source={require('../../assets/growing_0.png')} />

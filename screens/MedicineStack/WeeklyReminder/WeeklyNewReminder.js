@@ -11,6 +11,7 @@ import Toast from "react-native-simple-toast"
 import ReactNativeAN from 'react-native-alarm-notification'
 import TimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
+import { diff } from 'react-native-reanimated'
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -88,11 +89,11 @@ export default class WeeklyNewReminder extends React.Component {
             fire_date: fireDate,
             title: name,
             alarm_id: reminderId,
-        };
+        }
         // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details)
         this.getANid(details)
-    };
+    }
 
     // Show TimePicker
     showMode = () => {
@@ -108,12 +109,17 @@ export default class WeeklyNewReminder extends React.Component {
     onChange = (event, selectedDate) => {
         const { testDate } = this.state.timePicker
         let currentDate
-        if (selectedDate < Date.now()) {
-            const difference = Date.now() - selectedDate
-            const correctDate = new Date(Date.now() + difference)
-            currentDate = correctDate || testDate
+        if (selectedDate < new Date(Date.now())) {
+            const difference = new Date(Date.now()) - selectedDate
+            currentDate = new Date(Date.now() + (86400000 - difference)) || testDate
         } else {
-            currentDate = selectedDate || testDate
+            //console.log("Date now: " + moment(Date.now()).format())
+            if (selectedDate - new Date(Date.now()) > 86400000) {
+                const difference = selectedDate - new Date(Date.now())
+                currentDate = new Date(Date.now() + (difference - 86400000)) || testDate
+            } else {
+                currentDate = selectedDate || testDate
+            }
         }
         this.setState({
             timePicker: {

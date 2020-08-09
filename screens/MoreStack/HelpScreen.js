@@ -186,6 +186,15 @@ export default class HelpScreen extends React.Component {
                     <Text style={styles.answerText}>Edit the information you want</Text>
                     <Text style={styles.answerText}>Click "Save Profile"</Text>
                 </View>
+
+                <View style={styles.questionSection}>
+                    <Text style={styles.questionText}>What is the current problem with the application?</Text>
+                </View>
+
+                <View style={styles.answerSection}>
+                    <Text style={styles.answerText}>The alarm will still be sounded even when you logout, or login to another details</Text>
+                    <Text style={styles.answerText}>Solution: Delete all the alarms if you dont want to use a certain account anymore</Text>
+                </View>
             </ScrollView>
         )
     }
