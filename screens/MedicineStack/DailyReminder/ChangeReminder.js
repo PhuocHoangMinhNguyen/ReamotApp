@@ -125,8 +125,20 @@ export default class ChangeReminder extends React.Component {
 
     // When a time is chosen from TimePicker
     onChange = (event, selectedDate) => {
-        const { testDate } = this.state.timePicker;
-        let currentDate = selectedDate || testDate;
+        const { testDate } = this.state.timePicker
+        let currentDate
+        if (selectedDate < new Date(Date.now())) {
+            const difference = new Date(Date.now()) - selectedDate
+            currentDate = new Date(Date.now() + (86400000 - difference)) || testDate
+        } else {
+            //console.log("Date now: " + moment(Date.now()).format())
+            if (selectedDate - new Date(Date.now()) > 86400000) {
+                const difference = selectedDate - new Date(Date.now())
+                currentDate = new Date(Date.now() + (difference - 86400000)) || testDate
+            } else {
+                currentDate = selectedDate || testDate
+            }
+        }
         this.setState({
             timePicker: {
                 ...this.state.timePicker,
@@ -136,7 +148,7 @@ export default class ChangeReminder extends React.Component {
             },
             alarm: {
                 ...this.state.alarm,
-                fireDate: ReactNativeAN.parseDate(currentDate),
+                fireDate: ReactNativeAN.parseDate(currentDate)
             }
         })
     }
@@ -151,11 +163,18 @@ export default class ChangeReminder extends React.Component {
         // Remove Notification
         ReactNativeAN.removeAllFiredNotifications()
 
-        // Set a new fireDate 5 minutes later.
-        //
-        // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
-        // It should start from the time the alarm is set instead.
-        const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 86400000))
+        const hour = this.state.timePicker.initial.substring(0, 2)
+        const minute = this.state.timePicker.initial.substring(3, 5)
+        const morning_afternoon = this.state.timePicker.initial.substring(6, 8)
+        const now = new Date()
+        now.setDate(now.getDate() + 1)
+        if (morning_afternoon == "am") {
+            now.setHours(parseInt(hour), parseInt(minute), 0)
+        } else {
+            now.setHours(parseInt(hour) + 12, parseInt(minute), 0)
+        }
+        console.log("Real Value Barcode: " + moment(now).format())
+        const fireDates = ReactNativeAN.parseDate(new Date(now))
         // 10 minutes = 600.000 miliseconds
         // 5 minutes = 300.000 miliseconds.
         // 1 hour = 3.600.000 miliseconds
@@ -197,7 +216,7 @@ export default class ChangeReminder extends React.Component {
 
     render() {
         const { testDate, show, changed, initial } = this.state.timePicker
-        let message;
+        let message
         if (changed == true) {
             message = moment(testDate).format('hh:mm a')
         } else {

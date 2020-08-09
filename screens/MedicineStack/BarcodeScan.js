@@ -34,7 +34,8 @@ export default class BarcodeScan extends React.Component {
             flashOn: false,
             // Details in Problems.txt file, Problem 1
             alarmId: Math.floor(Math.random() * 10000).toString(),
-            number: 0
+            number: 0,
+            itemTime: "",
         }
     }
 
@@ -47,6 +48,9 @@ export default class BarcodeScan extends React.Component {
         // Take value from params and put it as state.firebaseId
         let paramsFirebaseId = this.props.navigation.state.params.firebaseId
         this.setState({ firebaseId: paramsFirebaseId })
+
+        let paramsItemTime = this.props.navigation.state.params.itemTime
+        this.setState({ itemTime: paramsItemTime })
 
         let paramsNumber = this.props.navigation.state.params.number
         this.setState({ number: paramsNumber })
@@ -63,11 +67,18 @@ export default class BarcodeScan extends React.Component {
                 // Remove Notification
                 ReactNativeAN.removeAllFiredNotifications()
 
-                // Set a new fireDate 5 minutes later.
-                //
-                // The alarm currently reset after every "loop" starting from the time the alarm is turned off.
-                // It should start from the time the alarm is set instead.
-                const fireDates = ReactNativeAN.parseDate(new Date(Date.now() + 86400000))
+                const hour = this.state.itemTime.substring(0, 2)
+                const minute = this.state.itemTime.substring(3, 5)
+                const morning_afternoon = this.state.itemTime.substring(6, 8)
+                const now = new Date()
+                now.setDate(now.getDate() + 1)
+                if (morning_afternoon == "am") {
+                    now.setHours(parseInt(hour), parseInt(minute), 0)
+                } else {
+                    now.setHours(parseInt(hour) + 12, parseInt(minute), 0)
+                }
+                console.log("Real Value Barcode: " + moment(now).format())
+                const fireDates = ReactNativeAN.parseDate(new Date(now))
                 // 10 minutes = 600.000 miliseconds
                 // 5 minutes = 300.000 miliseconds.
                 // 1 hour = 3.600.000 miliseconds
@@ -101,11 +112,10 @@ export default class BarcodeScan extends React.Component {
                 firestore().collection("history").add({
                     medicine: name,
                     patientEmail: auth().currentUser.email,
-                    time: moment().format('h:mm a'),
-                    date: moment().format('MMMM Do YYYY'),
+                    time: this.state.itemTime,
+                    date: moment(Date.now()).format('MMMM Do YYYY'),
                     status: "taken"
                 })
-                // Problem: Keep minus pills by 1 repeatly
                 let temporaryID
                 let firebasePills
                 const mPills = firestore().collection("medicinePills")
