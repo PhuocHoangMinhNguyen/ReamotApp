@@ -77,13 +77,9 @@ export default class BarcodeScan extends React.Component {
                 } else {
                     now.setHours(parseInt(hour) + 12, parseInt(minute), 0)
                 }
-                console.log("Real Value Barcode: " + moment(now).format())
-                const fireDates = ReactNativeAN.parseDate(new Date(now))
-                // 10 minutes = 600.000 miliseconds
-                // 5 minutes = 300.000 miliseconds.
-                // 1 hour = 3.600.000 miliseconds
-                // 24 hours = 86.400.000 miliseconds.
-                // 7 days = 168 hours = 604.800.000 miliseconds
+                console.log("Real Value Barcode: " + now)
+                console.log("Real Value Barcode Format: " + moment(now).format())
+                const fireDates = ReactNativeAN.parseDate(now)
 
                 const details = {
                     ...alarmNotifData,

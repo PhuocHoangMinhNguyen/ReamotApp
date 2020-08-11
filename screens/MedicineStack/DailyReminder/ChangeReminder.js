@@ -127,24 +127,36 @@ export default class ChangeReminder extends React.Component {
     onChange = (event, selectedDate) => {
         const { testDate } = this.state.timePicker
         let currentDate
-        if (selectedDate < new Date(Date.now())) {
-            const difference = new Date(Date.now()) - selectedDate
-            currentDate = new Date(Date.now() + (86400000 - difference)) || testDate
+        const currentSecond = moment(Date.now()).format('ss')
+        const secondValue = parseInt(currentSecond) * 1000
+        const correctValue = Date.now() - secondValue
+        if (selectedDate == null) {
+            currentDate = testDate
         } else {
-            //console.log("Date now: " + moment(Date.now()).format())
-            if (selectedDate - new Date(Date.now()) > 86400000) {
-                const difference = selectedDate - new Date(Date.now())
-                currentDate = new Date(Date.now() + (difference - 86400000)) || testDate
+            if (selectedDate.setSeconds(0) <= new Date(correctValue)) {
+                const difference = new Date(correctValue) - selectedDate.setSeconds(0)
+                currentDate = new Date(correctValue + (86400000 - difference))
             } else {
-                currentDate = selectedDate || testDate
+                if (selectedDate.setSeconds(0) - new Date(correctValue) > 86400000) {
+                    const difference = selectedDate.setSeconds(0) - new Date(correctValue)
+                    currentDate = new Date(correctValue + (difference - 86400000))
+                } else {
+                    currentDate = selectedDate
+                }
             }
         }
+        // 5 minutes = 300.000 miliseconds.
+        // 10 minutes = 600.000 miliseconds
+        // 1 hour = 3.600.000 miliseconds
+        // 24 hours = 86.400.000 miliseconds.
+        // 7 days = 168 hours = 604.800.000 miliseconds
+        console.log("Current Date: " + currentDate)
+        console.log("Current Date Format: " + moment(currentDate).format())
         this.setState({
             timePicker: {
                 ...this.state.timePicker,
                 show: Platform.OS === 'ios',
                 testDate: currentDate,
-                changed: true,
             },
             alarm: {
                 ...this.state.alarm,
@@ -174,12 +186,7 @@ export default class ChangeReminder extends React.Component {
             now.setHours(parseInt(hour) + 12, parseInt(minute), 0)
         }
         console.log("Real Value Barcode: " + moment(now).format())
-        const fireDates = ReactNativeAN.parseDate(new Date(now))
-        // 10 minutes = 600.000 miliseconds
-        // 5 minutes = 300.000 miliseconds.
-        // 1 hour = 3.600.000 miliseconds
-        // 24 hours = 86.400.000 miliseconds.
-        // 7 days = 168 hours = 604.800.000 miliseconds
+        const fireDates = ReactNativeAN.parseDate(now)
 
         const details = {
             ...alarmNotifData,
