@@ -3,7 +3,17 @@
 // Status: In development
 
 import React from "react"
-import { Text, StyleSheet, FlatList, SafeAreaView, Image, TouchableOpacity, View } from "react-native"
+import {
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  ImageBackground,
+} from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import moment from "moment"
@@ -347,19 +357,33 @@ export default class HomeScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.titleView}>
-          <Text style={styles.title}>Add Medication</Text>
+          <Text style={styles.title}></Text>
         </View>
         {image}
         {message}
+        <ImageBackground
+          style={[styles.fixed, styles.containter, { zIndex: -1 }]}
+          source={require("../../assets/registerBackground.png")}
+        />
       </SafeAreaView>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  containter: {
+    width: Dimensions.get("window").width, //for full screen
+    height: Dimensions.get("window").height //for full screen
+  },
+  fixed: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
   container: {
     flex: 1,
-    backgroundColor: '#DEE8F1',
     alignItems: 'center'
   },
   feed: {
@@ -443,8 +467,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   title: {
-    fontWeight: "bold",
-    fontSize: 20
+    fontSize: 20,
+    color: "#FFF"
   },
   chapterView: {
     marginVertical: 6,
