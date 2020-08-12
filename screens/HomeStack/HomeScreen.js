@@ -12,7 +12,9 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      // Medicine info in "history" collection
       historymedicines: [],
+      // Medicine info in "reminder" collection
       remindermedicines: [],
       tempHistory: [],
       tempReminder: [],
@@ -28,7 +30,7 @@ export default class HomeScreen extends React.Component {
       let tempHistory = []
       queryHistorySnapshot.forEach((documentHistorySnapshot) => {
         if (documentHistorySnapshot.data().patientEmail == auth().currentUser.email
-          && documentHistorySnapshot.data().date == moment(this.state.testDate).format("MMMM Do YYYY")) {
+          && documentHistorySnapshot.data().date == moment().format("MMMM Do YYYY")) {
           tempHistory.push({
             ...documentHistorySnapshot.data(),
             key: documentHistorySnapshot.id
@@ -122,37 +124,63 @@ export default class HomeScreen extends React.Component {
       times: item.time
     }
     // Item Time
-    const hour = item.time.substring(0, 2)
-    const minute = item.time.substring(3, 5)
+    const hour = parseInt(item.time.substring(0, 2))
+    const minute = parseInt(item.time.substring(3, 5))
     const morning_afternoon = item.time.substring(6, 8)
 
     // Current Time
-    const hourNow = moment().format('hh:mm a').substring(0, 2)
-    const minuteNow = moment().format('hh:mm a').substring(3, 5)
+    const hourNow = parseInt(moment().format('hh:mm a').substring(0, 2))
+    const minuteNow = parseInt(moment().format('hh:mm a').substring(3, 5))
     const morning_afternoonNow = moment().format('hh:mm a').substring(6, 8)
 
     let accepted = false
 
+    // If Time Now is "am"
     if (morning_afternoonNow == "am") {
+      // If Item Time is "am"
       if (morning_afternoon == "am") {
-        if (hour > hourNow) {
+        // If Hour values are similar
+        if (hour == hourNow) {
+          // If Item Minute larger than Minute Now
+          if (minute > minuteNow) {
+            accepted = true
+          }
+          // If Hour Now is not 12, and Item Hour is 12
+        } else if (hour == 12) {
+
+          // If Hour Now is 12, and Item Hour is not 12
+        } else if (hourNow == 12) {
           accepted = true
+          // If Hour Now and Item Hour are both not 12, 
+          // and they are not the same
+        } else {
+          if (hour > hourNow) {
+            accepted = true
+          }
         }
+        // If Item Time is "pm"
+      } else {
+        accepted = true
+      }
+      // If Time Now is "pm"
+    } else {
+      // If Item Time is "pm"
+      if (morning_afternoon == "pm") {
+        // If Hour values are similar
         if (hour == hourNow) {
           if (minute > minuteNow) {
             accepted = true
           }
-        }
-      } else {
-        accepted = true
-      }
-    } else {
-      if (morning_afternoon == "pm") {
-        if (hour > hourNow) {
+          // If Hour Now is not 12, and Item Hour is 12
+        } else if (hour == 12) {
+
+          // If Hour Now is 12, and Item Hour is not 12
+        } else if (hourNow == 12) {
           accepted = true
-        }
-        if (hour == hourNow) {
-          if (minute > minuteNow) {
+          // If Hour Now and Item Hour are both not 12, 
+          // and they are not the same
+        } else {
+          if (hour > hourNow) {
             accepted = true
           }
         }

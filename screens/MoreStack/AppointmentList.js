@@ -18,8 +18,8 @@ export default class AppointmentList extends React.Component {
     unsubscribe = null
 
     componentDidMount() {
-        let temp = []
         this.unsubscribe = firestore().collection("appointment").onSnapshot((querySnapshot) => {
+            let temp = []
             querySnapshot.forEach((documentSnapshot) => {
                 if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
                     temp.push({
@@ -68,7 +68,6 @@ export default class AppointmentList extends React.Component {
                     style={styles.feed}
                     data={this.state.appointmentList}
                     renderItem={({ item }) => this.renderItem(item)}
-                    keyExtractor={(item, index) => index.toString()}
                 />
             </View>
         )
