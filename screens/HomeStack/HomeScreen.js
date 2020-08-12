@@ -270,26 +270,53 @@ export default class HomeScreen extends React.Component {
       const hour = this.state.remindermedicines[i].time.substring(0, 2)
       const minute = this.state.remindermedicines[i].time.substring(3, 5)
       const morning_afternoon = this.state.remindermedicines[i].time.substring(6, 8)
+
+      // If Time Now is "am"
       if (morning_afternoonNow == "am") {
+        // If Item Time is "am"
         if (morning_afternoon == "am") {
-          if (hour > hourNow) {
+          // If Hour values are similar
+          if (hour == hourNow) {
+            // If Item Minute larger than Minute Now
+            if (minute > minuteNow) {
+              counting++
+            }
+            // If Hour Now is not 12, and Item Hour is 12
+          } else if (hour == 12) {
+
+            // If Hour Now is 12, and Item Hour is not 12
+          } else if (hourNow == 12) {
             counting++
+            // If Hour Now and Item Hour are both not 12, 
+            // and they are not the same
+          } else {
+            if (hour > hourNow) {
+              counting++
+            }
           }
+          // If Item Time is "pm"
+        } else {
+          counting++
+        }
+        // If Time Now is "pm"
+      } else {
+        // If Item Time is "pm"
+        if (morning_afternoon == "pm") {
+          // If Hour values are similar
           if (hour == hourNow) {
             if (minute > minuteNow) {
               counting++
             }
-          }
-        } else {
-          counting++
-        }
-      } else {
-        if (morning_afternoon == "pm") {
-          if (hour > hourNow) {
+            // If Hour Now is not 12, and Item Hour is 12
+          } else if (hour == 12) {
+
+            // If Hour Now is 12, and Item Hour is not 12
+          } else if (hourNow == 12) {
             counting++
-          }
-          if (hour == hourNow) {
-            if (minute > minuteNow) {
+            // If Hour Now and Item Hour are both not 12, 
+            // and they are not the same
+          } else {
+            if (hour > hourNow) {
               counting++
             }
           }
