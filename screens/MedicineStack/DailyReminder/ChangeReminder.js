@@ -181,9 +181,17 @@ export default class ChangeReminder extends React.Component {
         const now = new Date()
         now.setDate(now.getDate() + 1)
         if (morning_afternoon == "am") {
-            now.setHours(parseInt(hour), parseInt(minute), 0)
+            if (hour == 12) {
+                now.setHours(parseInt(hour - 12), parseInt(minute), 0)
+            } else {
+                now.setHours(parseInt(hour), parseInt(minute), 0)
+            }
         } else {
-            now.setHours(parseInt(hour) + 12, parseInt(minute), 0)
+            if (hour == 12) {
+                now.setHours(parseInt(hour), parseInt(minute), 0)
+            } else {
+                now.setHours(parseInt(hour) + 12, parseInt(minute), 0)
+            }
         }
         console.log("Real Value Barcode: " + moment(now).format())
         const fireDates = ReactNativeAN.parseDate(now)
