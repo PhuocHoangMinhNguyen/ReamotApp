@@ -178,8 +178,7 @@ The stack includes Register, SignIn, ForgotPassword, and TermsOfService Screens:
 The stack includes the Home Screen and Medication Information Screen. Home Screen includes 3 sections:
 - A "Medication Taking History For The Day" List including taken, missed reminder for the day
 - An "Upcoming Reminders" List including upcoming reminders for the day.
-- An image of a "growing" flower, that its growing status will be changed based on the value of: 
-(Taken Medicine * 100) / (Missed Medicine + Taken Medicine + Upcoming Reminders)
+- An image of a "growing" flower, that its growing status will be changed based on the value of: `(Taken Medicine * 100) / (Missed Medicine + Taken Medicine + Upcoming Reminders)`
 
 #### CalendarStack
 The stack shows patient's medication taking history for each day. It will show the medication details, the taking status, and the time for each time a medicine is taken or missed.
