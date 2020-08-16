@@ -25,43 +25,60 @@ In your `package.json`
 
 ```xml
     .....
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <application ....>
-        <receiver
-            android:name="com.emekalites.react.alarm.notification.AlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="ACTION_DISMISS" />
-                <action android:name="ACTION_SNOOZE" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="com.emekalites.react.alarm.notification.AlarmDismissReceiver"
-            android:enabled="true"
-            android:exported="true" />
-
-        <receiver
-            android:name="com.emekalites.react.alarm.notification.AlarmBootReceiver"
-            android:directBootAware="true"
-            android:enabled="false"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-     .....
+    "dependencies": {
+    "@react-native-community/checkbox": "^0.4.2",
+    "@react-native-community/cli-platform-android": "^4.11.0",
+    "@react-native-community/cli-platform-ios": "^4.11.0",
+    "@react-native-community/datetimepicker": "^3.0.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-firebase/app": "^8.3.1",
+    "@react-native-firebase/auth": "^8.3.3",
+    "@react-native-firebase/firestore": "^7.5.3",
+    "@react-native-firebase/ml-vision": "^7.3.2",
+    "@react-native-firebase/storage": "^7.3.3",
+    "expo": "^38.0.9",
+    "expo-constants": "^9.1.1",
+    "expo-permissions": "^9.1.0",
+    "moment": "^2.26.0",
+    "moment-range": "^4.0.2",
+    "react": "^16.13.1",
+    "react-native": "^0.63.2",
+    "react-native-alarm-notification": "^1.4.6",
+    "react-native-barcode-mask": "^1.2.4",
+    "react-native-calendars": "^1.313.0",
+    "react-native-camera": "^3.36.0",
+    "react-native-elements": "^2.2.1",
+    "react-native-gesture-handler": "^1.7.0",
+    "react-native-image-picker": "^2.3.3",
+    "react-native-keyboard-aware-scroll-view": "^0.9.2",
+    "react-native-push-notification": "^5.0.1",
+    "react-native-reanimated": "^1.13.0",
+    "react-native-safe-area-context": "^3.1.4",
+    "react-native-safe-area-view": "^1.1.1",
+    "react-native-screens": "^2.10.1",
+    "react-native-searchable-dropdown": "^1.1.1",
+    "react-native-simple-dialogs": "^1.2.1",
+    "react-native-simple-toast": "^1.1.2",
+    "react-native-vector-icons": "^7.0.0",
+    "react-native-view-more-text": "^2.1.0",
+    "react-navigation": "^4.3.9",
+    "react-navigation-drawer": "^2.5.0",
+    "react-navigation-stack": "^2.5.1",
+    "react-navigation-tabs": "^2.8.13"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/runtime": "^7.11.2",
+    "@react-native-community/cli": "^4.12.0",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.3.0",
+    "eslint": "^7.7.0",
+    "jest": "^26.4.0",
+    "metro-react-native-babel-preset": "^0.62.0",
+    "patch-package": "^6.2.2",
+    "react-test-renderer": "^16.13.1"
+  },
+    .....
 ```
 
 #### Android
