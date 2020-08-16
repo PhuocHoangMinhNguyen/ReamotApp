@@ -1,3 +1,7 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Terms of Service Screen so users can read before register account.
+// Status: Optimized
+
 import React from "react"
 import { Text, StyleSheet, TouchableOpacity } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"

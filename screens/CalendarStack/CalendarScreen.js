@@ -27,7 +27,7 @@ export default class CalendarScreen extends React.Component {
   unsubscribe = null
 
   componentDidMount() {
-    // Take data from "history" collection
+    // Take data from "history" collection, mainly medicine name.
     this.unsubscribe = firestore().collection("history").onSnapshot((querySnapshot) => {
       let temp = []
       querySnapshot.forEach((documentSnapshot) => {
@@ -40,7 +40,7 @@ export default class CalendarScreen extends React.Component {
       })
       this.setState({ history: temp })
 
-      // Take data from "medicine" collection
+      // Take data from "medicine" collection based on medicine name in "history" collection
       let temp2 = []
       if (this.state.history.length == 0) {
         this.setState({ medicines: [] })
@@ -98,6 +98,7 @@ export default class CalendarScreen extends React.Component {
     if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
       return correctItem
     } else {
+      // Blank text used so that the list can be processed normally
       return <Text style={{ height: 0.1 }}></Text>
     }
   }

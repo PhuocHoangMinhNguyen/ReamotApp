@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Register Screen
-// Status: Need to verify email
+// Status: Optimized
 
 import React from "react"
 import {
@@ -38,10 +38,12 @@ export default class RegisterScreen extends React.Component {
     toggleCheckBox: false,
   }
 
+  // To Show or Hide Password
   handlePassword = () => {
     this.setState({ showPassword: !this.state.showPassword })
   }
 
+  // Check if all information is entered before create a new user.
   handleSignUp = () => {
     const { name, email, password, phoneNumber } = this.state.user
     if (name.trim == "") {
@@ -59,6 +61,8 @@ export default class RegisterScreen extends React.Component {
     }
   }
 
+  // create a new user in Firebase Authentication with email and password, 
+  // then store the information in Firestore,
   createUser = async user => {
     let remoteUri = null
     try {
@@ -94,8 +98,9 @@ export default class RegisterScreen extends React.Component {
     } catch (error) {
 
     }
-  };
+  }
 
+  // Upload the avatar to Firebase Storage
   uploadPhotoAsync = (uri, filename) => {
     return new Promise(async (res, rej) => {
       const response = await fetch(uri)
@@ -113,6 +118,7 @@ export default class RegisterScreen extends React.Component {
     })
   }
 
+  // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
     UserPermissions.getPhotoPermission()
 
@@ -143,9 +149,10 @@ export default class RegisterScreen extends React.Component {
   }
 
   render() {
+    // This pass is for show, hide password icon.
     const showPass = <Ionicons name="ios-eye" size={24} />
     const hidePass = <Ionicons name="ios-eye-off" size={24} />
-    let message;
+    let message
     if (this.state.showPassword == false) {
       message = hidePass
     } else {

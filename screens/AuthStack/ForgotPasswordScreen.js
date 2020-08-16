@@ -1,3 +1,7 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Forgot Password Screen
+// Status: Optimized
+
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -9,6 +13,7 @@ export default class ForgotPasswordScreen extends React.Component {
         forgottenEmail: ""
     }
 
+    // A link will be sent to provided email address to reset password.
     handleChangePassword = () => {
         const emailTrim = this.state.forgottenEmail.trim()
         if (emailTrim == "") {
