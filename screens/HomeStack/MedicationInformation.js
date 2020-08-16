@@ -1,4 +1,4 @@
-// Author: Phuoc Hoang Minh Nguyen
+// Author: Quang Duy Nguyen
 // Description: Show medicine details of medicines shown on HomeScreen.
 // Status: Optimized
 

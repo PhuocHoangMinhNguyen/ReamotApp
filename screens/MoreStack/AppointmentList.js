@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to make appointment to the doctor or pharmacist of their chosen.
-// Status: In development
+// Description: Allow patient to view appointment to the doctor or pharmacist of their chosen.
+// Status: Optimized, but might need more design
 
 import React from "react"
 import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native"
@@ -36,6 +36,7 @@ export default class AppointmentList extends React.Component {
         this.unsubscribe()
     }
 
+    // Information appeared on each item.
     renderItem(item) {
         return (
             <SafeAreaView style={styles.feedItem}>

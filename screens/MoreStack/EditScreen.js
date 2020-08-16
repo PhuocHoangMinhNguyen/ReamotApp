@@ -1,3 +1,9 @@
+// Author: Phuoc Hoang Minh Nguyen & Quang Duy Nguyen
+// Description: Allow patient to edit their profile.
+// Status: Need to:
+//    - Implement ScrollView
+//    - Edit User's information in Firebase Authentication
+
 import React from 'react';
 import {
   View,
@@ -48,6 +54,7 @@ export default class EditScreen extends React.Component {
     this.unsubscribe()
   }
 
+  // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
     UserPermissions.getPhotoPermission()
 
@@ -57,7 +64,7 @@ export default class EditScreen extends React.Component {
         skipBackup: true,
         path: "images"
       }
-    };
+    }
 
     let result = await ImagePicker.showImagePicker(options, (response) => {
       console.log("Response = ", response)
@@ -77,6 +84,7 @@ export default class EditScreen extends React.Component {
     })
   }
 
+  // Edit User's information in Firestore.
   editProfile = async () => {
     const { name, phoneNumber, address, avatar } = this.state.user
     let remoteUri = null
@@ -99,6 +107,7 @@ export default class EditScreen extends React.Component {
     Toast.show("Your Account Details is editted !")
   }
 
+  // Upload and replace the avatar in Firebase Storage
   uploadPhotoAsync = (uri, filename) => {
     return new Promise(async (res, rej) => {
       const response = await fetch(uri)

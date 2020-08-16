@@ -1,9 +1,14 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Allow patient to change password
+// Status: Optimized, but might need more design
+
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import Toast from "react-native-simple-toast"
 import auth from "@react-native-firebase/auth"
 
 export default class ChangePassword extends React.Component {
+    // A link to reset password will be sent to current user's email
     handleChangePassword = () => {
         auth().sendPasswordResetEmail(auth().currentUser.email).then(
             Toast.show("Please Check your Email...")

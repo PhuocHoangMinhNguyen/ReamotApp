@@ -1,4 +1,4 @@
-// Author: Phuoc Hoang Minh Nguyen
+// Author: Phuoc Hoang Minh Nguyen & Quang Duy Nguyen
 // Description: HomeScreen show list of upcoming reminders 
 //  and medication taking history for the day
 // Status: Optimized
