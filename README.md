@@ -163,21 +163,26 @@ The program including 6 stacks.
 - CalendarStack.
 - MedicineStack
 - DoctorStack.
-- ProfileStack.
+- MoreStack.
 
-Each stack is for an option in TabBarNavigation except AuthStack.
+Each stack is for an option in BottomTabNavigator except AuthStack. MoreStack is as a DrawerNavigator.
 
 #### AuthStack
-The stack includes Register and SignIn Screens.
-- Patient can register by providing their full name, email, password, and phone number
-- Patient can sign in using registered email and password.
-- If the patient already signs in, they dont have to sign in again next time they open the application on the same mobile device (thanks to LoadingScreen.js)
+The stack includes Register, SignIn, ForgotPassword, and TermsOfService Screens:
+- Patients can register by providing their full name, email, password, phone number, and accepting Reamot Terms of Services. Then patients have to click on verification link in their email to verify their account before using the main part of the application.
+- Patients can sign in using registered email and password.
+- If a patient already signs in, they dont have to sign in again next time they open the application on the same mobile device (thanks to LoadingScreen.js)
+- If a patient forgets his/her password, he/she can enters email address in the input section, and a link will be sent to that email to reset his/her password.
 
 #### HomeStack
-The stack includes the Home Screen of the application.
+The stack includes the Home Screen and Medication Information Screen. Home Screen includes 3 sections:
+- A "Medication Taking History For The Day" List including taken, missed reminder for the day
+- An "Upcoming Reminders" List including upcoming reminders for the day.
+- An image of a "growing" flower, that its growing status will be changed based on the value of: 
+(Taken Medicine * 100) / (Missed Medicine + Taken Medicine + Upcoming Reminders)
 
 #### CalendarStack
-The stack shows patient's medication taking history for each day.
+The stack shows patient's medication taking history for each day. It will show the medication details, the taking status, and the time for each time a medicine is taken or missed.
 
 #### MedicineStack
 The stack shows:
@@ -200,6 +205,6 @@ The stack allows users:
 ## Authors
 
 * **Phuoc Hoang Minh Nguyen** - *Lead Developer* - [PhuocHoangMinhNguyen](https://github.com/PhuocHoangMinhNguyen)
-* **Quang Duy Nguyen** - *HomeStack and ProfileStack Developer* - [Duy1999](https://github.com/Duy1999)
+* **Quang Duy Nguyen** - *HomeStack and EditProfileScreen Developer* - [Duy1999](https://github.com/Duy1999)
 
 See also the list of [contributors](https://github.com/PhuocHoangMinhNguyen/ReamotReactNative/graphs/contributors) who participated in this project.
