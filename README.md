@@ -186,19 +186,25 @@ The stack shows patient's medication taking history for each day. It will show t
 #### MedicineStack
 The stack shows:
 - Patient's Medicine Information according to their prescription
+- Medicine Remaining Pills, which will be decreased based on the information in prescription, to remind patient when medicine runs out
 - Their Reminder including the name of the medicine and the time of the reminder
-- When the time of the reminder is reached, an alarm is sound and the patient has to scan the barcode of the medicine to stop the alarm.
+- When the time of the reminder is reached, an alarm is sound and the patient has to:
+- scan the barcode of the medicine to stop the alarm with status as "taken", or
+- click "Miss Medicine" to stop the alarm with status as "missed"
 
 #### DoctorStack
 The stack shows:
-- Doctor and Pharmacist list
+- Accessed and Non-Accessed Doctor and Pharmacist list
 - Detail information for each doctor and pharmacist
-- Choices to give doctor/pharmacist their access to monitor their information, and/or to schedule appointments with doctor.
+- Choices to give or revoke doctor/pharmacist access to patient's information to monitor their medication adherence, and/or to schedule appointments with doctor.
 
-#### ProfileStack
-The stack allows users: 
-- to manage and edit their account
-- to manage their appointments with the doctors.
+#### MoreStack
+This is a DrawerNavigator with multiple options to:
+- edit their account,
+- change password,
+- view their appointments with the doctors,
+- view FAQ,
+- view Terms Of Services, and
 - to log out of the application
 
 ## Authors
