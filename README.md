@@ -18,6 +18,52 @@ Reamot is compromised of a mobile app (compatible with both iOS and Android) for
 3. [Authors](#authors)
 
 ## Manual Installation
+#### Android & iOS
+
+In your `package.json`
+
+
+```xml
+    .....
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application ....>
+        <receiver
+            android:name="com.emekalites.react.alarm.notification.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ACTION_DISMISS" />
+                <action android:name="ACTION_SNOOZE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.emekalites.react.alarm.notification.AlarmDismissReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name="com.emekalites.react.alarm.notification.AlarmBootReceiver"
+            android:directBootAware="true"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+     .....
+```
+
 #### Android
 
 In your `AndroidManifest.xml`
