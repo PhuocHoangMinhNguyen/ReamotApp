@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Show medicine details, and reminder for that medicine of that patient.
-// Status: In development
+// Description: Show medicine details of medicines shown on HomeScreen.
+// Status: Optimized
 
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"

@@ -1,6 +1,7 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Used as a backup plan for HomeStack
-// Status: In development
+// Description: HomeScreen show list of upcoming reminders 
+//  and medication taking history for the day
+// Status: Optimized
 
 import React from "react"
 import {
@@ -36,6 +37,7 @@ export default class HomeScreen extends React.Component {
   unsubscribe2 = null
 
   componentDidMount() {
+    // Find medicine details from "medicine" collection based on data from "history" collection
     this.unsubscribe1 = firestore().collection("history").onSnapshot((queryHistorySnapshot) => {
       let tempHistory = []
       queryHistorySnapshot.forEach((documentHistorySnapshot) => {
@@ -82,6 +84,7 @@ export default class HomeScreen extends React.Component {
       }
     })
 
+    // Find medicine details from "medicine" collection based on data from "reminder" collection
     this.unsubscribe2 = firestore().collection("reminder").onSnapshot((queryReminderSnapshot) => {
       let tempReminder = []
       queryReminderSnapshot.forEach((documentReminderSnapshot) => {
@@ -120,11 +123,12 @@ export default class HomeScreen extends React.Component {
     this.unsubscribe2()
   }
 
+  // Handle clicking on medicine details on 1 of 2 flatlists.
   handleClick = (dataInfor) => {
     this.props.navigation.navigate("MedicationInformation", dataInfor)
   }
 
-  // Information appears on each item.
+  // Information appears on each item on "Upcoming Reminder" List
   renderItem = (item) => {
     let dataInfor = {
       image: item.image,
@@ -143,6 +147,7 @@ export default class HomeScreen extends React.Component {
     const minuteNow = parseInt(moment().format('hh:mm a').substring(3, 5))
     const morning_afternoonNow = moment().format('hh:mm a').substring(6, 8)
 
+    // "Accepted" = true means the reminder time is larger than current time.
     let accepted = false
 
     // If Time Now is "am"
@@ -211,10 +216,12 @@ export default class HomeScreen extends React.Component {
         </TouchableOpacity>
       )
     } else {
+      // Blank Text so the List can be processed normally
       return <Text></Text>
     }
   }
 
+  // Information appears on each item on "Medicines Taken" List
   renderItemHistory = (item) => {
     let dataInfor = {
       image: item.image,
@@ -239,6 +246,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     let message
+    // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
     if (this.state.historymedicines.length == 0 && this.state.remindermedicines.length == 0) {
       message =
         <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
@@ -333,6 +341,7 @@ export default class HomeScreen extends React.Component {
         }
       }
     }
+    // Determine Image Chosen to be shown, based on the value below.
     const value = (this.state.historymedicines.length - this.state.missedMedicines.length)
       * 100 / (counting + this.state.historymedicines.length)
     if (value == 0) {
