@@ -1,7 +1,7 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Application BottomTabNavigator with 5 options,
 //  each option is a "Stack" in "routes" folder, except the last one,
-//  which will open a drawer navigation.
+//  which will open a drawer navigation containings MoreStack.
 // Status: Optimized
 
 import React from "react";

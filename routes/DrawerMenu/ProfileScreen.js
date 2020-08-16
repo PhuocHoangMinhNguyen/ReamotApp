@@ -1,5 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Show user information including avatar, user name, and user email.
+// Description: Show user information including avatar, user name, 
+//  and user email in the drawer navigator.
 // Status: Optimized
 
 import React from "react"

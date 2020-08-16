@@ -1,5 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Includes HomeScreen and everything in DrawerMenu
+// Description: Includes HomeScreen and MedicationInformation 
+//  for medicines appearing in HomeScreen
 // Status: Optimized
 
 import { createStackNavigator } from "react-navigation-stack"

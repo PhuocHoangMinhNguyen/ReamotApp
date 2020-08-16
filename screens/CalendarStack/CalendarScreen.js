@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Used to show patient's taking medication history
-// Status: Optimized in function, need more design
+// Status: Optimized
 
 import React from "react"
 import { StyleSheet, FlatList, Image, View, Text, TouchableOpacity, SafeAreaView } from "react-native"

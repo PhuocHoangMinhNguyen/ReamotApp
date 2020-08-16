@@ -1,5 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Includes Register and SignIn Screens.
+// Description: Includes Register, SignIn, ForgotPassword, Terms Screens.
 // Status: Optimized
 
 import { createStackNavigator } from "react-navigation-stack"

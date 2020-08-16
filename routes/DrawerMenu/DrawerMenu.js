@@ -1,5 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Drawer Menu includes:
+// Description: Options in Drawer Menu includes:
 //  - EditProfile
 //  - HelpScreen
 //  - Logout Button
