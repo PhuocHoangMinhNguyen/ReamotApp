@@ -1,5 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Showing Doctors and Pharmacists who have access to user medical information.
+// Description: Showing Doctors and Pharmacists who have access to user's information.
 // Status: Optimized
 
 import React, { Component } from "react";
