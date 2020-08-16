@@ -92,7 +92,7 @@ export default class RegisterScreen extends React.Component {
         }
       }
     } catch (error) {
-      alert("Error: ", error.toString())
+
     }
   };
 
@@ -173,7 +173,6 @@ export default class RegisterScreen extends React.Component {
               name="ios-add"
               size={40}
               color="#FFF"
-              style={{ marginTop: 6, marginLeft: 2 }}
             />
           </TouchableOpacity>
         </View>
@@ -196,7 +195,7 @@ export default class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 16 }}>
+            <View style={{ marginTop: 12 }}>
               <Text style={styles.inputTitle}>Email Address</Text>
               <TextInput
                 style={styles.input}
@@ -208,7 +207,7 @@ export default class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 16 }}>
+            <View style={{ marginTop: 12 }}>
               <Text style={styles.inputTitle}>Password</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
@@ -226,7 +225,7 @@ export default class RegisterScreen extends React.Component {
               </View>
             </View>
 
-            <View style={{ marginTop: 16 }}>
+            <View style={{ marginTop: 12 }}>
               <Text style={styles.inputTitle}>Contact Number</Text>
               <TextInput
                 style={styles.input}
@@ -331,11 +330,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 30
   },
   errorMessage: {
-    marginTop: 36,
+    marginTop: 24,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 30,
-    marginBottom: 15
   },
   error: {
     color: "#E9446A",
@@ -346,10 +344,10 @@ const styles = StyleSheet.create({
   back: {
     position: "absolute",
     top: 24,
-    left: 32,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    left: 30,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     backgroundColor: "rgba(21, 22, 48, 0.1)",
     alignItems: "center",
     justifyContent: "center"
@@ -359,7 +357,7 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: "#E1E2E6",
     borderRadius: 50,
-    marginTop: 24,
+    marginTop: 12,
     justifyContent: "center",
     alignItems: "center"
   },
