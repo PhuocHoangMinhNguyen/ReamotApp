@@ -213,6 +213,6 @@ This is a DrawerNavigator with multiple options to:
 ## Authors
 
 * **Phuoc Hoang Minh Nguyen** - *Lead Developer* - [PhuocHoangMinhNguyen](https://github.com/PhuocHoangMinhNguyen)
-* **Quang Duy Nguyen** - *HomeStack and EditProfileScreen Developer* - [Duy1999](https://github.com/Duy1999)
+* **Quang Duy Nguyen** - *HomeStack, EditProfileScreen Developer and Automated Tester* - [Duy1999](https://github.com/Duy1999)
 
 See also the list of [contributors](https://github.com/PhuocHoangMinhNguyen/ReamotReactNative/graphs/contributors) who participated in this project.
