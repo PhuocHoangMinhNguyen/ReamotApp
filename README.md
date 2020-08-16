@@ -7,7 +7,7 @@ Reamot is compromised of a mobile app (compatible with both iOS and Android) for
 ## Table of Contents
 
 1. [Manual Installation](#manual-installation)
-    - [Android & iOS] (#android&ios)
+    - [Android & iOS](#android&ios)
     - [Android](#android)
 2. [Code Structure](#code-structure)
     - [AuthStack](#authstack)
