@@ -156,8 +156,7 @@ In your `android/app/build.gradle`
 
 ## Code Structure:
 ### "routes" folder
-### "screens" folder
-The program including 6 stacks.
+The folder includes 6 stacks:
 
 - AuthStack.
 - HomeStack.
@@ -167,6 +166,9 @@ The program including 6 stacks.
 - MoreStack.
 
 Each stack is for an option in BottomTabNavigator except AuthStack. MoreStack is as a DrawerNavigator.
+
+### "screens" folder
+The folder includes screens of 6 above stacks.
 
 #### AuthStack
 The stack includes Register, SignIn, ForgotPassword, and TermsOfService Screens:
