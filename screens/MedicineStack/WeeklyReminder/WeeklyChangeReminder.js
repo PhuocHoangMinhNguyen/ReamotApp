@@ -175,25 +175,26 @@ export default class WeeklyChangeReminder extends React.Component {
         // Remove Notification
         ReactNativeAN.removeAllFiredNotifications()
 
-        const hour = this.state.timePicker.initial.substring(0, 2)
-        const minute = this.state.timePicker.initial.substring(3, 5)
+        const hour = parseInt(this.state.timePicker.initial.substring(0, 2))
+        const minute = parseInt(this.state.timePicker.initial.substring(3, 5))
         const morning_afternoon = this.state.timePicker.initial.substring(6, 8)
         const now = new Date()
         now.setDate(now.getDate() + 1)
         if (morning_afternoon == "am") {
             if (hour == 12) {
-                now.setHours(parseInt(hour - 12), parseInt(minute), 0)
+                now.setHours(hour - 12, minute, 0)
             } else {
-                now.setHours(parseInt(hour), parseInt(minute), 0)
+                now.setHours(hour, minute, 0)
             }
         } else {
             if (hour == 12) {
-                now.setHours(parseInt(hour), parseInt(minute), 0)
+                now.setHours(hour, minute, 0)
             } else {
-                now.setHours(parseInt(hour) + 12, parseInt(minute), 0)
+                now.setHours(hour + 12, minute, 0)
             }
         }
-        console.log("Real Value Barcode: " + moment(now).format())
+        console.log("Real Value Weekly: " + now)
+        console.log("Real Value Weekly Format: " + moment(now).format())
         const fireDates = ReactNativeAN.parseDate(now)
 
         const details = {
