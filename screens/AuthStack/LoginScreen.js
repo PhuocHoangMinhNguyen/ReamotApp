@@ -19,6 +19,7 @@ import {
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import UserReminders from '../../utilities/UserReminders'
 
 export default class LoginScreen extends React.Component {
   state = {
@@ -47,6 +48,7 @@ export default class LoginScreen extends React.Component {
       auth()
         .signInWithEmailAndPassword(email, password)
         .catch(error => this.setState({ errorMessage: error.message }))
+      //.then(UserReminders.setReminders())
     }
   }
 

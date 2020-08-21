@@ -12,6 +12,9 @@ import auth from "@react-native-firebase/auth"
 // Used to show user information in drawer menu.
 import ProfileScreen from './ProfileScreen'
 
+// Used to handle deleting reminders when logging out
+import UserReminders from '../../utilities/UserReminders'
+
 // Used for the icons in each option of the drawer menu.
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -19,6 +22,7 @@ import Material from "react-native-vector-icons/MaterialCommunityIcons"
 
 export default class DrawerMenu extends React.Component {
     handleSignOut = () => {
+        //UserReminders.deleteReminders()
         auth().signOut()
     }
 
