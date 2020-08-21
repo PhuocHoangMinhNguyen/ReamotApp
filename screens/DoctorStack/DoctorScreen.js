@@ -51,41 +51,36 @@ export default class DoctorScreen extends Component {
           // If they are not null
         } else {
           if (tempDoctorEmail != null) {
-
             // Accessed Doctor
-            firestore().collection("doctor").onSnapshot(querySnapshot => {
-              let tempAccessedDoctor = []
-              querySnapshot.forEach(documentSnapshot => {
-                for (let i = 0; i < tempDoctorEmail.length; i++) {
-                  if (tempDoctorEmail[i] == documentSnapshot.data().doctorEmail) {
-                    tempAccessedDoctor.push({
-                      ...documentSnapshot.data(),
-                      key: documentSnapshot.id,
-                      type: "Doctor"
-                    })
-                  }
-                }
+            firestore().collection("doctor")
+              .where('doctorEmail', 'in', tempDoctorEmail)
+              .onSnapshot(querySnapshot => {
+                let tempAccessedDoctor = []
+                querySnapshot.forEach(documentSnapshot => {
+                  tempAccessedDoctor.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                    type: "Doctor"
+                  })
+                })
+                this.setState({ accessedDoctor: tempAccessedDoctor })
               })
-              this.setState({ accessedDoctor: tempAccessedDoctor })
-            })
           }
           if (tempPharmacistEmail != null) {
             // Accessed Pharmacist
-            firestore().collection("pharmacist").onSnapshot(querySnapshot => {
-              let tempAccessedPharmacist = []
-              querySnapshot.forEach(documentSnapshot => {
-                for (let i = 0; i < tempPharmacistEmail.length; i++) {
-                  if (tempPharmacistEmail[i] == documentSnapshot.data().pharmacistEmail) {
-                    tempAccessedPharmacist.push({
-                      ...documentSnapshot.data(),
-                      key: documentSnapshot.id,
-                      type: "Pharmacist"
-                    })
-                  }
-                }
+            firestore().collection("pharmacist")
+              .where('pharmacistEmail', 'in', tempPharmacistEmail)
+              .onSnapshot(querySnapshot => {
+                let tempAccessedPharmacist = []
+                querySnapshot.forEach(documentSnapshot => {
+                  tempAccessedPharmacist.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                    type: "Pharmacist"
+                  })
+                })
+                this.setState({ accessedPharmacist: tempAccessedPharmacist })
               })
-              this.setState({ accessedPharmacist: tempAccessedPharmacist })
-            })
           }
         }
       })
