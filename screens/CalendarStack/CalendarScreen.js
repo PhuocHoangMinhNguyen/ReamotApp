@@ -28,41 +28,41 @@ export default class CalendarScreen extends React.Component {
 
   componentDidMount() {
     // Take data from "history" collection, mainly medicine name.
-    this.unsubscribe = firestore().collection("history").onSnapshot((querySnapshot) => {
-      let temp = []
-      querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
+    this.unsubscribe = firestore().collection("history")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot((querySnapshot) => {
+        let temp = []
+        querySnapshot.forEach((documentSnapshot) => {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           })
+        })
+        this.setState({ history: temp })
+
+        // Take data from "medicine" collection based on medicine name in "history" collection
+        let temp2 = []
+        if (this.state.history.length == 0) {
+          this.setState({ medicines: [] })
+        } else {
+          for (let i = 0; i < this.state.history.length; i++) {
+            firestore().collection("medicine")
+              .where('name', '==', this.state.history[i].medicine)
+              .onSnapshot((querySnapshot2) => {
+                querySnapshot2.forEach((documentSnapshot2) => {
+                  temp2.push({
+                    ...documentSnapshot2.data(),
+                    time: this.state.history[i].time,
+                    date: this.state.history[i].date,
+                    status: this.state.history[i].status,
+                    key: this.state.history[i].key,
+                  })
+                })
+                this.setState({ medicine: temp2 })
+              })
+          }
         }
       })
-      this.setState({ history: temp })
-
-      // Take data from "medicine" collection based on medicine name in "history" collection
-      let temp2 = []
-      if (this.state.history.length == 0) {
-        this.setState({ medicines: [] })
-      } else {
-        for (let i = 0; i < this.state.history.length; i++) {
-          firestore().collection("medicine").onSnapshot((querySnapshot2) => {
-            querySnapshot2.forEach((documentSnapshot2) => {
-              if (documentSnapshot2.data().name == this.state.history[i].medicine) {
-                temp2.push({
-                  ...documentSnapshot2.data(),
-                  time: this.state.history[i].time,
-                  date: this.state.history[i].date,
-                  status: this.state.history[i].status,
-                  key: this.state.history[i].key,
-                })
-              }
-            })
-            this.setState({ medicine: temp2 })
-          })
-        }
-      }
-    })
   }
 
   componentWillUnmount() {

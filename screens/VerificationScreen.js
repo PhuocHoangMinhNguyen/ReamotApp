@@ -1,3 +1,10 @@
+// Author: Phuoc Hoang Minh Nguyen
+//
+// Description: 
+// If the account hasnt been verified, this screen will be shown when user login.
+//
+// Status: Optimized
+
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import auth from "@react-native-firebase/auth"

@@ -76,24 +76,25 @@ export default class WeeklyChangeReminder extends React.Component {
         // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
         let tempFirebase = ""
-        this.unsubscribe = firestore().collection("reminder").onSnapshot((querySnapshot) => {
-            querySnapshot.forEach((documentSnapshot) => {
-                if (documentSnapshot.data().medicine == this.state.medicine.name
-                    && documentSnapshot.data().patientEmail == auth().currentUser.email
-                    && documentSnapshot.data().times == this.state.timePicker.initial) {
-                    tempFirebase = documentSnapshot.id
-                    tempIdAN = documentSnapshot.data().idAN
-                }
+        this.unsubscribe = firestore().collection("reminder")
+            .where('patientEmail', '==', auth().currentUser.email)
+            .onSnapshot((querySnapshot) => {
+                querySnapshot.forEach((documentSnapshot) => {
+                    if (documentSnapshot.data().medicine == this.state.medicine.name
+                        && documentSnapshot.data().times == this.state.timePicker.initial) {
+                        tempFirebase = documentSnapshot.id
+                        tempIdAN = documentSnapshot.data().idAN
+                    }
+                })
+                // Assign to firebaseId and idAN in state.firebase
+                this.setState({
+                    firebase: {
+                        ...this.state.firebase,
+                        firebaseId: tempFirebase,
+                        idAN: tempIdAN,
+                    }
+                })
             })
-            // Assign to firebaseId and idAN in state.firebase
-            this.setState({
-                firebase: {
-                    ...this.state.firebase,
-                    firebaseId: tempFirebase,
-                    idAN: tempIdAN,
-                }
-            })
-        })
     }
 
     componentWillUnmount() {

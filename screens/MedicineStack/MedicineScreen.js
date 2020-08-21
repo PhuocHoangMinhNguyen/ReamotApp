@@ -32,33 +32,34 @@ export default class MedicineScreen extends React.Component {
 
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.
-    this.unsubscribe = firestore().collection("prescription").onSnapshot((queryPrescriptionSnapshot) => {
-      let temp = []
-      queryPrescriptionSnapshot.forEach((documentPrescriptionSnapshot) => {
-        if (documentPrescriptionSnapshot.data().patientEmail == auth().currentUser.email) {
-          temp.push(documentPrescriptionSnapshot.data().name)
+    this.unsubscribe = firestore().collection("prescription")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot((querySnapshot) => {
+        let temp = []
+        querySnapshot.forEach((documentSnapshot) => {
+          temp.push(documentSnapshot.data().name)
+        })
+        this.setState({ medicineNameList: temp })
+        let temp2 = [];
+        for (let i = 0; i < this.state.medicineNameList.length; i++) {
+          firestore().collection("medicine")
+            .onSnapshot((querySnapshot) => {
+              querySnapshot.forEach((documentSnapshot) => {
+                if (documentSnapshot.data().name == this.state.medicineNameList[i]) {
+                  temp2.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                  })
+                }
+              })
+              this.setState({
+                medicines: temp2,
+                myArray: temp2,
+                loading: false,
+              })
+            })
         }
       })
-      this.setState({ medicineNameList: temp })
-      let temp2 = [];
-      for (let i = 0; i < this.state.medicineNameList.length; i++) {
-        firestore().collection("medicine").onSnapshot((queryMedicineSnapshot) => {
-          queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
-            if (documentMedicineSnapshot.data().name == this.state.medicineNameList[i]) {
-              temp2.push({
-                ...documentMedicineSnapshot.data(),
-                key: documentMedicineSnapshot.id,
-              });
-            }
-          });
-          this.setState({
-            medicines: temp2,
-            myArray: temp2,
-            loading: false,
-          })
-        })
-      }
-    })
   }
 
   componentWillUnmount() {

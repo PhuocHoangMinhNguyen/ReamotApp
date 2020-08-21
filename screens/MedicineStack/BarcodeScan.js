@@ -123,20 +123,19 @@ export default class BarcodeScan extends React.Component {
                 let temporaryID
                 let firebasePills
                 const mPills = firestore().collection("medicinePills")
-                mPills.get().then(querySnapshot => {
-                    querySnapshot.forEach(documentSnapshot => {
-                        if (documentSnapshot.data().medicine == this.state.medicine.name
-                            && documentSnapshot.data().patientEmail == auth().currentUser.email) {
+                mPills.where('medicine', '==', this.state.medicine.name)
+                    .where('patientEmail', '==', auth().currentUser.email)
+                    .get().then(querySnapshot => {
+                        querySnapshot.forEach(documentSnapshot => {
                             temporaryID = documentSnapshot.id
                             firebasePills = documentSnapshot.data().pills
-                        }
+                        })
+                        // Need to minute the correct number of pills, not just one
+                        const value = parseInt(firebasePills, 10) - this.state.number
+                        mPills.doc(temporaryID).update({
+                            pills: value.toString()
+                        })
                     })
-                    // Need to minute the correct number of pills, not just one
-                    const value = parseInt(firebasePills, 10) - this.state.number
-                    mPills.doc(temporaryID).update({
-                        pills: value.toString()
-                    })
-                })
             }
             Alert.alert("Alarm Sound is Stopped")
         } else {

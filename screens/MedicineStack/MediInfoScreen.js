@@ -43,61 +43,60 @@ export default class MediInfoScreen extends React.Component {
     this.setState({ medicine: paramsFromMedicineScreen })
 
     // Get Medicine Number of Pills
-    this.unsubscribe1 = firestore().collection("medicinePills").onSnapshot(querySnapshot => {
-      let temp = ""
-      let tempID = ""
-      querySnapshot.forEach(documentSnapshot => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email
-          && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
+    this.unsubscribe1 = firestore().collection("medicinePills")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('medicine', '==', this.props.navigation.state.params.name)
+      .onSnapshot(querySnapshot => {
+        let temp = ""
+        let tempID = ""
+        querySnapshot.forEach(documentSnapshot => {
           temp = documentSnapshot.data().pills
           tempID = documentSnapshot.id
-        }
+        })
+        this.setState({
+          medicinePills: temp,
+          text: temp,
+          firebaseID: tempID
+        })
       })
-      this.setState({
-        medicinePills: temp,
-        text: temp,
-        firebaseID: tempID
-      })
-    })
 
     // Get Prescription data from Cloud Firestore to know number of capsules taken per time, 
     // and number of times to take medicine per day.
-    this.unsubscribe2 = firestore().collection("prescription").onSnapshot((querySnapshot) => {
-      let tempValue = 0
-      let tempValue2 = 0
-      let tempValue3 = ""
-
-      querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email
-          && documentSnapshot.data().name == this.props.navigation.state.params.name) {
+    this.unsubscribe2 = firestore().collection("prescription")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('name', '==', this.props.navigation.state.params.name)
+      .onSnapshot(querySnapshot => {
+        let tempValue = 0
+        let tempValue2 = 0
+        let tempValue3 = ""
+        querySnapshot.forEach(documentSnapshot => {
           tempValue = parseInt(documentSnapshot.data().times, 10)
           tempValue2 = parseInt(documentSnapshot.data().number, 10)
           tempValue3 = documentSnapshot.data().type
-        }
+        })
+        this.setState({
+          prescription: {
+            times: tempValue,
+            number: tempValue2,
+            type: tempValue3
+          }
+        })
       })
-      this.setState({
-        prescription: {
-          times: tempValue,
-          number: tempValue2,
-          type: tempValue3
-        }
-      })
-    })
 
     // Get Reminder data of that patient and that medicine.
-    this.unsubscribe3 = firestore().collection("reminder").onSnapshot((querySnapshot) => {
-      let temp = []
-      querySnapshot.forEach((documentSnapshot) => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email
-          && documentSnapshot.data().medicine == this.props.navigation.state.params.name) {
+    this.unsubscribe3 = firestore().collection("reminder")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('medicine', '==', this.props.navigation.state.params.name)
+      .onSnapshot(querySnapshot => {
+        let temp = []
+        querySnapshot.forEach(documentSnapshot => {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           })
-        }
+        })
+        this.setState({ reminder: temp })
       })
-      this.setState({ reminder: temp })
-    })
   }
 
   componentWillUnmount() {

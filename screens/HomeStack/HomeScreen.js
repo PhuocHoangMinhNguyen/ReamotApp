@@ -56,9 +56,10 @@ export default class HomeScreen extends React.Component {
         this.setState({ historymedicines: [] })
       } else {
         for (let i = 0; i < this.state.tempHistory.length; i++) {
-          firestore().collection("medicine").onSnapshot((querySnapshot) => {
-            querySnapshot.forEach((documentSnapshot) => {
-              if (documentSnapshot.data().name == this.state.tempHistory[i].medicine) {
+          firestore().collection("medicine")
+            .where('name', '==', this.state.tempHistory[i].medicine)
+            .onSnapshot((querySnapshot) => {
+              querySnapshot.forEach((documentSnapshot) => {
                 tempHis.push({
                   ...documentSnapshot.data(),
                   time: this.state.tempHistory[i].time,
@@ -73,49 +74,48 @@ export default class HomeScreen extends React.Component {
                     key: this.state.tempHistory[i].key,
                   })
                 }
-              }
+              })
+              this.setState({
+                historymedicines: tempHis,
+                missedMedicines: tempMissed,
+              })
             })
-            this.setState({
-              historymedicines: tempHis,
-              missedMedicines: tempMissed,
-            })
-          })
         }
       }
     })
 
     // Find medicine details from "medicine" collection based on data from "reminder" collection
-    this.unsubscribe2 = firestore().collection("reminder").onSnapshot((queryReminderSnapshot) => {
-      let tempReminder = []
-      queryReminderSnapshot.forEach((documentReminderSnapshot) => {
-        if (documentReminderSnapshot.data().patientEmail == auth().currentUser.email) {
+    this.unsubscribe2 = firestore().collection("reminder")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot((queryReminderSnapshot) => {
+        let tempReminder = []
+        queryReminderSnapshot.forEach((documentReminderSnapshot) => {
           tempReminder.push({
             ...documentReminderSnapshot.data(),
             key: documentReminderSnapshot.id
           })
+        })
+        this.setState({ tempReminder: tempReminder })
+        let tempRem = []
+        if (this.state.tempReminder.length == 0) {
+          this.setState({ remindermedicines: [] })
+        } else {
+          for (let i = 0; i < this.state.tempReminder.length; i++) {
+            firestore().collection("medicine")
+              .where('name', '==', this.state.tempReminder[i].medicine)
+              .onSnapshot((querySnapshot) => {
+                querySnapshot.forEach((documentSnapshot) => {
+                  tempRem.push({
+                    ...documentSnapshot.data(),
+                    time: this.state.tempReminder[i].times,
+                    key: this.state.tempReminder[i].key,
+                  })
+                })
+                this.setState({ remindermedicines: tempRem })
+              })
+          }
         }
       })
-      this.setState({ tempReminder: tempReminder })
-      let tempRem = []
-      if (this.state.tempReminder.length == 0) {
-        this.setState({ remindermedicines: [] })
-      } else {
-        for (let i = 0; i < this.state.tempReminder.length; i++) {
-          firestore().collection("medicine").onSnapshot((querySnapshot) => {
-            querySnapshot.forEach((documentSnapshot) => {
-              if (documentSnapshot.data().name == this.state.tempReminder[i].medicine) {
-                tempRem.push({
-                  ...documentSnapshot.data(),
-                  time: this.state.tempReminder[i].times,
-                  key: this.state.tempReminder[i].key,
-                })
-              }
-            })
-            this.setState({ remindermedicines: tempRem })
-          })
-        }
-      }
-    })
   }
 
   componentWillUnmount() {

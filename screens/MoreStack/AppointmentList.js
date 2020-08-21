@@ -18,18 +18,18 @@ export default class AppointmentList extends React.Component {
     unsubscribe = null
 
     componentDidMount() {
-        this.unsubscribe = firestore().collection("appointment").onSnapshot((querySnapshot) => {
-            let temp = []
-            querySnapshot.forEach((documentSnapshot) => {
-                if (documentSnapshot.data().patientEmail == auth().currentUser.email) {
+        this.unsubscribe = firestore().collection("appointment")
+            .where('patientEmail', '==', auth().currentUser.email)
+            .onSnapshot((querySnapshot) => {
+                let temp = []
+                querySnapshot.forEach((documentSnapshot) => {
                     temp.push({
                         ...documentSnapshot.data(),
                         key: documentSnapshot.id
                     })
-                }
+                })
+                this.setState({ appointmentList: temp })
             })
-            this.setState({ appointmentList: temp })
-        })
     }
 
     componentWillUnmount() {
