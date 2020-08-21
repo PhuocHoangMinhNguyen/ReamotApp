@@ -33,7 +33,7 @@ export default class AddAccess extends React.Component {
         let tempDoctorEmail = []
 
         firestore().collection("users").doc((auth().currentUser || {}).uid)
-            .onSnapshot((documentSnapshot) => {
+            .onSnapshot(documentSnapshot => {
                 if (documentSnapshot.data().pharmacistList != null) {
                     tempPharmacistEmail = documentSnapshot.data().pharmacistList
                 }
@@ -44,8 +44,8 @@ export default class AddAccess extends React.Component {
 
         let temp = []
         // push doctor data into temp
-        firestore().collection("doctor").onSnapshot((querySnapshot) => {
-            querySnapshot.forEach((documentSnapshot) => {
+        firestore().collection("doctor").onSnapshot(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
                 let found = false
                 for (let i = 0; i < tempDoctorEmail.length; i++) {
                     if (documentSnapshot.data().doctorEmail == tempDoctorEmail[i]) {
@@ -63,8 +63,8 @@ export default class AddAccess extends React.Component {
         })
 
         // push pharmacist data into temp
-        firestore().collection("pharmacist").onSnapshot((querySnapshot) => {
-            querySnapshot.forEach((documentSnapshot) => {
+        firestore().collection("pharmacist").onSnapshot(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
                 let found = false
                 for (let i = 0; i < tempPharmacistEmail.length; i++) {
                     if (documentSnapshot.data().pharmacistEmail == tempPharmacistEmail[i]) {

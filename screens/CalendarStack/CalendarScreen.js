@@ -30,9 +30,9 @@ export default class CalendarScreen extends React.Component {
     // Take data from "history" collection, mainly medicine name.
     this.unsubscribe = firestore().collection("history")
       .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot((querySnapshot) => {
+      .onSnapshot(querySnapshot => {
         let temp = []
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
@@ -48,10 +48,10 @@ export default class CalendarScreen extends React.Component {
           for (let i = 0; i < this.state.history.length; i++) {
             firestore().collection("medicine")
               .where('name', '==', this.state.history[i].medicine)
-              .onSnapshot((querySnapshot2) => {
-                querySnapshot2.forEach((documentSnapshot2) => {
+              .onSnapshot(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
                   temp2.push({
-                    ...documentSnapshot2.data(),
+                    ...documentSnapshot.data(),
                     time: this.state.history[i].time,
                     date: this.state.history[i].date,
                     status: this.state.history[i].status,

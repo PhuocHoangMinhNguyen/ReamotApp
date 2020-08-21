@@ -39,7 +39,7 @@ export default class DoctorScreen extends Component {
     //let tempAccessedPharmacist = []
 
     this.unsubscribe = firestore().collection("users").doc((auth().currentUser || {}).uid)
-      .onSnapshot((documentSnapshot) => {
+      .onSnapshot(documentSnapshot => {
         tempPharmacistEmail = documentSnapshot.data().pharmacistList
         tempDoctorEmail = documentSnapshot.data().doctorList
 
@@ -53,9 +53,9 @@ export default class DoctorScreen extends Component {
           if (tempDoctorEmail != null) {
 
             // Accessed Doctor
-            firestore().collection("doctor").onSnapshot((querySnapshot) => {
+            firestore().collection("doctor").onSnapshot(querySnapshot => {
               let tempAccessedDoctor = []
-              querySnapshot.forEach((documentSnapshot) => {
+              querySnapshot.forEach(documentSnapshot => {
                 for (let i = 0; i < tempDoctorEmail.length; i++) {
                   if (tempDoctorEmail[i] == documentSnapshot.data().doctorEmail) {
                     tempAccessedDoctor.push({
@@ -71,9 +71,9 @@ export default class DoctorScreen extends Component {
           }
           if (tempPharmacistEmail != null) {
             // Accessed Pharmacist
-            firestore().collection("pharmacist").onSnapshot((querySnapshot) => {
+            firestore().collection("pharmacist").onSnapshot(querySnapshot => {
               let tempAccessedPharmacist = []
-              querySnapshot.forEach((documentSnapshot) => {
+              querySnapshot.forEach(documentSnapshot => {
                 for (let i = 0; i < tempPharmacistEmail.length; i++) {
                   if (tempPharmacistEmail[i] == documentSnapshot.data().pharmacistEmail) {
                     tempAccessedPharmacist.push({
