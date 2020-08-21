@@ -37,11 +37,20 @@ class UserReminders {
                     title: documentSnapshot.data().medicine,
                     alarm_id: alarmID
                 }
-                // Step 2: Find "idAN"
                 ReactNativeAN.scheduleAlarm(details)
+
+                // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
+                const alarm = await ReactNativeAN.getScheduledAlarms()
+                let idAN = ""
+                for (let i = 0; i < alarm.length; i++) {
+                    if (alarm[i].alarmId == details.alarm_id) {
+                        idAN = alarm[i].id
+                    }
+                }
+
                 firestore().collection("reminder").doc(documentSnapshot.id)
                     .update({
-                        //idAN: idAN,
+                        idAN: idAN,
                         alarmId: alarmID
                     })
             })
