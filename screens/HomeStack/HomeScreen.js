@@ -364,7 +364,7 @@ export default class HomeScreen extends React.Component {
         source={require('../../assets/GrowingTree.jpg')} />
     }
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.titleView}>
           <Text style={styles.title}></Text>
         </View>
@@ -374,7 +374,7 @@ export default class HomeScreen extends React.Component {
           style={[styles.fixed, styles.containter, { zIndex: -1 }]}
           source={require("../../assets/registerBackground.png")}
         />
-      </SafeAreaView>
+      </View>
     )
   }
 }
