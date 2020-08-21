@@ -38,14 +38,14 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     // Find medicine details from "medicine" collection based on data from "history" collection
-    this.unsubscribe1 = firestore().collection("history").onSnapshot((queryHistorySnapshot) => {
+    this.unsubscribe1 = firestore().collection("history").onSnapshot(querySnapshot => {
       let tempHistory = []
-      queryHistorySnapshot.forEach((documentHistorySnapshot) => {
-        if (documentHistorySnapshot.data().patientEmail == auth().currentUser.email
-          && documentHistorySnapshot.data().date == moment().format("MMMM Do YYYY")) {
+      querySnapshot.forEach(documentSnapshot => {
+        if (documentSnapshot.data().patientEmail == auth().currentUser.email
+          && documentSnapshot.data().date == moment().format("MMMM Do YYYY")) {
           tempHistory.push({
-            ...documentHistorySnapshot.data(),
-            key: documentHistorySnapshot.id
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id
           })
         }
       })
@@ -58,8 +58,8 @@ export default class HomeScreen extends React.Component {
         for (let i = 0; i < this.state.tempHistory.length; i++) {
           firestore().collection("medicine")
             .where('name', '==', this.state.tempHistory[i].medicine)
-            .onSnapshot((querySnapshot) => {
-              querySnapshot.forEach((documentSnapshot) => {
+            .onSnapshot(querySnapshot => {
+              querySnapshot.forEach(documentSnapshot => {
                 tempHis.push({
                   ...documentSnapshot.data(),
                   time: this.state.tempHistory[i].time,
@@ -87,12 +87,12 @@ export default class HomeScreen extends React.Component {
     // Find medicine details from "medicine" collection based on data from "reminder" collection
     this.unsubscribe2 = firestore().collection("reminder")
       .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot((queryReminderSnapshot) => {
+      .onSnapshot(querySnapshot => {
         let tempReminder = []
-        queryReminderSnapshot.forEach((documentReminderSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           tempReminder.push({
-            ...documentReminderSnapshot.data(),
-            key: documentReminderSnapshot.id
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id
           })
         })
         this.setState({ tempReminder: tempReminder })
@@ -103,8 +103,8 @@ export default class HomeScreen extends React.Component {
           for (let i = 0; i < this.state.tempReminder.length; i++) {
             firestore().collection("medicine")
               .where('name', '==', this.state.tempReminder[i].medicine)
-              .onSnapshot((querySnapshot) => {
-                querySnapshot.forEach((documentSnapshot) => {
+              .onSnapshot(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
                   tempRem.push({
                     ...documentSnapshot.data(),
                     time: this.state.tempReminder[i].times,
@@ -124,12 +124,12 @@ export default class HomeScreen extends React.Component {
   }
 
   // Handle clicking on medicine details on 1 of 2 flatlists.
-  handleClick = (dataInfor) => {
+  handleClick = dataInfor => {
     this.props.navigation.navigate("MedicationInformation", dataInfor)
   }
 
   // Information appears on each item on "Upcoming Reminder" List
-  renderItem = (item) => {
+  renderItem = item => {
     let dataInfor = {
       image: item.image,
       name: item.name,
@@ -222,7 +222,7 @@ export default class HomeScreen extends React.Component {
   }
 
   // Information appears on each item on "Medicines Taken" List
-  renderItemHistory = (item) => {
+  renderItemHistory = item => {
     let dataInfor = {
       image: item.image,
       name: item.name,

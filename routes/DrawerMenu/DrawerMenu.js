@@ -18,6 +18,10 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import Material from "react-native-vector-icons/MaterialCommunityIcons"
 
 export default class DrawerMenu extends React.Component {
+    handleSignOut = () => {
+        auth().signOut()
+    }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -75,7 +79,7 @@ export default class DrawerMenu extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => { auth().signOut() }}>
+                    onPress={() => { this.handleSignOut() }}>
                     <Material name="logout" size={20} color={"#161F3D"} />
                     <Text>  Log Out</Text>
                 </TouchableOpacity>
