@@ -50,11 +50,11 @@ class UserReminders {
         if (now <= Date.now()) {
             now.setDate(now.getDate() + 1)
         }
-        console.log(now)
+        console.log(moment(now))
         return now
     }
 
-    findIdAN = async (alarm_id, id) => {
+    findIdAN = async (alarm_id, id, alarmID) => {
         const alarm = await ReactNativeAN.getScheduledAlarms()
         let idAN = ""
         for (let i = 0; i < alarm.length; i++) {
@@ -75,6 +75,7 @@ class UserReminders {
                 querySnapshot.forEach(documentSnapshot => {
                     const alarmID = Math.floor(Math.random() * 10000).toString()
                     const reminderTime = this.calculateReminderTime(documentSnapshot.data().times)
+                    console.log(moment(reminderTime))
                     const details = {
                         ...alarmNotifData,
                         fire_date: ReactNativeAN.parseDate(reminderTime),
@@ -84,7 +85,7 @@ class UserReminders {
                     ReactNativeAN.scheduleAlarm(details)
 
                     // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-                    this.findIdAN(details.alarm_id, documentSnapshot.id)
+                    this.findIdAN(details.alarm_id, documentSnapshot.id, alarmID)
                 })
             })
     }
