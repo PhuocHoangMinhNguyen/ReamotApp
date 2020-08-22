@@ -5,6 +5,7 @@
 // Status: In development
 import ReactNativeAN from 'react-native-alarm-notification'
 import firestore from "@react-native-firebase/firestore"
+import moment from 'moment'
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -15,17 +16,14 @@ const alarmNotifData = {
 }
 
 class UserReminders {
-    deleteReminders = patientEmail => {
-        let temp = []
+    // Check if Delete Reminders when logging out works => Success
+    deleteReminders = async patientEmail => {
         firestore().collection('reminder')
             .where('patientEmail', '==', patientEmail)
-            .onSnapshot(querySnapshot => {
+            .get().then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
-                    temp.push(documentSnapshot.data().idAN)
+                    ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString())
                 })
-                for (let i = 0; i < temp.length; i++) {
-                    ReactNativeAN.deleteAlarm(temp[i].toString())
-                }
             })
     }
 
@@ -50,11 +48,11 @@ class UserReminders {
         if (now <= Date.now()) {
             now.setDate(now.getDate() + 1)
         }
-        console.log(moment(now))
+        console.log(moment(now).format())
         return now
     }
 
-    findIdAN = async (alarm_id, id, alarmID) => {
+    findIdAN = async (alarm_id, id) => {
         const alarm = await ReactNativeAN.getScheduledAlarms()
         let idAN = ""
         for (let i = 0; i < alarm.length; i++) {
@@ -65,19 +63,25 @@ class UserReminders {
         // This is having problem because you cannot set a firestore inside a firestore.
         firestore().collection('reminder').doc(id).update({
             idAN: idAN,
-            alarmId: alarmID
+            alarmId: alarm_id
         })
     }
 
-    setReminders = (patientEmail) => {
-        firestore().collection('reminder').where('patientEmail', '==', patientEmail)
+    setReminders = async (patientEmail) => {
+        // Check if Delete Reminders when logging out works => Success
+        const alarm = await ReactNativeAN.getScheduledAlarms()
+        console.log(alarm)
+
+        firestore().collection('reminder')
+            .where('patientEmail', '==', patientEmail)
             .get().then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
                     const alarmID = Math.floor(Math.random() * 10000).toString()
                     const reminderTime = this.calculateReminderTime(documentSnapshot.data().times)
-                    console.log(moment(reminderTime))
+                    console.log(moment(reminderTime).format())
                     const details = {
                         ...alarmNotifData,
+                        // Need to check it.
                         fire_date: ReactNativeAN.parseDate(reminderTime),
                         title: documentSnapshot.data().medicine,
                         alarm_id: alarmID
@@ -85,7 +89,7 @@ class UserReminders {
                     ReactNativeAN.scheduleAlarm(details)
 
                     // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-                    this.findIdAN(details.alarm_id, documentSnapshot.id, alarmID)
+                    this.findIdAN(details.alarm_id, documentSnapshot.id)
                 })
             })
     }
