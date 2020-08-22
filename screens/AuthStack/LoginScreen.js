@@ -48,7 +48,7 @@ export default class LoginScreen extends React.Component {
       auth()
         .signInWithEmailAndPassword(email, password)
         .catch(error => this.setState({ errorMessage: error.message }))
-      //.then(UserReminders.setReminders())
+        .then(UserReminders.setReminders(email))
     }
   }
 

@@ -128,7 +128,7 @@ export default class RegisterScreen extends React.Component {
         skipBackup: true,
         path: "images"
       }
-    };
+    }
 
     let result = await ImagePicker.showImagePicker(options, (response) => {
       console.log("Response = ", response)
