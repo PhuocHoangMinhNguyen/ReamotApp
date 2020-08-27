@@ -144,7 +144,7 @@ export default class EditScreen extends React.Component {
             style={styles.icon}
           />
         </TouchableOpacity>
-        <View>
+        <ScrollView removeClippedSubviews={true}>
           <Text style={styles.name}>{this.state.user.name}</Text>
           <View style={styles.form}>
             <View>
@@ -184,7 +184,7 @@ export default class EditScreen extends React.Component {
               <Text style={{ color: "#FFF" }}>Save profile</Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
         <ImageBackground
           style={[styles.fixed, styles.containter, { zIndex: -1 }]}
           source={require("../../assets/registerBackground.png")}

@@ -45,23 +45,15 @@ export default class LoginScreen extends React.Component {
     } else if (password == "") {
       Toast.show("Please Enter Password", Toast.LONG)
     } else {
-      auth()
-        .signInWithEmailAndPassword(email, password)
+      auth().signInWithEmailAndPassword(email, password)
         .catch(error => this.setState({ errorMessage: error.message }))
-        .then(UserReminders.setReminders(email))
+        .then(() => {
+          if (auth().currentUser) UserReminders.setReminders(email)
+        })
     }
   }
 
   render() {
-    // This pass is for show, hide password icon.
-    const showPass = <Ionicons name="ios-eye" size={24} />
-    const hidePass = <Ionicons name="ios-eye-off" size={24} />
-    let message
-    if (this.state.showPassword == false) {
-      message = hidePass
-    } else {
-      message = showPass
-    }
     LayoutAnimation.easeInEaseOut()
     return (
       <View style={{ flex: 1 }}>
@@ -75,7 +67,7 @@ export default class LoginScreen extends React.Component {
             marginLeft: 10
           }}
         />
-        <ScrollView>
+        <ScrollView removeClippedSubviews={true}>
           <StatusBar barStyle="light-content" />
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
@@ -105,7 +97,9 @@ export default class LoginScreen extends React.Component {
                   value={this.state.password}
                 />
                 <TouchableOpacity onPress={this.handlePassword}>
-                  {message}
+                  {this.state.showPassword == true
+                    ? <Ionicons name="ios-eye" size={24} />
+                    : <Ionicons name="ios-eye-off" size={24} />}
                 </TouchableOpacity>
               </View>
             </View>

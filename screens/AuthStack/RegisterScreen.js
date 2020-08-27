@@ -95,9 +95,7 @@ export default class RegisterScreen extends React.Component {
           db.set({ avatar: remoteUri }, { merge: true })
         }
       }
-    } catch (error) {
-
-    }
+    } catch (error) { }
   }
 
   // Upload the avatar to Firebase Storage
@@ -149,15 +147,6 @@ export default class RegisterScreen extends React.Component {
   }
 
   render() {
-    // This pass is for show, hide password icon.
-    const showPass = <Ionicons name="ios-eye" size={24} />
-    const hidePass = <Ionicons name="ios-eye-off" size={24} />
-    let message
-    if (this.state.showPassword == false) {
-      message = hidePass
-    } else {
-      message = showPass
-    }
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -183,7 +172,7 @@ export default class RegisterScreen extends React.Component {
             />
           </TouchableOpacity>
         </View>
-        <ScrollView>
+        <ScrollView removeClippedSubviews={true}>
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
               <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -227,7 +216,9 @@ export default class RegisterScreen extends React.Component {
                   value={this.state.user.password}
                 />
                 <TouchableOpacity onPress={this.handlePassword}>
-                  {message}
+                  {this.state.showPassword == true
+                    ? <Ionicons name="ios-eye" size={24} />
+                    : <Ionicons name="ios-eye-off" size={24} />}
                 </TouchableOpacity>
               </View>
             </View>
