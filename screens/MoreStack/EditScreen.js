@@ -12,7 +12,6 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  ImageBackground,
   Dimensions,
   ScrollView
 } from 'react-native';
@@ -128,6 +127,10 @@ export default class EditScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Image
+          style={styles.containter}
+          source={require("../../assets/background.png")}
+        />
         <Text style={styles.header}>Edit Profile</Text>
         <TouchableOpacity style={styles.opacity}
           onPress={this.handlePickAvatar}>
@@ -185,10 +188,6 @@ export default class EditScreen extends React.Component {
             </View>
           </TouchableOpacity>
         </ScrollView>
-        <ImageBackground
-          style={[styles.fixed, styles.containter, { zIndex: -1 }]}
-          source={require("../../assets/registerBackground.png")}
-        />
       </View>
     )
   }
@@ -197,7 +196,6 @@ export default class EditScreen extends React.Component {
 const styles = StyleSheet.create({
   containter: {
     width: Dimensions.get("window").width, //for full screen
-    height: Dimensions.get("window").height, //for full screen
   },
   fixed: {
     position: "absolute",
@@ -208,12 +206,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: "#FFF"
   },
   header: {
     alignSelf: "center",
     color: "#FFF",
     fontSize: 20,
-    marginTop: 60,
+    marginTop: -160,
     marginBottom: 40,
   },
   opacity: {

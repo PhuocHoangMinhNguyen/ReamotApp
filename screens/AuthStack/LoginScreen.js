@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   Image,
   LayoutAnimation,
-  ImageBackground,
   ScrollView
 } from "react-native"
 import auth from "@react-native-firebase/auth"
@@ -55,15 +54,17 @@ export default class LoginScreen extends React.Component {
   render() {
     LayoutAnimation.easeInEaseOut()
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: "#FFF" }}>
+        <Image
+          style={[styles.fixed, styles.containter]}
+          source={require("../../assets/background.png")}
+        />
         <Image
           source={require("../../assets/logoTest.png")}
           style={{
-            marginTop: 30,
             alignSelf: 'center',
             width: 200,
             height: 200,
-            marginLeft: 10,
           }}
         />
         <ScrollView>
@@ -124,10 +125,6 @@ export default class LoginScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </ScrollView>
-        <ImageBackground
-          style={[styles.fixed, styles.containter, { zIndex: -1 }]}
-          source={require("../../assets/registerBackground.png")}
-        />
       </View >
     );
   }
@@ -136,7 +133,6 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   containter: {
     width: Dimensions.get("window").width, //for full screen
-    height: Dimensions.get("window").height //for full screen
   },
   fixed: {
     position: "absolute",
@@ -146,7 +142,7 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   form: {
-    marginBottom: 48,
+    marginBottom: 32,
     marginHorizontal: 30
   },
   inputTitle: {

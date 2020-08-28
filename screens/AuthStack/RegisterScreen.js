@@ -10,9 +10,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  StatusBar,
   Image,
-  ImageBackground,
   ScrollView
 } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -149,6 +147,10 @@ export default class RegisterScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Image
+          style={[styles.fixed, styles.containter]}
+          source={require("../../assets/background.png")}
+        />
         <TouchableOpacity
           style={styles.back}
           onPress={() => this.props.navigation.goBack()}
@@ -261,10 +263,6 @@ export default class RegisterScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </ScrollView>
-        <ImageBackground
-          style={[styles.fixed, styles.containter, { zIndex: -1 }]}
-          source={require("../../assets/registerBackground.png")}
-        />
       </View>
     )
   }
@@ -272,7 +270,6 @@ export default class RegisterScreen extends React.Component {
 const styles = StyleSheet.create({
   containter: {
     width: Dimensions.get("window").width, //for full screen
-    height: Dimensions.get("window").height //for full screen
   },
   fixed: {
     position: "absolute",
@@ -282,10 +279,11 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: "#FFF"
   },
   greeting: {
-    marginTop: 32,
+    marginTop: 25,
     fontSize: 18,
     fontWeight: "500",
     textAlign: "center",

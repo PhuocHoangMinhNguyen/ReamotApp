@@ -8,12 +8,10 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   View,
   Dimensions,
-  ImageBackground,
 } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -345,35 +343,31 @@ export default class HomeScreen extends React.Component {
     const value = (this.state.historymedicines.length - this.state.missedMedicines.length)
       * 100 / (counting + this.state.historymedicines.length)
     if (value == 0) {
-      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+      image = <Image style={styles.image}
         source={require('../../assets/growing_0.png')} />
     } else if (value > 0 && value < 25) {
-      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+      image = <Image style={styles.image}
         source={require('../../assets/growing_0_to_25.png')} />
     } else if (value >= 25 && value < 50) {
-      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+      image = <Image style={styles.image}
         source={require('../../assets/growing_25_to_50.png')} />
     } else if (value >= 50 && value < 75) {
-      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+      image = <Image style={styles.image}
         source={require('../../assets/growing_50_to_75.png')} />
     } else if (value >= 75 && value < 100) {
-      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+      image = <Image style={styles.image}
         source={require('../../assets/growing_75_to_100.png')} />
     } else {
-      image = <Image style={{ width: 220, height: 220, borderRadius: 110 }}
+      image = <Image style={styles.image}
         source={require('../../assets/GrowingTree.jpg')} />
     }
     return (
       <View style={styles.container}>
-        <View style={styles.titleView}>
-          <Text style={styles.title}></Text>
-        </View>
+        <Image style={styles.containter}
+          source={require("../../assets/background.png")}
+        />
         {image}
         {message}
-        <ImageBackground
-          style={[styles.fixed, styles.containter, { zIndex: -1 }]}
-          source={require("../../assets/registerBackground.png")}
-        />
       </View>
     )
   }
@@ -382,18 +376,11 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   containter: {
     width: Dimensions.get("window").width, //for full screen
-    height: Dimensions.get("window").height //for full screen
-  },
-  fixed: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
   },
   container: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: "#FFF"
   },
   feed: {
     marginHorizontal: 8,
@@ -487,4 +474,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16
   },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    marginTop: -150,
+  }
 })
