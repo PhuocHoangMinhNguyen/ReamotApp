@@ -38,51 +38,51 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     // Find medicine details from "medicine" collection based on data from "history" collection
-    this.unsubscribe1 = firestore().collection("history").onSnapshot(querySnapshot => {
-      let tempHistory = []
-      querySnapshot.forEach(documentSnapshot => {
-        if (documentSnapshot.data().patientEmail == auth().currentUser.email
-          && documentSnapshot.data().date == moment().format("MMMM Do YYYY")) {
+    this.unsubscribe1 = firestore().collection("history")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment().format("MMMM Do YYYY"))
+      .onSnapshot(querySnapshot => {
+        let tempHistory = []
+        querySnapshot.forEach(documentSnapshot => {
           tempHistory.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id
           })
-        }
-      })
-      this.setState({ tempHistory: tempHistory })
-      let tempHis = []
-      let tempMissed = []
-      if (this.state.tempHistory.length == 0) {
-        this.setState({ historymedicines: [] })
-      } else {
-        for (let i = 0; i < this.state.tempHistory.length; i++) {
-          firestore().collection("medicine")
-            .where('name', '==', this.state.tempHistory[i].medicine)
-            .onSnapshot(querySnapshot => {
-              querySnapshot.forEach(documentSnapshot => {
-                tempHis.push({
-                  ...documentSnapshot.data(),
-                  time: this.state.tempHistory[i].time,
-                  status: this.state.tempHistory[i].status,
-                  key: this.state.tempHistory[i].key,
-                })
-                if (this.state.tempHistory[i].status == "missed") {
-                  tempMissed.push({
+        })
+        this.setState({ tempHistory: tempHistory })
+        let tempHis = []
+        let tempMissed = []
+        if (this.state.tempHistory.length == 0) {
+          this.setState({ historymedicines: [] })
+        } else {
+          for (let i = 0; i < this.state.tempHistory.length; i++) {
+            firestore().collection("medicine")
+              .where('name', '==', this.state.tempHistory[i].medicine)
+              .onSnapshot(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
+                  tempHis.push({
                     ...documentSnapshot.data(),
                     time: this.state.tempHistory[i].time,
                     status: this.state.tempHistory[i].status,
                     key: this.state.tempHistory[i].key,
                   })
-                }
+                  if (this.state.tempHistory[i].status == "missed") {
+                    tempMissed.push({
+                      ...documentSnapshot.data(),
+                      time: this.state.tempHistory[i].time,
+                      status: this.state.tempHistory[i].status,
+                      key: this.state.tempHistory[i].key,
+                    })
+                  }
+                })
+                this.setState({
+                  historymedicines: tempHis,
+                  missedMedicines: tempMissed,
+                })
               })
-              this.setState({
-                historymedicines: tempHis,
-                missedMedicines: tempMissed,
-              })
-            })
+          }
         }
-      }
-    })
+      })
 
     // Find medicine details from "medicine" collection based on data from "reminder" collection
     this.unsubscribe2 = firestore().collection("reminder")
@@ -259,7 +259,7 @@ export default class HomeScreen extends React.Component {
         <View style={styles.chapterView}>
           <Text style={styles.chapter}>Medicines Taken</Text>
         </View>
-        <FlatList
+        <FlatList removeClippedSubviews={true}
           style={styles.feed}
           data={this.state.historymedicines}
           renderItem={({ item }) => this.renderItemHistory(item)}
@@ -268,7 +268,7 @@ export default class HomeScreen extends React.Component {
         <View style={styles.chapterView}>
           <Text style={styles.chapter}>Upcoming Reminders</Text>
         </View>
-        <FlatList
+        <FlatList removeClippedSubviews={true}
           style={styles.feed}
           data={this.state.remindermedicines}
           renderItem={({ item }) => this.renderItem(item)}

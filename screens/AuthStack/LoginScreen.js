@@ -11,7 +11,6 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  StatusBar,
   LayoutAnimation,
   ImageBackground,
   ScrollView
@@ -64,11 +63,10 @@ export default class LoginScreen extends React.Component {
             alignSelf: 'center',
             width: 200,
             height: 200,
-            marginLeft: 10
+            marginLeft: 10,
           }}
         />
-        <ScrollView removeClippedSubviews={true}>
-          <StatusBar barStyle="light-content" />
+        <ScrollView>
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
               <Text style={styles.error}>{this.state.errorMessage}</Text>

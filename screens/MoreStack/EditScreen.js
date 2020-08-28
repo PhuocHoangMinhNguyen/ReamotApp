@@ -144,7 +144,7 @@ export default class EditScreen extends React.Component {
             style={styles.icon}
           />
         </TouchableOpacity>
-        <ScrollView removeClippedSubviews={true}>
+        <ScrollView>
           <Text style={styles.name}>{this.state.user.name}</Text>
           <View style={styles.form}>
             <View>
@@ -197,17 +197,17 @@ export default class EditScreen extends React.Component {
 const styles = StyleSheet.create({
   containter: {
     width: Dimensions.get("window").width, //for full screen
-    height: Dimensions.get("window").height //for full screen
+    height: Dimensions.get("window").height, //for full screen
   },
   fixed: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
   },
   container: {
-    flex: 1
+    flex: 1,
   },
   header: {
     alignSelf: "center",
@@ -228,25 +228,25 @@ const styles = StyleSheet.create({
   name: {
     alignSelf: "flex-end",
     marginEnd: 30,
-    marginTop: -30,
+    //marginTop: -30,
     fontSize: 20,
-    color: "#000000"
+    color: "#000000",
   },
   form: {
     marginHorizontal: 30,
-    marginVertical: 24
+    marginVertical: 24,
   },
   inputTitle: {
     color: "#8A8F9E",
     fontSize: 10,
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   input: {
     borderBottomColor: "#8A8F9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
     height: 40,
     fontSize: 15,
-    color: "#161F3D"
+    color: "#161F3D",
   },
   button: {
     alignSelf: "flex-end",

@@ -154,9 +154,7 @@ export default class RegisterScreen extends React.Component {
           onPress={() => this.props.navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={32} color="#FFF" />
-          <StatusBar barStyle="light-content" />
         </TouchableOpacity>
-        <StatusBar barStyle="light-content" />
         <View style={{ alignItems: "center", width: "100%" }} >
           <Text style={styles.greeting}>
             {"Hello!\nSign up to get started."}
@@ -172,7 +170,7 @@ export default class RegisterScreen extends React.Component {
             />
           </TouchableOpacity>
         </View>
-        <ScrollView removeClippedSubviews={true}>
+        <ScrollView>
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
               <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -348,7 +346,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: "rgba(21, 22, 48, 0.1)",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   avatarPlaceholder: {
     width: 100,
