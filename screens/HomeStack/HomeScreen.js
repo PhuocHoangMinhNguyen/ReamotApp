@@ -182,39 +182,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    let message
-    // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
-    if (this.state.historymedicines.length == 0 && this.state.remindermedicines.length == 0) {
-      message =
-        <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
-          <Text style={styles.emptyText}>You have no active reminder</Text>
-          <Text>Please add a medicine,</Text>
-          <Text>or contact your doctor for a prescription</Text>
-        </View>
-    } else {
-      message = <View style={{ flex: 1 }}>
-        <View style={styles.chapterView}>
-          <Text style={styles.chapter}>Medicines Taken</Text>
-        </View>
-        <FlatList removeClippedSubviews={true}
-          style={styles.feed}
-          data={this.state.historymedicines}
-          renderItem={({ item }) => this.renderItemHistory(item)}
-          horizontal={true}
-        />
-        <View style={styles.chapterView}>
-          <Text style={styles.chapter}>Upcoming Reminders</Text>
-        </View>
-        <FlatList removeClippedSubviews={true}
-          style={styles.feed}
-          data={this.state.remindermedicines}
-          renderItem={({ item }) => this.renderItem(item)}
-          horizontal={true}
-        />
-      </View>
-    }
     let image
-
     let counting = 0
     for (let i = 0; i < this.state.remindermedicines.length; i++) {
       // Call calculateTime function in HomeFunctions.js
@@ -245,13 +213,50 @@ export default class HomeScreen extends React.Component {
       image = <Image style={styles.image}
         source={require('../../assets/GrowingTree.jpg')} />
     }
+
+    // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
+    if (this.state.historymedicines.length == 0 && this.state.remindermedicines.length == 0) {
+      return (
+        <View style={styles.container}>
+          <Image style={styles.containter}
+            source={require("../../assets/background.png")}
+          />
+          {image}
+          <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
+            <Text style={styles.emptyText}>You have no active reminder</Text>
+            <Text>Please add a medicine,</Text>
+            <Text>or contact your doctor for a prescription</Text>
+          </View>
+        </View>
+      )
+    }
+
     return (
       <View style={styles.container}>
         <Image style={styles.containter}
           source={require("../../assets/background.png")}
         />
         {image}
-        {message}
+        <View style={{ flex: 1 }}>
+          <View style={styles.chapterView}>
+            <Text style={styles.chapter}>Medicines Taken</Text>
+          </View>
+          <FlatList removeClippedSubviews={true}
+            style={styles.feed}
+            data={this.state.historymedicines}
+            renderItem={({ item }) => this.renderItemHistory(item)}
+            horizontal={true}
+          />
+          <View style={styles.chapterView}>
+            <Text style={styles.chapter}>Upcoming Reminders</Text>
+          </View>
+          <FlatList removeClippedSubviews={true}
+            style={styles.feed}
+            data={this.state.remindermedicines}
+            renderItem={({ item }) => this.renderItem(item)}
+            horizontal={true}
+          />
+        </View>
       </View>
     )
   }
