@@ -26,114 +26,100 @@ export default class HomeScreen extends React.Component {
       historymedicines: [],
       // Medicine info in "reminder" collection
       remindermedicines: [],
-      tempHistory: [],
-      tempReminder: [],
       missedMedicines: [],
     }
   }
 
-  unsubscribe1 = null
-  unsubscribe2 = null
+  unsubscribe = null
 
   componentDidMount() {
-    // Find medicine details from "medicine" collection based on data from "history" collection
-    this.unsubscribe1 = firestore().collection("history")
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('date', '==', moment().format("MMMM Do YYYY"))
-      .onSnapshot(querySnapshot => {
-        let tempHistory = []
-        querySnapshot.forEach(documentSnapshot => {
-          tempHistory.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id
-          })
+    this.unsubscribe = firestore().collection("medicine").onSnapshot(querySnapshot => {
+      let tempMedicine = []
+      querySnapshot.forEach(documentSnapshot => {
+        tempMedicine.push({
+          ...documentSnapshot.data(),
+          key: documentSnapshot.id
         })
-        this.setState({ tempHistory: tempHistory })
-        let tempHis = []
-        let tempMissed = []
-        if (this.state.tempHistory.length == 0) {
-          this.setState({ historymedicines: [] })
-        } else {
-          for (let i = 0; i < this.state.tempHistory.length; i++) {
-            firestore().collection("medicine")
-              .where('name', '==', this.state.tempHistory[i].medicine)
-              .onSnapshot(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                  tempHis.push({
-                    ...documentSnapshot.data(),
-                    time: this.state.tempHistory[i].time,
-                    status: this.state.tempHistory[i].status,
-                    key: this.state.tempHistory[i].key,
-                  })
-                  if (this.state.tempHistory[i].status == "missed") {
-                    tempMissed.push({
-                      ...documentSnapshot.data(),
-                      time: this.state.tempHistory[i].time,
-                      status: this.state.tempHistory[i].status,
-                      key: this.state.tempHistory[i].key,
-                    })
-                  }
-                })
-                this.setState({
-                  historymedicines: tempHis,
-                  missedMedicines: tempMissed,
-                })
-              })
-          }
-        }
       })
-
-    // Find medicine details from "medicine" collection based on data from "reminder" collection
-    this.unsubscribe2 = firestore().collection("reminder")
-      .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot(querySnapshot => {
-        let tempReminder = []
-        querySnapshot.forEach(documentSnapshot => {
-          tempReminder.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id
+      firestore().collection("history")
+        .where('patientEmail', '==', auth().currentUser.email)
+        .where('date', '==', moment().format("MMMM Do YYYY"))
+        .onSnapshot(querySnapshot => {
+          let tempHistory = []
+          querySnapshot.forEach(documentSnapshot => {
+            for (let i = 0; i < tempMedicine.length; i++) {
+              if (tempMedicine[i].name == documentSnapshot.data().medicine) {
+                tempHistory.push({
+                  ...documentSnapshot.data(),
+                  barcode: tempMedicine[i].barcode,
+                  description: tempMedicine[i].description,
+                  image: tempMedicine[i].image,
+                  key: documentSnapshot.id
+                })
+              }
+            }
           })
+          this.setState({ historymedicines: tempHistory })
         })
-        this.setState({ tempReminder: tempReminder })
-        let tempRem = []
-        if (this.state.tempReminder.length == 0) {
-          this.setState({ remindermedicines: [] })
-        } else {
-          for (let i = 0; i < this.state.tempReminder.length; i++) {
-            firestore().collection("medicine")
-              .where('name', '==', this.state.tempReminder[i].medicine)
-              .onSnapshot(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                  tempRem.push({
-                    ...documentSnapshot.data(),
-                    time: this.state.tempReminder[i].times,
-                    key: this.state.tempReminder[i].key,
-                  })
+      firestore().collection("history")
+        .where('patientEmail', '==', auth().currentUser.email)
+        .where('date', '==', moment().format("MMMM Do YYYY"))
+        .where('status', '==', 'missed')
+        .onSnapshot(querySnapshot => {
+          let tempHistory = []
+          querySnapshot.forEach(documentSnapshot => {
+            for (let i = 0; i < tempMedicine.length; i++) {
+              if (tempMedicine[i].name == documentSnapshot.data().medicine) {
+                tempHistory.push({
+                  ...documentSnapshot.data(),
+                  barcode: tempMedicine[i].barcode,
+                  description: tempMedicine[i].description,
+                  image: tempMedicine[i].image,
+                  key: documentSnapshot.id
                 })
-                this.setState({ remindermedicines: tempRem })
-              })
-          }
-        }
-      })
+              }
+            }
+          })
+          this.setState({ missedMedicines: tempHistory })
+        })
+      firestore().collection("reminder")
+        .where('patientEmail', '==', auth().currentUser.email)
+        .onSnapshot(querySnapshot => {
+          let tempReminder = []
+          querySnapshot.forEach(documentSnapshot => {
+            for (let i = 0; i < tempMedicine.length; i++) {
+              if (tempMedicine[i].name == documentSnapshot.data().medicine) {
+                tempReminder.push({
+                  ...documentSnapshot.data(),
+                  barcode: tempMedicine[i].barcode,
+                  description: tempMedicine[i].description,
+                  image: tempMedicine[i].image,
+                  key: documentSnapshot.id
+                })
+              }
+            }
+          })
+          this.setState({ remindermedicines: tempReminder })
+        })
+    })
   }
 
   componentWillUnmount() {
-    this.unsubscribe1()
-    this.unsubscribe2()
+    this.unsubscribe()
   }
 
   // Information appears on each item on "Upcoming Reminder" List
   renderItem = item => {
     let dataInfor = {
       image: item.image,
-      name: item.name,
+      name: item.medicine,
       description: item.description,
       barcode: item.barcode,
-      times: item.time
+      times: item.times
     }
 
     // Call calculateTime function in HomeFunctions.js
-    const accepted = HomeFunctions.calculateTime(item.time)
+    const accepted = HomeFunctions.calculateTime(item.times)
 
     if (accepted == true) {
       return (
@@ -146,8 +132,8 @@ export default class HomeScreen extends React.Component {
               item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
             }
           />
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.time}>{item.time}</Text>
+          <Text style={styles.name}>{item.medicine}</Text>
+          <Text style={styles.time}>{item.times}</Text>
         </TouchableOpacity>
       )
     } else {
@@ -160,7 +146,7 @@ export default class HomeScreen extends React.Component {
   renderItemHistory = item => {
     let dataInfor = {
       image: item.image,
-      name: item.name,
+      name: item.medicine,
       description: item.description,
       barcode: item.barcode,
       times: item.time
@@ -175,7 +161,7 @@ export default class HomeScreen extends React.Component {
             item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
           }
         />
-        <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.name}</Text>
+        <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.medicine}</Text>
         <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{item.time}</Text>
       </TouchableOpacity>
     )
@@ -186,7 +172,7 @@ export default class HomeScreen extends React.Component {
     let counting = 0
     for (let i = 0; i < this.state.remindermedicines.length; i++) {
       // Call calculateTime function in HomeFunctions.js
-      const accepted = HomeFunctions.calculateTime(this.state.remindermedicines[i].time)
+      const accepted = HomeFunctions.calculateTime(this.state.remindermedicines[i].times)
       if (accepted == true) {
         counting++
       }
