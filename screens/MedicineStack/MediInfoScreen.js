@@ -176,25 +176,19 @@ export default class MediInfoScreen extends React.Component {
   // times the patient has to take that medicine per day according to "prescription" document in Firebase,
   // all emptyItem will be replace by nonEmptyItem
   renderItem = (item) => {
-    const itemDetails = item
-    const nonEmptyItem =
-      <View style={styles.prescription}>
-        <Text style={styles.time}>{item.times}</Text>
-        <TouchableOpacity style={styles.showPicker} onPress={() => this.handleChangeReminder(itemDetails)}>
-          <Text style={{ color: "#FFF" }}>Edit</Text>
-        </TouchableOpacity>
-      </View>
-    const emptyItem =
-      <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
-        <Text style={{ fontSize: 18 }}>+ Add Reminder</Text>
-      </TouchableOpacity>
-    let message
     if (item == "null") {
-      message = emptyItem
-    } else {
-      message = nonEmptyItem
+      return (
+        <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
+          <Text style={{ fontSize: 18 }}>+ Add Reminder</Text>
+        </TouchableOpacity>
+      )
     }
-    return (message)
+    return (<View style={styles.prescription}>
+      <Text style={styles.time}>{item.times}</Text>
+      <TouchableOpacity style={styles.showPicker} onPress={() => this.handleChangeReminder(item)}>
+        <Text style={{ color: "#FFF" }}>Edit</Text>
+      </TouchableOpacity>
+    </View>)
   }
 
   render() {
