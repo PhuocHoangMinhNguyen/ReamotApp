@@ -34,42 +34,51 @@ export default class MedicineScreen extends React.Component {
     // To take user's medicine based on medicine listed in "prescription" collection.
     this.unsubscribe = firestore().collection("prescription")
       .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot((querySnapshot) => {
+      .onSnapshot(querySnapshot => {
         let temp = []
-        querySnapshot.forEach((documentSnapshot) => {
-          temp.push(documentSnapshot.data().name)
+        querySnapshot.forEach(documentSnapshot => {
+          temp.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          })
         })
         this.setState({ medicineNameList: temp })
+
+        // Deal with medicines that patient add
         let temp2 = [];
         for (let i = 0; i < this.state.medicineNameList.length; i++) {
-          firestore().collection("medicine")
-            .onSnapshot((querySnapshot) => {
-              querySnapshot.forEach((documentSnapshot) => {
-                if (documentSnapshot.data().name == this.state.medicineNameList[i]) {
-                  temp2.push({
-                    ...documentSnapshot.data(),
-                    key: documentSnapshot.id,
-                  })
-                }
-              })
-              this.setState({
-                medicines: temp2,
-                myArray: temp2,
-                loading: false,
-              })
+          if (this.state.medicineNameList[i].authorEmail == auth().currentUser.email) {
+            temp2.push({
+              description: null,
+              image: this.state.medicineNameList[i].image,
+              barcode: this.state.medicineNameList[i].barcode,
+              name: this.state.medicineNameList[i].name,
             })
+          }
+        }
+
+        for (let i = 0; i < this.state.medicineNameList.length; i++) {
+          firestore().collection("medicine").onSnapshot(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+              if (documentSnapshot.data().name == this.state.medicineNameList[i].name) {
+                temp2.push({
+                  ...documentSnapshot.data(),
+                  key: documentSnapshot.id,
+                })
+              }
+            })
+            this.setState({
+              medicines: temp2,
+              myArray: temp2,
+              loading: false,
+            })
+          })
         }
       })
   }
 
   componentWillUnmount() {
     this.unsubscribe()
-  }
-
-  // Click on each item in flatlist will lead user to MediInforScreen 
-  // to show that medicine details with reminders.
-  handleClick = (dataInfor) => {
-    this.props.navigation.navigate("MediInfoScreen", dataInfor)
   }
 
   // Information appears on each item.
@@ -83,7 +92,9 @@ export default class MedicineScreen extends React.Component {
     return (
       <TouchableOpacity
         style={styles.feedItem}
-        onPress={() => { this.handleClick(dataInfor) }}
+        onPress={() => {
+          this.props.navigation.navigate("MediInfoScreen", dataInfor)
+        }}
       >
         <Image
           source={

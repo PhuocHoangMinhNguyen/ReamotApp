@@ -72,41 +72,46 @@ export default class AddMedicine extends React.Component {
     }
 
     addMedicine = async () => {
-        const { name, image, note, number, times } = this.state.medicine
+        const { name, image, note, number, times, barcode } = this.state.medicine
         const { dailyType, weeklyType } = this.state.reminder
+        let remoteUri = null
+        let medicineImage = null
+        if (image) {
+            // Store the avatar in Firebase Storage
+            remoteUri = await UploadImage.uploadPhotoAsync(
+                image,
+                `medicines/${(auth().currentUser || {}).uid}`
+            );
+            // Then Store the avatar in Cloud Firestore
 
+            medicineImage = remoteUri
+        }
         if (dailyType == true) {
             firestore().collection("prescription").add({
-                medicine: name,
+                name: name,
                 patientEmail: auth().currentUser.email,
+                authorEmail: auth().currentUser.email,
                 note: note,
                 number: number,
                 times: times,
                 type: "Daily",
-                image: null,
+                image: medicineImage,
+                barcode: barcode,
             })
         }
 
         if (weeklyType == true) {
             firestore().collection("prescription").add({
-                medicine: name,
+                name: name,
                 patientEmail: auth().currentUser.email,
+                authorEmail: auth().currentUser.email,
                 note: note,
                 number: number,
                 times: times,
                 type: "Weekly",
-                image: null,
+                image: medicineImage,
+                barcode: barcode,
             })
-        }
-
-        if (image) {
-            // Store the avatar in Firebase Storage
-            remoteUri = await UploadImage.uploadPhotoAsync(
-                image,
-                `users/${(auth().currentUser || {}).uid}`
-            );
-            // Then Store the avatar in Cloud Firestore
-            db.set({ image: remoteUri }, { merge: true })
         }
         this.props.navigation.goBack()
         Toast.show("A new medicine is added !")
@@ -144,56 +149,61 @@ export default class AddMedicine extends React.Component {
                         <View style={styles.textInputContainer}>
                             <TextInput
                                 placeholder="Medicine Name"
-                                autoCapitalize="none"
                                 onChangeText={name => this.setState({ medicine: { ...this.state.medicine, name: name } })}
                                 value={this.state.medicine.name}
                             />
                         </View>
-                        <Text>Reminder Type: </Text>
-                        <View style={styles.reminderType}>
-                            <CheckBox value={this.state.reminder.dailyType}
-                                onValueChange={(newValue) => {
-                                    if (this.state.reminder.weeklyType != this.state.reminder.dailyType && newValue == true) {
-                                        this.setState({
-                                            reminder: {
-                                                ...this.state.reminder,
-                                                dailyType: newValue,
-                                                weeklyType: !this.state.reminder.weeklyType
-                                            }
-                                        })
-                                    } else {
-                                        this.setState({
-                                            reminder: {
-                                                ...this.state.reminder,
-                                                dailyType: newValue,
-                                            }
-                                        })
-                                    }
-
-                                }} />
-                            <Text>Daily</Text>
-                            <CheckBox value={this.state.reminder.weeklyType}
-                                onValueChange={(newValue) => {
-                                    if (this.state.reminder.weeklyType != this.state.reminder.dailyType && newValue == true) {
-                                        this.setState({
-                                            reminder: {
-                                                ...this.state.reminder,
-                                                dailyType: !this.state.reminder.dailyType,
-                                                weeklyType: newValue
-                                            }
-                                        })
-                                    } else {
-                                        this.setState({
-                                            reminder: {
-                                                ...this.state.reminder,
-                                                weeklyType: newValue
-                                            }
-                                        })
-                                    }
-                                }} />
-                            <Text>Weekly</Text>
+                        <View style={styles.textInputContainer}>
+                            <TextInput
+                                placeholder="Medicine Barcode"
+                                keyboardType="numeric"
+                                onChangeText={barcode => this.setState({ medicine: { ...this.state.medicine, barcode: barcode } })}
+                                value={this.state.medicine.barcode}
+                            />
                         </View>
                     </View>
+                </View>
+                <View style={styles.reminderType}>
+                    <CheckBox value={this.state.reminder.dailyType}
+                        onValueChange={(newValue) => {
+                            if (this.state.reminder.weeklyType != this.state.reminder.dailyType && newValue == true) {
+                                this.setState({
+                                    reminder: {
+                                        ...this.state.reminder,
+                                        dailyType: newValue,
+                                        weeklyType: !this.state.reminder.weeklyType
+                                    }
+                                })
+                            } else {
+                                this.setState({
+                                    reminder: {
+                                        ...this.state.reminder,
+                                        dailyType: newValue,
+                                    }
+                                })
+                            }
+                        }} />
+                    <Text>Taken Daily</Text>
+                    <CheckBox value={this.state.reminder.weeklyType}
+                        onValueChange={(newValue) => {
+                            if (this.state.reminder.weeklyType != this.state.reminder.dailyType && newValue == true) {
+                                this.setState({
+                                    reminder: {
+                                        ...this.state.reminder,
+                                        dailyType: !this.state.reminder.dailyType,
+                                        weeklyType: newValue
+                                    }
+                                })
+                            } else {
+                                this.setState({
+                                    reminder: {
+                                        ...this.state.reminder,
+                                        weeklyType: newValue
+                                    }
+                                })
+                            }
+                        }} />
+                    <Text>Taken Weekly</Text>
                 </View>
                 <View style={styles.numberTimes}>
                     <View style={styles.number}>
@@ -278,6 +288,7 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
     reminderType: {
+        marginHorizontal: 30,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-evenly"
