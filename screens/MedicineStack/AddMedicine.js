@@ -1,10 +1,13 @@
 import React from "react"
 import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text } from "react-native"
+
+import auth from "@react-native-firebase/auth"
+import firestore from "@react-native-firebase/firestore"
+import UploadImage from '../../utilities/UploadImage';
+
 import Ionicons from "react-native-vector-icons/Ionicons"
 import UserPermissions from "../../utilities/UserPermissions"
 import ImagePicker from "react-native-image-picker"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
 import CheckBox from "@react-native-community/checkbox"
 import Toast from "react-native-simple-toast"
 
@@ -68,7 +71,7 @@ export default class AddMedicine extends React.Component {
         }
     }
 
-    addMedicine = () => {
+    addMedicine = async () => {
         const { name, image, note, number, times } = this.state.medicine
         const { dailyType, weeklyType } = this.state.reminder
 
@@ -79,7 +82,8 @@ export default class AddMedicine extends React.Component {
                 note: note,
                 number: number,
                 times: times,
-                type: "Daily"
+                type: "Daily",
+                image: null,
             })
         }
 
@@ -90,33 +94,22 @@ export default class AddMedicine extends React.Component {
                 note: note,
                 number: number,
                 times: times,
-                type: "Weekly"
+                type: "Weekly",
+                image: null,
             })
         }
 
         if (image) {
-
+            // Store the avatar in Firebase Storage
+            remoteUri = await UploadImage.uploadPhotoAsync(
+                image,
+                `users/${(auth().currentUser || {}).uid}`
+            );
+            // Then Store the avatar in Cloud Firestore
+            db.set({ image: remoteUri }, { merge: true })
         }
-
         this.props.navigation.goBack()
         Toast.show("A new medicine is added !")
-    }
-
-    uploadPhotoAsync = (uri, filename) => {
-        return new Promise(async (res, rej) => {
-            const response = await fetch(uri)
-            const file = await response.blob()
-
-            let upload = storage().ref(filename).put(file);
-
-            upload.on("state_changed", snapshot => { },
-                err => { rej(err) },
-                async () => {
-                    const url = await upload.snapshot.ref.getDownloadURL()
-                    res(url)
-                }
-            )
-        })
     }
 
     render() {
