@@ -13,11 +13,13 @@ import {
   Image,
   ScrollView
 } from "react-native"
+
+import auth from "@react-native-firebase/auth"
+import firestore from "@react-native-firebase/firestore"
+import UploadImage from '../../utilities/UploadImage'
+
 import Ionicons from "react-native-vector-icons/Ionicons"
 import ImagePicker from "react-native-image-picker"
-import firestore from "@react-native-firebase/firestore"
-import storage from "@react-native-firebase/storage"
-import auth from "@react-native-firebase/auth"
 import UserPermissions from "../../utilities/UserPermissions"
 import Toast from "react-native-simple-toast"
 import CheckBox from "@react-native-community/checkbox"
@@ -85,7 +87,7 @@ export default class RegisterScreen extends React.Component {
         // If the user choose an avatar,
         if (user.avatar) {
           // Store the avatar in Firebase Storage
-          remoteUri = await this.uploadPhotoAsync(
+          remoteUri = await UploadImage.uploadPhotoAsync(
             user.avatar,
             `users/${(auth().currentUser || {}).uid}`
           );
@@ -94,24 +96,6 @@ export default class RegisterScreen extends React.Component {
         }
       }
     } catch (error) { }
-  }
-
-  // Upload the avatar to Firebase Storage
-  uploadPhotoAsync = (uri, filename) => {
-    return new Promise(async (res, rej) => {
-      const response = await fetch(uri)
-      const file = await response.blob()
-
-      let upload = storage().ref(filename).put(file);
-
-      upload.on("state_changed", snapshot => { },
-        err => { rej(err) },
-        async () => {
-          const url = await upload.snapshot.ref.getDownloadURL()
-          res(url)
-        }
-      )
-    })
   }
 
   // To Pick Avatar from library or take a photo and set it as avatar.

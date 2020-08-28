@@ -1,3 +1,8 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Mainly used to find items with time that 
+// after the current time of the day for HomeScreen,
+// Status: Optimized
+
 import moment from "moment"
 
 class HomeFunctions {

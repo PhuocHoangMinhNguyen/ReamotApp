@@ -18,12 +18,12 @@ import {
 
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import storage from "@react-native-firebase/storage";
+import UploadImage from '../../utilities/UploadImage';
 
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserPermissions from "../../utilities/UserPermissions";
-import Toast from "react-native-simple-toast"
+import Toast from "react-native-simple-toast";
 
 export default class EditScreen extends React.Component {
   constructor(props) {
@@ -96,7 +96,7 @@ export default class EditScreen extends React.Component {
     })
     if (avatar) {
       // Store the avatar in Firebase Storage
-      remoteUri = await this.uploadPhotoAsync(
+      remoteUri = await UploadImage.uploadPhotoAsync(
         avatar,
         `users/${(auth().currentUser || {}).uid}`
       );
@@ -104,24 +104,6 @@ export default class EditScreen extends React.Component {
       db.set({ avatar: remoteUri }, { merge: true })
     }
     Toast.show("Your Account Details is editted !")
-  }
-
-  // Upload and replace the avatar in Firebase Storage
-  uploadPhotoAsync = (uri, filename) => {
-    return new Promise(async (res, rej) => {
-      const response = await fetch(uri)
-      const file = await response.blob()
-
-      let upload = storage().ref(filename).put(file);
-
-      upload.on("state_changed", snapshot => { },
-        err => { rej(err) },
-        async () => {
-          const url = await upload.snapshot.ref.getDownloadURL()
-          res(url);
-        }
-      )
-    })
   }
 
   render() {
