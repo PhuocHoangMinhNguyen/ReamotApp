@@ -16,6 +16,7 @@ import {
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import moment from "moment"
+import HomeFunctions from '../../utilities/HomeFunctions'
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -121,11 +122,6 @@ export default class HomeScreen extends React.Component {
     this.unsubscribe2()
   }
 
-  // Handle clicking on medicine details on 1 of 2 flatlists.
-  handleClick = dataInfor => {
-    this.props.navigation.navigate("MedicationInformation", dataInfor)
-  }
-
   // Information appears on each item on "Upcoming Reminder" List
   renderItem = item => {
     let dataInfor = {
@@ -135,75 +131,16 @@ export default class HomeScreen extends React.Component {
       barcode: item.barcode,
       times: item.time
     }
-    // Item Time
-    const hour = parseInt(item.time.substring(0, 2))
-    const minute = parseInt(item.time.substring(3, 5))
-    const morning_afternoon = item.time.substring(6, 8)
 
-    // Current Time
-    const hourNow = parseInt(moment().format('hh:mm a').substring(0, 2))
-    const minuteNow = parseInt(moment().format('hh:mm a').substring(3, 5))
-    const morning_afternoonNow = moment().format('hh:mm a').substring(6, 8)
-
-    // "Accepted" = true means the reminder time is larger than current time.
-    let accepted = false
-
-    // If Time Now is "am"
-    if (morning_afternoonNow == "am") {
-      // If Item Time is "am"
-      if (morning_afternoon == "am") {
-        // If Hour values are similar
-        if (hour == hourNow) {
-          // If Item Minute larger than Minute Now
-          if (minute > minuteNow) {
-            accepted = true
-          }
-          // If Hour Now is not 12, and Item Hour is 12
-        } else if (hour == 12) {
-
-          // If Hour Now is 12, and Item Hour is not 12
-        } else if (hourNow == 12) {
-          accepted = true
-          // If Hour Now and Item Hour are both not 12, 
-          // and they are not the same
-        } else {
-          if (hour > hourNow) {
-            accepted = true
-          }
-        }
-        // If Item Time is "pm"
-      } else {
-        accepted = true
-      }
-      // If Time Now is "pm"
-    } else {
-      // If Item Time is "pm"
-      if (morning_afternoon == "pm") {
-        // If Hour values are similar
-        if (hour == hourNow) {
-          if (minute > minuteNow) {
-            accepted = true
-          }
-          // If Hour Now is not 12, and Item Hour is 12
-        } else if (hour == 12) {
-
-          // If Hour Now is 12, and Item Hour is not 12
-        } else if (hourNow == 12) {
-          accepted = true
-          // If Hour Now and Item Hour are both not 12, 
-          // and they are not the same
-        } else {
-          if (hour > hourNow) {
-            accepted = true
-          }
-        }
-      }
-    }
+    // Call calculateTime function in HomeFunctions.js
+    const accepted = HomeFunctions.calculateTime(item.time)
 
     if (accepted == true) {
       return (
         <TouchableOpacity style={styles.feedItem}
-          onPress={() => { this.handleClick(dataInfor) }}>
+          onPress={() => {
+            this.props.navigation.navigate("MedicationInformation", dataInfor)
+          }}>
           <Image style={styles.avatar}
             source={
               item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
@@ -230,7 +167,9 @@ export default class HomeScreen extends React.Component {
     }
     return (
       <TouchableOpacity style={item.status == "taken" ? styles.feedTaken : styles.feedMissed}
-        onPress={() => { this.handleClick(dataInfor) }}>
+        onPress={() => {
+          this.props.navigation.navigate("MedicationInformation", dataInfor)
+        }}>
         <Image style={styles.avatar}
           source={
             item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
@@ -276,67 +215,12 @@ export default class HomeScreen extends React.Component {
     }
     let image
 
-    // Current Time
-    const hourNow = moment().format('hh:mm a').substring(0, 2)
-    const minuteNow = moment().format('hh:mm a').substring(3, 5)
-    const morning_afternoonNow = moment().format('hh:mm a').substring(6, 8)
     let counting = 0
     for (let i = 0; i < this.state.remindermedicines.length; i++) {
-      // Item Time
-      const hour = this.state.remindermedicines[i].time.substring(0, 2)
-      const minute = this.state.remindermedicines[i].time.substring(3, 5)
-      const morning_afternoon = this.state.remindermedicines[i].time.substring(6, 8)
-
-      // If Time Now is "am"
-      if (morning_afternoonNow == "am") {
-        // If Item Time is "am"
-        if (morning_afternoon == "am") {
-          // If Hour values are similar
-          if (hour == hourNow) {
-            // If Item Minute larger than Minute Now
-            if (minute > minuteNow) {
-              counting++
-            }
-            // If Hour Now is not 12, and Item Hour is 12
-          } else if (hour == 12) {
-
-            // If Hour Now is 12, and Item Hour is not 12
-          } else if (hourNow == 12) {
-            counting++
-            // If Hour Now and Item Hour are both not 12, 
-            // and they are not the same
-          } else {
-            if (hour > hourNow) {
-              counting++
-            }
-          }
-          // If Item Time is "pm"
-        } else {
-          counting++
-        }
-        // If Time Now is "pm"
-      } else {
-        // If Item Time is "pm"
-        if (morning_afternoon == "pm") {
-          // If Hour values are similar
-          if (hour == hourNow) {
-            if (minute > minuteNow) {
-              counting++
-            }
-            // If Hour Now is not 12, and Item Hour is 12
-          } else if (hour == 12) {
-
-            // If Hour Now is 12, and Item Hour is not 12
-          } else if (hourNow == 12) {
-            counting++
-            // If Hour Now and Item Hour are both not 12, 
-            // and they are not the same
-          } else {
-            if (hour > hourNow) {
-              counting++
-            }
-          }
-        }
+      // Call calculateTime function in HomeFunctions.js
+      const accepted = HomeFunctions.calculateTime(this.state.remindermedicines[i].time)
+      if (accepted == true) {
+        counting++
       }
     }
     // Determine Image Chosen to be shown, based on the value below.
