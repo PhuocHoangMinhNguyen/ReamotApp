@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
 } from "react-native"
 import { SearchBar } from "react-native-elements"
+import Toast from 'react-native-simple-toast'
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
@@ -24,7 +25,6 @@ export default class MedicineScreen extends React.Component {
       medicines: [],
       text: "",
       myArray: [],
-      medicineNameList: [],
     }
   }
 
@@ -32,39 +32,30 @@ export default class MedicineScreen extends React.Component {
 
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.
-    this.unsubscribe = firestore().collection("prescription")
-      .where('patientEmail', '==', auth().currentUser.email)
+    this.unsubscribe = firestore().collection("medicine")
       .onSnapshot(querySnapshot => {
         let temp = []
         querySnapshot.forEach(documentSnapshot => {
           temp.push({
             ...documentSnapshot.data(),
-            key: documentSnapshot.id,
+            key: documentSnapshot.id
           })
         })
-        this.setState({ medicineNameList: temp })
 
         // Deal with medicines that patient add
-        let temp2 = [];
-        for (let i = 0; i < this.state.medicineNameList.length; i++) {
-          if (this.state.medicineNameList[i].authorEmail == auth().currentUser.email) {
-            temp2.push({
-              description: null,
-              image: this.state.medicineNameList[i].image,
-              barcode: this.state.medicineNameList[i].barcode,
-              name: this.state.medicineNameList[i].name,
-            })
-          }
-        }
-
-        for (let i = 0; i < this.state.medicineNameList.length; i++) {
-          firestore().collection("medicine").onSnapshot(querySnapshot => {
+        firestore().collection("prescription")
+          .where('patientEmail', '==', auth().currentUser.email)
+          .onSnapshot(querySnapshot => {
+            let temp2 = [];
             querySnapshot.forEach(documentSnapshot => {
-              if (documentSnapshot.data().name == this.state.medicineNameList[i].name) {
-                temp2.push({
-                  ...documentSnapshot.data(),
-                  key: documentSnapshot.id,
-                })
+              for (let i = 0; i < temp.length; i++) {
+                if (documentSnapshot.data().name == temp[i].name) {
+                  temp2.push({
+                    ...documentSnapshot.data(),
+                    ...temp[i],
+                    key: documentSnapshot.id,
+                  })
+                }
               }
             })
             this.setState({
@@ -73,7 +64,6 @@ export default class MedicineScreen extends React.Component {
               loading: false,
             })
           })
-        }
       })
   }
 
@@ -88,6 +78,36 @@ export default class MedicineScreen extends React.Component {
       name: item.name,
       description: item.description,
       barcode: item.barcode
+    }
+    if (item.adder == 'patient') {
+      return (
+        <TouchableOpacity
+          style={styles.feedItem}
+          onPress={() => {
+            this.props.navigation.navigate("MediInfoScreen", dataInfor)
+          }}
+        >
+          <Image
+            source={
+              item.image
+                ? { uri: item.image }
+                : require("../../assets/tempAvatar.jpg")
+            }
+            style={styles.avatar}
+          />
+          <Text style={styles.name}>{item.name}</Text>
+          {/* <TouchableOpacity style={styles.button}
+            onPress={() => {
+              // Also need to delete alarms for this medicine.
+              firestore().collection('prescription').doc(item.key)
+                .delete().then(() => {
+                  Toast.show('That medicine is deleted')
+                })
+            }}>
+            <Text style={{ color: "#FFF" }}>Delete</Text>
+          </TouchableOpacity> */}
+        </TouchableOpacity>
+      )
     }
     return (
       <TouchableOpacity
@@ -123,13 +143,10 @@ export default class MedicineScreen extends React.Component {
     })
   }
 
-  addItem = () => {
-    this.props.navigation.navigate("AddMedicine")
-  }
-
   render() {
     let message
-    if (this.state.medicineNameList.length == 0) {
+    // Need to be fixed
+    if (this.state.medicines.length == 0) {
       message =
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Text style={styles.emptyText}>You are not currently on medication</Text>
@@ -157,7 +174,9 @@ export default class MedicineScreen extends React.Component {
           />
         </View>
         {message}
-        <TouchableOpacity style={styles.addMedicine} onPress={this.addItem}>
+        <TouchableOpacity style={styles.addMedicine} onPress={() => {
+          this.props.navigation.navigate("AddMedicine")
+        }}>
           <Text style={styles.add}>Add Medicine</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -216,4 +235,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20
   },
+  button: {
+    backgroundColor: "#1565C0",
+    borderRadius: 4,
+    height: 40,
+    width: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  }
 })

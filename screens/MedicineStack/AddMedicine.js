@@ -83,36 +83,38 @@ export default class AddMedicine extends React.Component {
                 `medicines/${(auth().currentUser || {}).uid}`
             );
             // Then Store the avatar in Cloud Firestore
-
             medicineImage = remoteUri
         }
-        if (dailyType == true) {
-            firestore().collection("prescription").add({
-                name: name,
-                patientEmail: auth().currentUser.email,
-                authorEmail: auth().currentUser.email,
-                note: note,
-                number: number,
-                times: times,
-                type: "Daily",
-                image: medicineImage,
-                barcode: barcode,
-            })
-        }
-
-        if (weeklyType == true) {
-            firestore().collection("prescription").add({
-                name: name,
-                patientEmail: auth().currentUser.email,
-                authorEmail: auth().currentUser.email,
-                note: note,
-                number: number,
-                times: times,
-                type: "Weekly",
-                image: medicineImage,
-                barcode: barcode,
-            })
-        }
+        firestore().collection("medicine").add({
+            name: name,
+            barcode: barcode,
+            description: null,
+            image: medicineImage,
+            adder: 'patient'
+        }).then(() => {
+            if (dailyType == true) {
+                firestore().collection("prescription").add({
+                    name: name,
+                    patientEmail: auth().currentUser.email,
+                    authorEmail: auth().currentUser.email,
+                    note: note,
+                    number: number,
+                    times: times,
+                    type: "Daily",
+                })
+            }
+            if (weeklyType == true) {
+                firestore().collection("prescription").add({
+                    name: name,
+                    patientEmail: auth().currentUser.email,
+                    authorEmail: auth().currentUser.email,
+                    note: note,
+                    number: number,
+                    times: times,
+                    type: "Weekly",
+                })
+            }
+        })
         this.props.navigation.goBack()
         Toast.show("A new medicine is added !")
     }

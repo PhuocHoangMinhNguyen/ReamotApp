@@ -1,3 +1,0 @@
-Task 1: Patient-Added Medicines for HomeScreen and CalendarScreen
-- Information is already in "prescription", "history", "reminder" collections => Just need to take it out.
-Task 2: Delete Patient-Added Medicines from prescription

@@ -42,25 +42,22 @@ export default class CalendarScreen extends React.Component {
 
         // Take data from "medicine" collection based on medicine name in "history" collection
         let temp2 = []
-        if (this.state.history.length == 0) {
-          this.setState({ medicines: [] })
-        } else {
-          for (let i = 0; i < this.state.history.length; i++) {
-            firestore().collection("medicine")
-              .where('name', '==', this.state.history[i].medicine)
-              .onSnapshot(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                  temp2.push({
-                    ...documentSnapshot.data(),
-                    time: this.state.history[i].time,
-                    date: this.state.history[i].date,
-                    status: this.state.history[i].status,
-                    key: this.state.history[i].key,
-                  })
+
+        for (let i = 0; i < this.state.history.length; i++) {
+          firestore().collection("medicine")
+            .where('name', '==', this.state.history[i].medicine)
+            .onSnapshot(querySnapshot => {
+              querySnapshot.forEach(documentSnapshot => {
+                temp2.push({
+                  ...documentSnapshot.data(),
+                  time: this.state.history[i].time,
+                  date: this.state.history[i].date,
+                  status: this.state.history[i].status,
+                  key: this.state.history[i].key,
                 })
-                this.setState({ medicine: temp2 })
               })
-          }
+              this.setState({ medicine: temp2 })
+            })
         }
       })
   }
