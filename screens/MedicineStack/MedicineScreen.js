@@ -47,7 +47,7 @@ export default class MedicineScreen extends React.Component {
         firestore().collection("prescription")
           .where('patientEmail', '==', auth().currentUser.email)
           .onSnapshot(querySnapshot => {
-            let temp2 = [];
+            let temp2 = []
             querySnapshot.forEach(documentSnapshot => {
               for (let i = 0; i < temp.length; i++) {
                 if (documentSnapshot.data().name == temp[i].name) {
