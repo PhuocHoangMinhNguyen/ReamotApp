@@ -16,6 +16,7 @@ import { SearchBar } from "react-native-elements"
 import Toast from 'react-native-simple-toast'
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
+import ReactNativeAN from 'react-native-alarm-notification'
 
 export default class MedicineScreen extends React.Component {
   constructor(props) {
@@ -71,6 +72,21 @@ export default class MedicineScreen extends React.Component {
     this.unsubscribe()
   }
 
+  deleteAlarms = (name) => {
+    firestore().collection("reminder")
+      .where('medicine', '==', name)
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
+          firestore().collection("reminder").doc(documentSnapshot.id).delete()
+            .then(() => {
+              ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString())
+              Toast.show('That medicine is deleted')
+            })
+        })
+      })
+  }
+
   // Information appears on each item.
   renderItem = (item) => {
     let dataInfor = {
@@ -96,16 +112,16 @@ export default class MedicineScreen extends React.Component {
             style={styles.avatar}
           />
           <Text style={styles.name}>{item.name}</Text>
-          {/* <TouchableOpacity style={styles.button}
+          <TouchableOpacity style={styles.button}
             onPress={() => {
               // Also need to delete alarms for this medicine.
               firestore().collection('prescription').doc(item.key)
                 .delete().then(() => {
-                  Toast.show('That medicine is deleted')
+                  this.deleteAlarms(item.name)
                 })
             }}>
             <Text style={{ color: "#FFF" }}>Delete</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </TouchableOpacity>
       )
     }
