@@ -18,6 +18,14 @@ import auth from "@react-native-firebase/auth"
 import moment from "moment"
 import HomeFunctions from '../../utilities/HomeFunctions'
 
+import background from '../../assets/background.png'
+import growing1 from '../../assets/growing_0.png'
+import growing2 from '../../assets/growing_0_to_25.png'
+import growing3 from '../../assets/growing_25_to_50.png'
+import growing4 from '../../assets/growing_50_to_75.png'
+import growing5 from '../../assets/growing_75_to_100.png'
+import growing6 from '../../assets/GrowingTree.jpg'
+
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -182,22 +190,22 @@ export default class HomeScreen extends React.Component {
       * 100 / (counting + this.state.historymedicines.length)
     if (value == 0) {
       image = <Image style={styles.image}
-        source={require('../../assets/growing_0.png')} />
+        source={growing1} />
     } else if (value > 0 && value < 25) {
       image = <Image style={styles.image}
-        source={require('../../assets/growing_0_to_25.png')} />
+        source={growing2} />
     } else if (value >= 25 && value < 50) {
       image = <Image style={styles.image}
-        source={require('../../assets/growing_25_to_50.png')} />
+        source={growing3} />
     } else if (value >= 50 && value < 75) {
       image = <Image style={styles.image}
-        source={require('../../assets/growing_50_to_75.png')} />
+        source={growing4} />
     } else if (value >= 75 && value < 100) {
       image = <Image style={styles.image}
-        source={require('../../assets/growing_75_to_100.png')} />
+        source={growing5} />
     } else {
       image = <Image style={styles.image}
-        source={require('../../assets/GrowingTree.jpg')} />
+        source={growing6} />
     }
 
     // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
@@ -205,7 +213,7 @@ export default class HomeScreen extends React.Component {
       return (
         <View style={styles.container}>
           <Image style={styles.containter}
-            source={require("../../assets/background.png")}
+            source={background}
           />
           {image}
           <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
@@ -220,7 +228,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Image style={styles.containter}
-          source={require("../../assets/background.png")}
+          source={background}
         />
         {image}
         <View style={{ flex: 1 }}>

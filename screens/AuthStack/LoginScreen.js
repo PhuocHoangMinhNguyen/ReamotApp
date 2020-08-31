@@ -18,6 +18,8 @@ import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import UserReminders from '../../utilities/UserReminders'
+import background from '../../assets/background.png'
+import logoTest from '../../assets/logoTest.png'
 
 export default class LoginScreen extends React.Component {
   state = {
@@ -57,10 +59,9 @@ export default class LoginScreen extends React.Component {
       <View style={{ flex: 1, backgroundColor: "#FFF" }}>
         <Image
           style={[styles.fixed, styles.containter]}
-          source={require("../../assets/background.png")}
+          source={background}
         />
-        <Image
-          source={require("../../assets/logoTest.png")}
+        <Image source={logoTest}
           style={{
             alignSelf: 'center',
             width: 200,
