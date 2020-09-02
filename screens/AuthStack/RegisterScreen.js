@@ -23,7 +23,6 @@ import ImagePicker from "react-native-image-picker"
 import UserPermissions from "../../utilities/UserPermissions"
 import Toast from "react-native-simple-toast"
 import CheckBox from "@react-native-community/checkbox"
-import background from '../../assets/background.png'
 
 export default class RegisterScreen extends React.Component {
   state = {
@@ -134,7 +133,7 @@ export default class RegisterScreen extends React.Component {
       <View style={styles.container}>
         <Image
           style={[styles.fixed, styles.containter]}
-          source={background}
+          source={require('../../assets/background.png')}
         />
         <TouchableOpacity
           style={styles.back}

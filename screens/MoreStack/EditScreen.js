@@ -24,7 +24,6 @@ import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserPermissions from "../../utilities/UserPermissions";
 import Toast from "react-native-simple-toast";
-import background from '../../assets/background.png'
 
 export default class EditScreen extends React.Component {
   constructor(props) {
@@ -112,7 +111,7 @@ export default class EditScreen extends React.Component {
       <View style={styles.container}>
         <Image
           style={styles.containter}
-          source={background}
+          source={require('../../assets/background.png')}
         />
         <Text style={styles.header}>Edit Profile</Text>
         <TouchableOpacity style={styles.opacity}
