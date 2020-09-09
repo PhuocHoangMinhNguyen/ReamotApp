@@ -7,7 +7,7 @@ import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-export default class AppointmentList extends React.Component {
+class AppointmentList extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -112,3 +112,5 @@ const styles = StyleSheet.create({
         marginTop: 50
     },
 })
+
+export default AppointmentList

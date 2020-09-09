@@ -25,7 +25,12 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserPermissions from "../../utilities/UserPermissions";
 import Toast from "react-native-simple-toast";
 
-export default class EditScreen extends React.Component {
+var images = {
+  background: { img: require('../../assets/background.png') },
+  tempAvatar: { img: require("../../assets/tempAvatar.jpg") },
+}
+
+class EditScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -111,7 +116,7 @@ export default class EditScreen extends React.Component {
       <View style={styles.container}>
         <Image
           style={styles.containter}
-          source={require('../../assets/background.png')}
+          source={images.background.img}
         />
         <Text style={styles.header}>Edit Profile</Text>
         <TouchableOpacity style={styles.opacity}
@@ -120,7 +125,7 @@ export default class EditScreen extends React.Component {
             source={
               this.state.user.avatar
                 ? { uri: this.state.user.avatar }
-                : require("../../assets/tempAvatar.jpg")
+                : images.tempAvatar.img
             } />
           <MaterialIcons
             name="photo-camera"
@@ -249,3 +254,5 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
 })
+
+export default EditScreen

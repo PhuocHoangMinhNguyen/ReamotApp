@@ -7,7 +7,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import Toast from "react-native-simple-toast"
 import auth from "@react-native-firebase/auth"
 
-export default class ChangePassword extends React.Component {
+var images = {
+    confusedMan: { img: require('../../assets/confusedMan.png') }
+}
+
+class ChangePassword extends React.Component {
     // A link to reset password will be sent to current user's email
     handleChangePassword = () => {
         auth().sendPasswordResetEmail(auth().currentUser.email).then(
@@ -19,7 +23,7 @@ export default class ChangePassword extends React.Component {
         return (
             <View style={styles.container}>
                 <Image style={styles.image}
-                    source={require('../../assets/confusedMan.png')} />
+                    source={images.confusedMan.img} />
                 <Text style={styles.text}>Did someone forget their password?</Text>
                 <Text>That's ok...</Text>
                 <Text>Just click the button below and</Text>
@@ -60,3 +64,5 @@ const styles = StyleSheet.create({
         color: "#FFF"
     }
 })
+
+export default ChangePassword

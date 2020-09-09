@@ -16,7 +16,11 @@ import { SearchBar } from "react-native-elements"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-export default class AddAccess extends React.Component {
+var images = {
+    tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
+}
+
+class AddAccess extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -120,7 +124,7 @@ export default class AddAccess extends React.Component {
                     source={
                         item.avatar
                             ? { uri: item.avatar }
-                            : require("../../assets/tempAvatar.jpg")
+                            : images.tempAvatar.img
                     }
                     style={styles.avatar}
                 />
@@ -201,3 +205,5 @@ const styles = StyleSheet.create({
         color: "#454D65",
     },
 })
+
+export default AddAccess

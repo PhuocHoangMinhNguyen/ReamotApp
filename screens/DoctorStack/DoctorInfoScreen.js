@@ -11,7 +11,11 @@ import { ConfirmDialog } from "react-native-simple-dialogs"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-export default class DoctorInfoScreen extends React.Component {
+var images = {
+    tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
+}
+
+class DoctorInfoScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -78,7 +82,7 @@ export default class DoctorInfoScreen extends React.Component {
                         source={
                             this.state.doctor.avatar
                                 ? { uri: this.state.doctor.avatar }
-                                : require("../../assets/tempAvatar.jpg")
+                                : images.tempAvatar.img
                         }
                         style={styles.image} />
                     <View style={{ alignItems: "center" }}>
@@ -154,3 +158,5 @@ const styles = StyleSheet.create({
         marginHorizontal: 30
     },
 })
+
+export default DoctorInfoScreen

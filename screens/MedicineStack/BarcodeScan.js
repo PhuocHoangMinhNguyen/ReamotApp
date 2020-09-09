@@ -17,9 +17,9 @@ const alarmNotifData = {
     channel: "reminder",
     loop_sound: true,
     message: "Take your Medicine",
-};
+}
 
-export default class BarcodeScan extends React.Component {
+class BarcodeScan extends React.Component {
     constructor(props) {
         super(props)
         this.handleTourch = this.handleTourch.bind(this)
@@ -188,3 +188,5 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
 })
+
+export default BarcodeScan

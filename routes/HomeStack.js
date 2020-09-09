@@ -7,7 +7,7 @@ import { createStackNavigator } from "react-navigation-stack"
 import HomeScreen from "../screens/HomeStack/HomeScreen"
 import MedicationInformation from "../screens/HomeStack/MedicationInformation"
 
-export default HomeStack = createStackNavigator(
+HomeStack = createStackNavigator(
     {
         // HomeStack
         HomeScreen,
@@ -18,3 +18,5 @@ export default HomeStack = createStackNavigator(
         initialRouteName: "HomeScreen",
     }
 );
+
+export default HomeStack

@@ -17,7 +17,7 @@ import MedicineStack from "./MedicineStack"
 import DoctorStack from "./DoctorStack"
 import MoreStack from "./MoreStack"
 
-export default BottomTabs = createStackNavigator(
+BottomTabs = createStackNavigator(
     {
         default: createBottomTabNavigator(
             {
@@ -80,4 +80,6 @@ export default BottomTabs = createStackNavigator(
         mode: "modal",
         headerMode: "none",
     }
-);
+)
+
+export default BottomTabs

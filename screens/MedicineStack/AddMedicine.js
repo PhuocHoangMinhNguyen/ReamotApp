@@ -11,7 +11,7 @@ import ImagePicker from "react-native-image-picker"
 import CheckBox from "@react-native-community/checkbox"
 import Toast from "react-native-simple-toast"
 
-export default class AddMedicine extends React.Component {
+class AddMedicine extends React.Component {
     state = {
         medicine: {
             name: "",
@@ -332,3 +332,5 @@ const styles = StyleSheet.create({
         marginHorizontal: 30
     },
 })
+
+export default AddMedicine

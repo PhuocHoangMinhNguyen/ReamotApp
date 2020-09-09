@@ -7,7 +7,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { ScrollView } from "react-native-gesture-handler"
 
-export default class MediInfoScreen extends React.Component {
+var images = {
+    tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
+}
+
+class MedicationInformation extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -37,7 +41,7 @@ export default class MediInfoScreen extends React.Component {
                             source={
                                 this.state.medicine.image
                                     ? { uri: this.state.medicine.image }
-                                    : require("../../assets/tempAvatar.jpg")
+                                    : images.tempAvatar.img
                             }
                             style={styles.image}
                         />
@@ -89,3 +93,5 @@ const styles = StyleSheet.create({
         marginTop: 12
     },
 })
+
+export default MedicationInformation

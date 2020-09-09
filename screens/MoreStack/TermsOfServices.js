@@ -6,7 +6,7 @@ import React from "react"
 import { Text, StyleSheet } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 
-export default class TermsOfServices extends React.Component {
+class TermsOfServices extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -66,3 +66,5 @@ const styles = StyleSheet.create({
         marginBottom: 300,
     }
 })
+
+export default TermsOfServices

@@ -18,7 +18,11 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import ReactNativeAN from 'react-native-alarm-notification'
 
-export default class MedicineScreen extends React.Component {
+var images = {
+  tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
+}
+
+class MedicineScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -107,7 +111,7 @@ export default class MedicineScreen extends React.Component {
             source={
               item.image
                 ? { uri: item.image }
-                : require("../../assets/tempAvatar.jpg")
+                : images.tempAvatar.img
             }
             style={styles.avatar}
           />
@@ -136,7 +140,7 @@ export default class MedicineScreen extends React.Component {
           source={
             item.image
               ? { uri: item.image }
-              : require("../../assets/tempAvatar.jpg")
+              : images.tempAvatar.img
           }
           style={styles.avatar}
         />
@@ -260,3 +264,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   }
 })
+
+export default MedicineScreen

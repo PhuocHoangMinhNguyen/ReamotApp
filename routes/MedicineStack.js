@@ -25,7 +25,7 @@ import ChangeReminder from "../screens/MedicineStack/DailyReminder/ChangeReminde
 import WeeklyNewReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyNewReminder";
 import WeeklyChangeReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder";
 
-export default MedicineStack = createStackNavigator(
+MedicineStack = createStackNavigator(
     {
         MedicineScreen,
         AddMedicine,
@@ -38,4 +38,6 @@ export default MedicineStack = createStackNavigator(
     },
     {
         headerMode: "none"
-    });
+    })
+
+export default MedicineStack

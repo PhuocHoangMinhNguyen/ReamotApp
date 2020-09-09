@@ -5,7 +5,7 @@
 import React from "react"
 import { View, Text, StyleSheet, ScrollView } from "react-native"
 
-export default class HelpScreen extends React.Component {
+class HelpScreen extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -234,3 +234,5 @@ const styles = StyleSheet.create({
         marginBottom: 10
     }
 })
+
+export default HelpScreen

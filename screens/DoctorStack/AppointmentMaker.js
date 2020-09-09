@@ -13,7 +13,7 @@ import moment from "moment"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-export default class AppointmentMaker extends React.Component {
+class AppointmentMaker extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -227,3 +227,5 @@ const styles = StyleSheet.create({
         alignItems: "center",
     }
 })
+
+export default AppointmentMaker

@@ -15,7 +15,11 @@ import {
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 
-export default class DoctorScreen extends Component {
+var images = {
+  tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
+}
+
+class DoctorScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -123,7 +127,7 @@ export default class DoctorScreen extends Component {
           source={
             item.avatar
               ? { uri: item.avatar }
-              : require("../../assets/tempAvatar.jpg")
+              : images.tempAvatar.img
           }
           style={styles.avatar}
         />
@@ -223,3 +227,4 @@ const styles = StyleSheet.create({
   },
 })
 
+export default DoctorScreen

@@ -7,14 +7,18 @@
 // Status: In development
 
 import React from "react"
-import { View, Image, Text, StyleSheet, TouchableOpacity, Button } from "react-native"
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Toast from "react-native-simple-toast"
 import { ConfirmDialog } from "react-native-simple-dialogs"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-export default class AccessedDoctorScreen extends React.Component {
+var images = {
+    tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
+}
+
+class AccessedDoctorScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -91,7 +95,7 @@ export default class AccessedDoctorScreen extends React.Component {
                         source={
                             this.state.doctor.avatar
                                 ? { uri: this.state.doctor.avatar }
-                                : require("../../assets/tempAvatar.jpg")
+                                : images.tempAvatar.img
                         }
                         style={styles.image} />
                     <View style={{ alignItems: "center" }}>
@@ -172,3 +176,5 @@ const styles = StyleSheet.create({
         marginHorizontal: 30
     },
 })
+
+export default AccessedDoctorScreen

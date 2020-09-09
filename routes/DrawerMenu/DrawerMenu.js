@@ -20,7 +20,7 @@ import AntDesign from "react-native-vector-icons/AntDesign"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Material from "react-native-vector-icons/MaterialCommunityIcons"
 
-export default class DrawerMenu extends React.Component {
+class DrawerMenu extends React.Component {
     handleSignOut = () => {
         UserReminders.deleteReminders(auth().currentUser.email)
         auth().signOut()
@@ -115,3 +115,5 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
 })
+
+export default DrawerMenu

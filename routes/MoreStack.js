@@ -9,7 +9,7 @@ import TermsOfServices from "../screens/MoreStack/TermsOfServices"
 import ChangePassword from "../screens/MoreStack/ChangePassword"
 import AppointmentList from "../screens/MoreStack/AppointmentList"
 
-export default MoreStack = createStackNavigator(
+MoreStack = createStackNavigator(
     {
         // Drawer Menu
         EditScreen,
@@ -21,4 +21,6 @@ export default MoreStack = createStackNavigator(
     {
         headerMode: "none",
     }
-);
+)
+
+export default MoreStack

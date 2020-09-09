@@ -8,7 +8,7 @@ import RegisterScreen from "../screens/AuthStack/RegisterScreen"
 import ForgotPasswordScreen from "../screens/AuthStack/ForgotPasswordScreen"
 import Terms from "../screens/AuthStack/Terms"
 
-export default AuthStack = createStackNavigator(
+AuthStack = createStackNavigator(
     {
         LoginScreen,
         RegisterScreen,
@@ -18,4 +18,6 @@ export default AuthStack = createStackNavigator(
     {
         headerMode: "none"
     }
-);
+)
+
+export default AuthStack

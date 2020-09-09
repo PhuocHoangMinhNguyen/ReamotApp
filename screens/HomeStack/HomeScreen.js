@@ -18,15 +18,18 @@ import auth from "@react-native-firebase/auth"
 import moment from "moment"
 import HomeFunctions from '../../utilities/HomeFunctions'
 
-import background from '../../assets/background.png'
-import growing1 from '../../assets/growing_0.png'
-import growing2 from '../../assets/growing_0_to_25.png'
-import growing3 from '../../assets/growing_25_to_50.png'
-import growing4 from '../../assets/growing_50_to_75.png'
-import growing5 from '../../assets/growing_75_to_100.png'
-import growing6 from '../../assets/GrowingTree.jpg'
+var images = {
+  background: { img: require('../../assets/background.png') },
+  tempAvatar: { img: require("../../assets/tempAvatar.jpg") },
+  growing1: { img: require('../../assets/growing_0.png') },
+  growing2: { img: require('../../assets/growing_0_to_25.png') },
+  growing3: { img: require('../../assets/growing_25_to_50.png') },
+  growing4: { img: require('../../assets/growing_50_to_75.png') },
+  growing5: { img: require('../../assets/growing_75_to_100.png') },
+  growing6: { img: require('../../assets/GrowingTree.jpg') },
+}
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -136,9 +139,7 @@ export default class HomeScreen extends React.Component {
             this.props.navigation.navigate("MedicationInformation", dataInfor)
           }}>
           <Image style={styles.avatar}
-            source={
-              item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
-            }
+            source={item.image ? { uri: item.image } : images.tempAvatar.img}
           />
           <Text style={styles.name}>{item.medicine}</Text>
           <Text style={styles.time}>{item.times}</Text>
@@ -165,9 +166,7 @@ export default class HomeScreen extends React.Component {
           this.props.navigation.navigate("MedicationInformation", dataInfor)
         }}>
         <Image style={styles.avatar}
-          source={
-            item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")
-          }
+          source={item.image ? { uri: item.image } : images.tempAvatar.img}
         />
         <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.medicine}</Text>
         <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{item.time}</Text>
@@ -190,22 +189,22 @@ export default class HomeScreen extends React.Component {
       * 100 / (counting + this.state.historymedicines.length)
     if (value == 0) {
       image = <Image style={styles.image}
-        source={growing1} />
+        source={images.growing1.img} />
     } else if (value > 0 && value < 25) {
       image = <Image style={styles.image}
-        source={growing2} />
+        source={images.growing2.img} />
     } else if (value >= 25 && value < 50) {
       image = <Image style={styles.image}
-        source={growing3} />
+        source={images.growing3.img} />
     } else if (value >= 50 && value < 75) {
       image = <Image style={styles.image}
-        source={growing4} />
+        source={images.growing4.img} />
     } else if (value >= 75 && value < 100) {
       image = <Image style={styles.image}
-        source={growing5} />
+        source={images.growing5.img} />
     } else {
       image = <Image style={styles.image}
-        source={growing6} />
+        source={images.growing6.img} />
     }
 
     // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
@@ -213,7 +212,7 @@ export default class HomeScreen extends React.Component {
       return (
         <View style={styles.container}>
           <Image style={styles.containter}
-            source={background}
+            source={images.background.img}
           />
           {image}
           <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
@@ -228,7 +227,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Image style={styles.containter}
-          source={background}
+          source={images.background.img}
         />
         {image}
         <View style={{ flex: 1 }}>
@@ -364,3 +363,5 @@ const styles = StyleSheet.create({
     marginTop: -150,
   }
 })
+
+export default HomeScreen

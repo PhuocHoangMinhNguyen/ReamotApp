@@ -20,7 +20,11 @@ const alarmNotifData = {
     message: "Take your Medicine",
 }
 
-export default class WeeklyNewReminder extends React.Component {
+var images = {
+    tempAvatar: { img: require("../../../assets/tempAvatar.jpg") }
+}
+
+class WeeklyNewReminder extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -162,7 +166,7 @@ export default class WeeklyNewReminder extends React.Component {
                             source={
                                 this.state.medicine.image
                                     ? { uri: this.state.medicine.image }
-                                    : require("../../../assets/tempAvatar.jpg")
+                                    : images.tempAvatar.img
                             }
                             style={styles.image}
                         />
@@ -256,3 +260,5 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     }
 })
+
+export default WeeklyNewReminder

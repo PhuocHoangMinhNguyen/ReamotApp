@@ -24,7 +24,11 @@ import UserPermissions from "../../utilities/UserPermissions"
 import Toast from "react-native-simple-toast"
 import CheckBox from "@react-native-community/checkbox"
 
-export default class RegisterScreen extends React.Component {
+var images = {
+  background: { img: require("../../assets/background.png") },
+}
+
+class RegisterScreen extends React.Component {
   state = {
     user: {
       name: "",
@@ -133,7 +137,7 @@ export default class RegisterScreen extends React.Component {
       <View style={styles.container}>
         <Image
           style={[styles.fixed, styles.containter]}
-          source={require('../../assets/background.png')}
+          source={images.background.img}
         />
         <TouchableOpacity
           style={styles.back}
@@ -355,3 +359,5 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline"
   }
 })
+
+export default RegisterScreen

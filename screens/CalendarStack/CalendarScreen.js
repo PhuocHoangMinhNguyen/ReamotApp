@@ -9,7 +9,11 @@ import auth from "@react-native-firebase/auth"
 import DatePicker from '@react-native-community/datetimepicker'
 import moment from "moment"
 
-export default class CalendarScreen extends React.Component {
+var images = {
+  tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
+}
+
+class CalendarScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
   }
@@ -86,7 +90,7 @@ export default class CalendarScreen extends React.Component {
     const correctItem =
       <SafeAreaView style={item.status == "taken" ? styles.feedItem : styles.missedItem}>
         <Image style={styles.image}
-          source={item.image ? { uri: item.image } : require("../../assets/tempAvatar.jpg")} />
+          source={item.image ? { uri: item.image } : images.tempAvatar.img} />
         <View style={{ flex: 1 }}>
           <Text style={item.status == "taken" ? styles.name : styles.missedName}>{item.name}</Text>
           <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.time}</Text>
@@ -192,3 +196,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   }
 })
+
+export default CalendarScreen

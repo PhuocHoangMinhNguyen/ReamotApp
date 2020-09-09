@@ -7,7 +7,7 @@ import { Text, StyleSheet, TouchableOpacity } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ionicons from "react-native-vector-icons/Ionicons"
 
-export default class Terms extends React.Component {
+class Terms extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -72,3 +72,5 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
 })
+
+export default Terms

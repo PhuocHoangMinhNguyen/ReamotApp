@@ -8,7 +8,11 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
 
-export default class ForgotPasswordScreen extends React.Component {
+var images = {
+    confusedMan: { img: require('../../assets/confusedMan.png') }
+}
+
+class ForgotPasswordScreen extends React.Component {
     state = {
         forgottenEmail: ""
     }
@@ -37,7 +41,7 @@ export default class ForgotPasswordScreen extends React.Component {
                 <View style={styles.smallerContainer}>
                     <View style={{ alignItems: "center" }}>
                         <Image style={styles.image}
-                            source={require('../../assets/confusedMan.png')} />
+                            source={images.confusedMan.img} />
                         <Text style={styles.text}>Did someone forget their password?</Text>
                         <Text>That's ok...</Text>
                         <Text>Just enter a your email address and</Text>
@@ -108,3 +112,5 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
 })
+
+export default ForgotPasswordScreen

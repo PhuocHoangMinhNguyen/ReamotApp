@@ -19,7 +19,12 @@ import Toast from "react-native-simple-toast"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import UserReminders from '../../utilities/UserReminders'
 
-export default class LoginScreen extends React.Component {
+var images = {
+  background: { img: require("../../assets/background.png") },
+  logoTest: { img: require("../../assets/logoTest.png") },
+}
+
+class LoginScreen extends React.Component {
   state = {
     email: "",
     password: "",
@@ -57,9 +62,9 @@ export default class LoginScreen extends React.Component {
       <View style={{ flex: 1, backgroundColor: "#FFF" }}>
         <Image
           style={[styles.fixed, styles.containter]}
-          source={require('../../assets/background.png')}
+          source={images.background.img}
         />
-        <Image source={require('../../assets/logoTest.png')}
+        <Image source={images.logoTest.img}
           style={{
             alignSelf: 'center',
             width: 200,
@@ -188,3 +193,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 })
+
+export default LoginScreen

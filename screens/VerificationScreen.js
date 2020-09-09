@@ -11,7 +11,7 @@ import auth from "@react-native-firebase/auth"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Toast from "react-native-simple-toast"
 
-export default class VerificationScreen extends React.Component {
+class VerificationScreen extends React.Component {
     render() {
         return (
             <View style={styles.view}>
@@ -73,3 +73,5 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline"
     }
 })
+
+export default VerificationScreen
