@@ -18,16 +18,14 @@ import auth from "@react-native-firebase/auth"
 import moment from "moment"
 import HomeFunctions from '../../utilities/HomeFunctions'
 
-var images = {
-  background: { img: require('../../assets/background.png') },
-  tempAvatar: { img: require("../../assets/tempAvatar.jpg") },
-  growing1: { img: require('../../assets/growing_0.png') },
-  growing2: { img: require('../../assets/growing_0_to_25.png') },
-  growing3: { img: require('../../assets/growing_25_to_50.png') },
-  growing4: { img: require('../../assets/growing_50_to_75.png') },
-  growing5: { img: require('../../assets/growing_75_to_100.png') },
-  growing6: { img: require('../../assets/GrowingTree.jpg') },
-}
+var background = require('../../assets/background.png')
+var tempAvatar = require("../../assets/tempAvatar.jpg")
+var growing1 = require('../../assets/growing_0.png')
+var growing2 = require('../../assets/growing_0_to_25.png')
+var growing3 = require('../../assets/growing_25_to_50.png')
+var growing4 = require('../../assets/growing_50_to_75.png')
+var growing5 = require('../../assets/growing_75_to_100.png')
+var growing6 = require('../../assets/GrowingTree.jpg')
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -139,7 +137,7 @@ class HomeScreen extends React.Component {
             this.props.navigation.navigate("MedicationInformation", dataInfor)
           }}>
           <Image style={styles.avatar}
-            source={item.image ? { uri: item.image } : images.tempAvatar.img}
+            source={item.image ? { uri: item.image } : tempAvatar}
           />
           <Text style={styles.name}>{item.medicine}</Text>
           <Text style={styles.time}>{item.times}</Text>
@@ -166,7 +164,7 @@ class HomeScreen extends React.Component {
           this.props.navigation.navigate("MedicationInformation", dataInfor)
         }}>
         <Image style={styles.avatar}
-          source={item.image ? { uri: item.image } : images.tempAvatar.img}
+          source={item.image ? { uri: item.image } : tempAvatar}
         />
         <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.medicine}</Text>
         <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{item.time}</Text>
@@ -189,22 +187,22 @@ class HomeScreen extends React.Component {
       * 100 / (counting + this.state.historymedicines.length)
     if (value == 0) {
       image = <Image style={styles.image}
-        source={images.growing1.img} />
+        source={growing1} />
     } else if (value > 0 && value < 25) {
       image = <Image style={styles.image}
-        source={images.growing2.img} />
+        source={growing2} />
     } else if (value >= 25 && value < 50) {
       image = <Image style={styles.image}
-        source={images.growing3.img} />
+        source={growing3} />
     } else if (value >= 50 && value < 75) {
       image = <Image style={styles.image}
-        source={images.growing4.img} />
+        source={growing4} />
     } else if (value >= 75 && value < 100) {
       image = <Image style={styles.image}
-        source={images.growing5.img} />
+        source={growing5} />
     } else {
       image = <Image style={styles.image}
-        source={images.growing6.img} />
+        source={growing6} />
     }
 
     // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
@@ -212,7 +210,7 @@ class HomeScreen extends React.Component {
       return (
         <View style={styles.container}>
           <Image style={styles.containter}
-            source={images.background.img}
+            source={background}
           />
           {image}
           <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
@@ -227,7 +225,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Image style={styles.containter}
-          source={images.background.img}
+          source={background}
         />
         {image}
         <View style={{ flex: 1 }}>

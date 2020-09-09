@@ -7,9 +7,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { ScrollView } from "react-native-gesture-handler"
 
-var images = {
-    tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
-}
+var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class MedicationInformation extends React.Component {
     constructor(props) {
@@ -41,7 +39,7 @@ class MedicationInformation extends React.Component {
                             source={
                                 this.state.medicine.image
                                     ? { uri: this.state.medicine.image }
-                                    : images.tempAvatar.img
+                                    : tempAvatar
                             }
                             style={styles.image}
                         />

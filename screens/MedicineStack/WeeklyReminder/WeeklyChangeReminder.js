@@ -20,9 +20,7 @@ const alarmNotifData = {
     message: "Take your Medicine",
 }
 
-var images = {
-    tempAvatar: { img: require("../../../assets/tempAvatar.jpg") }
-}
+var tempAvatar = require("../../../assets/tempAvatar.jpg")
 
 class WeeklyChangeReminder extends React.Component {
     constructor(props) {
@@ -197,7 +195,7 @@ class WeeklyChangeReminder extends React.Component {
                             source={
                                 this.state.medicine.image
                                     ? { uri: this.state.medicine.image }
-                                    : images.tempAvatar.img
+                                    : tempAvatar
                             }
                             style={styles.image}
                         />

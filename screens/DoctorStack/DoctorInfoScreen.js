@@ -11,9 +11,7 @@ import { ConfirmDialog } from "react-native-simple-dialogs"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-var images = {
-    tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
-}
+var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class DoctorInfoScreen extends React.Component {
     constructor(props) {
@@ -82,7 +80,7 @@ class DoctorInfoScreen extends React.Component {
                         source={
                             this.state.doctor.avatar
                                 ? { uri: this.state.doctor.avatar }
-                                : images.tempAvatar.img
+                                : tempAvatar
                         }
                         style={styles.image} />
                     <View style={{ alignItems: "center" }}>

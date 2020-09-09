@@ -15,9 +15,7 @@ import {
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 
-var images = {
-  tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
-}
+var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class DoctorScreen extends Component {
   constructor(props) {
@@ -127,7 +125,7 @@ class DoctorScreen extends Component {
           source={
             item.avatar
               ? { uri: item.avatar }
-              : images.tempAvatar.img
+              : tempAvatar
           }
           style={styles.avatar}
         />

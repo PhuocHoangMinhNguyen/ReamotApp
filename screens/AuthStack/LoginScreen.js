@@ -19,10 +19,8 @@ import Toast from "react-native-simple-toast"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import UserReminders from '../../utilities/UserReminders'
 
-var images = {
-  background: { img: require("../../assets/background.png") },
-  logoTest: { img: require("../../assets/logoTest.png") },
-}
+var background = require("../../assets/background.png")
+var logoTest = require("../../assets/logoTest.png")
 
 class LoginScreen extends React.Component {
   state = {
@@ -62,9 +60,9 @@ class LoginScreen extends React.Component {
       <View style={{ flex: 1, backgroundColor: "#FFF" }}>
         <Image
           style={[styles.fixed, styles.containter]}
-          source={images.background.img}
+          source={background}
         />
-        <Image source={images.logoTest.img}
+        <Image source={logoTest}
           style={{
             alignSelf: 'center',
             width: 200,

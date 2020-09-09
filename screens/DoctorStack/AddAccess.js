@@ -16,9 +16,7 @@ import { SearchBar } from "react-native-elements"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
-var images = {
-    tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
-}
+var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class AddAccess extends React.Component {
     constructor(props) {
@@ -124,7 +122,7 @@ class AddAccess extends React.Component {
                     source={
                         item.avatar
                             ? { uri: item.avatar }
-                            : images.tempAvatar.img
+                            : tempAvatar
                     }
                     style={styles.avatar}
                 />

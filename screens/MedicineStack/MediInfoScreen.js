@@ -18,9 +18,7 @@ import auth from "@react-native-firebase/auth"
 import ViewMoreText from "react-native-view-more-text"
 import Toast from "react-native-simple-toast"
 
-var images = {
-  tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
-}
+var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class MediInfoScreen extends React.Component {
   constructor(props) {
@@ -305,7 +303,7 @@ class MediInfoScreen extends React.Component {
               source={
                 this.state.medicine.image
                   ? { uri: this.state.medicine.image }
-                  : images.tempAvatar.img
+                  : tempAvatar
               }
               style={styles.image}
             />
