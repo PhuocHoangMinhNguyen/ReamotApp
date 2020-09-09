@@ -29,12 +29,16 @@ class AddAccess extends React.Component {
         }
     }
 
+    unsubscribe1 = null
+    unsubscribe2 = null
+    unsubscribe3 = null
+
     componentDidMount() {
         // doctor and pharmacist email from "users" document
         let tempPharmacistEmail = []
         let tempDoctorEmail = []
 
-        firestore().collection("users").doc((auth().currentUser || {}).uid)
+        this.unsubscribe1 = firestore().collection("users").doc((auth().currentUser || {}).uid)
             .onSnapshot(documentSnapshot => {
                 if (documentSnapshot.data().pharmacistList != null) {
                     tempPharmacistEmail = documentSnapshot.data().pharmacistList
@@ -46,7 +50,7 @@ class AddAccess extends React.Component {
 
         let temp = []
         // push doctor data into temp
-        firestore().collection("doctor").onSnapshot(querySnapshot => {
+        this.unsubscribe2 = firestore().collection("doctor").onSnapshot(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
                 let found = false
                 for (let i = 0; i < tempDoctorEmail.length; i++) {
@@ -65,7 +69,7 @@ class AddAccess extends React.Component {
         })
 
         // push pharmacist data into temp
-        firestore().collection("pharmacist").onSnapshot(querySnapshot => {
+        this.unsubscribe3 = firestore().collection("pharmacist").onSnapshot(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
                 let found = false
                 for (let i = 0; i < tempPharmacistEmail.length; i++) {
@@ -88,6 +92,12 @@ class AddAccess extends React.Component {
                 loading: false,
             })
         })
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe1()
+        this.unsubscribe2()
+        this.unsubscribe3()
     }
 
     // Click on each item in flatlist will lead user to DoctorInfoScreen 
