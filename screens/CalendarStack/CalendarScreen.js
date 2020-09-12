@@ -21,12 +21,6 @@ import { ProgressChart } from "react-native-chart-kit"
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
-const chartConfig = {
-  backgroundGradientFrom: "#DEE8F1",
-  backgroundGradientTo: "#DEE8F1",
-  color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
-}
-
 class CalendarScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
@@ -41,6 +35,11 @@ class CalendarScreen extends React.Component {
     },
     missedLength: 0,
     takenLength: 0,
+    chartConfig: {
+      backgroundGradientFrom: "#FFF",
+      backgroundGradientTo: "#FFF",
+      color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+    }
   }
 
   loadItems = async () => {
@@ -91,11 +90,33 @@ class CalendarScreen extends React.Component {
     // calculate percentage
     const percentageArray = []
     const percentage = (docsTakenLength * 1.0) / (docsTakenLength + docsMissedLength)
+
+    // decide color
+    let r = 0
+    let g = 0
+    let b = 0
+    if (percentage <= 0.5) {
+      r = 255
+      g = 0
+      b = 0
+    } else if (percentage >= 0.75) {
+      r = 0
+      g = 255
+      b = 0
+    } else {
+      r = 255
+      g = 127
+      b = 0
+    }
+
     percentageArray[0] = percentage
     // tag it to this.state.chartData.data
     this.setState({
       chartData: {
         ...this.state.chartData, data: percentageArray
+      },
+      chartConfig: {
+        ...this.state.chartConfig, color: (opacity = 1) => `rgba(${r}, ${g}, ${b}, ${opacity})`
       }
     })
   }
@@ -161,14 +182,17 @@ class CalendarScreen extends React.Component {
           data={this.state.medicine}
           renderItem={({ item }) => this.renderItem(item)}
         />
-        <ProgressChart
-          data={this.state.chartData.data}
-          width={Dimensions.get("window").width}
-          height={220}
-          strokeWidth={20}
-          radius={50}
-          chartConfig={chartConfig}
-        />
+        <View style={styles.chart}>
+          <Text style={styles.chartHeader}>Day Progress</Text>
+          <ProgressChart
+            data={this.state.chartData.data}
+            width={Dimensions.get("window").width}
+            height={160}
+            strokeWidth={20}
+            radius={50}
+            chartConfig={this.state.chartConfig}
+          />
+        </View>
       </View>
     )
   }
@@ -236,7 +260,18 @@ const styles = StyleSheet.create({
   },
   testDate: {
     fontSize: 24,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#000"
+  },
+  chart: {
+    backgroundColor: "#FFF",
+    marginBottom: 30
+  },
+  chartHeader: {
+    alignSelf: "center",
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#000"
   }
 })
 
