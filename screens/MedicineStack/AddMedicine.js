@@ -98,8 +98,8 @@ class AddMedicine extends React.Component {
                     patientEmail: auth().currentUser.email,
                     authorEmail: auth().currentUser.email,
                     note: note,
-                    number: number,
-                    times: times,
+                    number: parseInt(number, 10),
+                    times: parseInt(times, 10),
                     type: "Daily",
                 })
             }
@@ -109,8 +109,8 @@ class AddMedicine extends React.Component {
                     patientEmail: auth().currentUser.email,
                     authorEmail: auth().currentUser.email,
                     note: note,
-                    number: number,
-                    times: times,
+                    number: parseInt(number, 10),
+                    times: parseInt(times, 10),
                     type: "Weekly",
                 })
             }

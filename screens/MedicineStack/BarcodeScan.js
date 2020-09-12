@@ -117,7 +117,8 @@ class BarcodeScan extends React.Component {
                     medicine: name,
                     patientEmail: auth().currentUser.email,
                     time: this.state.itemTime,
-                    date: moment(Date.now()).format('MMMM Do YYYY'),
+                    date: moment().format('MMMM Do YYYY'),
+                    month: moment().month() + 1,
                     status: "taken"
                 })
                 let temporaryID
@@ -131,9 +132,9 @@ class BarcodeScan extends React.Component {
                             firebasePills = documentSnapshot.data().pills
                         })
                         // Need to minus the correct number of pills, not just one
-                        const value = parseInt(firebasePills, 10) - this.state.number
+                        const value = firebasePills - this.state.number
                         mPills.doc(temporaryID).update({
-                            pills: value.toString()
+                            pills: value
                         })
                     })
             }

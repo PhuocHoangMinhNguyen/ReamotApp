@@ -28,7 +28,7 @@ class MediInfoScreen extends React.Component {
       prescription: {},
       reminder: [],
       medicinePills: "",
-      text: "",
+      text: -1,
       firebaseID: "",
       add: "",
     }
@@ -56,7 +56,7 @@ class MediInfoScreen extends React.Component {
           tempID = documentSnapshot.id
         })
         this.setState({
-          medicinePills: temp,
+          medicinePills: temp.toString(),
           text: temp,
           firebaseID: tempID
         })
@@ -72,8 +72,8 @@ class MediInfoScreen extends React.Component {
         let tempValue2 = 0
         let tempValue3 = ""
         querySnapshot.forEach(documentSnapshot => {
-          tempValue = parseInt(documentSnapshot.data().times, 10)
-          tempValue2 = parseInt(documentSnapshot.data().number, 10)
+          tempValue = documentSnapshot.data().times
+          tempValue2 = documentSnapshot.data().number
           tempValue3 = documentSnapshot.data().type
         })
         this.setState({
@@ -149,10 +149,11 @@ class MediInfoScreen extends React.Component {
     if (this.state.medicinePills == "") {
       Toast.show("Please enter number of capsules")
     } else {
+      const value = parseInt(this.state.medicinePills, 10)
       firestore().collection("medicinePills").add({
         medicine: this.state.medicine.name,
         patientEmail: auth().currentUser.email,
-        pills: this.state.medicinePills
+        pills: value
       })
     }
   }
@@ -163,7 +164,7 @@ class MediInfoScreen extends React.Component {
     } else {
       const value = parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10)
       firestore().collection("medicinePills").doc(this.state.firebaseID).update({
-        pills: value.toString()
+        pills: value
       })
     }
   }
@@ -274,19 +275,16 @@ class MediInfoScreen extends React.Component {
       </View>
 
     let message
-    if (this.state.text == "") {
+    if (this.state.text < 0) {
       message = empty
     }
-    if (parseInt(this.state.text) < 0) {
-      message = <Text>{this.state.text}</Text>
-    }
-    if (parseInt(this.state.text) == 0) {
+    if (this.state.text == 0) {
       message = none
     }
-    if (parseInt(this.state.text) <= 10 && parseInt(this.state.text) > 0) {
+    if (this.state.text <= 10 && this.state.text > 0) {
       message = lessThan10
     }
-    if (parseInt(this.state.text) > 10) {
+    if (this.state.text > 10) {
       message = normal
     }
     return (
