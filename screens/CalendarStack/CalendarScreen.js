@@ -20,7 +20,6 @@ class CalendarScreen extends React.Component {
     super(props)
     this.state = {
       medicine: [],
-      history: [],
       show: false,
       testDate: new Date(Date.now()),
     }
@@ -28,40 +27,35 @@ class CalendarScreen extends React.Component {
 
   unsubscribe = null
 
-  componentDidMount() {
-    // Take data from "history" collection, mainly medicine name.
-    this.unsubscribe = firestore().collection("history")
+  loadItems = () => {
+    firestore().collection("history")
       .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
+      // Add more condition to make it run faster
       .onSnapshot(querySnapshot => {
-        let temp = []
+        let result = []
         querySnapshot.forEach(documentSnapshot => {
-          temp.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          })
-        })
-        this.setState({ history: temp })
-
-        // Take data from "medicine" collection based on medicine name in "history" collection
-        let temp2 = []
-
-        for (let i = 0; i < this.state.history.length; i++) {
           firestore().collection("medicine")
-            .where('name', '==', this.state.history[i].medicine)
-            .onSnapshot(querySnapshot => {
-              querySnapshot.forEach(documentSnapshot => {
-                temp2.push({
+            .where('name', '==', documentSnapshot.data().medicine).get()
+            .then(queryMedicineSnapshot => {
+              let docs = queryMedicineSnapshot.docs
+              for (let doc of docs) {
+                const selectedItem = {
+                  ...doc.data(),
                   ...documentSnapshot.data(),
-                  time: this.state.history[i].time,
-                  date: this.state.history[i].date,
-                  status: this.state.history[i].status,
-                  key: this.state.history[i].key,
-                })
-              })
-              this.setState({ medicine: temp2 })
+                  key: documentSnapshot.id
+                }
+                result.push(selectedItem)
+              }
+            }).then(() => {
+              this.setState({ medicine: result })
             })
-        }
+        })
       })
+  }
+
+  componentDidMount() {
+    this.unsubscribe = this.loadItems()
   }
 
   componentWillUnmount() {
@@ -81,6 +75,7 @@ class CalendarScreen extends React.Component {
       show: Platform.OS === 'ios',
       testDate: currentDate,
     })
+    this.loadItems()
   }
 
   // Information appears on each item.
@@ -123,6 +118,7 @@ class CalendarScreen extends React.Component {
           style={styles.feed}
           data={this.state.medicine}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={(item, index) => item.key}
         />
       </View>
     )
