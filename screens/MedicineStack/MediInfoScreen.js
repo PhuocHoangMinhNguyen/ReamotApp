@@ -26,7 +26,7 @@ class MediInfoScreen extends React.Component {
     prescription: {},
     reminder: [],
     medicinePills: "",
-    text: -1,
+    text: "",
     firebaseID: "",
     add: "",
   }
@@ -54,7 +54,7 @@ class MediInfoScreen extends React.Component {
         })
         this.setState({
           medicinePills: temp.toString(),
-          text: temp,
+          text: temp.toString(),
           firebaseID: tempID
         })
       })
@@ -272,16 +272,19 @@ class MediInfoScreen extends React.Component {
       </View>
 
     let message
-    if (this.state.text < 0) {
+    if (this.state.text == '') {
       message = empty
     }
-    if (this.state.text == 0) {
+    if (parseInt(this.state.text, 10) < 0) {
+      message = <Text>{this.state.text}</Text>
+    }
+    if (parseInt(this.state.text, 10) == 0) {
       message = none
     }
-    if (this.state.text <= 10 && this.state.text > 0) {
+    if (parseInt(this.state.text, 10) <= 10 && parseInt(this.state.text, 10) > 0) {
       message = lessThan10
     }
-    if (this.state.text > 10) {
+    if (parseInt(this.state.text, 10) > 10) {
       message = normal
     }
     return (
