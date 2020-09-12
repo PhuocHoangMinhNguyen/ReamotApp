@@ -8,11 +8,8 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
 class AppointmentList extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            appointmentList: [],
-        }
+    state = {
+        appointmentList: [],
     }
 
     unsubscribe = null

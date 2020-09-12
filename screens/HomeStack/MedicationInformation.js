@@ -10,11 +10,8 @@ import { ScrollView } from "react-native-gesture-handler"
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class MedicationInformation extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            medicine: {},
-        }
+    state = {
+        medicine: {},
     }
 
     componentDidMount() {

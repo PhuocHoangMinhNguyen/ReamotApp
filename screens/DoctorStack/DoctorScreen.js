@@ -18,12 +18,9 @@ import firestore from "@react-native-firebase/firestore"
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class DoctorScreen extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      accessedDoctor: [],
-      accessedPharmacist: [],
-    }
+  state = {
+    accessedDoctor: [],
+    accessedPharmacist: [],
   }
 
   unsubscribe = null

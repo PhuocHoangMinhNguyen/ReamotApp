@@ -16,13 +16,10 @@ class CalendarScreen extends React.Component {
     headerShown: false,
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      medicine: [],
-      show: false,
-      testDate: new Date(Date.now()),
-    }
+  state = {
+    medicine: [],
+    show: false,
+    testDate: new Date(Date.now()),
   }
 
   unsubscribe = null

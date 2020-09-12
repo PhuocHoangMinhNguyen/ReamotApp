@@ -21,14 +21,11 @@ import ReactNativeAN from 'react-native-alarm-notification'
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class MedicineScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loading: true,
-      medicines: [],
-      text: "",
-      myArray: [],
-    }
+  state = {
+    loading: true,
+    medicines: [],
+    text: "",
+    myArray: [],
   }
 
   unsubscribe = null

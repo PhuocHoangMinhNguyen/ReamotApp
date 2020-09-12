@@ -28,15 +28,12 @@ var growing5 = require('../../assets/growing_75_to_100.png')
 var growing6 = require('../../assets/GrowingTree.jpg')
 
 class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      // Medicine info in "history" collection
-      historymedicines: [],
-      // Medicine info in "reminder" collection
-      remindermedicines: [],
-      missedMedicines: [],
-    }
+  state = {
+    // Medicine info in "history" collection
+    historymedicines: [],
+    // Medicine info in "reminder" collection
+    remindermedicines: [],
+    missedMedicines: [],
   }
 
   unsubscribe = null

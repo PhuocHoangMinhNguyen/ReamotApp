@@ -23,35 +23,32 @@ const alarmNotifData = {
 var tempAvatar = require("../../../assets/tempAvatar.jpg")
 
 class ChangeReminder extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            medicine: {},
-            // Ids from Firebase.
-            firebase: {
-                firebaseId: "",
-                idAN: "",
-                alarmId: Math.floor(Math.random() * 10000).toString(),
-            },
-            timePicker: {
-                // Used for TimePicker
-                testDate: new Date(Date.now()),
-                // Used to show TimePicker
-                show: false,
-                // "Changed" is the value to indicate when a new time is picked
-                // change to true when a new time is picked
-                changed: false,
-                // "Initial" is the inial text next to TimePicker,
-                // which is the reminder time value inside firestore before editing.
-                initial: ''
-            },
-            alarm: {
-                // Used for react-native-alarm-notification package
-                fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
-            },
-            dialogVisible: false,
-            number: 0
-        }
+    state = {
+        medicine: {},
+        // Ids from Firebase.
+        firebase: {
+            firebaseId: "",
+            idAN: "",
+            alarmId: Math.floor(Math.random() * 10000).toString(),
+        },
+        timePicker: {
+            // Used for TimePicker
+            testDate: new Date(Date.now()),
+            // Used to show TimePicker
+            show: false,
+            // "Changed" is the value to indicate when a new time is picked
+            // change to true when a new time is picked
+            changed: false,
+            // "Initial" is the inial text next to TimePicker,
+            // which is the reminder time value inside firestore before editing.
+            initial: ''
+        },
+        alarm: {
+            // Used for react-native-alarm-notification package
+            fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
+        },
+        dialogVisible: false,
+        number: 0
     }
 
     unsubscribe = null

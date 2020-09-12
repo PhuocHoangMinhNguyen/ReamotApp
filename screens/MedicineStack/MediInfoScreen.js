@@ -21,17 +21,14 @@ import Toast from "react-native-simple-toast"
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class MediInfoScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      medicine: {},
-      prescription: {},
-      reminder: [],
-      medicinePills: "",
-      text: -1,
-      firebaseID: "",
-      add: "",
-    }
+  state = {
+    medicine: {},
+    prescription: {},
+    reminder: [],
+    medicinePills: "",
+    text: -1,
+    firebaseID: "",
+    add: "",
   }
 
   unsubscribe1 = null

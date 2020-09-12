@@ -29,15 +29,12 @@ var background = require('../../assets/background.png')
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class EditScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: {
-        avatar: null,
-        name: "",
-        phoneNumber: "",
-        address: ""
-      }
+  state = {
+    user: {
+      avatar: null,
+      name: "",
+      phoneNumber: "",
+      address: ""
     }
   }
 

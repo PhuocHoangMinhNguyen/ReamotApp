@@ -19,14 +19,11 @@ import auth from "@react-native-firebase/auth"
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class AddAccess extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            loading: true,
-            doc_phar: [],
-            text: "",
-            myArray: [],
-        }
+    state = {
+        loading: true,
+        doc_phar: [],
+        text: "",
+        myArray: [],
     }
 
     unsubscribe1 = null

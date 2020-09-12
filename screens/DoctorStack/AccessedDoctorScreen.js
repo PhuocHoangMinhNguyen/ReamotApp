@@ -17,13 +17,10 @@ import auth from "@react-native-firebase/auth"
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class AccessedDoctorScreen extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            doctor: {},
-            dialogVisible: false,
-            show: false
-        }
+    state = {
+        doctor: {},
+        dialogVisible: false,
+        show: false
     }
 
     componentDidMount() {

@@ -14,17 +14,14 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
 class AppointmentMaker extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            doctor: {},
-            dialogVisible: false,
-            showDate: false,
-            testDate: new Date(Date.now()),
-            showTime: false,
-            testTime: new Date(Date.now()),
-            reason: ""
-        }
+    state = {
+        doctor: {},
+        dialogVisible: false,
+        showDate: false,
+        testDate: new Date(Date.now()),
+        showTime: false,
+        testTime: new Date(Date.now()),
+        reason: ""
     }
 
     componentDidMount() {
