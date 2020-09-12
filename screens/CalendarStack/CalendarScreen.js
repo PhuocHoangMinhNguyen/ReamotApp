@@ -3,13 +3,29 @@
 // Status: Optimized
 
 import React from "react"
-import { StyleSheet, FlatList, Image, View, Text, TouchableOpacity, SafeAreaView } from "react-native"
+import {
+  StyleSheet,
+  FlatList,
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Dimensions
+} from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import DatePicker from '@react-native-community/datetimepicker'
 import moment from "moment"
+import { ProgressChart } from "react-native-chart-kit"
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
+
+const chartConfig = {
+  backgroundGradientFrom: "#DEE8F1",
+  backgroundGradientTo: "#DEE8F1",
+  color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+}
 
 class CalendarScreen extends React.Component {
   static navigationOptions = {
@@ -20,15 +36,17 @@ class CalendarScreen extends React.Component {
     medicine: [],
     show: false,
     testDate: new Date(Date.now()),
+    chartData: {
+      data: []
+    },
+    missedLength: 0,
+    takenLength: 0,
   }
 
-  unsubscribe = null
-
-  loadItems = () => {
+  loadItems = async () => {
     firestore().collection("history")
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      // Add more condition to make it run faster
       .onSnapshot(querySnapshot => {
         let result = []
         querySnapshot.forEach(documentSnapshot => {
@@ -49,14 +67,41 @@ class CalendarScreen extends React.Component {
             })
         })
       })
+
+    // Get history documents with status missed to calculate percentage
+    let docsMissedLength = 0
+    const missedCollection = firestore().collection('history')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
+      .where('status', '==', "missed")
+    await missedCollection.get().then((querySnapshot) => {
+      docsMissedLength = querySnapshot.docs.length
+    })
+
+    // Get history documents with status taken to calculate percentage
+    let docsTakenLength = 0
+    const takenCollection = firestore().collection('history')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
+      .where('status', '==', "taken")
+    await takenCollection.get().then((querySnapshot) => {
+      docsTakenLength = querySnapshot.docs.length
+    })
+
+    // calculate percentage
+    const percentageArray = []
+    const percentage = (docsTakenLength * 1.0) / (docsTakenLength + docsMissedLength)
+    percentageArray[0] = percentage
+    // tag it to this.state.chartData.data
+    this.setState({
+      chartData: {
+        ...this.state.chartData, data: percentageArray
+      }
+    })
   }
 
   componentDidMount() {
-    this.unsubscribe = this.loadItems()
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe()
+    this.loadItems()
   }
 
   // Show DatePicker
@@ -115,7 +160,14 @@ class CalendarScreen extends React.Component {
           style={styles.feed}
           data={this.state.medicine}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => item.key}
+        />
+        <ProgressChart
+          data={this.state.chartData.data}
+          width={Dimensions.get("window").width}
+          height={220}
+          strokeWidth={20}
+          radius={50}
+          chartConfig={chartConfig}
         />
       </View>
     )
