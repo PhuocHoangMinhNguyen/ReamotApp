@@ -42,31 +42,7 @@ class CalendarScreen extends React.Component {
     }
   }
 
-  loadItems = async () => {
-    firestore().collection("history")
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      .onSnapshot(querySnapshot => {
-        let result = []
-        querySnapshot.forEach(documentSnapshot => {
-          firestore().collection("medicine")
-            .where('name', '==', documentSnapshot.data().medicine).get()
-            .then(queryMedicineSnapshot => {
-              let docs = queryMedicineSnapshot.docs
-              for (let doc of docs) {
-                const selectedItem = {
-                  ...doc.data(),
-                  ...documentSnapshot.data(),
-                  key: documentSnapshot.id
-                }
-                result.push(selectedItem)
-              }
-            }).then(() => {
-              this.setState({ medicine: result })
-            })
-        })
-      })
-
+  calculate = async () => {
     // Get history documents with status missed to calculate percentage
     let docsMissedLength = 0
     const missedCollection = firestore().collection('history')
@@ -121,6 +97,34 @@ class CalendarScreen extends React.Component {
     })
   }
 
+  loadItems = () => {
+    firestore().collection("history")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
+      .onSnapshot(querySnapshot => {
+        let result = []
+        querySnapshot.forEach(documentSnapshot => {
+          firestore().collection("medicine")
+            .where('name', '==', documentSnapshot.data().medicine).get()
+            .then(queryMedicineSnapshot => {
+              let docs = queryMedicineSnapshot.docs
+              for (let doc of docs) {
+                const selectedItem = {
+                  ...doc.data(),
+                  ...documentSnapshot.data(),
+                  key: documentSnapshot.id
+                }
+                result.push(selectedItem)
+              }
+            }).then(() => {
+              this.setState({ medicine: result })
+            })
+        })
+      })
+
+    this.calculate()
+  }
+
   componentDidMount() {
     this.loadItems()
   }
@@ -161,6 +165,7 @@ class CalendarScreen extends React.Component {
   }
 
   render() {
+    this.calculate()
     return (
       <View style={styles.container}>
         <View style={styles.testDateContainer}>
