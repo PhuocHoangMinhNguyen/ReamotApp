@@ -135,9 +135,9 @@ class CalendarScreen extends React.Component {
   }
 
   // When a date is chosen from DatePicker
-  onChangeDate = (event, selectedDate) => {
+  onChange = (event, selectedDate) => {
     const { testDate } = this.state
-    let currentDate = selectedDate || testDate;
+    const currentDate = selectedDate || testDate;
     this.setState({
       show: Platform.OS === 'ios',
       testDate: currentDate,
@@ -179,7 +179,7 @@ class CalendarScreen extends React.Component {
         {this.state.show && (
           <DatePicker
             value={this.state.testDate}
-            onChange={this.onChangeDate}
+            onChange={this.onChange}
           />
         )}
         <FlatList
