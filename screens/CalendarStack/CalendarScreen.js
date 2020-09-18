@@ -98,10 +98,12 @@ class CalendarScreen extends React.Component {
   }
 
   loadItems = () => {
+    let found = false
     firestore().collection("history")
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .onSnapshot(querySnapshot => {
+        found = true
         let result = []
         querySnapshot.forEach(documentSnapshot => {
           firestore().collection("medicine")
@@ -121,6 +123,9 @@ class CalendarScreen extends React.Component {
             })
         })
       })
+    if (found == false) {
+      this.setState({ medicine: null })
+    }
     this.calculate()
   }
 
@@ -191,14 +196,16 @@ class CalendarScreen extends React.Component {
         />
         <View style={styles.chart}>
           <Text style={styles.chartHeader}>Day Progress</Text>
-          <ProgressChart
-            data={this.state.chartData.data}
-            width={Dimensions.get("window").width}
-            height={160}
-            strokeWidth={20}
-            radius={50}
-            chartConfig={chartConfig}
-          />
+          {medicine ?
+            <ProgressChart
+              data={this.state.chartData.data}
+              width={Dimensions.get("window").width}
+              height={160}
+              strokeWidth={20}
+              radius={50}
+              chartConfig={chartConfig}
+            />
+            : <Text style={styles.chartBody}>No Medicine Taken/Missed</Text>}
         </View>
       </View>
     )
@@ -272,13 +279,21 @@ const styles = StyleSheet.create({
   },
   chart: {
     backgroundColor: "#FFF",
-    marginBottom: 30
+    marginBottom: 30,
   },
   chartHeader: {
     alignSelf: "center",
     fontWeight: "bold",
     fontSize: 20,
     color: "#000"
+  },
+  chartBody: {
+    alignSelf: "center",
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#000",
+    marginTop: 30,
+    height: 120
   }
 })
 
