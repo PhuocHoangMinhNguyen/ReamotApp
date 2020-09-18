@@ -115,7 +115,7 @@ class HomeScreen extends React.Component {
   }
 
   // Information appears on each item on "Upcoming Reminder" List
-  renderItem = item => {
+  renderReminder = item => {
     let dataInfor = {
       image: item.image,
       name: item.medicine,
@@ -147,13 +147,12 @@ class HomeScreen extends React.Component {
   }
 
   // Information appears on each item on "Medicines Taken" List
-  renderItemHistory = item => {
+  renderHistory = item => {
     let dataInfor = {
       image: item.image,
       name: item.medicine,
       description: item.description,
       barcode: item.barcode,
-      times: item.time
     }
     return (
       <TouchableOpacity style={item.status == "taken" ? styles.feedTaken : styles.feedMissed}
@@ -164,7 +163,9 @@ class HomeScreen extends React.Component {
           source={item.image ? { uri: item.image } : tempAvatar}
         />
         <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.medicine}</Text>
-        <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{item.time}</Text>
+        <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>
+          {`${item.startTime.toDate().getHours()}:${item.startTime.toDate().getMinutes()}`}
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -232,7 +233,7 @@ class HomeScreen extends React.Component {
           <FlatList removeClippedSubviews={true}
             style={styles.feed}
             data={this.state.historymedicines}
-            renderItem={({ item }) => this.renderItemHistory(item)}
+            renderItem={({ item }) => this.renderHistory(item)}
             horizontal={true}
           />
           <View style={styles.chapterView}>
@@ -241,7 +242,7 @@ class HomeScreen extends React.Component {
           <FlatList removeClippedSubviews={true}
             style={styles.feed}
             data={this.state.remindermedicines}
-            renderItem={({ item }) => this.renderItem(item)}
+            renderItem={({ item }) => this.renderReminder(item)}
             horizontal={true}
           />
         </View>
