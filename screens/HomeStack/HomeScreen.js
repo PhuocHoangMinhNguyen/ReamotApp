@@ -154,6 +154,22 @@ class HomeScreen extends React.Component {
       description: item.description,
       barcode: item.barcode,
     }
+
+    let displayTime
+    if (item.startTime.toDate().getHours() > 11) {
+      if (item.startTime.toDate().getHours() == 12) {
+        displayTime = `${item.startTime.toDate().getHours()}:${item.startTime.toDate().getMinutes()} pm`
+      } else {
+        displayTime = `${item.startTime.toDate().getHours() - 12}:${item.startTime.toDate().getMinutes()} pm`
+      }
+    } else {
+      if (item.startTime.toDate().getHours() == 0) {
+        displayTime = `${item.startTime.toDate().getHours() + 12}:${item.startTime.toDate().getMinutes()} am`
+      } else {
+        displayTime = `${item.startTime.toDate().getHours()}:${item.startTime.toDate().getMinutes()} am`
+      }
+    }
+
     return (
       <TouchableOpacity style={item.status == "taken" ? styles.feedTaken : styles.feedMissed}
         onPress={() => {
@@ -163,9 +179,7 @@ class HomeScreen extends React.Component {
           source={item.image ? { uri: item.image } : tempAvatar}
         />
         <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.medicine}</Text>
-        <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>
-          {`${item.startTime.toDate().getHours()}:${item.startTime.toDate().getMinutes()}`}
-        </Text>
+        <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{displayTime}</Text>
       </TouchableOpacity>
     )
   }
