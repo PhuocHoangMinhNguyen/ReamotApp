@@ -121,7 +121,6 @@ class CalendarScreen extends React.Component {
             })
         })
       })
-
     this.calculate()
   }
 
@@ -165,26 +164,27 @@ class CalendarScreen extends React.Component {
   }
 
   render() {
-    this.calculate()
+    const { testDate, medicine, show, chartConfig } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.testDateContainer}>
           <Text style={styles.testDate}>
-            {moment(this.state.testDate).format("MMMM Do YYYY")}
+            {moment(testDate).format("MMMM Do YYYY")}
           </Text>
         </View>
         <TouchableOpacity style={styles.button} onPress={this.showMode}>
           <Text style={styles.buttonText}>Show Calendar</Text>
         </TouchableOpacity>
-        {this.state.show && (
+        {show && (
           <DatePicker
-            value={this.state.testDate}
+            value={testDate}
+            mode="date"
             onChange={this.onChange}
           />
         )}
         <FlatList
           style={styles.feed}
-          data={this.state.medicine}
+          data={medicine}
           renderItem={({ item }) => this.renderItem(item)}
         />
         <View style={styles.chart}>
@@ -195,7 +195,7 @@ class CalendarScreen extends React.Component {
             height={160}
             strokeWidth={20}
             radius={50}
-            chartConfig={this.state.chartConfig}
+            chartConfig={chartConfig}
           />
         </View>
       </View>

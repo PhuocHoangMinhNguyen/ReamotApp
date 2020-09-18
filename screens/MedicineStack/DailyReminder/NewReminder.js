@@ -183,7 +183,6 @@ class NewReminder extends React.Component {
                             <TimePicker
                                 value={testDate}
                                 mode="time"
-                                //is24Hour={true}
                                 onChange={this.onChange}
                             />
                         )}

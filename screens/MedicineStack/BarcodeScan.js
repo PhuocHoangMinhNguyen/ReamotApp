@@ -117,8 +117,9 @@ class BarcodeScan extends React.Component {
                     medicine: name,
                     patientEmail: auth().currentUser.email,
                     time: this.state.itemTime,
+                    startTime: new Date(Date.now()),
+                    endTime: new Date(Date.now()),
                     date: moment().format('MMMM Do YYYY'),
-                    month: moment().month() + 1,
                     status: "taken"
                 })
                 let temporaryID

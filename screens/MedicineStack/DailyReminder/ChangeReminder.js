@@ -172,8 +172,9 @@ class ChangeReminder extends React.Component {
             medicine: name,
             patientEmail: auth().currentUser.email,
             time: moment().format('h:mm a'),
+            startTime: new Date(Date.now()),
+            endTime: new Date(Date.now()),
             date: moment().format('MMMM Do YYYY'),
-            month: moment().month() + 1,
             status: "missed"
         })
     }
