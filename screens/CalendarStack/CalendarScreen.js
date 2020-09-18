@@ -152,7 +152,9 @@ class CalendarScreen extends React.Component {
           source={item.image ? { uri: item.image } : tempAvatar} />
         <View style={{ flex: 1 }}>
           <Text style={item.status == "taken" ? styles.name : styles.missedName}>{item.name}</Text>
-          <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>{item.time}</Text>
+          <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>
+            {`${item.startTime.toDate().getHours()}:${item.startTime.toDate().getMinutes()}`}
+          </Text>
         </View>
       </SafeAreaView>
     if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
