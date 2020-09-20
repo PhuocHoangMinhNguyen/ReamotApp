@@ -120,13 +120,13 @@ class CalendarScreen extends React.Component {
               }
             }).then(() => {
               this.setState({ medicine: result })
+              this.calculate()
             })
         })
       })
     if (found == false) {
       this.setState({ medicine: null })
     }
-    this.calculate()
   }
 
   componentDidMount() {
