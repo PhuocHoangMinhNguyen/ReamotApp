@@ -3,7 +3,7 @@
 // Status: Currently working similar to daily reminder
 
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -21,6 +21,7 @@ const alarmNotifData = {
 }
 
 var tempAvatar = require("../../../assets/tempAvatar.jpg")
+var background = require('../../../assets/background.png')
 
 class WeeklyNewReminder extends React.Component {
     constructor(props) {
@@ -152,6 +153,9 @@ class WeeklyNewReminder extends React.Component {
         const { testDate, show } = this.state.timePicker
         return (
             <View style={styles.container}>
+                <Image style={styles.containter}
+                    source={background}
+                />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -197,9 +201,12 @@ class WeeklyNewReminder extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    containter: {
+        width: Dimensions.get("window").width, //for full screen
+    },
     container: {
         flex: 1,
-        backgroundColor: '#DEE8F1',
+        backgroundColor: "#FFF"
     },
     back: {
         position: "absolute",
