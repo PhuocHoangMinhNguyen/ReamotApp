@@ -11,11 +11,13 @@ import {
   SectionList,
   TouchableOpacity,
   Image,
+  Dimensions
 } from "react-native";
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
+var background = require('../../assets/background.png')
 
 class DoctorScreen extends Component {
   state = {
@@ -151,26 +153,38 @@ class DoctorScreen extends Component {
           ]}
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => this.renderItem(item)}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.header}>{title}</Text>
-          )}
+          renderSectionHeader={({ section: { title } }) => {
+            if (title === 'Accessed Doctor') {
+              return <Text style={styles.headerWhite}>{title}</Text>
+            } else {
+              return <Text style={styles.header}>{title}</Text>
+            }
+          }}
         />
     }
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <Image style={styles.containter}
+          source={background}
+        />
+        <Text style={styles.header1}>{`Doctors & Pharmacists`}</Text>
+        <Text style={styles.header2}>{`Doctors and pharmacists who have accessed to your medication records`}</Text>
         {message}
         <TouchableOpacity style={styles.button} onPress={this.addAccess}>
           <Text style={{ color: "#FFF" }}>Give Access to Another Doctor/ Pharmacist</Text>
         </TouchableOpacity>
-      </SafeAreaView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  containter: {
+    width: Dimensions.get("window").width, //for full screen
+  },
   container: {
     flex: 1,
-    backgroundColor: '#DEE8F1',
+    backgroundColor: "#FFF"
   },
   item: {
     backgroundColor: "#f9c2ff",
@@ -179,17 +193,21 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 18,
-    fontWeight: "bold"
+    color: '#000'
+  },
+  headerWhite: {
+    fontSize: 18,
+    color: '#FFF'
   },
   title: {
     fontSize: 24
   },
   feed: {
-    marginTop: 16,
+    marginTop: 26,
     marginHorizontal: 16,
   },
   feedItem: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#ddd",
     borderRadius: 5,
     padding: 8,
     flexDirection: "row",
@@ -220,6 +238,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20
   },
+  header1: {
+    color: "#FFF",
+    marginHorizontal: 16,
+    marginTop: -150,
+    fontSize: 24
+  },
+  header2: {
+    color: "#FFF",
+    marginHorizontal: 16,
+  }
 })
 
 export default DoctorScreen
