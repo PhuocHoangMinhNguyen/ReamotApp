@@ -116,7 +116,8 @@ class AddAccess extends React.Component {
             name: item.name,
             type: item.type,
             email: emailInfo,
-            id: item.key
+            id: item.key,
+            address: item.address
         }
         return (
             <TouchableOpacity
@@ -136,6 +137,7 @@ class AddAccess extends React.Component {
                 <View style={{ flex: 1 }}>
                     <Text style={styles.name}>{item.name}</Text>
                     <Text>{item.type}</Text>
+                    <Text>Address: {item.address}</Text>
                 </View>
             </TouchableOpacity>
         )

@@ -93,9 +93,8 @@ class AccessedDoctorScreen extends React.Component {
                                 : tempAvatar
                         }
                         style={styles.image} />
-                    <View style={{ alignItems: "center" }}>
-                        <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
-                    </View>
+                    <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
+                    <Text>Address: {this.state.doctor.address}</Text>
                 </View>
                 <TouchableOpacity style={styles.button} onPress={this.handleRevokeAccessToDoctor}>
                     <Text style={{ color: "#FFF" }}>Revoke access of medical details</Text>

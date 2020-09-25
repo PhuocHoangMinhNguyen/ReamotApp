@@ -4,7 +4,7 @@
 // Status: In development
 
 import React from "react"
-import { View, Image, Text, StyleSheet, TouchableOpacity, Button } from "react-native"
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Toast from "react-native-simple-toast"
 import { ConfirmDialog } from "react-native-simple-dialogs"
@@ -80,9 +80,8 @@ class DoctorInfoScreen extends React.Component {
                                 : tempAvatar
                         }
                         style={styles.image} />
-                    <View style={{ alignItems: "center" }}>
-                        <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
-                    </View>
+                    <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
+                    <Text>Address: {this.state.doctor.address}</Text>
                 </View>
                 <TouchableOpacity style={styles.button} onPress={this.handleGiveAccessToDoctor}>
                     <Text style={{ color: "#FFF" }}>Give access of medical details</Text>
