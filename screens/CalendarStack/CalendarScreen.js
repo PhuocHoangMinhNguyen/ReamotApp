@@ -20,6 +20,7 @@ import moment from "moment"
 import { ProgressChart } from "react-native-chart-kit"
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
+var background = require('../../assets/background.png')
 
 class CalendarScreen extends React.Component {
   static navigationOptions = {
@@ -36,8 +37,8 @@ class CalendarScreen extends React.Component {
     missedLength: 0,
     takenLength: 0,
     chartConfig: {
-      backgroundGradientFrom: "#FFF",
-      backgroundGradientTo: "#FFF",
+      backgroundGradientFrom: '#DEE8F1',
+      backgroundGradientTo: '#DEE8F1',
       color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
     }
   }
@@ -156,8 +157,8 @@ class CalendarScreen extends React.Component {
         <Image style={styles.image}
           source={item.image ? { uri: item.image } : tempAvatar} />
         <View style={{ flex: 1 }}>
-          <Text style={item.status == "taken" ? styles.name : styles.missedName}>{item.name}</Text>
-          <Text style={item.status == "taken" ? styles.blank : styles.missedTime}>
+          <Text style={styles.missedName}>{item.name}</Text>
+          <Text style={styles.missedTime}>
             {`${item.startTime.toDate().getHours()}:${item.startTime.toDate().getMinutes()}`}
           </Text>
         </View>
@@ -174,6 +175,9 @@ class CalendarScreen extends React.Component {
     const { testDate, medicine, show, chartConfig } = this.state
     return (
       <View style={styles.container}>
+        <Image style={styles.containter}
+          source={background}
+        />
         <Text style={styles.header}>History</Text>
         <Text style={styles.testDate}>
           {moment(testDate).format("MMMM Do YYYY")}
@@ -212,12 +216,15 @@ class CalendarScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  containter: {
+    width: Dimensions.get("window").width, //for full screen
+  },
   container: {
     flex: 1,
-    backgroundColor: '#DEE8F1',
+    backgroundColor: "#FFF",
   },
   feedItem: {
-    backgroundColor: "#FFF",
+    backgroundColor: '#004481',
     borderRadius: 5,
     padding: 8,
     flexDirection: "row",
@@ -261,7 +268,8 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: "#1565C0",
     borderRadius: 4,
-    marginVertical: 16,
+    marginTop: 16,
+    marginBottom: 30,
     marginEnd: 16
   },
   buttonText: {
@@ -270,18 +278,17 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#000",
+    color: "#FFF",
     textAlign: "center",
-    marginTop: 20
+    marginTop: -150
   },
   testDate: {
     fontSize: 20,
-    color: "#000",
+    color: "#FFF",
     textAlign: "center",
   },
   chart: {
-    backgroundColor: "#FFF",
-    marginBottom: 30,
+    backgroundColor: '#DEE8F1',
   },
   chartHeader: {
     alignSelf: "center",
