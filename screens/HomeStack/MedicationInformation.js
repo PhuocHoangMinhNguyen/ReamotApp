@@ -3,11 +3,12 @@
 // Status: Optimized
 
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { ScrollView } from "react-native-gesture-handler"
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
+var background = require('../../assets/background.png')
 
 class MedicationInformation extends React.Component {
     state = {
@@ -24,12 +25,16 @@ class MedicationInformation extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
+                <Image style={styles.containter}
+                    source={background}
+                />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
+                <Text style={styles.header}>Medicine Information</Text>
                 <View style={styles.information}>
                     <View style={{ flexDirection: "row" }}>
                         <Image
@@ -50,9 +55,12 @@ class MedicationInformation extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    containter: {
+        width: Dimensions.get("window").width, //for full screen
+    },
     container: {
         flex: 1,
-        backgroundColor: '#DEE8F1',
+        backgroundColor: "#FFF"
     },
     back: {
         position: "absolute",
@@ -77,12 +85,18 @@ const styles = StyleSheet.create({
         marginVertical: 24,
         fontSize: 20
     },
+    header: {
+        marginTop: -120,
+        color: "#FFF",
+        textAlign: "center",
+        fontSize: 24
+    },
     information: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         borderRadius: 5,
         padding: 16,
-        marginTop: 70,
-        marginHorizontal: 16,
+        marginTop: 20,
+        marginHorizontal: 30,
     },
     description: {
         marginTop: 12

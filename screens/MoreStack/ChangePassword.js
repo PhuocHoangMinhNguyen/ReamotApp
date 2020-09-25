@@ -3,11 +3,12 @@
 // Status: Optimized, but might need more design
 
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native"
 import Toast from "react-native-simple-toast"
 import auth from "@react-native-firebase/auth"
 
 var confusedMan = require('../../assets/confusedMan.png')
+var background = require('../../assets/background.png')
 
 class ChangePassword extends React.Component {
     // A link to reset password will be sent to current user's email
@@ -20,6 +21,9 @@ class ChangePassword extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Image style={styles.containter}
+                    source={background}
+                />
                 <Image style={styles.image}
                     source={confusedMan} />
                 <Text style={styles.text}>Did someone forget their password?</Text>
@@ -35,19 +39,25 @@ class ChangePassword extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    containter: {
+        width: Dimensions.get("window").width, //for full screen
+    },
     container: {
         flex: 1,
+        backgroundColor: "#FFF",
         alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: '#DEE8F1',
     },
     image: {
         width: 250,
-        height: 250
+        height: 250,
+        marginTop: -120,
+        backgroundColor: '#DDD',
+        borderRadius: 125,
     },
     text: {
         fontWeight: "bold",
-        fontSize: 16
+        fontSize: 16,
+        marginVertical: 12
     },
     submitButton: {
         justifyContent: "center",
