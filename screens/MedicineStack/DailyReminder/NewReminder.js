@@ -173,7 +173,9 @@ class NewReminder extends React.Component {
                             }
                             style={styles.image}
                         />
-                        <Text style={styles.name}>{this.state.medicine.name}</Text>
+                        <View style={styles.name}>
+                            <Text style={{ fontSize: 16 }}>{this.state.medicine.name}</Text>
+                        </View>
                     </View>
                 </View>
                 <View style={{ flex: 1 }}>
@@ -226,10 +228,9 @@ const styles = StyleSheet.create({
     },
     name: {
         flex: 1,
-        fontSize: 16,
         fontWeight: "600",
         marginLeft: 8,
-        marginVertical: 24
+        justifyContent: "center"
     },
     header: {
         marginTop: -150,

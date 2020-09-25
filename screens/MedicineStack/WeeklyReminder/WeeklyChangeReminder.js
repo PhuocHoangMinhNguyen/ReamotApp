@@ -203,7 +203,10 @@ class WeeklyChangeReminder extends React.Component {
                             }
                             style={styles.image}
                         />
-                        <Text style={styles.name}>{this.state.medicine.name}</Text>
+                        <View style={styles.name}>
+                            <Text style={{ fontSize: 15 }}>{this.state.medicine.name}</Text>
+                            <Text style={styles.time}>{this.state.timePicker.initial}</Text>
+                        </View>
                     </View>
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 30 }}>
@@ -277,7 +280,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "600",
         marginLeft: 8,
-        marginVertical: 24
+        justifyContent: "center"
     },
     header: {
         marginTop: -150,
@@ -328,6 +331,10 @@ const styles = StyleSheet.create({
         width: 120,
         alignItems: "center",
         justifyContent: "center",
+    },
+    time: {
+        fontSize: 24,
+        marginTop: 10
     }
 })
 
