@@ -4,7 +4,7 @@
 // Status: In development
 
 import React from "react"
-import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
+import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Toast from "react-native-simple-toast"
 import { ConfirmDialog } from "react-native-simple-dialogs"
@@ -12,6 +12,7 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
+var background = require('../../assets/background.png')
 
 class DoctorInfoScreen extends React.Component {
     state = {
@@ -65,6 +66,9 @@ class DoctorInfoScreen extends React.Component {
         }
         return (
             <View style={styles.container}>
+                <Image style={styles.containter}
+                    source={background}
+                />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -109,9 +113,12 @@ class DoctorInfoScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    containter: {
+        width: Dimensions.get("window").width, //for full screen
+    },
     container: {
         flex: 1,
-        backgroundColor: '#DEE8F1',
+        backgroundColor: "#FFF"
     },
     back: {
         position: "absolute",
@@ -126,12 +133,12 @@ const styles = StyleSheet.create({
     },
     header: {
         alignSelf: "center",
-        color: "#000000",
+        color: "#FFF",
         fontSize: 20,
-        marginTop: 50
+        marginTop: -150
     },
     information: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         borderRadius: 5,
         padding: 16,
         marginVertical: 12,
