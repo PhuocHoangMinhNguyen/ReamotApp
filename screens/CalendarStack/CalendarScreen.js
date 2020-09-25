@@ -174,11 +174,10 @@ class CalendarScreen extends React.Component {
     const { testDate, medicine, show, chartConfig } = this.state
     return (
       <View style={styles.container}>
-        <View style={styles.testDateContainer}>
-          <Text style={styles.testDate}>
-            {moment(testDate).format("MMMM Do YYYY")}
-          </Text>
-        </View>
+        <Text style={styles.header}>History</Text>
+        <Text style={styles.testDate}>
+          {moment(testDate).format("MMMM Do YYYY")}
+        </Text>
         <TouchableOpacity style={styles.button} onPress={this.showMode}>
           <Text style={styles.buttonText}>Show Calendar</Text>
         </TouchableOpacity>
@@ -268,14 +267,17 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFF"
   },
-  testDateContainer: {
-    alignItems: "center",
-    marginTop: 30
-  },
-  testDate: {
+  header: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#000"
+    color: "#000",
+    textAlign: "center",
+    marginTop: 20
+  },
+  testDate: {
+    fontSize: 20,
+    color: "#000",
+    textAlign: "center",
   },
   chart: {
     backgroundColor: "#FFF",

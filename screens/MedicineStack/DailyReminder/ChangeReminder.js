@@ -192,6 +192,7 @@ class ChangeReminder extends React.Component {
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
+                <Text style={styles.header}>Edit Reminder</Text>
                 <View style={styles.information}>
                     <View style={{ flexDirection: "row" }}>
                         <Image
@@ -275,20 +276,26 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         marginVertical: 24
     },
+    header: {
+        marginTop: -150,
+        color: "#FFF",
+        textAlign: "center",
+        fontSize: 24,
+    },
     information: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#ddd",
         borderRadius: 5,
         padding: 16,
-        marginTop: 70,
+        marginTop: 50,
         marginBottom: 12,
         marginHorizontal: 30
     },
     timePicker: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#ddd",
         borderRadius: 5,
         padding: 10,
-        marginHorizontal: 30,
         marginVertical: 8,
+        marginHorizontal: 30,
         flexDirection: "row",
         justifyContent: "space-between"
     },
