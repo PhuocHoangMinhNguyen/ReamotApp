@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text } from "react-native"
+import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text, Dimensions } from "react-native"
 
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
@@ -10,6 +10,8 @@ import UserPermissions from "../../utilities/UserPermissions"
 import ImagePicker from "react-native-image-picker"
 import CheckBox from "@react-native-community/checkbox"
 import Toast from "react-native-simple-toast"
+
+var background = require('../../assets/background.png')
 
 class AddMedicine extends React.Component {
     state = {
@@ -122,15 +124,16 @@ class AddMedicine extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Image style={styles.containter}
+                    source={background}
+                />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={30} color="#FFF" />
                 </TouchableOpacity>
-                <View style={styles.titleView}>
-                    <Text style={styles.title}>Add Medication</Text>
-                </View>
+                <Text style={styles.title}>Add Medication</Text>
                 <View style={styles.cover}>
                     <TouchableOpacity
                         style={styles.imagePlaceholder}
@@ -147,22 +150,22 @@ class AddMedicine extends React.Component {
                             style={{ marginTop: 6, marginLeft: 2 }}
                         />
                     </TouchableOpacity>
-                    <View style={{ flex: 1, marginLeft: 12 }}>
-                        <View style={styles.textInputContainer}>
-                            <TextInput
-                                placeholder="Medicine Name"
-                                onChangeText={name => this.setState({ medicine: { ...this.state.medicine, name: name } })}
-                                value={this.state.medicine.name}
-                            />
-                        </View>
-                        <View style={styles.textInputContainer}>
-                            <TextInput
-                                placeholder="Medicine Barcode"
-                                keyboardType="numeric"
-                                onChangeText={barcode => this.setState({ medicine: { ...this.state.medicine, barcode: barcode } })}
-                                value={this.state.medicine.barcode}
-                            />
-                        </View>
+                </View>
+                <View style={styles.cover2}>
+                    <View style={styles.textInputContainer1}>
+                        <TextInput
+                            placeholder="Medicine Name"
+                            onChangeText={name => this.setState({ medicine: { ...this.state.medicine, name: name } })}
+                            value={this.state.medicine.name}
+                        />
+                    </View>
+                    <View style={styles.textInputContainer2}>
+                        <TextInput
+                            placeholder="Medicine Barcode"
+                            keyboardType="numeric"
+                            onChangeText={barcode => this.setState({ medicine: { ...this.state.medicine, barcode: barcode } })}
+                            value={this.state.medicine.barcode}
+                        />
                     </View>
                 </View>
                 <View style={styles.reminderType}>
@@ -242,9 +245,12 @@ class AddMedicine extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    containter: {
+        width: Dimensions.get("window").width, //for full screen
+    },
     container: {
         flex: 1,
-        backgroundColor: '#DEE8F1',
+        backgroundColor: "#FFF",
     },
     back: {
         position: "absolute",
@@ -257,18 +263,21 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
-    titleView: {
-        marginTop: 30,
-        alignItems: "center"
-    },
     title: {
-        fontWeight: "bold",
-        fontSize: 20
+        fontSize: 24,
+        marginTop: -140,
+        textAlign: "center",
+        color: '#FFF'
     },
     cover: {
         marginHorizontal: 30,
         marginTop: 20,
-        flexDirection: "row"
+        alignItems: 'center'
+    },
+    cover2: {
+        flexDirection: "row",
+        marginHorizontal: 30,
+        marginVertical: 12,
     },
     imagePlaceholder: {
         width: 110,
@@ -284,16 +293,23 @@ const styles = StyleSheet.create({
         height: 110,
         borderRadius: 55
     },
-    textInputContainer: {
-        backgroundColor: "#FFF",
+    textInputContainer1: {
+        backgroundColor: "#DDD",
         borderRadius: 4,
-        marginBottom: 12
+        flex: 1,
+        marginRight: 8
+    },
+    textInputContainer2: {
+        backgroundColor: "#DDD",
+        borderRadius: 4,
+        flex: 1,
+        marginLeft: 8
     },
     reminderType: {
         marginHorizontal: 30,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-evenly"
+        justifyContent: "space-evenly",
     },
     button: {
         alignSelf: "flex-end",
@@ -310,13 +326,13 @@ const styles = StyleSheet.create({
         color: "#FFF"
     },
     number: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         borderRadius: 4,
         flex: 1,
         marginRight: 8
     },
     times: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         borderRadius: 4,
         flex: 1,
         marginLeft: 8
@@ -327,7 +343,7 @@ const styles = StyleSheet.create({
         marginVertical: 12,
     },
     note: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         borderRadius: 4,
         marginHorizontal: 30
     },
