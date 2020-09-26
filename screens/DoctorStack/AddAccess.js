@@ -200,11 +200,12 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
     avatar: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
         marginRight: 16,
-        marginLeft: 8
+        marginLeft: 8,
+        alignSelf: "center"
     },
     name: {
         fontSize: 15,

@@ -3,12 +3,13 @@
 // Status: Optimized
 
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Dimensions } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
 
 var confusedMan = require('../../assets/confusedMan.png')
+var background = require('../../assets/background.png')
 
 class ForgotPasswordScreen extends React.Component {
     state = {
@@ -30,6 +31,9 @@ class ForgotPasswordScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Image style={styles.containter}
+                    source={background}
+                />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -63,10 +67,13 @@ class ForgotPasswordScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    containter: {
+        width: Dimensions.get("window").width, //for full screen
+    },
     container: {
         flex: 1,
-        justifyContent: "center",
-        backgroundColor: '#DEE8F1',
+        backgroundColor: "#FFF",
+        alignItems: "center",
     },
     smallerContainer: {
         marginHorizontal: 30,
@@ -84,7 +91,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     textInputContainer: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         marginTop: 12,
         borderRadius: 4,
     },
@@ -103,11 +110,14 @@ const styles = StyleSheet.create({
     },
     image: {
         width: 250,
-        height: 250
+        height: 250,
+        backgroundColor: '#DDD',
+        borderRadius: 125,
     },
     text: {
         fontWeight: "bold",
-        fontSize: 16
+        fontSize: 16,
+        marginVertical: 12
     },
 })
 

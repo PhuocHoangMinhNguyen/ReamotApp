@@ -179,6 +179,7 @@ class CalendarScreen extends React.Component {
           source={background}
         />
         <Text style={styles.header}>History</Text>
+        <Text style={styles.header1}>Patient's history of taking medicine per day</Text>
         <Text style={styles.testDate}>
           {moment(testDate).format("MMMM Do YYYY")}
         </Text>
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 50,
-    borderRadius: 18,
+    borderRadius: 25,
     marginRight: 16,
     marginLeft: 8
   },
@@ -277,15 +278,19 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    fontWeight: "bold",
     color: "#FFF",
-    textAlign: "center",
-    marginTop: -150
+    marginTop: -170,
+    marginHorizontal: 16
+  },
+  header1: {
+    color: "#FFF",
+    marginHorizontal: 16,
   },
   testDate: {
     fontSize: 20,
     color: "#FFF",
-    textAlign: "center",
+    marginHorizontal: 16,
+    marginTop: 8
   },
   chart: {
     backgroundColor: '#DEE8F1',
