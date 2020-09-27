@@ -67,20 +67,33 @@ class AppointmentMaker extends React.Component {
 
     // If user click yes when the dialog appears
     handleYes = () => {
-        const patient = auth().currentUser.email
+        const time = this.calculateTime()
+        console.log('Time: ' + time)
         this.setState({ dialogVisible: false })
         firestore().collection("appointment")
             .add({
                 doctor: this.state.doctor.name,
-                date: moment(this.state.testDate).format("MMM Do YYYY"),
-                time: moment(this.state.testTime).format('hh:mm a'),
+                time: time,
                 reason: this.state.reason,
-                patientEmail: patient
+                patientEmail: auth().currentUser.email
             })
             .then(() => {
                 Toast.show("Your appointment is confirmed !")
                 this.props.navigation.goBack()
             })
+    }
+
+    calculateTime = () => {
+        const { testTime, testDate } = this.state
+        const time = new Date()
+        time.setFullYear(testDate.getFullYear())
+        time.setMonth(testDate.getMonth())
+        time.setDate(testDate.getDate())
+        time.setHours(testTime.getHours())
+        time.setMinutes(testTime.getMinutes())
+        time.setSeconds(0)
+        time.setMilliseconds(0)
+        return time
     }
 
     render() {

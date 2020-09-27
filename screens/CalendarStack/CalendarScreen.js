@@ -159,7 +159,7 @@ class CalendarScreen extends React.Component {
         <View style={{ flex: 1 }}>
           <Text style={styles.missedName}>{item.name}</Text>
           <Text style={styles.missedTime}>
-            {`${item.startTime.toDate().getHours()}:${item.startTime.toDate().getMinutes()}`}
+            {moment(item.startTime.toDate()).format('hh:mm a')}
           </Text>
         </View>
       </SafeAreaView>
