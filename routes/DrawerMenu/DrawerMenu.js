@@ -29,10 +29,10 @@ class DrawerMenu extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ backgroundColor: "#1565C0" }}>
+                <View style={{ backgroundColor: "#001F4C" }}>
                     <TouchableOpacity style={styles.back}
                         onPress={() => { this.props.navigation.closeDrawer() }}>
-                        <Ionicons name="arrow-back" size={20} color={"#161F3D"} />
+                        <Ionicons name="arrow-back" size={20} color={"#FFF"} />
                     </TouchableOpacity>
                     <ProfileScreen />
                 </View>
