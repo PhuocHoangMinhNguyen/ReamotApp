@@ -62,7 +62,7 @@ class AppointmentList extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Background style={styles.containter} />
+                <Background />
                 <Text style={styles.header}>Your Appointment List</Text>
                 <FlatList
                     style={styles.feed}
@@ -75,9 +75,6 @@ class AppointmentList extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    containter: {
-        width: Dimensions.get("window").width, //for full screen
-    },
     container: {
         flex: 1,
         backgroundColor: "#FFF",

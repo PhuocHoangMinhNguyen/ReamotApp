@@ -11,7 +11,6 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions
 } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -175,7 +174,7 @@ class CalendarScreen extends React.Component {
     const { testDate, medicine, show, chartConfig } = this.state
     return (
       <View style={styles.container}>
-        <Background style={styles.containter} />
+        <Background />
         <Text style={styles.header}>History</Text>
         <Text style={styles.header1}>Patient's history of taking medicine per day</Text>
         <Text style={styles.testDate}>
@@ -215,9 +214,6 @@ class CalendarScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  containter: {
-    width: Dimensions.get("window").width, //for full screen
-  },
   container: {
     flex: 1,
     backgroundColor: "#FFF",

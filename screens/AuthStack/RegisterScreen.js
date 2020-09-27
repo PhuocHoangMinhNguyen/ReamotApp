@@ -4,7 +4,6 @@
 
 import React from "react";
 import {
-  Dimensions,
   View,
   Text,
   StyleSheet,
@@ -21,8 +20,7 @@ import ImagePicker from "react-native-image-picker";
 import UserPermissions from "../../utilities/UserPermissions";
 import Toast from "react-native-simple-toast";
 import CheckBox from "@react-native-community/checkbox";
-
-var background = require("../../assets/background.png")
+import Background from '../../components/Background';
 
 class RegisterScreen extends React.Component {
   state = {
@@ -131,17 +129,14 @@ class RegisterScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image
-          style={[styles.fixed, styles.containter]}
-          source={background}
-        />
+        <Background />
         <TouchableOpacity
           style={styles.back}
           onPress={() => this.props.navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={32} color="#FFF" />
         </TouchableOpacity>
-        <View style={{ alignItems: "center", width: "100%" }} >
+        <View style={{ alignItems: "center", width: "100%", marginTop: -200 }} >
           <Text style={styles.greeting}>
             {"Hello!\nSign up to get started."}
           </Text>
@@ -252,16 +247,6 @@ class RegisterScreen extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-  containter: {
-    width: Dimensions.get("window").width, //for full screen
-  },
-  fixed: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
-  },
   container: {
     flex: 1,
     backgroundColor: "#FFF"

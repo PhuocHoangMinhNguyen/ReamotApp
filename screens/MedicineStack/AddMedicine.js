@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text, Dimensions } from "react-native"
+import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text } from "react-native"
 
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
@@ -122,7 +122,7 @@ class AddMedicine extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Background style={styles.containter} />
+                <Background />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -241,9 +241,6 @@ class AddMedicine extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    containter: {
-        width: Dimensions.get("window").width, //for full screen
-    },
     container: {
         flex: 1,
         backgroundColor: "#FFF",

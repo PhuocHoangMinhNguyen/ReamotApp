@@ -17,7 +17,7 @@ import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import ViewMoreText from "react-native-view-more-text";
 import Toast from "react-native-simple-toast";
-import Background from '../../components/Background'
+import Background from '../../components/Background';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 

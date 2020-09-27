@@ -234,7 +234,7 @@ class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Background style={styles.containter} />
+        <Background />
         {image}
         <View style={{ flex: 1 }}>
           <View style={styles.chapterView}>
@@ -262,9 +262,6 @@ class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  containter: {
-    width: Dimensions.get("window").width, //for full screen
-  },
   container: {
     flex: 1,
     alignItems: 'center',

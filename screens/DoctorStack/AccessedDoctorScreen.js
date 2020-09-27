@@ -7,7 +7,7 @@
 // Status: In development
 
 import React from "react"
-import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Toast from "react-native-simple-toast"
 import { ConfirmDialog } from "react-native-simple-dialogs"
@@ -79,7 +79,7 @@ class AccessedDoctorScreen extends React.Component {
         }
         return (
             <View style={styles.container}>
-                <Background style={styles.containter} />
+                <Background />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -129,9 +129,6 @@ class AccessedDoctorScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    containter: {
-        width: Dimensions.get("window").width, //for full screen
-    },
     container: {
         flex: 1,
         backgroundColor: "#FFF"

@@ -3,7 +3,7 @@
 // Status: In development
 
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -153,7 +153,7 @@ class NewReminder extends React.Component {
         const { testDate, show } = this.state.timePicker
         return (
             <View style={styles.container}>
-                <Background style={styles.containter} />
+                <Background />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -202,9 +202,6 @@ class NewReminder extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    containter: {
-        width: Dimensions.get("window").width, //for full screen
-    },
     container: {
         flex: 1,
         backgroundColor: "#FFF"

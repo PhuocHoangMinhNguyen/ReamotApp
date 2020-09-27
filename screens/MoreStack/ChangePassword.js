@@ -3,7 +3,7 @@
 // Status: Optimized, but might need more design
 
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import Toast from "react-native-simple-toast"
 import auth from "@react-native-firebase/auth"
 import Background from '../../components/Background'
@@ -21,7 +21,7 @@ class ChangePassword extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Background style={styles.containter} />
+                <Background />
                 <Image style={styles.image}
                     source={confusedMan} />
                 <Text style={styles.text}>Did someone forget their password?</Text>
@@ -37,9 +37,6 @@ class ChangePassword extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    containter: {
-        width: Dimensions.get("window").width, //for full screen
-    },
     container: {
         flex: 1,
         backgroundColor: "#FFF",

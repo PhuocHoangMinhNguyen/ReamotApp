@@ -108,7 +108,7 @@ class EditScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Background style={styles.containter} />
+        <Background />
         <Text style={styles.header}>Edit Profile</Text>
         <TouchableOpacity style={styles.opacity}
           onPress={this.handlePickAvatar}>
@@ -172,9 +172,6 @@ class EditScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  containter: {
-    width: Dimensions.get("window").width, //for full screen
-  },
   container: {
     flex: 1,
     backgroundColor: "#FFF"

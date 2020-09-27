@@ -2,9 +2,8 @@
 // Description: Sign In Screen
 // Status: Optimized
 
-import React from "react"
+import React from "react";
 import {
-  Dimensions,
   View,
   Text,
   StyleSheet,
@@ -13,13 +12,13 @@ import {
   Image,
   LayoutAnimation,
   ScrollView
-} from "react-native"
-import auth from "@react-native-firebase/auth"
-import Toast from "react-native-simple-toast"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import UserReminders from '../../utilities/UserReminders'
+} from "react-native";
+import auth from "@react-native-firebase/auth";
+import Toast from "react-native-simple-toast";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import UserReminders from '../../utilities/UserReminders';
+import Background from '../../components/Background';
 
-var background = require("../../assets/background.png")
 var logoTest = require("../../assets/logoTest.png")
 
 class LoginScreen extends React.Component {
@@ -58,16 +57,9 @@ class LoginScreen extends React.Component {
     LayoutAnimation.easeInEaseOut()
     return (
       <View style={{ flex: 1, backgroundColor: "#FFF" }}>
-        <Image
-          style={[styles.fixed, styles.containter]}
-          source={background}
-        />
+        <Background />
         <Image source={logoTest}
-          style={{
-            alignSelf: 'center',
-            width: 200,
-            height: 200,
-          }}
+          style={styles.logoTest}
         />
         <ScrollView>
           <View style={styles.errorMessage}>
@@ -133,15 +125,11 @@ class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  containter: {
-    width: Dimensions.get("window").width, //for full screen
-  },
-  fixed: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
+  logoTest: {
+    alignSelf: 'center',
+    width: 200,
+    height: 200,
+    marginTop: -180
   },
   form: {
     marginBottom: 32,
