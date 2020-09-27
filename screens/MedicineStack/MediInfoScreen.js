@@ -290,6 +290,7 @@ class MediInfoScreen extends React.Component {
     }
     return (
       <View style={styles.container}>
+        <Background />
         <TouchableOpacity
           style={styles.back}
           onPress={() => this.props.navigation.goBack()}
@@ -338,7 +339,7 @@ class MediInfoScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DEE8F1',
+    backgroundColor: '#FFF',
   },
   back: {
     position: "absolute",
@@ -364,10 +365,10 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   information: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#DDD",
     borderRadius: 5,
     padding: 16,
-    marginTop: 70,
+    marginTop: -120,
     marginHorizontal: 16,
     marginBottom: 8
   },
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
     marginTop: 12
   },
   reminder: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#DDD",
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly"
   },
   prescription: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#DDD",
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
@@ -393,7 +394,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   capsules: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#DDD",
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,

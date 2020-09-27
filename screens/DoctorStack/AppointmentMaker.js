@@ -86,6 +86,7 @@ class AppointmentMaker extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Background />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
@@ -93,6 +94,7 @@ class AppointmentMaker extends React.Component {
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
                 <Text style={styles.header}>Appointment Maker</Text>
+                <Text style={styles.header1}>Make an appointment with the chosen doctor</Text>
                 <View style={styles.timePicker}>
                     <TouchableOpacity style={styles.pickerButton} onPress={this.showModeDate}>
                         <Text style={{ color: "#FFF" }}>Choose a Day!</Text>
@@ -156,7 +158,7 @@ class AppointmentMaker extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#DEE8F1',
+        backgroundColor: '#FFF',
     },
     back: {
         position: "absolute",
@@ -170,14 +172,19 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     header: {
-        alignSelf: "center",
-        color: "#000000",
-        fontSize: 20,
-        marginTop: 50,
-        marginBottom: 20
+        color: "#FFF",
+        fontSize: 24,
+        marginTop: -120,
+        marginBottom: 20,
+        marginHorizontal: 30
+    },
+    header1: {
+        color: "#FFF",
+        marginBottom: 20,
+        marginHorizontal: 30
     },
     timePicker: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         borderRadius: 5,
         padding: 10,
         marginVertical: 8,
@@ -200,7 +207,6 @@ const styles = StyleSheet.create({
         color: "#8A8F9E",
         fontSize: 12,
         textTransform: "uppercase",
-        fontWeight: "bold"
     },
     input: {
         borderBottomColor: "#8A8F9E",
@@ -212,7 +218,7 @@ const styles = StyleSheet.create({
     reason: {
         marginHorizontal: 30,
         marginVertical: 8,
-        backgroundColor: "#FFF",
+        backgroundColor: "#DDD",
         padding: 10,
         borderRadius: 4
     },
