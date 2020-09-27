@@ -118,7 +118,6 @@ class BarcodeScan extends React.Component {
                     patientEmail: auth().currentUser.email,
                     time: this.state.itemTime,
                     startTime: new Date(Date.now()),
-                    endTime: new Date(Date.now()),
                     date: moment().format('MMMM Do YYYY'),
                     status: "taken"
                 })
