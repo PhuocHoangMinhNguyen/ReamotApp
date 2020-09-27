@@ -18,9 +18,9 @@ import auth from "@react-native-firebase/auth"
 import DatePicker from '@react-native-community/datetimepicker'
 import moment from "moment"
 import { ProgressChart } from "react-native-chart-kit"
+import Background from '../../components/Background'
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
-var background = require('../../assets/background.png')
 
 class CalendarScreen extends React.Component {
   static navigationOptions = {
@@ -175,9 +175,7 @@ class CalendarScreen extends React.Component {
     const { testDate, medicine, show, chartConfig } = this.state
     return (
       <View style={styles.container}>
-        <Image style={styles.containter}
-          source={background}
-        />
+        <Background style={styles.containter} />
         <Text style={styles.header}>History</Text>
         <Text style={styles.header1}>Patient's history of taking medicine per day</Text>
         <Text style={styles.testDate}>

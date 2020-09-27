@@ -17,8 +17,8 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import moment from "moment"
 import HomeFunctions from '../../utilities/HomeFunctions'
+import Background from '../../components/Background'
 
-var background = require('../../assets/background.png')
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 var growing1 = require('../../assets/growing_0.png')
 var growing2 = require('../../assets/growing_0_to_25.png')
@@ -221,9 +221,7 @@ class HomeScreen extends React.Component {
     if (this.state.historymedicines.length == 0 && this.state.remindermedicines.length == 0) {
       return (
         <View style={styles.container}>
-          <Image style={styles.containter}
-            source={background}
-          />
+          <Background style={styles.containter} />
           {image}
           <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
             <Text style={styles.emptyText}>You have no active reminder</Text>
@@ -236,9 +234,7 @@ class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Image style={styles.containter}
-          source={background}
-        />
+        <Background style={styles.containter} />
         {image}
         <View style={{ flex: 1 }}>
           <View style={styles.chapterView}>

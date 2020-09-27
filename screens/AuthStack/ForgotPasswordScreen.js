@@ -7,9 +7,9 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Dimensions 
 import Ionicons from "react-native-vector-icons/Ionicons"
 import auth from "@react-native-firebase/auth"
 import Toast from "react-native-simple-toast"
+import Background from '../../components/Background'
 
 var confusedMan = require('../../assets/confusedMan.png')
-var background = require('../../assets/background.png')
 
 class ForgotPasswordScreen extends React.Component {
     state = {
@@ -31,9 +31,7 @@ class ForgotPasswordScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}

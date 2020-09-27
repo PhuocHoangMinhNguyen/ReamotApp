@@ -13,9 +13,9 @@ import Toast from "react-native-simple-toast"
 import { ConfirmDialog } from "react-native-simple-dialogs"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
+import Background from '../../components/Background'
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
-var background = require('../../assets/background.png')
 
 class AccessedDoctorScreen extends React.Component {
     state = {
@@ -79,9 +79,7 @@ class AccessedDoctorScreen extends React.Component {
         }
         return (
             <View style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}

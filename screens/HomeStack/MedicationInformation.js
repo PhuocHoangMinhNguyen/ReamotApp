@@ -6,9 +6,9 @@ import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { ScrollView } from "react-native-gesture-handler"
+import Background from '../../components/Background'
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
-var background = require('../../assets/background.png')
 
 class MedicationInformation extends React.Component {
     state = {
@@ -25,9 +25,7 @@ class MedicationInformation extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}

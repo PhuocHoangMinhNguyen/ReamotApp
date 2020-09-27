@@ -6,8 +6,7 @@ import React from "react"
 import { View, Text, StyleSheet, FlatList, SafeAreaView, Dimensions, Image } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
-
-var background = require('../../assets/background.png')
+import Background from '../../components/Background'
 
 class AppointmentList extends React.Component {
     state = {
@@ -63,9 +62,7 @@ class AppointmentList extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <Text style={styles.header}>Your Appointment List</Text>
                 <FlatList
                     style={styles.feed}

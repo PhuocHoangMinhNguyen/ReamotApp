@@ -2,7 +2,7 @@
 // Description: Show medicine details, and reminder for that medicine of that patient.
 // Status: In development
 
-import React from "react"
+import React from "react";
 import {
   View,
   Text,
@@ -11,12 +11,13 @@ import {
   Image,
   FlatList,
   TextInput
-} from "react-native"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import ViewMoreText from "react-native-view-more-text"
-import Toast from "react-native-simple-toast"
+} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import ViewMoreText from "react-native-view-more-text";
+import Toast from "react-native-simple-toast";
+import Background from '../../components/Background'
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 

@@ -19,13 +19,12 @@ import {
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import UploadImage from '../../utilities/UploadImage';
-
+import Background from '../../components/Background';
 import ImagePicker from 'react-native-image-picker';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserPermissions from "../../utilities/UserPermissions";
 import Toast from "react-native-simple-toast";
 
-var background = require('../../assets/background.png')
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class EditScreen extends React.Component {
@@ -109,10 +108,7 @@ class EditScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image
-          style={styles.containter}
-          source={background}
-        />
+        <Background style={styles.containter} />
         <Text style={styles.header}>Edit Profile</Text>
         <TouchableOpacity style={styles.opacity}
           onPress={this.handlePickAvatar}>

@@ -3,16 +3,16 @@
 // who doesn't have access to user medical details
 // Status: In development
 
-import React from "react"
-import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import Toast from "react-native-simple-toast"
-import { ConfirmDialog } from "react-native-simple-dialogs"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
+import React from "react";
+import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import Toast from "react-native-simple-toast";
+import { ConfirmDialog } from "react-native-simple-dialogs";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import Background from '../../components/Background'
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
-var background = require('../../assets/background.png')
 
 class DoctorInfoScreen extends React.Component {
     state = {
@@ -66,9 +66,7 @@ class DoctorInfoScreen extends React.Component {
         }
         return (
             <View style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}

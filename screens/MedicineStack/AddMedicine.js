@@ -4,14 +4,12 @@ import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text, Dimensions 
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 import UploadImage from '../../utilities/UploadImage';
-
+import Background from '../../components/Background';
 import Ionicons from "react-native-vector-icons/Ionicons"
 import UserPermissions from "../../utilities/UserPermissions"
 import ImagePicker from "react-native-image-picker"
 import CheckBox from "@react-native-community/checkbox"
 import Toast from "react-native-simple-toast"
-
-var background = require('../../assets/background.png')
 
 class AddMedicine extends React.Component {
     state = {
@@ -124,9 +122,7 @@ class AddMedicine extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}

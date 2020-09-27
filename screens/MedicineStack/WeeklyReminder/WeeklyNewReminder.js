@@ -11,6 +11,7 @@ import Toast from "react-native-simple-toast"
 import ReactNativeAN from 'react-native-alarm-notification'
 import TimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
+import Background from '../../../components/Background'
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -21,7 +22,6 @@ const alarmNotifData = {
 }
 
 var tempAvatar = require("../../../assets/tempAvatar.jpg")
-var background = require('../../../assets/background.png')
 
 class WeeklyNewReminder extends React.Component {
     constructor(props) {
@@ -153,9 +153,7 @@ class WeeklyNewReminder extends React.Component {
         const { testDate, show } = this.state.timePicker
         return (
             <View style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}

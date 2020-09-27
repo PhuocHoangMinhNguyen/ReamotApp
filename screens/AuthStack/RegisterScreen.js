@@ -2,7 +2,7 @@
 // Description: Register Screen
 // Status: Optimized
 
-import React from "react"
+import React from "react";
 import {
   Dimensions,
   View,
@@ -12,17 +12,15 @@ import {
   TouchableOpacity,
   Image,
   ScrollView
-} from "react-native"
-
-import auth from "@react-native-firebase/auth"
-import firestore from "@react-native-firebase/firestore"
-import UploadImage from '../../utilities/UploadImage'
-
-import Ionicons from "react-native-vector-icons/Ionicons"
-import ImagePicker from "react-native-image-picker"
-import UserPermissions from "../../utilities/UserPermissions"
-import Toast from "react-native-simple-toast"
-import CheckBox from "@react-native-community/checkbox"
+} from "react-native";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import UploadImage from '../../utilities/UploadImage';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import ImagePicker from "react-native-image-picker";
+import UserPermissions from "../../utilities/UserPermissions";
+import Toast from "react-native-simple-toast";
+import CheckBox from "@react-native-community/checkbox";
 
 var background = require("../../assets/background.png")
 

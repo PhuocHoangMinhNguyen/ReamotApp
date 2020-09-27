@@ -12,11 +12,11 @@ import {
   Image,
   Dimensions
 } from "react-native";
-import auth from "@react-native-firebase/auth"
-import firestore from "@react-native-firebase/firestore"
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import Background from "../../components/Background";
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
-var background = require('../../assets/background.png')
 
 class DoctorScreen extends Component {
   state = {
@@ -165,9 +165,7 @@ class DoctorScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        <Image style={styles.containter}
-          source={background}
-        />
+        <Background style={styles.containter} />
         <Text style={styles.header1}>{`Doctors & Pharmacists`}</Text>
         <Text style={styles.header2}>{`Doctors and pharmacists who have accessed to your medication records`}</Text>
         {message}
@@ -243,7 +241,7 @@ const styles = StyleSheet.create({
   header1: {
     color: "#FFF",
     marginHorizontal: 16,
-    marginTop: -150,
+    marginTop: -170,
     fontSize: 24
   },
   header2: {

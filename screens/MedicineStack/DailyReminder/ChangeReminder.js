@@ -2,15 +2,16 @@
 // Description: Allow patient to delete their daily reminder and stop sounding alarm
 // Status: In development
 
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native'
-import Ionicons from "react-native-vector-icons/Ionicons"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import Toast from "react-native-simple-toast"
-import ReactNativeAN from 'react-native-alarm-notification'
-import moment from 'moment'
-import { ConfirmDialog } from "react-native-simple-dialogs"
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import Toast from "react-native-simple-toast";
+import ReactNativeAN from 'react-native-alarm-notification';
+import moment from 'moment';
+import { ConfirmDialog } from "react-native-simple-dialogs";
+import Background from '../../../components/Background';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -21,7 +22,6 @@ const alarmNotifData = {
 }
 
 var tempAvatar = require("../../../assets/tempAvatar.jpg")
-var background = require('../../../assets/background.png')
 
 class ChangeReminder extends React.Component {
     state = {
@@ -183,9 +183,7 @@ class ChangeReminder extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.containter}
-                    source={background}
-                />
+                <Background style={styles.containter} />
                 <TouchableOpacity
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
