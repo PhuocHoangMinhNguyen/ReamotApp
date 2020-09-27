@@ -156,10 +156,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 30
   },
   errorMessage: {
-    height: 72,
+    height: 30,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 30
+    marginHorizontal: 30,
+    marginBottom: 12
   },
   error: {
     color: "#E9446A",

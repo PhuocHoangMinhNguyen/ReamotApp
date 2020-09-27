@@ -138,7 +138,7 @@ class RegisterScreen extends React.Component {
         </TouchableOpacity>
         <View style={{ alignItems: "center", width: "100%", marginTop: -200 }} >
           <Text style={styles.greeting}>
-            {"Hello!\nSign up to get started."}
+            {"Hello to Reamot!\nSign up to get started."}
           </Text>
           <TouchableOpacity style={styles.avatarPlaceholder}
             onPress={this.handlePickAvatar}>

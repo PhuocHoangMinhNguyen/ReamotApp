@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Dimensions
 } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -263,8 +264,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: "#1565C0",
     borderRadius: 4,
-    marginTop: 16,
-    marginBottom: 30,
+    marginVertical: 12,
     marginEnd: 16
   },
   buttonText: {
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     color: "#FFF",
-    marginTop: -170,
+    marginTop: -150,
     marginHorizontal: 16
   },
   header1: {

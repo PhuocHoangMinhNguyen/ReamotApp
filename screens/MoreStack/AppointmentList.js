@@ -3,7 +3,7 @@
 // Status: Optimized, but might need more design
 
 import React from "react"
-import { View, Text, StyleSheet, FlatList, SafeAreaView, Dimensions, Image } from "react-native"
+import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import Background from '../../components/Background'
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         color: "#FFF",
         fontSize: 24,
-        marginTop: -150,
+        marginTop: -120,
         marginBottom: 30
     },
 })
