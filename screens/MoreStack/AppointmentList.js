@@ -25,7 +25,7 @@ class AppointmentList extends React.Component {
                 let tempUpcomming = []
                 let tempPast = []
                 querySnapshot.forEach(documentSnapshot => {
-                    if (documentSnapshot.data().time < dateNow) {
+                    if (documentSnapshot.data().time.toDate() < dateNow) {
                         tempPast.push({
                             ...documentSnapshot.data(),
                             key: documentSnapshot.id
@@ -76,7 +76,8 @@ class AppointmentList extends React.Component {
         return (
             <View style={styles.container}>
                 <Background />
-                <Text style={styles.header}>Your Appointment List</Text>
+                <Text style={styles.header}>Appointment List</Text>
+                <Text style={styles.header1}>List of Upcomming and Past Appointment</Text>
                 <Text style={styles.titleUpcomming}>Upcomming Appointments</Text>
                 <FlatList
                     style={styles.feed}
@@ -124,18 +125,25 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     header: {
-        alignSelf: "center",
         color: "#FFF",
         fontSize: 24,
-        marginTop: -120,
-        marginBottom: 30
+        marginTop: -150,
+        marginHorizontal: 30,
+        marginBottom: 12
+    },
+    header1: {
+        color: "#FFF",
+        marginHorizontal: 30,
+        marginBottom: 30,
     },
     titleUpcomming: {
         marginHorizontal: 30,
-        color: '#FFF'
+        color: '#FFF',
+        fontSize: 18
     },
     titlePast: {
-        marginHorizontal: 30
+        marginHorizontal: 30,
+        fontSize: 18
     }
 })
 
