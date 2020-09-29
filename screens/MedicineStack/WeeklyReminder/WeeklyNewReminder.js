@@ -71,7 +71,6 @@ class WeeklyNewReminder extends React.Component {
             medicine: name,
             type: "Weekly",
             time: testDate,
-            times: moment(testDate).format('hh:mm a'),
             patientEmail: auth().currentUser.email,
         }).then(() => {
             Toast.show("Reminder Set!")
