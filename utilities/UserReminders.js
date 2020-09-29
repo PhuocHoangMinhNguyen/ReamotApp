@@ -26,33 +26,6 @@ class UserReminders {
             })
     }
 
-    // calculate reminder time (in date format) based on time on Firebase (which was in 
-    // string format), to set that reminder time using react-native-alarm-notification
-    calculateReminderTime = reminderTime => {
-        const hour = parseInt(reminderTime.substring(0, 2))
-        const minute = parseInt(reminderTime.substring(3, 5))
-        const morning_afternoon = reminderTime.substring(6, 8)
-        const now = new Date()
-        if (morning_afternoon == "am") {
-            if (hour == 12) {
-                now.setHours(hour - 12, minute, 0)
-            } else {
-                now.setHours(hour, minute, 0)
-            }
-        } else {
-            if (hour == 12) {
-                now.setHours(hour, minute, 0)
-            } else {
-                now.setHours(hour + 12, minute, 0)
-            }
-        }
-        if (now <= Date.now()) {
-            now.setDate(now.getDate() + 1)
-        }
-        console.log(moment(now).format())
-        return now
-    }
-
     // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
     findIdAN = async (alarm_id, id) => {
         const alarm = await ReactNativeAN.getScheduledAlarms()
@@ -74,14 +47,14 @@ class UserReminders {
         const alarm = await ReactNativeAN.getScheduledAlarms()
         console.log(alarm)
 
-        firestore().collection('reminder')
-            .where('patientEmail', '==', patientEmail)
-            .get().then(querySnapshot => {
+        firestore().collection('reminder').where('patientEmail', '==', patientEmail).get()
+            .then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
                     const alarmID = Math.floor(Math.random() * 10000).toString()
-                    // calculate reminder time (in date format) based on time on Firebase (which was in 
-                    // string format), to set that reminder time using react-native-alarm-notification
-                    const reminderTime = this.calculateReminderTime(documentSnapshot.data().times)
+                    const reminderTime = documentSnapshot.data().time.toDate()
+                    while (reminderTime < Date.now()) {
+                        reminderTime.setDate(reminderTime.getDate() + 1)
+                    }
                     console.log(moment(reminderTime).format())
                     const details = {
                         ...alarmNotifData,

@@ -50,7 +50,7 @@ class BarcodeScan extends React.Component {
         this.setState({ firebaseId: paramsFirebaseId })
 
         // Take value from params and put it as state.itemTime
-        let paramsItemTime = this.props.navigation.state.params.itemTime.toDate()
+        let paramsItemTime = this.props.navigation.state.params.itemTime
         this.setState({ itemTime: paramsItemTime })
 
         // Take value from params and put it as state.number
