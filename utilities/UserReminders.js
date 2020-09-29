@@ -17,9 +17,8 @@ const alarmNotifData = {
 class UserReminders {
     // Delete All Existing Reminders on the phone when logging out
     deleteReminders = async patientEmail => {
-        firestore().collection('reminder')
-            .where('patientEmail', '==', patientEmail)
-            .get().then(querySnapshot => {
+        firestore().collection('reminder').where('patientEmail', '==', patientEmail).get()
+            .then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
                     ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString())
                 })
