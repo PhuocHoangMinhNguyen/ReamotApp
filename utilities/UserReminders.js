@@ -1,8 +1,7 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: 
-// Delete all reminders when logging out, 
+// Description: Delete all reminders when logging out, 
 // and set all reminders when logging in
-// Status: In development
+// Status: Optimized
 import ReactNativeAN from 'react-native-alarm-notification'
 import firestore from "@react-native-firebase/firestore"
 import moment from 'moment'
@@ -16,7 +15,7 @@ const alarmNotifData = {
 }
 
 class UserReminders {
-    // Check if Delete Reminders when logging out works => Success
+    // Delete All Existing Reminders on the phone when logging out
     deleteReminders = async patientEmail => {
         firestore().collection('reminder')
             .where('patientEmail', '==', patientEmail)
@@ -27,6 +26,8 @@ class UserReminders {
             })
     }
 
+    // calculate reminder time (in date format) based on time on Firebase (which was in 
+    // string format), to set that reminder time using react-native-alarm-notification
     calculateReminderTime = reminderTime => {
         const hour = parseInt(reminderTime.substring(0, 2))
         const minute = parseInt(reminderTime.substring(3, 5))
@@ -52,6 +53,7 @@ class UserReminders {
         return now
     }
 
+    // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
     findIdAN = async (alarm_id, id) => {
         const alarm = await ReactNativeAN.getScheduledAlarms()
         let idAN = ""
@@ -68,7 +70,7 @@ class UserReminders {
     }
 
     setReminders = async (patientEmail) => {
-        // Check if Delete Reminders when logging out works => Success
+        // Double check if there is any alarm working before logging in
         const alarm = await ReactNativeAN.getScheduledAlarms()
         console.log(alarm)
 
@@ -77,11 +79,12 @@ class UserReminders {
             .get().then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
                     const alarmID = Math.floor(Math.random() * 10000).toString()
+                    // calculate reminder time (in date format) based on time on Firebase (which was in 
+                    // string format), to set that reminder time using react-native-alarm-notification
                     const reminderTime = this.calculateReminderTime(documentSnapshot.data().times)
                     console.log(moment(reminderTime).format())
                     const details = {
                         ...alarmNotifData,
-                        // Need to check it.
                         fire_date: ReactNativeAN.parseDate(reminderTime),
                         title: documentSnapshot.data().medicine,
                         alarm_id: alarmID

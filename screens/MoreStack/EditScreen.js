@@ -12,7 +12,6 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Dimensions,
   ScrollView
 } from 'react-native';
 

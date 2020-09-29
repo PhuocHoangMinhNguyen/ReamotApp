@@ -4,7 +4,7 @@
 //  - Show options to:
 //      - Revoke access to user medical details.
 //      - Make Appointment (if the chosen one is a doctor, not pharmacist)
-// Status: In development
+// Status: Optimized
 
 import React from "react"
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
@@ -36,34 +36,40 @@ class AccessedDoctorScreen extends React.Component {
         }
     }
 
-    // Give doctor/pharmacist access to user's data.
+    // Open a dialog to make sure if user wants to revoke doctor/pharmacist access to user's data.
     handleRevokeAccessToDoctor = () => { this.setState({ dialogVisible: true }) }
 
     // Send user to AppointmentMaker to choose appointment time and reason.
     handleSchedule = () => {
         this.props.navigation.navigate("AppointmentMaker", this.state.doctor)
     }
+
+    // If the user is sure to revoke doctor/pharmacist access to user's data
     handleYes = () => {
         const { doctor } = this.state
+        // If the target is a doctor
         if (doctor.type == "Doctor") {
+            // Remove the doctor email from user's doctorList
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     doctorList: firestore.FieldValue.arrayRemove(doctor.email)
                 })
-            firestore().collection("doctor").doc(doctor.id)
-                .update({
-                    patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
-                })
+            // Remove user's email from doctor's patientList
+            firestore().collection("doctor").doc(doctor.id).update({
+                patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
+            })
         }
+        // If the target is a pharmacist
         if (doctor.type == "Pharmacist") {
+            // Remove the pharmacist email from user's pharmacistList
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     pharmacistList: firestore.FieldValue.arrayRemove(doctor.email)
                 })
-            firestore().collection("pharmacist").doc(doctor.id)
-                .update({
-                    patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
-                })
+            // Remove user's email from pharmacist's patientList
+            firestore().collection("pharmacist").doc(doctor.id).update({
+                patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
+            })
         }
         this.setState({ dialogVisible: false })
         Toast.show("Your request is confirmed !")

@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Show the list of medicines that is in patient's prescriptions
-// Status: In development
+// Status: Optimized
 
 import React from "react"
 import {

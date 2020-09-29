@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Allow patient to make a new daily reminder
-// Status: In development
+// Status: Optimized
 
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'

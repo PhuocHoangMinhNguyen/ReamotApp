@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Allow patient to change password
-// Status: Optimized, but might need more design
+// Status: Optimized
 
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"

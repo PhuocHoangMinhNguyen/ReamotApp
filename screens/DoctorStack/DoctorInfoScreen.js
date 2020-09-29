@@ -27,30 +27,35 @@ class DoctorInfoScreen extends React.Component {
         this.setState({ doctor: paramsFromDoctorScreen })
     }
 
-    // Give doctor/pharmacist access to user's data.
+    // Open a dialog to make sure if user wants to give doctor/pharmacist access to user's data.
     handleGiveAccessToDoctor = () => { this.setState({ dialogVisible: true }) }
 
+    // If the user is sure to give doctor/pharmacist access to user's data
     handleYes = () => {
         const { doctor } = this.state
+        // If the target is a doctor
         if (doctor.type == "Doctor") {
+            // Add the doctor email to user's doctorList
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     doctorList: firestore.FieldValue.arrayUnion(doctor.email)
                 })
-            firestore().collection("doctor").doc(doctor.id)
-                .update({
-                    patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
-                })
+            // Add user's email to doctor's patientList
+            firestore().collection("doctor").doc(doctor.id).update({
+                patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
+            })
         }
+        // If the target is a pharmacist
         if (doctor.type == "Pharmacist") {
+            // Add the pharmacist email to user's pharmacistList
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     pharmacistList: firestore.FieldValue.arrayUnion(doctor.email)
                 })
-            firestore().collection("pharmacist").doc(doctor.id)
-                .update({
-                    patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
-                })
+            // Add user's email to pharmacist's patientList
+            firestore().collection("pharmacist").doc(doctor.id).update({
+                patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
+            })
         }
         this.setState({ dialogVisible: false })
         Toast.show("Your request is confirmed !")

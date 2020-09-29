@@ -10,12 +10,17 @@ Reamot is compromised of a mobile app (compatible with both iOS and Android) for
     - [Packages](#packages)
     - [Android](#android)
 2. [Code Structure](#code-structure)
-    - [AuthStack](#authstack)
-    - [HomeStack](#homestack)
-    - [CalendarStack](#calendarstack)
-    - [MedicineStack](#medicinestack)
-    - [DoctorStack](#doctorstack)
-    - [MoreStack](#morestack)
+    - ["assets" folder](#assetsfolder)
+    - ["components" folder](#componentsfolder)
+    - ["utilities" folder](#utilitiesfolder)
+    - ["routes" folder](#routesfolder)
+    - ["screen" folder](#screensfolder)
+        - [AuthStack](#authstack)
+        - [HomeStack](#homestack)
+        - [CalendarStack](#calendarstack)
+        - [MedicineStack](#medicinestack)
+        - [DoctorStack](#doctorstack)
+        - [MoreStack](#morestack)
 3. [Authors](#authors)
 
 ## Manual Installation
@@ -155,6 +160,15 @@ In your `android/app/build.gradle`
 ```
 
 ## Code Structure:
+### "assets" folder
+The folder includes images used locally within the application.
+
+### "components" folder
+The folder includes components that is used multiple times in the application.
+
+### "utilities" folder
+The folder includes helper functions that can be used within the application.
+
 ### "routes" folder
 The folder includes 6 stacks:
 
@@ -178,13 +192,17 @@ The stack includes Register, SignIn, ForgotPassword, and TermsOfService Screens:
 - If a patient forgets his/her password, he/she can enters email address in the input section, and a link will be sent to that email to reset his/her password.
 
 #### HomeStack
-The stack includes the Home Screen and Medication Information Screen. Home Screen includes 3 sections:
+The stack includes the Home Screen and Medication Information Screen. 
+
+Home Screen includes 3 sections:
 - A "Medication Taking History For The Day" List including taken, missed reminder for the day
 - An "Upcoming Reminders" List including upcoming reminders for the day.
 - An image of a "growing" flower, that its growing status will be changed based on the value of: `(Taken Medicine * 100) / (Missed Medicine + Taken Medicine + Upcoming Reminders)`
 
+When clicking on a medicine in one of the 2 lists in Home Screen, the Medication Information Screen pops up, showing the information of the medicine clicked on including medicine name, image, and information.
+
 #### CalendarStack
-The stack shows patient's medication taking history for each day. It will show the medication details, the taking status, and the time for each time a medicine is taken or missed.
+The stack shows patient's medication taking history for each day. It will show the medication details, the taking status, and the time for each time a medicine is taken or missed. A Progress Chart is showed at the bottom of the screen to show the patient's taking medicine progress of that day.
 
 #### MedicineStack
 The stack shows:
@@ -205,7 +223,7 @@ The stack shows:
 This is a DrawerNavigator with multiple options to:
 - edit their account,
 - change password,
-- view their appointments with the doctors,
+- view their upcomming and past appointments with the doctors,
 - view FAQ,
 - view Terms Of Services, and
 - to log out of the application

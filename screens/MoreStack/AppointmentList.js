@@ -1,5 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Allow patient to view appointment to the doctor or pharmacist of their chosen.
+// Description: Allow patient to view upcomming and past doctor appointment.
 // Status: Optimized, but might need more design
 
 import React from "react";

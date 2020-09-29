@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen & Quang Duy Nguyen
 // Description: HomeScreen show list of upcoming reminders 
-//  and medication taking history for the day
+// and medication taking history for the day
 // Status: Optimized
 
 import React from "react"
@@ -11,7 +11,6 @@ import {
   Image,
   TouchableOpacity,
   View,
-  Dimensions,
 } from "react-native"
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
@@ -39,6 +38,7 @@ class HomeScreen extends React.Component {
   unsubscribe = null
 
   componentDidMount() {
+    // Get the medicine information
     this.unsubscribe = firestore().collection("medicine").onSnapshot(querySnapshot => {
       let tempMedicine = []
       querySnapshot.forEach(documentSnapshot => {
@@ -47,6 +47,7 @@ class HomeScreen extends React.Component {
           key: documentSnapshot.id
         })
       })
+      // Get all the history of taking medicine for today.
       firestore().collection("history")
         .where('patientEmail', '==', auth().currentUser.email)
         .where('date', '==', moment().format("MMMM Do YYYY"))
@@ -67,6 +68,7 @@ class HomeScreen extends React.Component {
           })
           this.setState({ historymedicines: tempHistory })
         })
+      // Get all the history of taking medicine, that are missed, for today.
       firestore().collection("history")
         .where('patientEmail', '==', auth().currentUser.email)
         .where('date', '==', moment().format("MMMM Do YYYY"))
@@ -88,8 +90,8 @@ class HomeScreen extends React.Component {
           })
           this.setState({ missedMedicines: tempHistory })
         })
-      firestore().collection("reminder")
-        .where('patientEmail', '==', auth().currentUser.email)
+      // Get all the reminders
+      firestore().collection("reminder").where('patientEmail', '==', auth().currentUser.email)
         .onSnapshot(querySnapshot => {
           let tempReminder = []
           querySnapshot.forEach(documentSnapshot => {

@@ -1,6 +1,9 @@
+// Author: Phuoc Hoang Minh Nguyen
+// Description: Used to allow patients to add their own medicine
+// Status: Optimized
+
 import React from "react"
 import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text } from "react-native"
-
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 import UploadImage from '../../utilities/UploadImage';
@@ -26,6 +29,7 @@ class AddMedicine extends React.Component {
         }
     }
 
+    // To pick image from library or take a photo for medicine image (optional)
     handlePickImage = async () => {
         UserPermissions.getPhotoPermission()
 
@@ -46,8 +50,6 @@ class AddMedicine extends React.Component {
                 console.log("ImagePicker Error: ", response.error)
             } else {
                 const source = response.uri
-                // You can also display the image using data:
-                // let source = { uri: 'data:image/jpeg;base64,' + response.data };
                 this.setState({
                     medicine: { ...this.state.medicine, image: source }
                 })
@@ -55,6 +57,7 @@ class AddMedicine extends React.Component {
         })
     }
 
+    // Make sure all the information is enter successfully before adding the medicine into Firebase
     handleAdd = () => {
         const { name, number, times } = this.state.medicine
         const { dailyType, weeklyType } = this.state.reminder
@@ -71,6 +74,7 @@ class AddMedicine extends React.Component {
         }
     }
 
+    // Add the medicine into Firebase
     addMedicine = async () => {
         const { name, image, note, number, times, barcode } = this.state.medicine
         const { dailyType, weeklyType } = this.state.reminder

@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Allow patient to delete their daily reminder and stop sounding alarm
-// Status: In development
+// Status: Optimized
 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
@@ -113,8 +113,10 @@ class ChangeReminder extends React.Component {
             })
     }
 
+    // Show up a dialog to ask if user is sure to miss the reminder.
     handleMiss = () => { this.setState({ dialogVisible: true }) }
 
+    // If the user is sure to miss the reminder
     handleYes = async () => {
         const { name } = this.state.medicine
         const { firebaseId, alarmId } = this.state.firebase
@@ -123,6 +125,7 @@ class ChangeReminder extends React.Component {
         // Remove Notification
         ReactNativeAN.removeAllFiredNotifications()
 
+        // Get the time in Firebase (which is string) and change it to Date format
         const hour = parseInt(this.state.timePicker.initial.substring(0, 2))
         const minute = parseInt(this.state.timePicker.initial.substring(3, 5))
         const morning_afternoon = this.state.timePicker.initial.substring(6, 8)
@@ -161,12 +164,10 @@ class ChangeReminder extends React.Component {
                 idAN = alarm[i].id
             }
         }
-        firestore().collection("reminder").doc(firebaseId)
-            .update({
-                idAN: idAN,
-                alarmId: alarmId
-            })
-        this.props.navigation.navigate("MedicineScreen")
+        firestore().collection("reminder").doc(firebaseId).update({
+            idAN: idAN,
+            alarmId: alarmId
+        })
 
         // When the alarm is turned off, add the medicine into "history" collection
         firestore().collection("history").add({
@@ -177,6 +178,7 @@ class ChangeReminder extends React.Component {
             date: moment().format('MMMM Do YYYY'),
             status: "missed"
         })
+        this.props.navigation.navigate("MedicineScreen")
     }
 
     render() {

@@ -1,6 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: 
-// Used to ask for user's permission for taking photos,
+// Description: Used to ask for user's permission for taking photos,
 // or choosing photo from library for user's avatar
 // Status: Optimized
 
@@ -9,6 +8,7 @@ import * as Permissions from "expo-permissions"
 
 class UserPermissions {
   getPhotoPermission = async () => {
+    // if the platform OS is iOS
     if (Platform.OS === "ios") {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
 
@@ -19,6 +19,7 @@ class UserPermissions {
       }
     }
 
+    // if the platform OS is Android
     if (Platform.OS === "android") {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE

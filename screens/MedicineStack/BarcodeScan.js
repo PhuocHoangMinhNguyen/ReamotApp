@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Used to scan medicine barcode when the alarm is sounded
-// Status: In development
+// Status: Optimized
 
 import React from 'react'
 import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native'
@@ -49,9 +49,11 @@ class BarcodeScan extends React.Component {
         let paramsFirebaseId = this.props.navigation.state.params.firebaseId
         this.setState({ firebaseId: paramsFirebaseId })
 
+        // Take value from params and put it as state.itemTime
         let paramsItemTime = this.props.navigation.state.params.itemTime
         this.setState({ itemTime: paramsItemTime })
 
+        // Take value from params and put it as state.number
         let paramsNumber = this.props.navigation.state.params.number
         this.setState({ number: paramsNumber })
     }
@@ -59,6 +61,7 @@ class BarcodeScan extends React.Component {
     onBarCodeRead = async (e) => {
         const { name, barcode } = this.state.medicine
         const { firebaseId, barcodeRead, alarmId } = this.state
+        // If the barcode scanned is correct.
         if (barcode == e.data) {
             if (barcodeRead == false) {
                 this.setState({ barcodeRead: true })
@@ -67,6 +70,7 @@ class BarcodeScan extends React.Component {
                 // Remove Notification
                 ReactNativeAN.removeAllFiredNotifications()
 
+                // Get the time in Firebase (which is string) and change it to Date format
                 const hour = parseInt(this.state.itemTime.substring(0, 2))
                 const minute = parseInt(this.state.itemTime.substring(3, 5))
                 const morning_afternoon = this.state.itemTime.substring(6, 8)
@@ -105,12 +109,10 @@ class BarcodeScan extends React.Component {
                         idAN = alarm[i].id
                     }
                 }
-                firestore().collection("reminder").doc(firebaseId)
-                    .update({
-                        idAN: idAN,
-                        alarmId: alarmId
-                    })
-                this.props.navigation.navigate("MedicineScreen")
+                firestore().collection("reminder").doc(firebaseId).update({
+                    idAN: idAN,
+                    alarmId: alarmId
+                })
 
                 // When the alarm is turned off, add the medicine into "history" collection
                 firestore().collection("history").add({
@@ -137,8 +139,10 @@ class BarcodeScan extends React.Component {
                             pills: value
                         })
                     })
+                this.props.navigation.navigate("MedicineScreen")
             }
             Alert.alert("Alarm Sound is Stopped")
+            // If the barcode scanned is incorrect.
         } else {
             Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode)
         }

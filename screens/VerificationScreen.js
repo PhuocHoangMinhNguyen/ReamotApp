@@ -1,8 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
-//
 // Description: 
 // If the account hasnt been verified, this screen will be shown when user login.
-//
 // Status: Optimized
 
 import React from "react"

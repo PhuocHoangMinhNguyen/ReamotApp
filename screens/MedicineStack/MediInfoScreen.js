@@ -1,6 +1,6 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Show medicine details, and reminder for that medicine of that patient.
-// Status: In development
+// Status: Optimized
 
 import React from "react";
 import {
@@ -105,6 +105,8 @@ class MediInfoScreen extends React.Component {
     this.unsubscribe3()
   }
 
+  // If the prescription.type is Daily, navigate to 'Daily New Reminder'
+  // If the prescription.type is Weekly, navigate to 'Weekly New Reminder'
   handleNewReminder = () => {
     if (this.state.prescription.type == "Daily") {
       this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
@@ -113,6 +115,8 @@ class MediInfoScreen extends React.Component {
     }
   }
 
+  // If the prescription.type is Daily, navigate to 'Daily Change Reminder'
+  // If the prescription.type is Weekly, navigate to 'Weekly Change Reminder'
   handleChangeReminder = (item) => {
     if (this.state.prescription.type == "Daily") {
       this.props.navigation.navigate("ChangeReminder", {
@@ -143,6 +147,7 @@ class MediInfoScreen extends React.Component {
     )
   }
 
+  // Add Medicine Pills is used when there are no existing number of pills stored in database
   addMedicinePills = () => {
     if (this.state.medicinePills == "") {
       Toast.show("Please enter number of capsules")
@@ -156,6 +161,7 @@ class MediInfoScreen extends React.Component {
     }
   }
 
+  // Update Medicine Pills is used when there are already some number of pills stored in database
   updateMedicinePills = () => {
     if (this.state.add == "") {
       Toast.show("Please enter number of capsules")
@@ -173,7 +179,7 @@ class MediInfoScreen extends React.Component {
   // times the patient has to take that medicine per day according to "prescription" document in Firebase,
   // some emptyItem will be shown.
   //
-  // If the number of reminder set by that patient for that medicine is equal or largert than
+  // If the number of reminder set by that patient for that medicine is equal or larger than
   // times the patient has to take that medicine per day according to "prescription" document in Firebase,
   // all emptyItem will be replace by nonEmptyItem
   renderItem = (item) => {
@@ -273,18 +279,23 @@ class MediInfoScreen extends React.Component {
       </View>
 
     let message
+    // If no info about number of pills is stored
     if (this.state.text == '') {
       message = empty
     }
+    // If the number of pills is lower than 0
     if (parseInt(this.state.text, 10) < 0) {
       message = <Text>{this.state.text}</Text>
     }
+    // If the number of pills is equal 0
     if (parseInt(this.state.text, 10) == 0) {
       message = none
     }
+    // If the number of pills is between 0 and 10
     if (parseInt(this.state.text, 10) <= 10 && parseInt(this.state.text, 10) > 0) {
       message = lessThan10
     }
+    // If the number of pills is larger than 10
     if (parseInt(this.state.text, 10) > 10) {
       message = normal
     }
