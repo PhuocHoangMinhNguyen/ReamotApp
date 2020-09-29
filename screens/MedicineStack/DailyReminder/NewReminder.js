@@ -65,19 +65,18 @@ class NewReminder extends React.Component {
             }
         }
         // Officially add the alarm details into Firebase, alarm id is also from reminderId
-        firestore().collection("reminder")
-            .add({
-                alarmId: reminderId,
-                idAN: idAN,
-                medicine: name,
-                type: "Daily",
-                times: moment(testDate).format('hh:mm a'),
-                patientEmail: auth().currentUser.email,
-            })
-            .then(() => {
-                Toast.show("Reminder Set!")
-                this.props.navigation.goBack()
-            })
+        firestore().collection("reminder").add({
+            alarmId: reminderId,
+            idAN: idAN,
+            medicine: name,
+            type: "Daily",
+            time: testDate,
+            times: moment(testDate).format('hh:mm a'),
+            patientEmail: auth().currentUser.email,
+        }).then(() => {
+            Toast.show("Reminder Set!")
+            this.props.navigation.goBack()
+        })
     }
 
     // This function called when Schedule Alarm button is clicked

@@ -40,10 +40,10 @@ class WeeklyChangeReminder extends React.Component {
             // "Changed" is the value to indicate when a new time is picked
             // change to true when a new time is picked
             changed: false,
-            // "Initial" is the inial text next to TimePicker,
-            // which is the reminder time value inside firestore before editing.
-            initial: ''
         },
+        // "Initial" is the inial text next to TimePicker,
+        // which is the reminder time value inside firestore before editing.
+        initial: null,
         alarm: {
             // Used for react-native-alarm-notification package
             fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
@@ -62,12 +62,7 @@ class WeeklyChangeReminder extends React.Component {
 
         // Take value from params and put it as state.timePicker.initial
         let paramsTime = this.props.navigation.state.params.itemTime
-        this.setState({
-            timePicker: {
-                ...this.state.timePicker,
-                initial: paramsTime
-            }
-        })
+        this.setState({ initial: paramsTime })
 
         let paramsNumber = this.props.navigation.state.params.number
         this.setState({ number: paramsNumber })
@@ -77,13 +72,12 @@ class WeeklyChangeReminder extends React.Component {
         let tempFirebase = ""
         this.unsubscribe = firestore().collection("reminder")
             .where('patientEmail', '==', auth().currentUser.email)
+            .where('time', '==', this.props.navigation.state.params.itemTime)
+            .where('medicine', '==', this.props.navigation.state.params.medicine.name)
             .onSnapshot((querySnapshot) => {
                 querySnapshot.forEach((documentSnapshot) => {
-                    if (documentSnapshot.data().medicine == this.state.medicine.name
-                        && documentSnapshot.data().times == this.state.timePicker.initial) {
-                        tempFirebase = documentSnapshot.id
-                        tempIdAN = documentSnapshot.data().idAN
-                    }
+                    tempFirebase = documentSnapshot.id
+                    tempIdAN = documentSnapshot.data().idAN
                 })
                 // Assign to firebaseId and idAN in state.firebase
                 this.setState({
@@ -125,28 +119,10 @@ class WeeklyChangeReminder extends React.Component {
         // Remove Notification
         ReactNativeAN.removeAllFiredNotifications()
 
-        // Get the time in Firebase (which is string) and change it to Date format
-        const hour = parseInt(this.state.timePicker.initial.substring(0, 2))
-        const minute = parseInt(this.state.timePicker.initial.substring(3, 5))
-        const morning_afternoon = this.state.timePicker.initial.substring(6, 8)
-        const now = new Date()
-        now.setDate(now.getDate() + 1)
-        if (morning_afternoon == "am") {
-            if (hour == 12) {
-                now.setHours(hour - 12, minute, 0)
-            } else {
-                now.setHours(hour, minute, 0)
-            }
-        } else {
-            if (hour == 12) {
-                now.setHours(hour, minute, 0)
-            } else {
-                now.setHours(hour + 12, minute, 0)
-            }
-        }
-        console.log("Real Value Weekly: " + now)
-        console.log("Real Value Weekly Format: " + moment(now).format())
-        const fireDates = ReactNativeAN.parseDate(now)
+        this.state.initial.setDate(this.state.initial.getDate() + 1)
+        console.log("Real Value Weekly: " + this.state.initial)
+        console.log("Real Value Weekly Format: " + moment(this.state.initial).format())
+        const fireDates = ReactNativeAN.parseDate(this.state.initial)
 
         const details = {
             ...alarmNotifData,
@@ -166,7 +142,8 @@ class WeeklyChangeReminder extends React.Component {
         }
         firestore().collection("reminder").doc(firebaseId).update({
             idAN: idAN,
-            alarmId: alarmId
+            alarmId: alarmId,
+            time: this.state.initial
         })
 
         // When the alarm is turned off, add the medicine into "history" collection
@@ -194,17 +171,14 @@ class WeeklyChangeReminder extends React.Component {
                 <Text style={styles.header}>Edit Reminder</Text>
                 <View style={styles.information}>
                     <View style={{ flexDirection: "row" }}>
-                        <Image
-                            source={
-                                this.state.medicine.image
-                                    ? { uri: this.state.medicine.image }
-                                    : tempAvatar
-                            }
-                            style={styles.image}
-                        />
+                        <Image style={styles.image}
+                            source={this.state.medicine.image
+                                ? { uri: this.state.medicine.image }
+                                : tempAvatar
+                            } />
                         <View style={styles.name}>
                             <Text style={{ fontSize: 15 }}>{this.state.medicine.name}</Text>
-                            <Text style={styles.time}>{this.state.timePicker.initial}</Text>
+                            <Text style={styles.time}>{moment(this.state.timePicker.initial.toDate()).format('hh:mm a')}</Text>
                         </View>
                     </View>
                 </View>
@@ -257,7 +231,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF"
     },
     back: {
-        position: "absolute",
+        marginTop: -170,
         top: 24,
         left: 24,
         width: 32,
@@ -279,7 +253,6 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     header: {
-        marginTop: -150,
         color: "#FFF",
         textAlign: "center",
         fontSize: 24,

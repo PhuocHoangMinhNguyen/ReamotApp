@@ -15,7 +15,6 @@ import {
 import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import moment from "moment"
-import HomeFunctions from '../../utilities/HomeFunctions'
 import Background from '../../components/Background'
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
@@ -48,8 +47,7 @@ class HomeScreen extends React.Component {
         })
       })
       // Get all the history of taking medicine for today.
-      firestore().collection("history")
-        .where('patientEmail', '==', auth().currentUser.email)
+      firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
         .where('date', '==', moment().format("MMMM Do YYYY"))
         .onSnapshot(querySnapshot => {
           let tempHistory = []
@@ -69,8 +67,7 @@ class HomeScreen extends React.Component {
           this.setState({ historymedicines: tempHistory })
         })
       // Get all the history of taking medicine, that are missed, for today.
-      firestore().collection("history")
-        .where('patientEmail', '==', auth().currentUser.email)
+      firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
         .where('date', '==', moment().format("MMMM Do YYYY"))
         .where('status', '==', 'missed')
         .onSnapshot(querySnapshot => {
@@ -122,14 +119,9 @@ class HomeScreen extends React.Component {
       image: item.image,
       name: item.medicine,
       description: item.description,
-      barcode: item.barcode,
-      times: item.times
     }
 
-    // Call calculateTime function in HomeFunctions.js
-    const accepted = HomeFunctions.calculateTime(item.times)
-
-    if (accepted == true) {
+    if (item.time.toDate().toDateString() == (new Date()).toDateString() && item.time.toDate() >= Date.now()) {
       return (
         <TouchableOpacity style={styles.feedItem}
           onPress={() => {
@@ -139,7 +131,7 @@ class HomeScreen extends React.Component {
             source={item.image ? { uri: item.image } : tempAvatar}
           />
           <Text style={styles.name}>{item.medicine}</Text>
-          <Text style={styles.time}>{item.times}</Text>
+          <Text style={styles.time}>{moment(item.time.toDate()).format('hh:mm a')}</Text>
         </TouchableOpacity>
       )
     } else {
@@ -154,7 +146,6 @@ class HomeScreen extends React.Component {
       image: item.image,
       name: item.medicine,
       description: item.description,
-      barcode: item.barcode,
     }
 
     return (
@@ -175,9 +166,8 @@ class HomeScreen extends React.Component {
     let image
     let counting = 0
     for (let i = 0; i < this.state.remindermedicines.length; i++) {
-      // Call calculateTime function in HomeFunctions.js
-      const accepted = HomeFunctions.calculateTime(this.state.remindermedicines[i].times)
-      if (accepted == true) {
+      if (this.state.remindermedicines[i].time.toDate().toDateString() == (new Date()).toDateString()
+        && this.state.remindermedicines[i].time.toDate() >= Date.now()) {
         counting++
       }
     }

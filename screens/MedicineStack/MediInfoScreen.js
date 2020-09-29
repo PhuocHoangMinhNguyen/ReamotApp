@@ -18,6 +18,7 @@ import auth from "@react-native-firebase/auth";
 import ViewMoreText from "react-native-view-more-text";
 import Toast from "react-native-simple-toast";
 import Background from '../../components/Background';
+import moment from 'moment';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
@@ -121,13 +122,13 @@ class MediInfoScreen extends React.Component {
     if (this.state.prescription.type == "Daily") {
       this.props.navigation.navigate("ChangeReminder", {
         medicine: this.props.navigation.state.params,
-        itemTime: item.times,
+        itemTime: item.time.toDate(),
         number: this.state.prescription.number
       })
     } else {
       this.props.navigation.navigate("WeeklyChangeReminder", {
         medicine: this.props.navigation.state.params,
-        itemTime: item.times,
+        itemTime: item.time.toDate(),
         number: this.state.prescription.number
       })
     }
@@ -191,7 +192,7 @@ class MediInfoScreen extends React.Component {
       )
     }
     return (<View style={styles.prescription}>
-      <Text style={styles.time}>{item.times}</Text>
+      <Text style={styles.time}>{moment(item.time.toDate()).format('hh:mm a')}</Text>
       <TouchableOpacity style={styles.showPicker} onPress={() => this.handleChangeReminder(item)}>
         <Text style={{ color: "#FFF" }}>Edit</Text>
       </TouchableOpacity>
@@ -310,14 +311,11 @@ class MediInfoScreen extends React.Component {
         </TouchableOpacity>
         <View style={styles.information}>
           <View style={{ flexDirection: "row" }}>
-            <Image
-              source={
-                this.state.medicine.image
-                  ? { uri: this.state.medicine.image }
-                  : tempAvatar
-              }
-              style={styles.image}
-            />
+            <Image style={styles.image}
+              source={this.state.medicine.image
+                ? { uri: this.state.medicine.image }
+                : tempAvatar
+              } />
             <Text style={styles.name}>{this.state.medicine.name}</Text>
           </View>
           <ViewMoreText

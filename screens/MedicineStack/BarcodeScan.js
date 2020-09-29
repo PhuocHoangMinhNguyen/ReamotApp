@@ -35,7 +35,7 @@ class BarcodeScan extends React.Component {
             // Details in Problems.txt file, Problem 1
             alarmId: Math.floor(Math.random() * 10000).toString(),
             number: 0,
-            itemTime: "",
+            itemTime: null,
         }
     }
 
@@ -50,7 +50,7 @@ class BarcodeScan extends React.Component {
         this.setState({ firebaseId: paramsFirebaseId })
 
         // Take value from params and put it as state.itemTime
-        let paramsItemTime = this.props.navigation.state.params.itemTime
+        let paramsItemTime = this.props.navigation.state.params.itemTime.toDate()
         this.setState({ itemTime: paramsItemTime })
 
         // Take value from params and put it as state.number
@@ -70,28 +70,11 @@ class BarcodeScan extends React.Component {
                 // Remove Notification
                 ReactNativeAN.removeAllFiredNotifications()
 
-                // Get the time in Firebase (which is string) and change it to Date format
-                const hour = parseInt(this.state.itemTime.substring(0, 2))
-                const minute = parseInt(this.state.itemTime.substring(3, 5))
-                const morning_afternoon = this.state.itemTime.substring(6, 8)
-                const now = new Date()
-                now.setDate(now.getDate() + 1)
-                if (morning_afternoon == "am") {
-                    if (hour == 12) {
-                        now.setHours(hour - 12, minute, 0)
-                    } else {
-                        now.setHours(hour, minute, 0)
-                    }
-                } else {
-                    if (hour == 12) {
-                        now.setHours(hour, minute, 0)
-                    } else {
-                        now.setHours(hour + 12, minute, 0)
-                    }
-                }
-                console.log("Real Value Barcode: " + now)
-                console.log("Real Value Barcode Format: " + moment(now).format())
-                const fireDates = ReactNativeAN.parseDate(now)
+                // Set New Alarm Time
+                this.state.itemTime.setDate(this.state.itemTime.getDate() + 1)
+                console.log("Real Value Barcode: " + this.state.itemTime)
+                console.log("Real Value Barcode Format: " + moment(this.state.itemTime).format())
+                const fireDates = ReactNativeAN.parseDate(this.state.itemTime)
 
                 const details = {
                     ...alarmNotifData,
@@ -111,15 +94,16 @@ class BarcodeScan extends React.Component {
                 }
                 firestore().collection("reminder").doc(firebaseId).update({
                     idAN: idAN,
-                    alarmId: alarmId
+                    alarmId: alarmId,
+                    time: this.state.itemTime
                 })
 
                 // When the alarm is turned off, add the medicine into "history" collection
                 firestore().collection("history").add({
                     medicine: name,
                     patientEmail: auth().currentUser.email,
-                    time: this.state.itemTime,
-                    startTime: new Date(Date.now()),
+                    startTime: this.state.itemTime,
+                    //startTime: new Date(Date.now()),
                     date: moment().format('MMMM Do YYYY'),
                     status: "taken"
                 })
