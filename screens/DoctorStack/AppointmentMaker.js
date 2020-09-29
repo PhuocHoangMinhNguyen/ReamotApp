@@ -4,7 +4,7 @@
 // Status: Optimized
 
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-simple-toast";
 import { ConfirmDialog } from "react-native-simple-dialogs";
@@ -13,6 +13,8 @@ import moment from "moment";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Background from '../../components/Background';
+
+var tempAvatar = require("../../assets/tempAvatar.jpg")
 
 class AppointmentMaker extends React.Component {
     state = {
@@ -104,10 +106,19 @@ class AppointmentMaker extends React.Component {
                     style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
-                    <Ionicons name="arrow-back" size={32} color="#FFF" />
+                    <Ionicons name="arrow-back" size={30} color="#FFF" />
                 </TouchableOpacity>
                 <Text style={styles.header}>Appointment Maker</Text>
                 <Text style={styles.header1}>Make an appointment with the chosen doctor</Text>
+                <View style={styles.information}>
+                    <Image style={styles.image}
+                        source={this.state.doctor.avatar
+                            ? { uri: this.state.doctor.avatar }
+                            : tempAvatar
+                        } />
+                    <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
+                    <Text>Address: {this.state.doctor.address}</Text>
+                </View>
                 <View style={styles.timePicker}>
                     <TouchableOpacity style={styles.pickerButton} onPress={this.showModeDate}>
                         <Text style={{ color: "#FFF" }}>Choose a Day!</Text>
@@ -174,12 +185,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
     },
     back: {
-        position: "absolute",
-        top: 24,
-        left: 32,
-        width: 32,
-        height: 32,
-        borderRadius: 16,
+        marginTop: -160,
+        left: 30,
+        width: 30,
+        height: 30,
+        borderRadius: 15,
         backgroundColor: "rgba(21, 22, 48, 0.1)",
         alignItems: "center",
         justifyContent: "center",
@@ -187,9 +197,8 @@ const styles = StyleSheet.create({
     header: {
         color: "#FFF",
         fontSize: 24,
-        marginTop: -120,
-        marginBottom: 20,
-        marginHorizontal: 30
+        marginBottom: 8,
+        textAlign: "center"
     },
     header1: {
         color: "#FFF",
@@ -242,7 +251,18 @@ const styles = StyleSheet.create({
         height: 35,
         justifyContent: "center",
         alignItems: "center",
-    }
+    },
+    information: {
+        backgroundColor: "#DDD",
+        alignItems: "center",
+        borderRadius: 5,
+        padding: 16,
+        marginHorizontal: 30,
+    },
+    image: {
+        width: 100,
+        height: 100
+    },
 })
 
 export default AppointmentMaker

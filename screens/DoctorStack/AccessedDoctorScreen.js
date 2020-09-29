@@ -94,13 +94,11 @@ class AccessedDoctorScreen extends React.Component {
                 </TouchableOpacity>
                 {header}
                 <View style={styles.information}>
-                    <Image
-                        source={
-                            this.state.doctor.avatar
-                                ? { uri: this.state.doctor.avatar }
-                                : tempAvatar
-                        }
-                        style={styles.image} />
+                    <Image style={styles.image}
+                        source={this.state.doctor.avatar
+                            ? { uri: this.state.doctor.avatar }
+                            : tempAvatar
+                        } />
                     <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
                     <Text>Address: {this.state.doctor.address}</Text>
                 </View>
