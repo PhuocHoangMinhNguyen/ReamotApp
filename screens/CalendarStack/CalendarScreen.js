@@ -43,6 +43,7 @@ class CalendarScreen extends React.Component {
     }
   }
 
+  // calculate some value to show the progress chart
   calculate = async () => {
     // Get history documents with status missed to calculate percentage
     let docsMissedLength = 0
@@ -98,10 +99,12 @@ class CalendarScreen extends React.Component {
     })
   }
 
+  // Load the history of taking medicine for day chosen and the information of medicines 
+  // appeared in the history.
+  // Then calculate some value to show the progress chart
   loadItems = () => {
     let found = false
-    firestore().collection("history")
-      .where('patientEmail', '==', auth().currentUser.email)
+    firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .onSnapshot(querySnapshot => {
         found = true
@@ -147,6 +150,7 @@ class CalendarScreen extends React.Component {
       show: Platform.OS === 'ios',
       testDate: currentDate,
     })
+    // Reload medicines for the new date chosen and new progress chart.
     this.loadItems()
   }
 

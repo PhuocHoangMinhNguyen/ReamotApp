@@ -33,10 +33,6 @@ class DoctorScreen extends Component {
     let tempPharmacistEmail = []
     let tempDoctorEmail = []
 
-    // doctor and pharmacist info using emails from "users" document
-    //let tempAccessedDoctor = []
-    //let tempAccessedPharmacist = []
-
     this.unsubscribe = firestore().collection("users").doc((auth().currentUser || {}).uid)
       .onSnapshot(documentSnapshot => {
         tempPharmacistEmail = documentSnapshot.data().pharmacistList
@@ -51,8 +47,7 @@ class DoctorScreen extends Component {
         } else {
           if (tempDoctorEmail != null) {
             // Accessed Doctor
-            firestore().collection("doctor")
-              .where('doctorEmail', 'in', tempDoctorEmail)
+            firestore().collection("doctor").where('doctorEmail', 'in', tempDoctorEmail)
               .onSnapshot(querySnapshot => {
                 let tempAccessedDoctor = []
                 querySnapshot.forEach(documentSnapshot => {
@@ -67,8 +62,7 @@ class DoctorScreen extends Component {
           }
           if (tempPharmacistEmail != null) {
             // Accessed Pharmacist
-            firestore().collection("pharmacist")
-              .where('pharmacistEmail', 'in', tempPharmacistEmail)
+            firestore().collection("pharmacist").where('pharmacistEmail', 'in', tempPharmacistEmail)
               .onSnapshot(querySnapshot => {
                 let tempAccessedPharmacist = []
                 querySnapshot.forEach(documentSnapshot => {
@@ -89,14 +83,19 @@ class DoctorScreen extends Component {
     this.unsubscribe()
   }
 
+  // When clicking on one doctor/ pharmacist item, navigate user to 
+  // that doctor/pharmacist information screen.
   handleClick = (dataInfor) => {
     this.props.navigation.navigate("AccessedDoctorScreen", dataInfor)
   }
 
+  // Navigate user to a screen containing list of doctor/pharmacist
+  // that do not have access to user's database.
   addAccess = () => {
     this.props.navigation.navigate("AddAccess")
   }
 
+  // Render each doctor and pharmacist item.
   renderItem = (item) => {
     let emailInfo
     if (item.type == "Doctor") {
@@ -138,6 +137,7 @@ class DoctorScreen extends Component {
 
   render() {
     let message
+    // If there is no accessed doctor and accessed pharmacist.
     if (this.state.accessedDoctor.length == 0 && this.state.accessedPharmacist.length == 0) {
       message =
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
