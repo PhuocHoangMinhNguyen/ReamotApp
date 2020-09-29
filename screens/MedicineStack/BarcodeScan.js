@@ -71,10 +71,11 @@ class BarcodeScan extends React.Component {
                 ReactNativeAN.removeAllFiredNotifications()
 
                 // Set New Alarm Time
-                this.state.itemTime.setDate(this.state.itemTime.getDate() + 1)
-                console.log("Real Value Barcode: " + this.state.itemTime)
-                console.log("Real Value Barcode Format: " + moment(this.state.itemTime).format())
-                const fireDates = ReactNativeAN.parseDate(this.state.itemTime)
+                const newReminderTime = this.state.itemTime
+                newReminderTime.setDate(newReminderTime.getDate() + 1)
+                console.log("Real Value Barcode: " + newReminderTime)
+                console.log("Real Value Barcode Format: " + moment(newReminderTime).format())
+                const fireDates = ReactNativeAN.parseDate(newReminderTime)
 
                 const details = {
                     ...alarmNotifData,
@@ -95,7 +96,7 @@ class BarcodeScan extends React.Component {
                 firestore().collection("reminder").doc(firebaseId).update({
                     idAN: idAN,
                     alarmId: alarmId,
-                    time: this.state.itemTime
+                    time: newReminderTime
                 })
 
                 // When the alarm is turned off, add the medicine into "history" collection
@@ -103,7 +104,6 @@ class BarcodeScan extends React.Component {
                     medicine: name,
                     patientEmail: auth().currentUser.email,
                     startTime: this.state.itemTime,
-                    //startTime: new Date(Date.now()),
                     date: moment().format('MMMM Do YYYY'),
                     status: "taken"
                 })

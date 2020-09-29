@@ -51,7 +51,7 @@ class CalendarScreen extends React.Component {
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .where('status', '==', "missed")
-    await missedCollection.get().then((querySnapshot) => {
+    await missedCollection.get().then(querySnapshot => {
       docsMissedLength = querySnapshot.docs.length
     })
 
@@ -61,7 +61,7 @@ class CalendarScreen extends React.Component {
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .where('status', '==', "taken")
-    await takenCollection.get().then((querySnapshot) => {
+    await takenCollection.get().then(querySnapshot => {
       docsTakenLength = querySnapshot.docs.length
     })
 

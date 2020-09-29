@@ -119,10 +119,11 @@ class ChangeReminder extends React.Component {
         // Remove Notification
         ReactNativeAN.removeAllFiredNotifications()
 
-        this.state.initial.setDate(this.state.initial.getDate() + 1)
-        console.log("Real Value Daily: " + this.state.initial)
-        console.log("Real Value Daily Format: " + moment(this.state.initial).format())
-        const fireDates = ReactNativeAN.parseDate(this.state.initial)
+        const newReminderTime = this.state.initial
+        newReminderTime.setDate(newReminderTime.getDate() + 1)
+        console.log("Real Value Daily: " + newReminderTime)
+        console.log("Real Value Daily Format: " + moment(newReminderTime).format())
+        const fireDates = ReactNativeAN.parseDate(newReminderTime)
 
         const details = {
             ...alarmNotifData,
@@ -143,15 +144,14 @@ class ChangeReminder extends React.Component {
         firestore().collection("reminder").doc(firebaseId).update({
             idAN: idAN,
             alarmId: alarmId,
-            time: this.state.initial
+            time: newReminderTime
         })
 
         // When the alarm is turned off, add the medicine into "history" collection
         firestore().collection("history").add({
             medicine: name,
             patientEmail: auth().currentUser.email,
-            time: moment().format('h:mm a'),
-            startTime: new Date(Date.now()),
+            startTime: this.state.initial,
             date: moment().format('MMMM Do YYYY'),
             status: "missed"
         })
