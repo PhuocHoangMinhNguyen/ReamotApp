@@ -16,14 +16,9 @@ import firestore from "@react-native-firebase/firestore"
 import auth from "@react-native-firebase/auth"
 import moment from "moment"
 import Background from '../../components/Background'
+import TreeImage from '../../components/TreeImage'
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
-var growing1 = require('../../assets/growing_0.png')
-var growing2 = require('../../assets/growing_0_to_25.png')
-var growing3 = require('../../assets/growing_25_to_50.png')
-var growing4 = require('../../assets/growing_50_to_75.png')
-var growing5 = require('../../assets/growing_75_to_100.png')
-var growing6 = require('../../assets/GrowingTree.jpg')
 
 class HomeScreen extends React.Component {
   state = {
@@ -163,7 +158,6 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    let image
     let counting = 0
     for (let i = 0; i < this.state.remindermedicines.length; i++) {
       if (this.state.remindermedicines[i].time.toDate().toDateString() == (new Date()).toDateString()
@@ -174,32 +168,13 @@ class HomeScreen extends React.Component {
     // Determine Image Chosen to be shown, based on the value below.
     const value = (this.state.historymedicines.length - this.state.missedMedicines.length)
       * 100 / (counting + this.state.historymedicines.length)
-    if (value == 0) {
-      image = <Image style={styles.image}
-        source={growing1} />
-    } else if (value > 0 && value < 25) {
-      image = <Image style={styles.image}
-        source={growing2} />
-    } else if (value >= 25 && value < 50) {
-      image = <Image style={styles.image}
-        source={growing3} />
-    } else if (value >= 50 && value < 75) {
-      image = <Image style={styles.image}
-        source={growing4} />
-    } else if (value >= 75 && value < 100) {
-      image = <Image style={styles.image}
-        source={growing5} />
-    } else {
-      image = <Image style={styles.image}
-        source={growing6} />
-    }
 
     // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
     if (this.state.historymedicines.length == 0 && this.state.remindermedicines.length == 0) {
       return (
         <View style={styles.container}>
           <Background style={styles.containter} />
-          {image}
+          <TreeImage value={value} />
           <View style={{ flex: 1, marginTop: -150, justifyContent: "center", alignItems: "center" }}>
             <Text style={styles.emptyText}>You have no active reminder</Text>
             <Text>Please add a medicine,</Text>
@@ -212,7 +187,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Background />
-        {image}
+        <TreeImage value={value} />
         <View style={{ flex: 1 }}>
           <View style={styles.chapterView}>
             <Text style={styles.chapter}>Medicines Taken</Text>
@@ -336,12 +311,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16
   },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    marginTop: -150,
-  }
 })
 
 export default HomeScreen
