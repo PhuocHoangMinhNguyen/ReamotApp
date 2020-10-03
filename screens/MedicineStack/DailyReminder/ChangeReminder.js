@@ -134,8 +134,7 @@ class ChangeReminder extends React.Component {
 
         const newReminderTime = this.state.initial
         newReminderTime.setDate(newReminderTime.getDate() + 1)
-        console.log("Real Value Daily: " + newReminderTime)
-        console.log("Real Value Daily Format: " + moment(newReminderTime).format())
+        console.log("Change Reminder: " + newReminderTime)
         const fireDates = ReactNativeAN.parseDate(newReminderTime)
 
         const details = {

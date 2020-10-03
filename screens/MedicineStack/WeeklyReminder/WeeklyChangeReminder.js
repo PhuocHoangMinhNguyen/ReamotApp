@@ -134,8 +134,7 @@ class WeeklyChangeReminder extends React.Component {
 
         const newReminderTime = this.state.initial
         newReminderTime.setDate(newReminderTime.getDate() + 1)
-        console.log("Real Value Weekly: " + newReminderTime)
-        console.log("Real Value Weekly Format: " + moment(newReminderTime).format())
+        console.log("Weekly Change Reminder: " + newReminderTime)
         const fireDates = ReactNativeAN.parseDate(newReminderTime)
 
         const details = {
