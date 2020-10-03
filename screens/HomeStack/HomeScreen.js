@@ -110,7 +110,8 @@ class HomeScreen extends React.Component {
 
     DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
       const obj = JSON.parse(e);
-      this.props.navigation.navigate("ChangeReminder", { medicine: obj })
+      console.log(obj);
+      //this.props.navigation.navigate("ChangeReminder", { medicine: obj })
     });
   }
 
