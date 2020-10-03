@@ -12,7 +12,6 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import TimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import Background from '../../../components/Background';
-import { DeviceEventEmitter } from 'react-native';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -51,21 +50,6 @@ class WeeklyNewReminder extends React.Component {
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMedicineScreen = this.props.navigation.state.params
         this.setState({ medicine: paramsFromMedicineScreen })
-
-        DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
-            const obj = JSON.parse(e);
-            console.log(`Notification id: ${obj.id} dismissed`);
-        });
-
-        DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
-            const obj = JSON.parse(e);
-            console.log(`Notification id: ${obj.id} opened`);
-        });
-    }
-
-    componentWillUnmount() {
-        DeviceEventEmitter.removeListener('OnNotificationDismissed');
-        DeviceEventEmitter.removeListener('OnNotificationOpened');
     }
 
     // This function called after the alarm is set.

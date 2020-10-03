@@ -10,7 +10,6 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import moment from "moment";
-import { DeviceEventEmitter } from 'react-native';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -18,6 +17,7 @@ const alarmNotifData = {
     channel: "reminder",
     loop_sound: true,
     message: "Take your Medicine",
+    data: { content: 'My name is Minh' },
 }
 
 class BarcodeScan extends React.Component {
@@ -57,21 +57,6 @@ class BarcodeScan extends React.Component {
         // Take value from params and put it as state.number
         let paramsNumber = this.props.navigation.state.params.number
         this.setState({ number: paramsNumber })
-
-        DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
-            const obj = JSON.parse(e);
-            console.log(`Notification id: ${obj.id} dismissed`);
-        });
-
-        DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
-            const obj = JSON.parse(e);
-            console.log(`Notification id: ${obj.id} opened`);
-        });
-    }
-
-    componentWillUnmount() {
-        DeviceEventEmitter.removeListener('OnNotificationDismissed');
-        DeviceEventEmitter.removeListener('OnNotificationOpened');
     }
 
     onBarCodeRead = async (e) => {
@@ -115,10 +100,12 @@ class BarcodeScan extends React.Component {
                 })
 
                 // When the alarm is turned off, add the medicine into "history" collection
+                const firebaseReminder = this.state.itemTime
+                firebaseReminder.setDate(firebaseReminder.getDate() - 1)
                 firestore().collection("history").add({
                     medicine: name,
                     patientEmail: auth().currentUser.email,
-                    startTime: this.state.itemTime,
+                    startTime: firebaseReminder,
                     date: moment().format('MMMM Do YYYY'),
                     status: "taken"
                 })

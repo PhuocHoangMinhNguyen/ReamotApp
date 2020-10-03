@@ -12,7 +12,6 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import moment from 'moment';
 import { ConfirmDialog } from "react-native-simple-dialogs";
 import Background from '../../../components/Background';
-import { DeviceEventEmitter } from 'react-native';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -20,6 +19,7 @@ const alarmNotifData = {
     channel: "reminder",
     loop_sound: true,
     message: "Take your Medicine",
+    data: { content: 'My name is Minh' },
 }
 
 var tempAvatar = require("../../../assets/tempAvatar.jpg")
@@ -89,22 +89,10 @@ class WeeklyChangeReminder extends React.Component {
                     }
                 })
             })
-
-        DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
-            const obj = JSON.parse(e);
-            console.log(`Notification id: ${obj.id} dismissed`);
-        });
-
-        DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
-            const obj = JSON.parse(e);
-            console.log(`Notification id: ${obj.id} opened`);
-        });
     }
 
     componentWillUnmount() {
         this.unsubscribe()
-        DeviceEventEmitter.removeListener('OnNotificationDismissed');
-        DeviceEventEmitter.removeListener('OnNotificationOpened');
     }
 
     // delete alarm from "reminder" collection in firestore
@@ -160,10 +148,12 @@ class WeeklyChangeReminder extends React.Component {
         })
 
         // When the alarm is turned off, add the medicine into "history" collection
+        const firebaseReminder = this.state.initial
+        firebaseReminder.setDate(firebaseReminder.getDate() - 1)
         firestore().collection("history").add({
             medicine: name,
             patientEmail: auth().currentUser.email,
-            startTime: this.state.initial,
+            startTime: firebaseReminder,
             date: moment().format('MMMM Do YYYY'),
             status: "missed"
         })
