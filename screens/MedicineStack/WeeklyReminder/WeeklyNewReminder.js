@@ -19,7 +19,6 @@ const alarmNotifData = {
     channel: "reminder",
     loop_sound: true,
     message: "Take your Medicine",
-    data: { content: 'My name is Minh' },
 }
 
 var tempAvatar = require("../../../assets/tempAvatar.jpg")
@@ -90,6 +89,7 @@ class WeeklyNewReminder extends React.Component {
             fire_date: fireDate,
             title: name,
             alarm_id: reminderId,
+            data: this.state.medicine
         }
         // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details)

@@ -3,10 +3,10 @@
 //  and user email in the drawer navigator.
 // Status: Optimized
 
-import React from "react"
-import { View, Text, StyleSheet, Image } from "react-native"
-import auth from "@react-native-firebase/auth"
-import firestore from "@react-native-firebase/firestore"
+import React from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
 var images = {
   tempAvatar: { img: require("../../assets/tempAvatar.jpg") }

@@ -5,17 +5,17 @@
 // Status: Optimized
 
 import React from "react";
-import { createStackNavigator } from "react-navigation-stack"
-import { createBottomTabNavigator } from "react-navigation-tabs"
+import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
-import HomeStack from "./HomeStack"
-import CalendarStack from "./CalendarStack"
-import MedicineStack from "./MedicineStack"
-import DoctorStack from "./DoctorStack"
-import MoreStack from "./MoreStack"
+import HomeStack from "./HomeStack";
+import CalendarStack from "./CalendarStack";
+import MedicineStack from "./MedicineStack";
+import DoctorStack from "./DoctorStack";
+import MoreStack from "./MoreStack";
 
 BottomTabs = createStackNavigator(
     {

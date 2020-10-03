@@ -2,8 +2,8 @@
 // Description: Includes CalendarScreen only
 // Status: Optimized
 
-import { createStackNavigator } from "react-navigation-stack"
-import CalendarScreen from "../screens/CalendarStack/CalendarScreen"
+import { createStackNavigator } from "react-navigation-stack";
+import CalendarScreen from "../screens/CalendarStack/CalendarScreen";
 
 CalendarStack = createStackNavigator({
     CalendarScreen,

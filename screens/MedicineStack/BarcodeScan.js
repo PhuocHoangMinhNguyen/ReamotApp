@@ -17,7 +17,6 @@ const alarmNotifData = {
     channel: "reminder",
     loop_sound: true,
     message: "Take your Medicine",
-    data: { content: 'My name is Minh' },
 }
 
 class BarcodeScan extends React.Component {
@@ -81,7 +80,8 @@ class BarcodeScan extends React.Component {
                     ...alarmNotifData,
                     fire_date: fireDates,
                     title: name,
-                    alarm_id: alarmId
+                    alarm_id: alarmId,
+                    data: this.state.medicine
                 }
                 ReactNativeAN.scheduleAlarm(details)
 
