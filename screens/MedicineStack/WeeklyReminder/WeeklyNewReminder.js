@@ -2,16 +2,17 @@
 // Description: Allow patient to make a new weekly reminder
 // Status: Currently working similar to daily reminder
 
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import Ionicons from "react-native-vector-icons/Ionicons"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import Toast from "react-native-simple-toast"
-import ReactNativeAN from 'react-native-alarm-notification'
-import TimePicker from '@react-native-community/datetimepicker'
-import moment from 'moment'
-import Background from '../../../components/Background'
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import Toast from "react-native-simple-toast";
+import ReactNativeAN from 'react-native-alarm-notification';
+import TimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+import Background from '../../../components/Background';
+import { DeviceEventEmitter } from 'react-native';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -19,6 +20,7 @@ const alarmNotifData = {
     channel: "reminder",
     loop_sound: true,
     message: "Take your Medicine",
+    data: { content: 'My name is Minh' },
 }
 
 var tempAvatar = require("../../../assets/tempAvatar.jpg")
@@ -49,6 +51,21 @@ class WeeklyNewReminder extends React.Component {
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMedicineScreen = this.props.navigation.state.params
         this.setState({ medicine: paramsFromMedicineScreen })
+
+        DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} dismissed`);
+        });
+
+        DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} opened`);
+        });
+    }
+
+    componentWillUnmount() {
+        DeviceEventEmitter.removeListener('OnNotificationDismissed');
+        DeviceEventEmitter.removeListener('OnNotificationOpened');
     }
 
     // This function called after the alarm is set.
@@ -152,8 +169,7 @@ class WeeklyNewReminder extends React.Component {
         return (
             <View style={styles.container}>
                 <Background />
-                <TouchableOpacity
-                    style={styles.back}
+                <TouchableOpacity style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
@@ -161,14 +177,11 @@ class WeeklyNewReminder extends React.Component {
                 <Text style={styles.header}>Set Reminder</Text>
                 <View style={styles.information}>
                     <View style={{ flexDirection: "row" }}>
-                        <Image
-                            source={
-                                this.state.medicine.image
-                                    ? { uri: this.state.medicine.image }
-                                    : tempAvatar
-                            }
-                            style={styles.image}
-                        />
+                        <Image style={styles.image}
+                            source={this.state.medicine.image
+                                ? { uri: this.state.medicine.image }
+                                : tempAvatar
+                            } />
                         <View style={styles.name}>
                             <Text style={{ fontSize: 16 }}>{this.state.medicine.name}</Text>
                         </View>

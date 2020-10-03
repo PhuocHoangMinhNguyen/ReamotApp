@@ -3,7 +3,7 @@
 // and medication taking history for the day
 // Status: Optimized
 
-import React from "react"
+import React from "react";
 import {
   Text,
   StyleSheet,
@@ -11,12 +11,12 @@ import {
   Image,
   TouchableOpacity,
   View,
-} from "react-native"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import moment from "moment"
-import Background from '../../components/Background'
-import TreeImage from '../../components/TreeImage'
+} from "react-native";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import moment from "moment";
+import Background from '../../components/Background';
+import TreeImage from '../../components/TreeImage';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
@@ -216,7 +216,6 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: "#FFF"
   },
   feed: {

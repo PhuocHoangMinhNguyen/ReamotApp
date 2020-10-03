@@ -2,8 +2,8 @@
 // Description: Frequent Asked Questions Screen (Can also be used as tutorial for new users)
 // Status: Optimized
 
-import React from "react"
-import { View, Text, StyleSheet, ScrollView } from "react-native"
+import React from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 
 class HelpScreen extends React.Component {
     render() {

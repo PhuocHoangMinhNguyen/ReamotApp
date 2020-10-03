@@ -3,8 +3,8 @@
 // or choosing photo from library for user's avatar
 // Status: Optimized
 
-import { PermissionsAndroid, Platform } from "react-native"
-import * as Permissions from "expo-permissions"
+import { PermissionsAndroid, Platform } from "react-native";
+import * as Permissions from "expo-permissions";
 
 class UserPermissions {
   getPhotoPermission = async () => {

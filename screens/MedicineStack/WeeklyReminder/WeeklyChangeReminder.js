@@ -2,16 +2,17 @@
 // Description: Allow patient to delete their weekly reminder and stop sounding alarm
 // Status: Currently working similar to daily reminder
 
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import Ionicons from "react-native-vector-icons/Ionicons"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import Toast from "react-native-simple-toast"
-import ReactNativeAN from 'react-native-alarm-notification'
-import moment from 'moment'
-import { ConfirmDialog } from "react-native-simple-dialogs"
-import Background from '../../../components/Background'
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import Toast from "react-native-simple-toast";
+import ReactNativeAN from 'react-native-alarm-notification';
+import moment from 'moment';
+import { ConfirmDialog } from "react-native-simple-dialogs";
+import Background from '../../../components/Background';
+import { DeviceEventEmitter } from 'react-native';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -88,10 +89,22 @@ class WeeklyChangeReminder extends React.Component {
                     }
                 })
             })
+
+        DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} dismissed`);
+        });
+
+        DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} opened`);
+        });
     }
 
     componentWillUnmount() {
         this.unsubscribe()
+        DeviceEventEmitter.removeListener('OnNotificationDismissed');
+        DeviceEventEmitter.removeListener('OnNotificationOpened');
     }
 
     // delete alarm from "reminder" collection in firestore

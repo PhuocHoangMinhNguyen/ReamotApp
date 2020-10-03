@@ -6,14 +6,14 @@
 //      - Make Appointment (if the chosen one is a doctor, not pharmacist)
 // Status: Optimized
 
-import React from "react"
-import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import Toast from "react-native-simple-toast"
-import { ConfirmDialog } from "react-native-simple-dialogs"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import Background from '../../components/Background'
+import React from "react";
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import Toast from "react-native-simple-toast";
+import { ConfirmDialog } from "react-native-simple-dialogs";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import Background from '../../components/Background';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 

@@ -2,12 +2,12 @@
 // Description: Forgot Password Screen
 // Status: Optimized
 
-import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import auth from "@react-native-firebase/auth"
-import Toast from "react-native-simple-toast"
-import Background from '../../components/Background'
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import auth from "@react-native-firebase/auth";
+import Toast from "react-native-simple-toast";
+import Background from '../../components/Background';
 
 var confusedMan = require('../../assets/confusedMan.png')
 

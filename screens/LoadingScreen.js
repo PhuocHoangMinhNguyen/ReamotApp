@@ -4,9 +4,9 @@
 // based on user's state (null or not null)
 // Status: Optimized
 
-import React from "react"
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native"
-import auth from "@react-native-firebase/auth"
+import React from "react";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import auth from "@react-native-firebase/auth";
 
 class LoadingScreen extends React.Component {
   componentDidMount() {

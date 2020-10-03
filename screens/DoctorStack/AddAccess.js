@@ -2,7 +2,7 @@
 // Description: Choose a doctor/pharmacist to give him/her access to user medical details.
 // Status: In development
 
-import React from "react"
+import React from "react";
 import {
     View,
     Text,
@@ -11,10 +11,10 @@ import {
     FlatList,
     TouchableOpacity,
     Image
-} from "react-native"
-import { SearchBar } from "react-native-elements"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
+} from "react-native";
+import { SearchBar } from "react-native-elements";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 

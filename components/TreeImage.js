@@ -1,5 +1,5 @@
-import React from 'react'
-import { Image, StyleSheet } from 'react-native'
+import React from 'react';
+import { Image, StyleSheet } from 'react-native';
 
 var growing1 = require('../assets/growing_0.png')
 var growing2 = require('../assets/growing_0_to_25.png')
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 100,
         marginTop: -150,
+        alignSelf: 'center'
     }
 })
 

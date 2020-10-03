@@ -2,9 +2,9 @@
 // Description: Allow patient to view application terms of services
 // Status: Optimized
 
-import React from "react"
-import { Text, StyleSheet } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
+import React from "react";
+import { Text, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 class TermsServices extends React.Component {
     render() {

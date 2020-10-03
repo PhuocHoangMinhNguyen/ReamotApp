@@ -3,11 +3,11 @@
 // If the account hasnt been verified, this screen will be shown when user login.
 // Status: Optimized
 
-import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
-import auth from "@react-native-firebase/auth"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import Toast from "react-native-simple-toast"
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import auth from "@react-native-firebase/auth";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import Toast from "react-native-simple-toast";
 
 class VerificationScreen extends React.Component {
     render() {

@@ -2,9 +2,9 @@
 // Description: Delete all reminders when logging out, 
 // and set all reminders when logging in
 // Status: Optimized
-import ReactNativeAN from 'react-native-alarm-notification'
-import firestore from "@react-native-firebase/firestore"
-import moment from 'moment'
+import ReactNativeAN from 'react-native-alarm-notification';
+import firestore from "@react-native-firebase/firestore";
+import moment from 'moment';
 
 // Notification Data Structure.
 const alarmNotifData = {

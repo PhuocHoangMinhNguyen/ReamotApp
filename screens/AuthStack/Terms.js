@@ -2,10 +2,10 @@
 // Description: Terms of Service Screen so users can read before register account.
 // Status: Optimized
 
-import React from "react"
-import { View, StyleSheet, TouchableOpacity } from "react-native"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import TermsServices from '../../components/TermsServices'
+import React from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import TermsServices from '../../components/TermsServices';
 
 class Terms extends React.Component {
     render() {

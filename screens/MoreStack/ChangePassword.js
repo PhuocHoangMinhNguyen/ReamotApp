@@ -2,11 +2,11 @@
 // Description: Allow patient to change password
 // Status: Optimized
 
-import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
-import Toast from "react-native-simple-toast"
-import auth from "@react-native-firebase/auth"
-import Background from '../../components/Background'
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import Toast from "react-native-simple-toast";
+import auth from "@react-native-firebase/auth";
+import Background from '../../components/Background';
 
 var confusedMan = require('../../assets/confusedMan.png')
 

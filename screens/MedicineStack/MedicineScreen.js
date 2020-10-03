@@ -2,7 +2,7 @@
 // Description: Show the list of medicines that is in patient's prescriptions
 // Status: Optimized
 
-import React from "react"
+import React from "react";
 import {
   StyleSheet,
   FlatList,
@@ -11,12 +11,12 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
-} from "react-native"
-import { SearchBar } from "react-native-elements"
-import Toast from 'react-native-simple-toast'
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import ReactNativeAN from 'react-native-alarm-notification'
+} from "react-native";
+import { SearchBar } from "react-native-elements";
+import Toast from 'react-native-simple-toast';
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import ReactNativeAN from 'react-native-alarm-notification';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 

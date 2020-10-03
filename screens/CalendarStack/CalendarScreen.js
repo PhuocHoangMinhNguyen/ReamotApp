@@ -2,7 +2,7 @@
 // Description: Used to show patient's taking medication history
 // Status: Optimized
 
-import React from "react"
+import React from "react";
 import {
   StyleSheet,
   FlatList,
@@ -12,13 +12,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Dimensions
-} from "react-native"
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import DatePicker from '@react-native-community/datetimepicker'
-import moment from "moment"
-import { ProgressChart } from "react-native-chart-kit"
-import Background from '../../components/Background'
+} from "react-native";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import DatePicker from '@react-native-community/datetimepicker';
+import moment from "moment";
+import { ProgressChart } from "react-native-chart-kit";
+import Background from '../../components/Background';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 

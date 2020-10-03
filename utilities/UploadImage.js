@@ -2,7 +2,7 @@
 // Description: Used to upload images to Firebase Storage
 // Status: Optimized
 
-import storage from "@react-native-firebase/storage"
+import storage from "@react-native-firebase/storage";
 
 class UploadImage {
     // Upload and replace the avatar in Firebase Storage

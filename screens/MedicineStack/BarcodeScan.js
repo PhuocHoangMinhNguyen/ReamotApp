@@ -2,14 +2,15 @@
 // Description: Used to scan medicine barcode when the alarm is sounded
 // Status: Optimized
 
-import React from 'react'
-import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native'
-import { RNCamera } from 'react-native-camera'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import ReactNativeAN from 'react-native-alarm-notification'
-import firestore from "@react-native-firebase/firestore"
-import auth from "@react-native-firebase/auth"
-import moment from "moment"
+import React from 'react';
+import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { RNCamera } from 'react-native-camera';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import ReactNativeAN from 'react-native-alarm-notification';
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import moment from "moment";
+import { DeviceEventEmitter } from 'react-native';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -56,6 +57,21 @@ class BarcodeScan extends React.Component {
         // Take value from params and put it as state.number
         let paramsNumber = this.props.navigation.state.params.number
         this.setState({ number: paramsNumber })
+
+        DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} dismissed`);
+        });
+
+        DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} opened`);
+        });
+    }
+
+    componentWillUnmount() {
+        DeviceEventEmitter.removeListener('OnNotificationDismissed');
+        DeviceEventEmitter.removeListener('OnNotificationOpened');
     }
 
     onBarCodeRead = async (e) => {

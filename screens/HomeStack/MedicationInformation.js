@@ -2,11 +2,11 @@
 // Description: Show medicine details of medicines shown on HomeScreen.
 // Status: Optimized
 
-import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import { ScrollView } from "react-native-gesture-handler"
-import Background from '../../components/Background'
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { ScrollView } from "react-native-gesture-handler";
+import Background from '../../components/Background';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 

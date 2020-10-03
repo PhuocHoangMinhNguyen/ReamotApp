@@ -2,17 +2,17 @@
 // Description: Used to allow patients to add their own medicine
 // Status: Optimized
 
-import React from "react"
-import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text } from "react-native"
-import auth from "@react-native-firebase/auth"
-import firestore from "@react-native-firebase/firestore"
+import React from "react";
+import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text } from "react-native";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 import UploadImage from '../../utilities/UploadImage';
 import Background from '../../components/Background';
-import Ionicons from "react-native-vector-icons/Ionicons"
-import UserPermissions from "../../utilities/UserPermissions"
-import ImagePicker from "react-native-image-picker"
-import CheckBox from "@react-native-community/checkbox"
-import Toast from "react-native-simple-toast"
+import Ionicons from "react-native-vector-icons/Ionicons";
+import UserPermissions from "../../utilities/UserPermissions";
+import ImagePicker from "react-native-image-picker";
+import CheckBox from "@react-native-community/checkbox";
+import Toast from "react-native-simple-toast";
 
 class AddMedicine extends React.Component {
     state = {

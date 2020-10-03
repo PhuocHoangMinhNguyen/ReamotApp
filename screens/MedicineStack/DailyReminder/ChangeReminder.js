@@ -12,6 +12,7 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import moment from 'moment';
 import { ConfirmDialog } from "react-native-simple-dialogs";
 import Background from '../../../components/Background';
+import { DeviceEventEmitter } from 'react-native';
 
 // Notification Data Structure.
 const alarmNotifData = {
@@ -88,10 +89,22 @@ class ChangeReminder extends React.Component {
                     }
                 })
             })
+
+        DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} dismissed`);
+        });
+
+        DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
+            const obj = JSON.parse(e);
+            console.log(`Notification id: ${obj.id} opened`);
+        });
     }
 
     componentWillUnmount() {
         this.unsubscribe()
+        DeviceEventEmitter.removeListener('OnNotificationDismissed');
+        DeviceEventEmitter.removeListener('OnNotificationOpened');
     }
 
     // delete alarm from "reminder" collection in firestore
