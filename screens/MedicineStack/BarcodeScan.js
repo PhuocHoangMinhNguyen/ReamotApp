@@ -34,7 +34,6 @@ class BarcodeScan extends React.Component {
             flashOn: false,
             // Details in Problems.txt file, Problem 1
             alarmId: Math.floor(Math.random() * 10000).toString(),
-            number: 0,
             itemTime: null,
         }
     }
@@ -52,14 +51,10 @@ class BarcodeScan extends React.Component {
         // Take value from params and put it as state.itemTime
         let paramsItemTime = this.props.navigation.state.params.itemTime
         this.setState({ itemTime: paramsItemTime })
-
-        // Take value from params and put it as state.number
-        let paramsNumber = this.props.navigation.state.params.number
-        this.setState({ number: paramsNumber })
     }
 
     onBarCodeRead = async (e) => {
-        const { name, barcode } = this.state.medicine
+        const { name, barcode, image, description } = this.state.medicine
         const { firebaseId, barcodeRead, alarmId } = this.state
         // If the barcode scanned is correct.
         if (barcode == e.data) {
@@ -81,7 +76,13 @@ class BarcodeScan extends React.Component {
                     fire_date: fireDates,
                     title: name,
                     alarm_id: alarmId,
-                    data: this.state.medicine
+                    data: {
+                        image: image,
+                        name: name,
+                        description: description,
+                        barcode: barcode,
+                        itemTime: newReminderTime.toString(),
+                    }
                 }
                 ReactNativeAN.scheduleAlarm(details)
 
@@ -101,7 +102,6 @@ class BarcodeScan extends React.Component {
 
                 // When the alarm is turned off, add the medicine into "history" collection
                 const firebaseReminder = this.state.itemTime
-                firebaseReminder.setDate(firebaseReminder.getDate() - 1)
                 firestore().collection("history").add({
                     medicine: name,
                     patientEmail: auth().currentUser.email,
@@ -109,23 +109,30 @@ class BarcodeScan extends React.Component {
                     date: moment().format('MMMM Do YYYY'),
                     status: "taken"
                 })
+
+                // Reduce the number of pills
                 let temporaryID
                 let firebasePills
+                let numberOfPills
                 const mPills = firestore().collection("medicinePills")
-                mPills.where('medicine', '==', this.state.medicine.name)
-                    .where('patientEmail', '==', auth().currentUser.email)
-                    .get().then(querySnapshot => {
-                        querySnapshot.forEach(documentSnapshot => {
-                            temporaryID = documentSnapshot.id
-                            firebasePills = documentSnapshot.data().pills
+                firestore().collection("reminder").doc(firebaseId).get().then((documentSnapshot) => {
+                    numberOfPills = documentSnapshot.data().numberOfPills
+                }).then(() => {
+                    mPills.where('medicine', '==', name)
+                        .where('patientEmail', '==', auth().currentUser.email)
+                        .get().then(querySnapshot => {
+                            querySnapshot.forEach(documentSnapshot => {
+                                temporaryID = documentSnapshot.id
+                                firebasePills = documentSnapshot.data().pills
+                            })
+                            // Need to minus the correct number of pills, not just one
+                            const value = firebasePills - numberOfPills
+                            mPills.doc(temporaryID).update({
+                                pills: value
+                            })
                         })
-                        // Need to minus the correct number of pills, not just one
-                        const value = firebasePills - this.state.number
-                        mPills.doc(temporaryID).update({
-                            pills: value
-                        })
-                    })
-                this.props.navigation.navigate("MedicineScreen")
+                    this.props.navigation.navigate("MedicineScreen")
+                })
             }
             Alert.alert("Alarm Sound is Stopped")
             // If the barcode scanned is incorrect.

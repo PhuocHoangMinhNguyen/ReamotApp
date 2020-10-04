@@ -17,7 +17,6 @@ import auth from "@react-native-firebase/auth";
 import moment from "moment";
 import Background from '../../components/Background';
 import TreeImage from '../../components/TreeImage';
-import { DeviceEventEmitter } from 'react-native';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
@@ -103,22 +102,10 @@ class HomeScreen extends React.Component {
           this.setState({ remindermedicines: tempReminder })
         })
     })
-    DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
-      const obj = JSON.parse(e);
-      console.log(`Notification id: ${obj.id} dismissed`);
-    });
-
-    DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
-      const obj = JSON.parse(e);
-      console.log(obj);
-      //this.props.navigation.navigate("ChangeReminder", { medicine: obj })
-    });
   }
 
   componentWillUnmount() {
     this.unsubscribe()
-    DeviceEventEmitter.removeListener('OnNotificationDismissed');
-    DeviceEventEmitter.removeListener('OnNotificationOpened');
   }
 
   // Information appears on each item on "Upcoming Reminder" List

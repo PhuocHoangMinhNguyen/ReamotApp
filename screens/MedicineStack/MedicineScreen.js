@@ -17,6 +17,8 @@ import Toast from 'react-native-simple-toast';
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import ReactNativeAN from 'react-native-alarm-notification';
+import { DeviceEventEmitter } from 'react-native';
+import NavigationService from '../../utilities/NavigationService';
 
 var tempAvatar = require("../../assets/tempAvatar.jpg")
 
@@ -38,7 +40,7 @@ class MedicineScreen extends React.Component {
         querySnapshot.forEach(documentSnapshot => {
           temp.push({
             ...documentSnapshot.data(),
-            key: documentSnapshot.id
+            medicineKey: documentSnapshot.id
           })
         })
 
@@ -65,10 +67,31 @@ class MedicineScreen extends React.Component {
             })
           })
       })
+
+    DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
+      const obj = JSON.parse(e);
+      console.log(`Notification id: ${obj.id} dismissed`);
+    });
+
+    DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
+      const obj = JSON.parse(e);
+      //console.log("Item Time: " + new Date(Date.parse(obj.itemTime)));
+      NavigationService.navigate("ChangeReminder", {
+        medicine: {
+          image: obj.image,
+          name: obj.name,
+          description: obj.description,
+          barcode: obj.barcode,
+        },
+        itemTime: new Date(Date.parse(obj.itemTime)),
+      })
+    });
   }
 
   componentWillUnmount() {
     this.unsubscribe()
+    DeviceEventEmitter.removeListener('OnNotificationDismissed');
+    DeviceEventEmitter.removeListener('OnNotificationOpened');
   }
 
   deleteAlarms = (name) => {
@@ -131,14 +154,11 @@ class MedicineScreen extends React.Component {
           this.props.navigation.navigate("MediInfoScreen", dataInfor)
         }}
       >
-        <Image
-          source={
-            item.image
-              ? { uri: item.image }
-              : tempAvatar
-          }
-          style={styles.avatar}
-        />
+        <Image style={styles.avatar}
+          source={item.image
+            ? { uri: item.image }
+            : tempAvatar
+          } />
         <Text style={styles.name}>{item.name}</Text>
       </TouchableOpacity>
     )

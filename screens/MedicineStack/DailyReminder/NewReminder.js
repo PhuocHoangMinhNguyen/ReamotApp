@@ -39,7 +39,8 @@ class NewReminder extends React.Component {
                 reminderId: Math.floor(Math.random() * 10000).toString(),
                 // Used for react-native-alarm-notification package
                 fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
-            }
+            },
+            number: 0
         }
         this.scheduleAlarm = this.scheduleAlarm.bind(this)
     }
@@ -47,8 +48,11 @@ class NewReminder extends React.Component {
     componentDidMount() {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
-        let paramsFromMedicineScreen = this.props.navigation.state.params
+        let paramsFromMedicineScreen = this.props.navigation.state.params.medicine
         this.setState({ medicine: paramsFromMedicineScreen })
+
+        let paramsNumber = this.props.navigation.state.params.number
+        this.setState({ number: paramsNumber })
     }
 
     // This function called after the alarm is set.
@@ -72,6 +76,7 @@ class NewReminder extends React.Component {
             type: "Daily",
             time: testDate,
             patientEmail: auth().currentUser.email,
+            numberOfPills: this.state.number
         }).then(() => {
             Toast.show("Reminder Set!")
             this.props.navigation.goBack()
@@ -81,7 +86,8 @@ class NewReminder extends React.Component {
     // This function called when Schedule Alarm button is clicked
     scheduleAlarm = () => {
         const { fireDate, reminderId } = this.state.alarm
-        const { name } = this.state.medicine
+        const { name, barcode, image, description } = this.state.medicine
+        const { testDate } = this.state.timePicker
         // Put more detail into Notification Data Structure, then set it as details for ReactNativeAN.
         // alarm_id is the new reminder id from reminderId, to convert from int to string.
         const details = {
@@ -89,7 +95,13 @@ class NewReminder extends React.Component {
             fire_date: fireDate,
             title: name,
             alarm_id: reminderId,
-            data: this.state.medicine
+            data: {
+                image: image,
+                name: name,
+                description: description,
+                barcode: barcode,
+                itemTime: testDate.toString(),
+            }
         }
         // Officially make a new alarm with information from details.
         ReactNativeAN.scheduleAlarm(details)

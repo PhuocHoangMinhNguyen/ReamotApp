@@ -46,27 +46,45 @@ class UserReminders {
         const alarm = await ReactNativeAN.getScheduledAlarms()
         console.log(alarm)
 
-        firestore().collection('reminder').where('patientEmail', '==', patientEmail).get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                    const alarmID = Math.floor(Math.random() * 10000).toString()
-                    const reminderTime = documentSnapshot.data().time.toDate()
-                    while (reminderTime < Date.now()) {
-                        reminderTime.setDate(reminderTime.getDate() + 1)
-                    }
-                    console.log(moment(reminderTime).format())
-                    const details = {
-                        ...alarmNotifData,
-                        fire_date: ReactNativeAN.parseDate(reminderTime),
-                        title: documentSnapshot.data().medicine,
-                        alarm_id: alarmID
-                    }
-                    ReactNativeAN.scheduleAlarm(details)
-
-                    // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-                    this.findIdAN(details.alarm_id, documentSnapshot.id)
-                })
+        let temp = []
+        firestore().collection('medicine').get().then(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                temp.push(documentSnapshot.data())
             })
+        }).then(() => {
+            firestore().collection('reminder').where('patientEmail', '==', patientEmail).get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(documentSnapshot => {
+                        const alarmID = Math.floor(Math.random() * 10000).toString()
+                        const reminderTime = documentSnapshot.data().time.toDate()
+                        while (reminderTime < Date.now()) {
+                            reminderTime.setDate(reminderTime.getDate() + 1)
+                        }
+                        console.log(moment(reminderTime).format())
+                        temp.forEach(medi => {
+                            if (medi.name == documentSnapshot.data().medicine) {
+                                const details = {
+                                    ...alarmNotifData,
+                                    fire_date: ReactNativeAN.parseDate(reminderTime),
+                                    title: documentSnapshot.data().medicine,
+                                    alarm_id: alarmID,
+                                    data: {
+                                        image: medi.image,
+                                        name: medi.name,
+                                        description: medi.description,
+                                        barcode: medi.barcode,
+                                        itemTime: reminderTime.toString(),
+                                    }
+                                }
+                                ReactNativeAN.scheduleAlarm(details)
+
+                                // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
+                                this.findIdAN(details.alarm_id, documentSnapshot.id)
+                            }
+                        })
+                    })
+                })
+        })
     }
 }
 

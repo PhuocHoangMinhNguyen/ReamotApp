@@ -49,7 +49,6 @@ class ChangeReminder extends React.Component {
             fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
         },
         dialogVisible: false,
-        number: 0
     }
 
     unsubscribe = null
@@ -64,18 +63,19 @@ class ChangeReminder extends React.Component {
         let paramsTime = this.props.navigation.state.params.itemTime
         this.setState({ initial: paramsTime })
 
-        let paramsNumber = this.props.navigation.state.params.number
-        this.setState({ number: paramsNumber })
-
         // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
         let tempFirebase = ""
+        console.log("Email la: " + auth().currentUser.email)
+        console.log("Time la: " + paramsTime)
+        console.log("Name la: " + paramsFromMediInfoScreen.name)
         this.unsubscribe = firestore().collection("reminder")
             .where('patientEmail', '==', auth().currentUser.email)
-            .where('time', '==', this.props.navigation.state.params.itemTime)
-            .where('medicine', '==', this.props.navigation.state.params.medicine.name)
-            .onSnapshot((querySnapshot) => {
-                querySnapshot.forEach((documentSnapshot) => {
+            //.where('time', '==', paramsTime)
+            .where('medicine', '==', paramsFromMediInfoScreen.name)
+            .onSnapshot(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
+                    console.log(documentSnapshot.id)
                     tempFirebase = documentSnapshot.id
                     tempIdAN = documentSnapshot.data().idAN
                 })
@@ -112,14 +112,16 @@ class ChangeReminder extends React.Component {
 
     // If the user is sure to miss the reminder
     handleYes = async () => {
-        const { name } = this.state.medicine
+        const { name, image, description, barcode } = this.state.medicine
         const { firebaseId, alarmId } = this.state.firebase
+        const { initial } = this.state
         // Stop Alarm Sound
         ReactNativeAN.stopAlarmSound()
         // Remove Notification
         ReactNativeAN.removeAllFiredNotifications()
 
-        const newReminderTime = this.state.initial
+        console.log("Initial: " + new Date(initial))
+        const newReminderTime = new Date(initial)
         newReminderTime.setDate(newReminderTime.getDate() + 1)
         console.log("Change Reminder: " + newReminderTime)
         const fireDates = ReactNativeAN.parseDate(newReminderTime)
@@ -129,7 +131,13 @@ class ChangeReminder extends React.Component {
             fire_date: fireDates,
             title: name,
             alarm_id: alarmId,
-            data: this.state.medicine
+            data: {
+                image: image,
+                name: name,
+                description: description,
+                barcode: barcode,
+                itemTime: newReminderTime.toString(),
+            }
         }
         ReactNativeAN.scheduleAlarm(details)
 
@@ -148,8 +156,7 @@ class ChangeReminder extends React.Component {
         })
 
         // When the alarm is turned off, add the medicine into "history" collection
-        const firebaseReminder = this.state.initial
-        firebaseReminder.setDate(firebaseReminder.getDate() - 1)
+        const firebaseReminder = new Date(initial)
         firestore().collection("history").add({
             medicine: name,
             patientEmail: auth().currentUser.email,
@@ -192,7 +199,6 @@ class ChangeReminder extends React.Component {
                                 medicine: this.props.navigation.state.params.medicine,
                                 itemTime: this.props.navigation.state.params.itemTime,
                                 firebaseId: this.state.firebase.firebaseId,
-                                number: this.props.navigation.state.params.number,
                             })
                         }}>
                         <Text style={{ color: "#FFF" }}>Take Medicine</Text>

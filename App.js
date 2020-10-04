@@ -12,6 +12,8 @@ import AuthStack from "./routes/AuthStack";
 import BottomTabs from "./routes/BottomTabs";
 import DrawerMenu from "./routes/DrawerMenu/DrawerMenu";
 
+import NavigationService from './utilities/NavigationService';
+
 const Drawer = createDrawerNavigator(
   {
     BottomTabs,
@@ -23,7 +25,7 @@ const Drawer = createDrawerNavigator(
   }
 );
 
-export default createAppContainer(
+const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
       Loading: LoadingScreen,
@@ -36,3 +38,13 @@ export default createAppContainer(
     }
   )
 )
+
+class App extends React.Component {
+  render() {
+    return <AppContainer ref={navigatorRef => {
+      NavigationService.setTopLevelNavigator(navigatorRef)
+    }} />
+  }
+}
+
+export default App

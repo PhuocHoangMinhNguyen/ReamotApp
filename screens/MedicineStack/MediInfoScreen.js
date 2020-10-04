@@ -110,9 +110,15 @@ class MediInfoScreen extends React.Component {
   // If the prescription.type is Weekly, navigate to 'Weekly New Reminder'
   handleNewReminder = () => {
     if (this.state.prescription.type == "Daily") {
-      this.props.navigation.navigate("NewReminder", this.props.navigation.state.params)
+      this.props.navigation.navigate("NewReminder", {
+        medicine: this.props.navigation.state.params,
+        number: this.state.prescription.number
+      })
     } else {
-      this.props.navigation.navigate("WeeklyNewReminder", this.props.navigation.state.params)
+      this.props.navigation.navigate("WeeklyNewReminder", {
+        medicine: this.props.navigation.state.params,
+        number: this.state.prescription.number
+      })
     }
   }
 
@@ -123,13 +129,11 @@ class MediInfoScreen extends React.Component {
       this.props.navigation.navigate("ChangeReminder", {
         medicine: this.props.navigation.state.params,
         itemTime: item.time.toDate(),
-        number: this.state.prescription.number
       })
     } else {
       this.props.navigation.navigate("WeeklyChangeReminder", {
         medicine: this.props.navigation.state.params,
         itemTime: item.time.toDate(),
-        number: this.state.prescription.number
       })
     }
   }
