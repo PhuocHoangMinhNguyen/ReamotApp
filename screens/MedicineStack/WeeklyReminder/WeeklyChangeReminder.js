@@ -73,7 +73,7 @@ class WeeklyChangeReminder extends React.Component {
             .where('medicine', '==', paramsFromMediInfoScreen.name)
             .onSnapshot(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
-                    if (Math.round(paramsTime.getTime() / 1000) == documentSnapshot.data().time.seconds) {
+                    if (Math.floor(paramsTime.getTime() / 1000) == documentSnapshot.data().time.seconds) {
                         console.log(documentSnapshot.id)
                         tempFirebase = documentSnapshot.id
                         tempIdAN = documentSnapshot.data().idAN

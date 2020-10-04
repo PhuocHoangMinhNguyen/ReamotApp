@@ -26,7 +26,7 @@ class UserReminders {
     }
 
     // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-    findIdAN = async (alarm_id, id) => {
+    findIdAN = async (alarm_id, id, time) => {
         const alarm = await ReactNativeAN.getScheduledAlarms()
         let idAN = ""
         for (let i = 0; i < alarm.length; i++) {
@@ -37,7 +37,8 @@ class UserReminders {
         // This is having problem because you cannot set a firestore inside a firestore.
         firestore().collection('reminder').doc(id).update({
             idAN: idAN,
-            alarmId: alarm_id
+            alarmId: alarm_id,
+            time: time
         })
     }
 
@@ -79,7 +80,7 @@ class UserReminders {
                                 ReactNativeAN.scheduleAlarm(details)
 
                                 // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-                                this.findIdAN(details.alarm_id, documentSnapshot.id)
+                                this.findIdAN(details.alarm_id, documentSnapshot.id, reminderTime)
                             }
                         })
                     })

@@ -66,14 +66,15 @@ class ChangeReminder extends React.Component {
         // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
         let tempFirebase = ""
-        //console.log(`Time la: "${Math.round(paramsTime.getTime() / 1000)}"`)
+        //console.log(`Time la: "${Math.floor(paramsTime.getTime() / 1000)}"`)
         this.unsubscribe = firestore().collection("reminder")
             .where('patientEmail', '==', auth().currentUser.email)
             //.where('time', '==', paramsTime)
             .where('medicine', '==', paramsFromMediInfoScreen.name)
             .onSnapshot(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
-                    if (Math.round(paramsTime.getTime() / 1000) == documentSnapshot.data().time.seconds) {
+                    console.log(documentSnapshot.data().time.seconds)
+                    if (Math.floor(paramsTime.getTime() / 1000) == documentSnapshot.data().time.seconds) {
                         console.log(documentSnapshot.id)
                         tempFirebase = documentSnapshot.id
                         tempIdAN = documentSnapshot.data().idAN

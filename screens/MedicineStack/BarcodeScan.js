@@ -55,7 +55,7 @@ class BarcodeScan extends React.Component {
 
     onBarCodeRead = async (e) => {
         const { name, barcode, image, description } = this.state.medicine
-        const { firebaseId, barcodeRead, alarmId } = this.state
+        const { firebaseId, barcodeRead, alarmId, itemTime } = this.state
         // If the barcode scanned is correct.
         if (barcode == e.data) {
             if (barcodeRead == false) {
@@ -66,7 +66,7 @@ class BarcodeScan extends React.Component {
                 ReactNativeAN.removeAllFiredNotifications()
 
                 // Set New Alarm Time
-                const newReminderTime = this.state.itemTime
+                const newReminderTime = new Date(itemTime)
                 newReminderTime.setDate(newReminderTime.getDate() + 1)
                 console.log("Barcode Scanner: " + newReminderTime)
                 const fireDates = ReactNativeAN.parseDate(newReminderTime)
@@ -101,7 +101,7 @@ class BarcodeScan extends React.Component {
                 })
 
                 // When the alarm is turned off, add the medicine into "history" collection
-                const firebaseReminder = this.state.itemTime
+                const firebaseReminder = new Date(itemTime)
                 firestore().collection("history").add({
                     medicine: name,
                     patientEmail: auth().currentUser.email,
