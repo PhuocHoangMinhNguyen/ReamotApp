@@ -161,7 +161,7 @@ In your `android/app/build.gradle`
 
 In your `android/app/src/main/java/com/reamotreactnative/MainActivity.java`
 ```xml
-    package com.reamotreactnative;
+package com.reamotreactnative;
 
 import android.content.Intent;
 import android.os.Bundle;
