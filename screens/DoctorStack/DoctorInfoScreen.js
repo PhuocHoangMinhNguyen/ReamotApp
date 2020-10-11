@@ -12,7 +12,7 @@ import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/tempAvatar.jpg")
+var tempAvatar = require("../../assets/tempAvatar.png")
 
 class DoctorInfoScreen extends React.Component {
     state = {

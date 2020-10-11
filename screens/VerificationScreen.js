@@ -17,7 +17,7 @@ class VerificationScreen extends React.Component {
                     <Text style={styles.text}>A Verification Email was sent to your Email Address</Text>
                 </View>
                 <Image style={styles.image}
-                    source={require('../assets/GrowingTree.jpg')} />
+                    source={require('../assets/GrowingTree.png')} />
                 <View style={styles.refreshing}>
                     <View style={{ justifyContent: "center" }}>
                         <Text style={styles.text}>Refresh after Verifying your account</Text>

@@ -8,9 +8,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
-var images = {
-  tempAvatar: { img: require("../../assets/tempAvatar.jpg") }
-}
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class ProfileScreen extends React.Component {
   constructor(props) {
@@ -43,7 +41,7 @@ class ProfileScreen extends React.Component {
             source={
               this.state.user.avatar
                 ? { uri: this.state.user.avatar }
-                : images.tempAvatar.img
+                : tempAvatar
             }
             style={styles.avatar}
           />

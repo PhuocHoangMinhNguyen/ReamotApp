@@ -20,7 +20,7 @@ import Toast from "react-native-simple-toast";
 import Background from '../../components/Background';
 import moment from 'moment';
 
-var tempAvatar = require("../../assets/tempAvatar.jpg")
+var tempAvatar = require("../../assets/tempAvatar.png")
 
 class MediInfoScreen extends React.Component {
   state = {

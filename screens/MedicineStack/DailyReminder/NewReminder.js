@@ -21,7 +21,7 @@ const alarmNotifData = {
     message: "Take your Medicine",
 }
 
-var tempAvatar = require("../../../assets/tempAvatar.jpg")
+var tempAvatar = require("../../../assets/tempAvatar.png")
 
 class NewReminder extends React.Component {
     constructor(props) {

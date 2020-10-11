@@ -16,7 +16,7 @@ import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 
-var tempAvatar = require("../../assets/tempAvatar.jpg")
+var tempAvatar = require("../../assets/tempAvatar.png")
 
 class AddAccess extends React.Component {
     state = {
