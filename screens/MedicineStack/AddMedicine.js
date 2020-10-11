@@ -236,7 +236,7 @@ class AddMedicine extends React.Component {
                         value={this.state.medicine.note}
                     />
                 </View>
-                <TouchableOpacity style={styles.button} onPress={this.handleAdd}>
+                <TouchableOpacity style={styles.button} onPress={() => this.handleAdd()}>
                     <Text style={styles.buttonText}>Add Medicine</Text>
                 </TouchableOpacity>
             </View>
