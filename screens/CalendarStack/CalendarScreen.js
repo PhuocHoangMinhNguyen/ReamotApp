@@ -47,23 +47,22 @@ class CalendarScreen extends React.Component {
   calculate = async () => {
     // Get history documents with status missed to calculate percentage
     let docsMissedLength = 0
-    const missedCollection = firestore().collection('history')
-      .where('patientEmail', '==', auth().currentUser.email)
+    await firestore().collection('history').where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      .where('status', '==', "missed");
-    await missedCollection.get().then(querySnapshot => {
-      docsMissedLength = querySnapshot.docs.length
-    });
+      .where('status', '==', "missed")
+      .get().then(querySnapshot => {
+        docsMissedLength = querySnapshot.docs.length
+      });
 
     // Get history documents with status taken to calculate percentage
     let docsTakenLength = 0
-    const takenCollection = firestore().collection('history')
+    await firestore().collection('history')
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      .where('status', '==', "taken");
-    await takenCollection.get().then(querySnapshot => {
-      docsTakenLength = querySnapshot.docs.length
-    });
+      .where('status', '==', "taken")
+      .get().then(querySnapshot => {
+        docsTakenLength = querySnapshot.docs.length
+      });
 
     // calculate percentage
     const percentageArray = [];
@@ -108,20 +107,18 @@ class CalendarScreen extends React.Component {
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .onSnapshot(querySnapshot => {
         found = true
-        let result = []
+        let result = [];
         querySnapshot.forEach(documentSnapshot => {
           firestore().collection("medicine")
             .where('name', '==', documentSnapshot.data().medicine).get()
             .then(queryMedicineSnapshot => {
-              let docs = queryMedicineSnapshot.docs
-              for (let doc of docs) {
-                const selectedItem = {
-                  ...doc.data(),
+              queryMedicineSnapshot.forEach(documentMedicineSnapshot => {
+                result.push({
+                  ...documentMedicineSnapshot.data(),
                   ...documentSnapshot.data(),
                   key: documentSnapshot.id
-                }
-                result.push(selectedItem);
-              }
+                });
+              });
             }).then(() => {
               this.setState({ medicine: result });
               this.calculate();

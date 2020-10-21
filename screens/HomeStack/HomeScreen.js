@@ -31,6 +31,75 @@ class HomeScreen extends React.Component {
 
   unsubscribe = null
 
+  historyCollection = (tempMedicine) => {
+    // Get all the history of taking medicine for today.
+    firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment().format("MMMM Do YYYY"))
+      .onSnapshot(querySnapshot => {
+        let tempHistory = []
+        querySnapshot.forEach(documentSnapshot => {
+          for (let i = 0; i < tempMedicine.length; i++) {
+            if (tempMedicine[i].name == documentSnapshot.data().medicine) {
+              tempHistory.push({
+                ...documentSnapshot.data(),
+                barcode: tempMedicine[i].barcode,
+                description: tempMedicine[i].description,
+                image: tempMedicine[i].image,
+                key: documentSnapshot.id
+              });
+            }
+          }
+        });
+        this.setState({ historymedicines: tempHistory });
+      });
+  }
+
+  missCollection = (tempMedicine) => {
+    // Get all the history of taking medicine, that are missed, for today.
+    firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment().format("MMMM Do YYYY"))
+      .where('status', '==', 'missed')
+      .onSnapshot(querySnapshot => {
+        let tempHistory = []
+        querySnapshot.forEach(documentSnapshot => {
+          for (let i = 0; i < tempMedicine.length; i++) {
+            if (tempMedicine[i].name == documentSnapshot.data().medicine) {
+              tempHistory.push({
+                ...documentSnapshot.data(),
+                barcode: tempMedicine[i].barcode,
+                description: tempMedicine[i].description,
+                image: tempMedicine[i].image,
+                key: documentSnapshot.id
+              });
+            }
+          }
+        });
+        this.setState({ missedMedicines: tempHistory });
+      });
+  }
+
+  reminderCollection = (tempMedicine) => {
+    // Get all the reminders
+    firestore().collection("reminder").where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot(querySnapshot => {
+        let tempReminder = []
+        querySnapshot.forEach(documentSnapshot => {
+          for (let i = 0; i < tempMedicine.length; i++) {
+            if (tempMedicine[i].name == documentSnapshot.data().medicine) {
+              tempReminder.push({
+                ...documentSnapshot.data(),
+                barcode: tempMedicine[i].barcode,
+                description: tempMedicine[i].description,
+                image: tempMedicine[i].image,
+                key: documentSnapshot.id
+              });
+            }
+          }
+        });
+        this.setState({ remindermedicines: tempReminder });
+      });
+  }
+
   componentDidMount() {
     // Get the medicine information
     this.unsubscribe = firestore().collection("medicine").onSnapshot(querySnapshot => {
@@ -41,66 +110,9 @@ class HomeScreen extends React.Component {
           key: documentSnapshot.id
         });
       });
-      // Get all the history of taking medicine for today.
-      firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
-        .where('date', '==', moment().format("MMMM Do YYYY"))
-        .onSnapshot(querySnapshot => {
-          let tempHistory = []
-          querySnapshot.forEach(documentSnapshot => {
-            for (let i = 0; i < tempMedicine.length; i++) {
-              if (tempMedicine[i].name == documentSnapshot.data().medicine) {
-                tempHistory.push({
-                  ...documentSnapshot.data(),
-                  barcode: tempMedicine[i].barcode,
-                  description: tempMedicine[i].description,
-                  image: tempMedicine[i].image,
-                  key: documentSnapshot.id
-                });
-              }
-            }
-          });
-          this.setState({ historymedicines: tempHistory });
-        });
-      // Get all the history of taking medicine, that are missed, for today.
-      firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
-        .where('date', '==', moment().format("MMMM Do YYYY"))
-        .where('status', '==', 'missed')
-        .onSnapshot(querySnapshot => {
-          let tempHistory = []
-          querySnapshot.forEach(documentSnapshot => {
-            for (let i = 0; i < tempMedicine.length; i++) {
-              if (tempMedicine[i].name == documentSnapshot.data().medicine) {
-                tempHistory.push({
-                  ...documentSnapshot.data(),
-                  barcode: tempMedicine[i].barcode,
-                  description: tempMedicine[i].description,
-                  image: tempMedicine[i].image,
-                  key: documentSnapshot.id
-                });
-              }
-            }
-          });
-          this.setState({ missedMedicines: tempHistory });
-        });
-      // Get all the reminders
-      firestore().collection("reminder").where('patientEmail', '==', auth().currentUser.email)
-        .onSnapshot(querySnapshot => {
-          let tempReminder = []
-          querySnapshot.forEach(documentSnapshot => {
-            for (let i = 0; i < tempMedicine.length; i++) {
-              if (tempMedicine[i].name == documentSnapshot.data().medicine) {
-                tempReminder.push({
-                  ...documentSnapshot.data(),
-                  barcode: tempMedicine[i].barcode,
-                  description: tempMedicine[i].description,
-                  image: tempMedicine[i].image,
-                  key: documentSnapshot.id
-                });
-              }
-            }
-          });
-          this.setState({ remindermedicines: tempReminder });
-        });
+      this.historyCollection(tempMedicine);
+      this.missCollection(tempMedicine);
+      this.reminderCollection(tempMedicine);
     });
   }
 

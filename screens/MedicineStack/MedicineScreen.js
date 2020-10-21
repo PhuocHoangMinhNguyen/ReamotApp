@@ -32,6 +32,31 @@ class MedicineScreen extends React.Component {
 
   unsubscribe = null
 
+  prescriptionCollection = (temp) => {
+    // Deal with medicines that patient add
+    firestore().collection("prescription")
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot(querySnapshot => {
+        let temp2 = [];
+        querySnapshot.forEach(documentSnapshot => {
+          for (let i = 0; i < temp.length; i++) {
+            if (documentSnapshot.data().name == temp[i].name) {
+              temp2.push({
+                ...documentSnapshot.data(),
+                ...temp[i],
+                key: documentSnapshot.id,
+              });
+            }
+          }
+        });
+        this.setState({
+          medicines: temp2,
+          myArray: temp2,
+          loading: false,
+        });
+      });
+  }
+
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.
     this.unsubscribe = firestore().collection("medicine")
@@ -43,29 +68,7 @@ class MedicineScreen extends React.Component {
             medicineKey: documentSnapshot.id
           });
         });
-
-        // Deal with medicines that patient add
-        firestore().collection("prescription")
-          .where('patientEmail', '==', auth().currentUser.email)
-          .onSnapshot(querySnapshot => {
-            let temp2 = [];
-            querySnapshot.forEach(documentSnapshot => {
-              for (let i = 0; i < temp.length; i++) {
-                if (documentSnapshot.data().name == temp[i].name) {
-                  temp2.push({
-                    ...documentSnapshot.data(),
-                    ...temp[i],
-                    key: documentSnapshot.id,
-                  });
-                }
-              }
-            });
-            this.setState({
-              medicines: temp2,
-              myArray: temp2,
-              loading: false,
-            });
-          });
+        this.prescriptionCollection(temp);
       });
 
     DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
