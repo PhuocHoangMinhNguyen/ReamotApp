@@ -18,13 +18,13 @@ class ForgotPasswordScreen extends React.Component {
 
     // A link will be sent to provided email address to reset password.
     handleChangePassword = () => {
-        const emailTrim = this.state.forgottenEmail.trim()
+        const emailTrim = this.state.forgottenEmail.trim();
         if (emailTrim == "") {
-            Toast.show("Please Enter Email Address to Change Password")
+            Toast.show("Please Enter Email Address to Change Password");
         } else {
-            auth().sendPasswordResetEmail(emailTrim).then(
-                this.props.navigation.navigate("LoginScreen")
-            ).then(Toast.show("Please Check your Email..."))
+            auth().sendPasswordResetEmail(emailTrim)
+                .then(() => this.props.navigation.navigate("LoginScreen"))
+                .then(() => Toast.show("Please Check your Email..."));
         }
     }
 
@@ -32,28 +32,24 @@ class ForgotPasswordScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Background />
-                <TouchableOpacity
-                    style={styles.back}
+                <TouchableOpacity style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
                 <View style={styles.smallerContainer}>
                     <View style={{ alignItems: "center" }}>
-                        <Image style={styles.image}
-                            source={confusedMan} />
+                        <Image style={styles.image} source={confusedMan} />
                         <Text style={styles.text}>Did someone forget their password?</Text>
                         <Text>That's ok...</Text>
                         <Text>Just enter a your email address and</Text>
                         <Text>we will help you set a new password in no time</Text>
                     </View>
                     <View style={styles.textInputContainer}>
-                        <TextInput
-                            placeholder="Email Address"
+                        <TextInput placeholder="Email Address"
                             autoCapitalize="none"
                             onChangeText={newEmail => this.setState({ forgottenEmail: newEmail })}
-                            value={this.state.forgottenEmail}
-                        />
+                            value={this.state.forgottenEmail} />
                     </View>
                     <TouchableOpacity style={styles.submitButton} onPress={this.handleChangePassword}>
                         <Text style={styles.submitText}>Submit</Text>

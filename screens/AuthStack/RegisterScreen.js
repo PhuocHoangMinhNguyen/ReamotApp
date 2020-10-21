@@ -37,25 +37,23 @@ class RegisterScreen extends React.Component {
   }
 
   // To Show or Hide Password
-  handlePassword = () => {
-    this.setState({ showPassword: !this.state.showPassword })
-  }
+  handlePassword = () => { this.setState({ showPassword: !this.state.showPassword }) }
 
   // Check if all information is entered before create a new user.
   handleSignUp = () => {
     const { name, email, password, phoneNumber } = this.state.user
     if (name.trim == "") {
-      Toast.show("Please Enter Full Name", Toast.LONG)
+      Toast.show("Please Enter Full Name", Toast.LONG);
     } else if (email.trim == "") {
-      Toast.show("Please Enter Email Information", Toast.LONG)
+      Toast.show("Please Enter Email Information", Toast.LONG);
     } else if (password == "") {
-      Toast.show("Please Enter A Password", Toast.LONG)
+      Toast.show("Please Enter A Password", Toast.LONG);
     } else if (phoneNumber == "") {
-      Toast.show("Please Enter Contact Number", Toast.LONG)
+      Toast.show("Please Enter Contact Number", Toast.LONG);
     } else if (this.state.toggleCheckBox == false) {
-      Toast.show("Please Agree to Terms of Services", Toast.LONG)
+      Toast.show("Please Agree to Terms of Services", Toast.LONG);
     } else {
-      this.createUser(this.state.user)
+      this.createUser(this.state.user);
     }
   }
 
@@ -65,13 +63,13 @@ class RegisterScreen extends React.Component {
     let remoteUri = null
     try {
       await auth().createUserWithEmailAndPassword(user.email.trim(), user.password)
-        .catch(error => this.setState({ errorMessage: error.message }))
+        .catch(error => this.setState({ errorMessage: error.message }));
 
-      await auth().currentUser.sendEmailVerification()
+      await auth().currentUser.sendEmailVerification();
 
       // If there is no error.
       if (this.state.errorMessage == null) {
-        let db = firestore().collection("users").doc((auth().currentUser || {}).uid)
+        let db = firestore().collection("users").doc((auth().currentUser || {}).uid);
 
         db.set({
           name: user.name.trim(),
@@ -80,7 +78,7 @@ class RegisterScreen extends React.Component {
           avatar: null,
           doctorList: null,
           pharmacistList: null
-        })
+        });
 
         // If the user choose an avatar,
         if (user.avatar) {
@@ -90,7 +88,7 @@ class RegisterScreen extends React.Component {
             `users/${(auth().currentUser || {}).uid}`
           );
           // Then Store the avatar in Cloud Firestore
-          db.set({ avatar: remoteUri }, { merge: true })
+          db.set({ avatar: remoteUri }, { merge: true });
         }
       }
     } catch (error) { }
@@ -98,7 +96,7 @@ class RegisterScreen extends React.Component {
 
   // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
-    UserPermissions.getPhotoPermission()
+    UserPermissions.getPhotoPermission();
 
     var options = {
       title: "Select Image",
@@ -109,29 +107,28 @@ class RegisterScreen extends React.Component {
     }
 
     let result = await ImagePicker.showImagePicker(options, (response) => {
-      console.log("Response = ", response)
+      console.log("Response = ", response);
 
       if (response.didCancel) {
-        console.log("User cancelled image picker")
+        console.log("User cancelled image picker");
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error)
+        console.log("ImagePicker Error: ", response.error);
       } else {
         const source = response.uri
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
           user: { ...this.state.user, avatar: source }
-        })
+        });
       }
-    })
+    });
   }
 
   render() {
     return (
       <View style={styles.container}>
         <Background />
-        <TouchableOpacity
-          style={styles.back}
+        <TouchableOpacity style={styles.back}
           onPress={() => this.props.navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={32} color="#FFF" />
@@ -141,14 +138,13 @@ class RegisterScreen extends React.Component {
             {"Hello to Reamot!\nSign up to get started."}
           </Text>
           <TouchableOpacity style={styles.avatarPlaceholder}
-            onPress={this.handlePickAvatar}>
+            onPress={this.handlePickAvatar}
+          >
             <Image source={{ uri: this.state.user.avatar }}
               style={styles.avatar} />
-            <Ionicons
-              name="ios-add"
+            <Ionicons name="ios-add"
               size={40}
-              color="#FFF"
-            />
+              color="#FFF" />
           </TouchableOpacity>
         </View>
         <ScrollView>
@@ -161,40 +157,28 @@ class RegisterScreen extends React.Component {
           <View style={styles.form}>
             <View>
               <Text style={styles.inputTitle}>Full Name</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={name =>
-                  this.setState({ user: { ...this.state.user, name } })
-                }
-                value={this.state.user.name}
-              />
+              <TextInput style={styles.input}
+                onChangeText={name => this.setState({ user: { ...this.state.user, name } })}
+                value={this.state.user.name} />
             </View>
 
             <View style={{ marginTop: 12 }}>
               <Text style={styles.inputTitle}>Email Address</Text>
-              <TextInput
-                style={styles.input}
+              <TextInput style={styles.input}
                 autoCapitalize="none"
-                onChangeText={email =>
-                  this.setState({ user: { ...this.state.user, email } })
-                }
-                value={this.state.user.email}
-              />
+                onChangeText={email => this.setState({ user: { ...this.state.user, email } })}
+                value={this.state.user.email} />
             </View>
 
             <View style={{ marginTop: 12 }}>
               <Text style={styles.inputTitle}>Password</Text>
               <View style={styles.passwordContainer}>
-                <TextInput
-                  style={styles.password}
+                <TextInput style={styles.password}
                   secureTextEntry={!this.state.showPassword}
                   autoCapitalize="none"
-                  onChangeText={password =>
-                    this.setState({ user: { ...this.state.user, password } })
-                  }
-                  value={this.state.user.password}
-                />
-                <TouchableOpacity onPress={this.handlePassword}>
+                  onChangeText={password => this.setState({ user: { ...this.state.user, password } })}
+                  value={this.state.user.password} />
+                <TouchableOpacity onPress={() => this.handlePassword}>
                   {this.state.showPassword == true
                     ? <Ionicons name="ios-eye" size={24} />
                     : <Ionicons name="ios-eye-off" size={24} />}
@@ -204,21 +188,17 @@ class RegisterScreen extends React.Component {
 
             <View style={{ marginTop: 12 }}>
               <Text style={styles.inputTitle}>Contact Number</Text>
-              <TextInput
-                style={styles.input}
+              <TextInput style={styles.input}
                 keyboardType="numeric"
-                onChangeText={phoneNumber =>
-                  this.setState({ user: { ...this.state.user, phoneNumber } })
-                }
-                value={this.state.user.phoneNumber}
-              />
+                onChangeText={phoneNumber => this.setState({ user: { ...this.state.user, phoneNumber } })}
+                value={this.state.user.phoneNumber} />
             </View>
           </View>
 
           <View style={styles.termsOfServicesContainer}>
             <CheckBox
               value={this.state.toggleCheckBox}
-              onValueChange={(newValue) => this.setState({ toggleCheckBox: newValue })}
+              onValueChange={newValue => this.setState({ toggleCheckBox: newValue })}
             />
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", flex: 1 }}>
               <Text>I agree to Reamot</Text>
@@ -228,12 +208,11 @@ class RegisterScreen extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+          <TouchableOpacity style={styles.button} onPress={() => this.handleSignUp}>
             <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 12 }}
+          <TouchableOpacity style={{ alignSelf: "center", marginTop: 12 }}
             onPress={() => this.props.navigation.navigate("LoginScreen")}
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>

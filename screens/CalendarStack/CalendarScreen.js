@@ -138,9 +138,7 @@ class CalendarScreen extends React.Component {
   }
 
   // Show DatePicker
-  showMode = () => {
-    this.setState({ show: true });
-  }
+  showMode = () => { this.setState({ show: true }) }
 
   // When a date is chosen from DatePicker
   onChange = (event, selectedDate) => {
@@ -158,13 +156,10 @@ class CalendarScreen extends React.Component {
   renderItem(item) {
     const correctItem =
       <SafeAreaView style={item.status == "taken" ? styles.feedItem : styles.missedItem}>
-        <Image style={styles.image}
-          source={item.image ? { uri: item.image } : tempAvatar} />
+        <Image style={styles.image} source={item.image ? { uri: item.image } : tempAvatar} />
         <View style={{ flex: 1 }}>
           <Text style={styles.missedName}>{item.name}</Text>
-          <Text style={styles.missedTime}>
-            {moment(item.startTime.toDate()).format('hh:mm a')}
-          </Text>
+          <Text style={styles.missedTime}>{moment(item.startTime.toDate()).format('hh:mm a')}</Text>
         </View>
       </SafeAreaView>
     if (item.date == moment(this.state.testDate).format("MMMM Do YYYY")) {
@@ -182,28 +177,22 @@ class CalendarScreen extends React.Component {
         <Background />
         <Text style={styles.header}>History</Text>
         <Text style={styles.header1}>Patient's history of taking medicine per day</Text>
-        <Text style={styles.testDate}>
-          {moment(testDate).format("MMMM Do YYYY")}
-        </Text>
+        <Text style={styles.testDate}>{moment(testDate).format("MMMM Do YYYY")}</Text>
         <TouchableOpacity style={styles.button} onPress={this.showMode}>
           <Text style={styles.buttonText}>Show Calendar</Text>
         </TouchableOpacity>
         {show && (
-          <DatePicker
-            value={testDate}
+          <DatePicker value={testDate}
             mode="date"
-            onChange={this.onChange}
-          />
+            onChange={this.onChange} />
         )}
-        <FlatList
-          style={styles.feed}
+        <FlatList style={styles.feed}
           data={medicine}
-          renderItem={({ item }) => this.renderItem(item)}
-        />
+          renderItem={({ item }) => this.renderItem(item)} />
         <View style={styles.chart}>
           <Text style={styles.chartHeader}>Day Progress</Text>
-          {medicine ?
-            <ProgressChart
+          {medicine
+            ? <ProgressChart
               data={this.state.chartData.data}
               width={Dimensions.get("window").width}
               height={160}

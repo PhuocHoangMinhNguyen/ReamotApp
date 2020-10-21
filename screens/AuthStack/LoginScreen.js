@@ -30,37 +30,34 @@ class LoginScreen extends React.Component {
   }
 
   // Handle Show, Hide Password
-  handlePassword = () => {
-    this.setState({ showPassword: !this.state.showPassword })
-  }
+  handlePassword = () => { this.setState({ showPassword: !this.state.showPassword }) }
 
   // Handle Login using email and password.
   handleLogin = () => {
     const { password } = this.state
     // Solve the problem when there is space in the end of email by mistake
-    const email = this.state.email.trim()
+    const email = this.state.email.trim();
 
     if (email == "") {
-      Toast.show("Please Enter Email Information", Toast.LONG)
+      Toast.show("Please Enter Email Information", Toast.LONG);
     } else if (password == "") {
-      Toast.show("Please Enter Password", Toast.LONG)
+      Toast.show("Please Enter Password", Toast.LONG);
     } else {
       auth().signInWithEmailAndPassword(email, password)
         .catch(error => this.setState({ errorMessage: error.message }))
         .then(() => {
           if (auth().currentUser) UserReminders.setReminders(email)
-        })
+        });
     }
   }
 
   render() {
-    LayoutAnimation.easeInEaseOut()
+    LayoutAnimation.easeInEaseOut();
     return (
       <View style={{ flex: 1, backgroundColor: "#FFF" }}>
         <Background />
         <Image source={logoTest}
-          style={styles.logoTest}
-        />
+          style={styles.logoTest} />
         <ScrollView>
           <View style={styles.errorMessage}>
             {this.state.errorMessage && (
@@ -71,12 +68,10 @@ class LoginScreen extends React.Component {
           <View style={styles.form}>
             <View>
               <Text style={styles.inputTitle}>Email Address</Text>
-              <TextInput
-                style={styles.input}
+              <TextInput style={styles.input}
                 autoCapitalize="none"
                 onChangeText={email => this.setState({ email })}
-                value={this.state.email}
-              />
+                value={this.state.email} />
             </View>
 
             <View style={{ marginTop: 32 }}>
@@ -107,15 +102,12 @@ class LoginScreen extends React.Component {
             <Text style={{ textDecorationLine: "underline" }}>Forgot Password?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{ alignSelf: "center" }}
+          <TouchableOpacity style={{ alignSelf: "center" }}
             onPress={() => this.props.navigation.navigate("RegisterScreen")}
           >
             <Text style={{ color: "#414959", fontSize: 13 }}>
               New to SocialApp?{' '}
-              <Text style={{ fontWeight: '500', color: '#018ABE' }}>
-                Sign up
-              </Text>
+              <Text style={{ fontWeight: '500', color: '#018ABE' }}>Sign up</Text>
             </Text>
           </TouchableOpacity>
         </ScrollView>
