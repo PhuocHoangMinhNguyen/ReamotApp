@@ -97,8 +97,7 @@ class MedicineScreen extends React.Component {
   }
 
   deleteAlarms = (name) => {
-    firestore().collection("reminder")
-      .where('medicine', '==', name)
+    firestore().collection("reminder").where('medicine', '==', name)
       .where('patientEmail', '==', auth().currentUser.email)
       .onSnapshot(querySnapshot => {
         querySnapshot.forEach(documentSnapshot => {
