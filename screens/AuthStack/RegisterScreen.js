@@ -339,6 +339,6 @@ const styles = StyleSheet.create({
   termsOfServices: {
     textDecorationLine: "underline"
   }
-})
+});
 
 export default RegisterScreen

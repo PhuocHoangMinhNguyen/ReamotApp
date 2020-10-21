@@ -35,9 +35,9 @@ MedicineStack = createStackNavigator(
         ChangeReminder,
         WeeklyNewReminder,
         WeeklyChangeReminder
-    },
-    {
-        headerMode: "none"
-    })
+    }, {
+    headerMode: "none"
+}
+);
 
 export default MedicineStack

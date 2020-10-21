@@ -22,16 +22,14 @@ class VerificationScreen extends React.Component {
                     <View style={{ justifyContent: "center" }}>
                         <Text style={styles.text}>Refresh after Verifying your account</Text>
                     </View>
-                    <TouchableOpacity
-                        onPress={() => {
-                            auth().currentUser.reload()
-                            if (auth().currentUser.emailVerified) {
-                                this.props.navigation.navigate("App")
-                            } else {
-                                Toast.show("Email not Verified")
-                            }
-                        }}
-                    >
+                    <TouchableOpacity onPress={() => {
+                        auth().currentUser.reload()
+                        if (auth().currentUser.emailVerified) {
+                            this.props.navigation.navigate("App");
+                        } else {
+                            Toast.show("Email not Verified");
+                        }
+                    }}>
                         <Ionicons name="reload" size={30} />
                     </TouchableOpacity>
                 </View>
@@ -70,6 +68,6 @@ const styles = StyleSheet.create({
         color: "#1565C0",
         textDecorationLine: "underline"
     }
-})
+});
 
 export default VerificationScreen

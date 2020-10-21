@@ -15,7 +15,7 @@ import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import Background from "../../components/Background";
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class DoctorScreen extends Component {
   state = {
@@ -30,8 +30,8 @@ class DoctorScreen extends Component {
     // Then use the doctor and pharmacist email to find the infor from "doctor" and "pharmacist" collection
 
     // doctor and pharmacist email from "users" document
-    let tempPharmacistEmail = []
-    let tempDoctorEmail = []
+    let tempPharmacistEmail = [];
+    let tempDoctorEmail = [];
 
     this.unsubscribe = firestore().collection("users").doc((auth().currentUser || {}).uid)
       .onSnapshot(documentSnapshot => {
@@ -55,10 +55,10 @@ class DoctorScreen extends Component {
                     ...documentSnapshot.data(),
                     key: documentSnapshot.id,
                     type: "Doctor"
-                  })
-                })
-                this.setState({ accessedDoctor: tempAccessedDoctor })
-              })
+                  });
+                });
+                this.setState({ accessedDoctor: tempAccessedDoctor });
+              });
           }
           if (tempPharmacistEmail != null) {
             // Accessed Pharmacist
@@ -70,13 +70,13 @@ class DoctorScreen extends Component {
                     ...documentSnapshot.data(),
                     key: documentSnapshot.id,
                     type: "Pharmacist"
-                  })
-                })
-                this.setState({ accessedPharmacist: tempAccessedPharmacist })
-              })
+                  });
+                });
+                this.setState({ accessedPharmacist: tempAccessedPharmacist });
+              });
           }
         }
-      })
+      });
   }
 
   componentWillUnmount() {
@@ -85,15 +85,11 @@ class DoctorScreen extends Component {
 
   // When clicking on one doctor/ pharmacist item, navigate user to 
   // that doctor/pharmacist information screen.
-  handleClick = (dataInfor) => {
-    this.props.navigation.navigate("AccessedDoctorScreen", dataInfor)
-  }
+  handleClick = (dataInfor) => { this.props.navigation.navigate("AccessedDoctorScreen", dataInfor) }
 
   // Navigate user to a screen containing list of doctor/pharmacist
   // that do not have access to user's database.
-  addAccess = () => {
-    this.props.navigation.navigate("AddAccess")
-  }
+  addAccess = () => { this.props.navigation.navigate("AddAccess") }
 
   // Render each doctor and pharmacist item.
   renderItem = (item) => {
@@ -112,20 +108,16 @@ class DoctorScreen extends Component {
       address: item.address,
     }
     return (
-      <TouchableOpacity
-        style={styles.feedItem}
+      <TouchableOpacity style={styles.feedItem}
         onPress={() => {
           this.handleClick(dataInfor)
         }}
       >
-        <Image
-          source={
-            item.avatar
-              ? { uri: item.avatar }
-              : tempAvatar
-          }
-          style={styles.avatar}
-        />
+        <Image style={styles.avatar}
+          source={item.avatar
+            ? { uri: item.avatar }
+            : tempAvatar
+          } />
         <View style={{ flex: 1 }}>
           <Text style={styles.name}>{item.name}</Text>
           <Text>{item.type}</Text>
@@ -168,7 +160,7 @@ class DoctorScreen extends Component {
         <Text style={styles.header1}>{`Doctors & Pharmacists`}</Text>
         <Text style={styles.header2}>{`Doctors and pharmacists who have accessed to your medication records`}</Text>
         {message}
-        <TouchableOpacity style={styles.button} onPress={this.addAccess}>
+        <TouchableOpacity style={styles.button} onPress={() => this.addAccess}>
           <Text style={{ color: "#FFF" }}>Give Access to Another Doctor/ Pharmacist</Text>
         </TouchableOpacity>
       </View>
@@ -244,6 +236,6 @@ const styles = StyleSheet.create({
     color: "#FFF",
     marginHorizontal: 16,
   }
-})
+});
 
 export default DoctorScreen

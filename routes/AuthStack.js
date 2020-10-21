@@ -14,10 +14,9 @@ AuthStack = createStackNavigator(
         RegisterScreen,
         ForgotPasswordScreen,
         Terms
-    },
-    {
-        headerMode: "none"
-    }
+    }, {
+    headerMode: "none"
+}
 )
 
 export default AuthStack

@@ -22,8 +22,8 @@ import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
 class DrawerMenu extends React.Component {
     handleSignOut = () => {
-        UserReminders.deleteReminders(auth().currentUser.email)
-        auth().signOut()
+        UserReminders.deleteReminders(auth().currentUser.email);
+        auth().signOut();
     }
 
     render() {
@@ -114,6 +114,6 @@ const styles = StyleSheet.create({
         height: 30,
         borderRadius: 16,
     },
-})
+});
 
 export default DrawerMenu

@@ -9,7 +9,7 @@ import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
 import Background from '../../components/Background';
 
-var confusedMan = require('../../assets/confusedMan.png')
+var confusedMan = require('../../assets/confusedMan.png');
 
 class ForgotPasswordScreen extends React.Component {
     state = {
@@ -114,6 +114,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginVertical: 12
     },
-})
+});
 
 export default ForgotPasswordScreen

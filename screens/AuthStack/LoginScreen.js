@@ -179,6 +179,6 @@ const styles = StyleSheet.create({
     borderBottomColor: "#8A8F9E",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-})
+});
 
 export default LoginScreen

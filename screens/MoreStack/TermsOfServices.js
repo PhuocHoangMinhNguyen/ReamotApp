@@ -7,7 +7,7 @@ import TermsServices from '../../components/TermsServices';
 
 class TermsOfServices extends React.Component {
     render() {
-        return (<TermsServices />)
+        return (<TermsServices />);
     }
 }
 

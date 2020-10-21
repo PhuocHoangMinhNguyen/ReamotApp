@@ -92,7 +92,7 @@ class ChangeReminder extends React.Component {
     }
 
     componentWillUnmount() {
-        this.unsubscribe()
+        this.unsubscribe();
     }
 
     // delete alarm from "reminder" collection in firestore

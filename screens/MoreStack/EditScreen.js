@@ -24,7 +24,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserPermissions from "../../utilities/UserPermissions";
 import Toast from "react-native-simple-toast";
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class EditScreen extends React.Component {
   state = {
@@ -44,16 +44,16 @@ class EditScreen extends React.Component {
     this.unsubscribe = firestore().collection("users").doc(user)
       .onSnapshot(doc => {
         this.setState({ user: doc.data() });
-      })
+      });
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
+    this.unsubscribe();
   }
 
   // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
-    UserPermissions.getPhotoPermission()
+    UserPermissions.getPhotoPermission();
 
     var options = {
       title: "Select Image",
@@ -64,12 +64,12 @@ class EditScreen extends React.Component {
     }
 
     let result = await ImagePicker.showImagePicker(options, (response) => {
-      console.log("Response = ", response)
+      console.log("Response = ", response);
 
       if (response.didCancel) {
-        console.log("User cancelled image picker")
+        console.log("User cancelled image picker");
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error)
+        console.log("ImagePicker Error: ", response.error);
       } else {
         const source = response.uri
         // You can also display the image using data:
@@ -85,13 +85,13 @@ class EditScreen extends React.Component {
   editProfile = async () => {
     const { name, phoneNumber, address, avatar } = this.state.user
     let remoteUri = null
-    let db = firestore().collection("users").doc((auth().currentUser || {}).uid)
+    let db = firestore().collection("users").doc((auth().currentUser || {}).uid);
     db.update({
       avatar: null,
       name: name,
       phoneNumber: phoneNumber,
       address: address,
-    })
+    });
     if (avatar) {
       // Store the avatar in Firebase Storage
       remoteUri = await UploadImage.uploadPhotoAsync(
@@ -99,9 +99,9 @@ class EditScreen extends React.Component {
         `users/${(auth().currentUser || {}).uid}`
       );
       // Then Store the avatar in Cloud Firestore
-      db.set({ avatar: remoteUri }, { merge: true })
+      db.set({ avatar: remoteUri }, { merge: true });
     }
-    Toast.show("Your Account Details is editted !")
+    Toast.show("Your Account Details is editted !");
   }
 
   render() {
@@ -117,12 +117,10 @@ class EditScreen extends React.Component {
                 ? { uri: this.state.user.avatar }
                 : tempAvatar
             } />
-          <MaterialIcons
-            name="photo-camera"
+          <MaterialIcons name="photo-camera"
             size={35}
             color="black"
-            style={styles.icon}
-          />
+            style={styles.icon} />
         </TouchableOpacity>
         <ScrollView>
           <Text style={styles.name}>{this.state.user.name}</Text>
@@ -130,31 +128,22 @@ class EditScreen extends React.Component {
             <View>
               <Text style={styles.inputTitle}>Full Name</Text>
               <TextInput style={styles.input}
-                onChangeText={name =>
-                  this.setState({ user: { ...this.state.user, name } })
-                }
-                value={this.state.user.name}
-              />
+                onChangeText={name => this.setState({ user: { ...this.state.user, name } })}
+                value={this.state.user.name} />
             </View>
 
             <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Contact Number</Text>
-              <TextInput
-                style={styles.input}
+              <TextInput style={styles.input}
                 keyboardType="numeric"
-                onChangeText={phoneNumber =>
-                  this.setState({ user: { ...this.state.user, phoneNumber } })
-                }
+                onChangeText={phoneNumber => this.setState({ user: { ...this.state.user, phoneNumber } })}
                 value={this.state.user.phoneNumber}
               />
             </View>
             <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Address</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={address =>
-                  this.setState({ user: { ...this.state.user, address } })
-                }
+              <TextInput style={styles.input}
+                onChangeText={address => this.setState({ user: { ...this.state.user, address } })}
                 value={this.state.user.address}
               />
             </View>
@@ -233,6 +222,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
   },
-})
+});
 
 export default EditScreen

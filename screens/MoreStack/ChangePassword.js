@@ -8,14 +8,14 @@ import Toast from "react-native-simple-toast";
 import auth from "@react-native-firebase/auth";
 import Background from '../../components/Background';
 
-var confusedMan = require('../../assets/confusedMan.png')
+var confusedMan = require('../../assets/confusedMan.png');
 
 class ChangePassword extends React.Component {
     // A link to reset password will be sent to current user's email
     handleChangePassword = () => {
-        auth().sendPasswordResetEmail(auth().currentUser.email).then(
-            Toast.show("Please Check your Email...")
-        )
+        auth().sendPasswordResetEmail(auth().currentUser.email).then(() => {
+            Toast.show("Please Check your Email...");
+        });
     }
 
     render() {
@@ -66,6 +66,6 @@ const styles = StyleSheet.create({
     submitText: {
         color: "#FFF"
     }
-})
+});
 
 export default ChangePassword

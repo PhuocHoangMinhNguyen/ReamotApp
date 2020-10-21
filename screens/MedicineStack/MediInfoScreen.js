@@ -20,7 +20,7 @@ import Toast from "react-native-simple-toast";
 import Background from '../../components/Background';
 import moment from 'moment';
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class MediInfoScreen extends React.Component {
   state = {
@@ -41,7 +41,7 @@ class MediInfoScreen extends React.Component {
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
     // => Faster than accessing Cloud Firestore again.
     let paramsFromMedicineScreen = this.props.navigation.state.params
-    this.setState({ medicine: paramsFromMedicineScreen })
+    this.setState({ medicine: paramsFromMedicineScreen });
 
     // Get Medicine Number of Pills
     this.unsubscribe1 = firestore().collection("medicinePills")
@@ -53,13 +53,13 @@ class MediInfoScreen extends React.Component {
         querySnapshot.forEach(documentSnapshot => {
           temp = documentSnapshot.data().pills
           tempID = documentSnapshot.id
-        })
+        });
         this.setState({
           medicinePills: temp.toString(),
           text: temp.toString(),
           firebaseID: tempID
-        })
-      })
+        });
+      });
 
     // Get Prescription data from Cloud Firestore to know number of capsules taken per time, 
     // and number of times to take medicine per day.
@@ -74,15 +74,15 @@ class MediInfoScreen extends React.Component {
           tempValue = documentSnapshot.data().times
           tempValue2 = documentSnapshot.data().number
           tempValue3 = documentSnapshot.data().type
-        })
+        });
         this.setState({
           prescription: {
             times: tempValue,
             number: tempValue2,
             type: tempValue3
           }
-        })
-      })
+        });
+      });
 
     // Get Reminder data of that patient and that medicine.
     this.unsubscribe3 = firestore().collection("reminder")
@@ -94,16 +94,16 @@ class MediInfoScreen extends React.Component {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
-          })
-        })
-        this.setState({ reminder: temp })
-      })
+          });
+        });
+        this.setState({ reminder: temp });
+      });
   }
 
   componentWillUnmount() {
-    this.unsubscribe1()
-    this.unsubscribe2()
-    this.unsubscribe3()
+    this.unsubscribe1();
+    this.unsubscribe2();
+    this.unsubscribe3();
   }
 
   // If the prescription.type is Daily, navigate to 'Daily New Reminder'
@@ -113,12 +113,12 @@ class MediInfoScreen extends React.Component {
       this.props.navigation.navigate("NewReminder", {
         medicine: this.props.navigation.state.params,
         number: this.state.prescription.number
-      })
+      });
     } else {
       this.props.navigation.navigate("WeeklyNewReminder", {
         medicine: this.props.navigation.state.params,
         number: this.state.prescription.number
-      })
+      });
     }
   }
 
@@ -129,12 +129,12 @@ class MediInfoScreen extends React.Component {
       this.props.navigation.navigate("ChangeReminder", {
         medicine: this.props.navigation.state.params,
         itemTime: item.time.toDate(),
-      })
+      });
     } else {
       this.props.navigation.navigate("WeeklyChangeReminder", {
         medicine: this.props.navigation.state.params,
         itemTime: item.time.toDate(),
-      })
+      });
     }
   }
 
@@ -155,26 +155,26 @@ class MediInfoScreen extends React.Component {
   // Add Medicine Pills is used when there are no existing number of pills stored in database
   addMedicinePills = () => {
     if (this.state.medicinePills == "") {
-      Toast.show("Please enter number of capsules")
+      Toast.show("Please enter number of capsules");
     } else {
-      const value = parseInt(this.state.medicinePills, 10)
+      const value = parseInt(this.state.medicinePills, 10);
       firestore().collection("medicinePills").add({
         medicine: this.state.medicine.name,
         patientEmail: auth().currentUser.email,
         pills: value
-      })
+      });
     }
   }
 
   // Update Medicine Pills is used when there are already some number of pills stored in database
   updateMedicinePills = () => {
     if (this.state.add == "") {
-      Toast.show("Please enter number of capsules")
+      Toast.show("Please enter number of capsules");
     } else {
-      const value = parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10)
+      const value = parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10);
       firestore().collection("medicinePills").doc(this.state.firebaseID).update({
         pills: value
-      })
+      });
     }
   }
 
@@ -211,7 +211,7 @@ class MediInfoScreen extends React.Component {
 
     if (this.state.reminder.length < this.state.prescription.times) {
       for (let i = this.state.reminder.length; i < this.state.prescription.times; i++) {
-        this.state.reminder.push("null")
+        this.state.reminder.push("null");
       }
     }
 
@@ -307,8 +307,7 @@ class MediInfoScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Background />
-        <TouchableOpacity
-          style={styles.back}
+        <TouchableOpacity style={styles.back}
           onPress={() => this.props.navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={30} color="#FFF" />
@@ -322,8 +321,7 @@ class MediInfoScreen extends React.Component {
               } />
             <Text style={styles.name}>{this.state.medicine.name}</Text>
           </View>
-          <ViewMoreText
-            numberOfLines={3}
+          <ViewMoreText numberOfLines={3}
             renderViewMore={this.renderViewMore}
             renderViewLess={this.renderViewLess}
             textStyle={styles.description}>
@@ -339,11 +337,9 @@ class MediInfoScreen extends React.Component {
           <Text style={styles.repeat}>{this.state.prescription.type}</Text>
         </View>
 
-        <FlatList
-          data={this.state.reminder}
+        <FlatList data={this.state.reminder}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()}
-        />
+          keyExtractor={(item, index) => index.toString()} />
       </View>
     )
   }
@@ -431,6 +427,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   }
-})
+});
 
 export default MediInfoScreen

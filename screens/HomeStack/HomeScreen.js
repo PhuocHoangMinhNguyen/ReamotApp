@@ -18,7 +18,7 @@ import moment from "moment";
 import Background from '../../components/Background';
 import TreeImage from '../../components/TreeImage';
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class HomeScreen extends React.Component {
   state = {
@@ -39,8 +39,8 @@ class HomeScreen extends React.Component {
         tempMedicine.push({
           ...documentSnapshot.data(),
           key: documentSnapshot.id
-        })
-      })
+        });
+      });
       // Get all the history of taking medicine for today.
       firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
         .where('date', '==', moment().format("MMMM Do YYYY"))
@@ -55,12 +55,12 @@ class HomeScreen extends React.Component {
                   description: tempMedicine[i].description,
                   image: tempMedicine[i].image,
                   key: documentSnapshot.id
-                })
+                });
               }
             }
-          })
-          this.setState({ historymedicines: tempHistory })
-        })
+          });
+          this.setState({ historymedicines: tempHistory });
+        });
       // Get all the history of taking medicine, that are missed, for today.
       firestore().collection("history").where('patientEmail', '==', auth().currentUser.email)
         .where('date', '==', moment().format("MMMM Do YYYY"))
@@ -76,12 +76,12 @@ class HomeScreen extends React.Component {
                   description: tempMedicine[i].description,
                   image: tempMedicine[i].image,
                   key: documentSnapshot.id
-                })
+                });
               }
             }
-          })
-          this.setState({ missedMedicines: tempHistory })
-        })
+          });
+          this.setState({ missedMedicines: tempHistory });
+        });
       // Get all the reminders
       firestore().collection("reminder").where('patientEmail', '==', auth().currentUser.email)
         .onSnapshot(querySnapshot => {
@@ -95,17 +95,17 @@ class HomeScreen extends React.Component {
                   description: tempMedicine[i].description,
                   image: tempMedicine[i].image,
                   key: documentSnapshot.id
-                })
+                });
               }
             }
-          })
-          this.setState({ remindermedicines: tempReminder })
-        })
-    })
+          });
+          this.setState({ remindermedicines: tempReminder });
+        });
+    });
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
+    this.unsubscribe();
   }
 
   // Information appears on each item on "Upcoming Reminder" List
@@ -119,12 +119,9 @@ class HomeScreen extends React.Component {
     if (item.time.toDate().toDateString() == (new Date()).toDateString() && item.time.toDate() >= Date.now()) {
       return (
         <TouchableOpacity style={styles.feedItem}
-          onPress={() => {
-            this.props.navigation.navigate("MedicationInformation", dataInfor)
-          }}>
+          onPress={() => { this.props.navigation.navigate("MedicationInformation", dataInfor) }}>
           <Image style={styles.avatar}
-            source={item.image ? { uri: item.image } : tempAvatar}
-          />
+            source={item.image ? { uri: item.image } : tempAvatar} />
           <Text style={styles.name}>{item.medicine}</Text>
           <Text style={styles.time}>{moment(item.time.toDate()).format('hh:mm a')}</Text>
         </TouchableOpacity>
@@ -145,12 +142,9 @@ class HomeScreen extends React.Component {
 
     return (
       <TouchableOpacity style={item.status == "taken" ? styles.feedTaken : styles.feedMissed}
-        onPress={() => {
-          this.props.navigation.navigate("MedicationInformation", dataInfor)
-        }}>
+        onPress={() => { this.props.navigation.navigate("MedicationInformation", dataInfor) }}>
         <Image style={styles.avatar}
-          source={item.image ? { uri: item.image } : tempAvatar}
-        />
+          source={item.image ? { uri: item.image } : tempAvatar} />
         <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.medicine}</Text>
         <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{moment(item.startTime.toDate()).format('hh:mm a')}</Text>
       </TouchableOpacity>
@@ -310,6 +304,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16
   },
-})
+});
 
 export default HomeScreen

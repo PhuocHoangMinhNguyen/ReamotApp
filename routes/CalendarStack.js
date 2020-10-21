@@ -7,6 +7,6 @@ import CalendarScreen from "../screens/CalendarStack/CalendarScreen";
 
 CalendarStack = createStackNavigator({
     CalendarScreen,
-})
+});
 
 export default CalendarStack

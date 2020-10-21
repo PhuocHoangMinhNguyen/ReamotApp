@@ -8,7 +8,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
 import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class MedicationInformation extends React.Component {
     state = {
@@ -19,30 +19,25 @@ class MedicationInformation extends React.Component {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMedicineScreen = this.props.navigation.state.params
-        this.setState({ medicine: paramsFromMedicineScreen })
+        this.setState({ medicine: paramsFromMedicineScreen });
     }
 
     render() {
         return (
             <ScrollView style={styles.container}>
                 <Background />
-                <TouchableOpacity
-                    style={styles.back}
-                    onPress={() => this.props.navigation.goBack()}
-                >
+                <TouchableOpacity style={styles.back}
+                    onPress={() => this.props.navigation.goBack()}>
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
                 <Text style={styles.header}>Medicine Information</Text>
                 <View style={styles.information}>
                     <View style={{ flexDirection: "row" }}>
-                        <Image
-                            source={
-                                this.state.medicine.image
-                                    ? { uri: this.state.medicine.image }
-                                    : tempAvatar
-                            }
-                            style={styles.image}
-                        />
+                        <Image style={styles.image}
+                            source={this.state.medicine.image
+                                ? { uri: this.state.medicine.image }
+                                : tempAvatar
+                            } />
                         <Text style={styles.name}>{this.state.medicine.name}</Text>
                     </View>
                     <Text style={styles.description}>{this.state.medicine.description}</Text>
@@ -96,6 +91,6 @@ const styles = StyleSheet.create({
     description: {
         marginTop: 12
     },
-})
+});
 
 export default MedicationInformation

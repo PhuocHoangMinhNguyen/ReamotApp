@@ -20,7 +20,7 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import { DeviceEventEmitter } from 'react-native';
 import NavigationService from '../../utilities/NavigationService';
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class MedicineScreen extends React.Component {
   state = {
@@ -36,19 +36,19 @@ class MedicineScreen extends React.Component {
     // To take user's medicine based on medicine listed in "prescription" collection.
     this.unsubscribe = firestore().collection("medicine")
       .onSnapshot(querySnapshot => {
-        let temp = []
+        let temp = [];
         querySnapshot.forEach(documentSnapshot => {
           temp.push({
             ...documentSnapshot.data(),
             medicineKey: documentSnapshot.id
-          })
-        })
+          });
+        });
 
         // Deal with medicines that patient add
         firestore().collection("prescription")
           .where('patientEmail', '==', auth().currentUser.email)
           .onSnapshot(querySnapshot => {
-            let temp2 = []
+            let temp2 = [];
             querySnapshot.forEach(documentSnapshot => {
               for (let i = 0; i < temp.length; i++) {
                 if (documentSnapshot.data().name == temp[i].name) {
@@ -56,17 +56,17 @@ class MedicineScreen extends React.Component {
                     ...documentSnapshot.data(),
                     ...temp[i],
                     key: documentSnapshot.id,
-                  })
+                  });
                 }
               }
-            })
+            });
             this.setState({
               medicines: temp2,
               myArray: temp2,
               loading: false,
-            })
-          })
-      })
+            });
+          });
+      });
 
     DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
       const obj = JSON.parse(e);
@@ -84,12 +84,12 @@ class MedicineScreen extends React.Component {
           barcode: obj.barcode,
         },
         itemTime: new Date(Date.parse(obj.itemTime)),
-      })
+      });
     });
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
+    this.unsubscribe();
     DeviceEventEmitter.removeListener('OnNotificationDismissed');
     DeviceEventEmitter.removeListener('OnNotificationOpened');
   }
@@ -102,8 +102,8 @@ class MedicineScreen extends React.Component {
         querySnapshot.forEach(documentSnapshot => {
           firestore().collection("reminder").doc(documentSnapshot.id).delete()
             .then(() => {
-              ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString())
-              Toast.show('That medicine is deleted')
+              ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString());
+              Toast.show('That medicine is deleted');
             })
         })
       })
@@ -119,28 +119,19 @@ class MedicineScreen extends React.Component {
     }
     if (item.adder == 'patient') {
       return (
-        <TouchableOpacity
-          style={styles.feedItem}
-          onPress={() => {
-            this.props.navigation.navigate("MediInfoScreen", dataInfor)
-          }}
-        >
-          <Image
-            source={
-              item.image
-                ? { uri: item.image }
-                : tempAvatar
-            }
-            style={styles.avatar}
-          />
+        <TouchableOpacity style={styles.feedItem}
+          onPress={() => { this.props.navigation.navigate("MediInfoScreen", dataInfor) }} >
+          <Image style={styles.avatar}
+            source={item.image
+              ? { uri: item.image }
+              : tempAvatar
+            } />
           <Text style={styles.name}>{item.name}</Text>
           <TouchableOpacity style={styles.button}
             onPress={() => {
               // Also need to delete alarms for this medicine.
-              firestore().collection('prescription').doc(item.key)
-                .delete().then(() => {
-                  this.deleteAlarms(item.name)
-                })
+              firestore().collection('prescription').doc(item.key).delete()
+                .then(() => { this.deleteAlarms(item.name) });
             }}>
             <Text style={{ color: "#FFF" }}>Delete</Text>
           </TouchableOpacity>
@@ -148,12 +139,8 @@ class MedicineScreen extends React.Component {
       )
     }
     return (
-      <TouchableOpacity
-        style={styles.feedItem}
-        onPress={() => {
-          this.props.navigation.navigate("MediInfoScreen", dataInfor)
-        }}
-      >
+      <TouchableOpacity style={styles.feedItem}
+        onPress={() => { this.props.navigation.navigate("MediInfoScreen", dataInfor) }} >
         <Image style={styles.avatar}
           source={item.image
             ? { uri: item.image }
@@ -169,13 +156,13 @@ class MedicineScreen extends React.Component {
     const newData = this.state.medicines.filter(function (item) {
       //applying filter for the inserted text in search bar
       const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
-      const textData = newText.toUpperCase()
+      const textData = newText.toUpperCase();
       return itemData.indexOf(textData) > -1
-    })
+    });
     this.setState({
       myArray: newData,
       text: newText,
-    })
+    });
   }
 
   render() {
@@ -190,8 +177,7 @@ class MedicineScreen extends React.Component {
         </View>
     } else {
       message =
-        <FlatList
-          style={styles.feed}
+        <FlatList style={styles.feed}
           data={this.state.myArray}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
@@ -200,18 +186,15 @@ class MedicineScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <SearchBar
-            placeholder="Search Medicine..."
+          <SearchBar placeholder="Search Medicine..."
             lightTheme
             round
             onChangeText={(newText) => this.searchFilterFunction(newText)}
-            value={this.state.text}
-          />
+            value={this.state.text} />
         </View>
         {message}
-        <TouchableOpacity style={styles.addMedicine} onPress={() => {
-          this.props.navigation.navigate("AddMedicine")
-        }}>
+        <TouchableOpacity style={styles.addMedicine}
+          onPress={() => { this.props.navigation.navigate("AddMedicine") }}>
           <Text style={styles.add}>Add Medicine</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -278,6 +261,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   }
-})
+});
 
 export default MedicineScreen

@@ -233,6 +233,6 @@ const styles = StyleSheet.create({
         color: "#FFF",
         marginBottom: 10
     }
-})
+});
 
 export default HelpScreen

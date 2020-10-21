@@ -66,20 +66,18 @@ BottomTabs = createStackNavigator(
                         tabBarOnPress: ({ navigation }) => { navigation.openDrawer() }
                     },
                 },
+            }, {
+            tabBarOptions: {
+                activeTintColor: "#161F3D",
+                inactiveTintColor: "#B8BBC4",
+                showLabel: false,
             },
-            {
-                tabBarOptions: {
-                    activeTintColor: "#161F3D",
-                    inactiveTintColor: "#B8BBC4",
-                    showLabel: false,
-                },
-            }
+        }
         ),
-    },
-    {
-        mode: "modal",
-        headerMode: "none",
-    }
-)
+    }, {
+    mode: "modal",
+    headerMode: "none",
+}
+);
 
 export default BottomTabs

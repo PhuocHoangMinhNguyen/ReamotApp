@@ -17,10 +17,9 @@ MoreStack = createStackNavigator(
         AppointmentList,
         HelpScreen,
         TermsOfServices,
-    },
-    {
-        headerMode: "none",
-    }
-)
+    }, {
+    headerMode: "none",
+}
+);
 
 export default MoreStack

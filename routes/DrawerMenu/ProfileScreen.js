@@ -26,11 +26,11 @@ class ProfileScreen extends React.Component {
     this.unsubscribe = firestore().collection("users").doc(user)
       .onSnapshot(doc => {
         this.setState({ user: doc.data() });
-      })
+      });
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
+    this.unsubscribe();
   }
 
   render() {
@@ -80,6 +80,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16
   }
-})
+});
 
 export default ProfileScreen

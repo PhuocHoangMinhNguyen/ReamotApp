@@ -53,7 +53,7 @@ class CalendarScreen extends React.Component {
       .where('status', '==', "missed")
     await missedCollection.get().then(querySnapshot => {
       docsMissedLength = querySnapshot.docs.length
-    })
+    });
 
     // Get history documents with status taken to calculate percentage
     let docsTakenLength = 0
@@ -63,11 +63,11 @@ class CalendarScreen extends React.Component {
       .where('status', '==', "taken")
     await takenCollection.get().then(querySnapshot => {
       docsTakenLength = querySnapshot.docs.length
-    })
+    });
 
     // calculate percentage
-    const percentageArray = []
-    const percentage = (docsTakenLength * 1.0) / (docsTakenLength + docsMissedLength)
+    const percentageArray = [];
+    const percentage = (docsTakenLength * 1.0) / (docsTakenLength + docsMissedLength);
 
     // decide color
     let r = 0
@@ -96,7 +96,7 @@ class CalendarScreen extends React.Component {
       chartConfig: {
         ...this.state.chartConfig, color: (opacity = 1) => `rgba(${r}, ${g}, ${b}, ${opacity})`
       }
-    })
+    });
   }
 
   // Load the history of taking medicine for day chosen and the information of medicines 
@@ -120,38 +120,38 @@ class CalendarScreen extends React.Component {
                   ...documentSnapshot.data(),
                   key: documentSnapshot.id
                 }
-                result.push(selectedItem)
+                result.push(selectedItem);
               }
             }).then(() => {
-              this.setState({ medicine: result })
-              this.calculate()
-            })
-        })
-      })
+              this.setState({ medicine: result });
+              this.calculate();
+            });
+        });
+      });
     if (found == false) {
-      this.setState({ medicine: null })
+      this.setState({ medicine: null });
     }
   }
 
   componentDidMount() {
-    this.loadItems()
+    this.loadItems();
   }
 
   // Show DatePicker
   showMode = () => {
-    this.setState({ show: true })
+    this.setState({ show: true });
   }
 
   // When a date is chosen from DatePicker
   onChange = (event, selectedDate) => {
     const { testDate } = this.state
-    const currentDate = selectedDate || testDate;
+    const currentDate = selectedDate || testDate
     this.setState({
       show: Platform.OS === 'ios',
       testDate: currentDate,
-    })
+    });
     // Reload medicines for the new date chosen and new progress chart.
-    this.loadItems()
+    this.loadItems();
   }
 
   // Information appears on each item.
@@ -307,6 +307,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     height: 120
   }
-})
+});
 
 export default CalendarScreen

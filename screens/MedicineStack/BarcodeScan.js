@@ -42,15 +42,15 @@ class BarcodeScan extends React.Component {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
-        this.setState({ medicine: paramsFromMediInfoScreen })
+        this.setState({ medicine: paramsFromMediInfoScreen });
 
         // Take value from params and put it as state.firebaseId
         let paramsFirebaseId = this.props.navigation.state.params.firebaseId
-        this.setState({ firebaseId: paramsFirebaseId })
+        this.setState({ firebaseId: paramsFirebaseId });
 
         // Take value from params and put it as state.itemTime
         let paramsItemTime = this.props.navigation.state.params.itemTime
-        this.setState({ itemTime: paramsItemTime })
+        this.setState({ itemTime: paramsItemTime });
     }
 
     onBarCodeRead = async (e) => {
@@ -59,17 +59,17 @@ class BarcodeScan extends React.Component {
         // If the barcode scanned is correct.
         if (barcode == e.data) {
             if (barcodeRead == false) {
-                this.setState({ barcodeRead: true })
+                this.setState({ barcodeRead: true });
                 // Stop Alarm Sound
-                ReactNativeAN.stopAlarmSound()
+                ReactNativeAN.stopAlarmSound();
                 // Remove Notification
-                ReactNativeAN.removeAllFiredNotifications()
+                ReactNativeAN.removeAllFiredNotifications();
 
                 // Set New Alarm Time
-                const newReminderTime = new Date(itemTime)
-                newReminderTime.setDate(newReminderTime.getDate() + 1)
-                console.log("Barcode Scanner: " + newReminderTime)
-                const fireDates = ReactNativeAN.parseDate(newReminderTime)
+                const newReminderTime = new Date(itemTime);
+                newReminderTime.setDate(newReminderTime.getDate() + 1);
+                console.log("Barcode Scanner: " + newReminderTime);
+                const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
                 const details = {
                     ...alarmNotifData,
@@ -84,10 +84,10 @@ class BarcodeScan extends React.Component {
                         itemTime: newReminderTime.toString(),
                     }
                 }
-                ReactNativeAN.scheduleAlarm(details)
+                ReactNativeAN.scheduleAlarm(details);
 
                 // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-                const alarm = await ReactNativeAN.getScheduledAlarms()
+                const alarm = await ReactNativeAN.getScheduledAlarms();
                 let idAN = ""
                 for (let i = 0; i < alarm.length; i++) {
                     if (alarm[i].alarmId == details.alarm_id) {
@@ -98,7 +98,7 @@ class BarcodeScan extends React.Component {
                     idAN: idAN,
                     alarmId: alarmId,
                     time: newReminderTime
-                })
+                });
 
                 // When the alarm is turned off, add the medicine into "history" collection
                 const firebaseReminder = new Date(itemTime)
@@ -108,7 +108,7 @@ class BarcodeScan extends React.Component {
                     startTime: firebaseReminder,
                     date: moment().format('MMMM Do YYYY'),
                     status: "taken"
-                })
+                });
 
                 // Reduce the number of pills
                 let temporaryID
@@ -124,29 +124,29 @@ class BarcodeScan extends React.Component {
                             querySnapshot.forEach(documentSnapshot => {
                                 temporaryID = documentSnapshot.id
                                 firebasePills = documentSnapshot.data().pills
-                            })
+                            });
                             // Need to minus the correct number of pills, not just one
                             const value = firebasePills - numberOfPills
                             mPills.doc(temporaryID).update({
                                 pills: value
-                            })
-                        })
-                    this.props.navigation.navigate("MedicineScreen")
+                            });
+                        });
+                    this.props.navigation.navigate("MedicineScreen");
                 })
             }
-            Alert.alert("Alarm Sound is Stopped")
+            Alert.alert("Alarm Sound is Stopped");
             // If the barcode scanned is incorrect.
         } else {
-            Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode)
+            Alert.alert("Scanned Barcode is " + e.data, "Required Barcode is " + barcode);
         }
     }
 
     // Handle turning on, turning off flash. Currently just change the icon.
     handleTourch(value) {
         if (value === true) {
-            this.setState({ flashOn: false })
+            this.setState({ flashOn: false });
         } else {
-            this.setState({ flashOn: true })
+            this.setState({ flashOn: true });
         }
     }
 
@@ -185,6 +185,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },
-})
+});
 
 export default BarcodeScan

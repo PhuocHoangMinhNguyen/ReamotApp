@@ -22,7 +22,7 @@ class UserReminders {
                 querySnapshot.forEach(documentSnapshot => {
                     ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString())
                 })
-            })
+            });
     }
 
     // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
@@ -39,29 +39,29 @@ class UserReminders {
             idAN: idAN,
             alarmId: alarm_id,
             time: time
-        })
+        });
     }
 
     setReminders = async (patientEmail) => {
         // Double check if there is any alarm working before logging in
-        const alarm = await ReactNativeAN.getScheduledAlarms()
-        console.log(alarm)
+        const alarm = await ReactNativeAN.getScheduledAlarms();
+        console.log(alarm);
 
         let temp = []
         firestore().collection('medicine').get().then(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
                 temp.push(documentSnapshot.data())
-            })
+            });
         }).then(() => {
             firestore().collection('reminder').where('patientEmail', '==', patientEmail).get()
                 .then(querySnapshot => {
                     querySnapshot.forEach(documentSnapshot => {
-                        const alarmID = Math.floor(Math.random() * 10000).toString()
-                        const reminderTime = documentSnapshot.data().time.toDate()
+                        const alarmID = Math.floor(Math.random() * 10000).toString();
+                        const reminderTime = documentSnapshot.data().time.toDate();
                         while (reminderTime < Date.now()) {
                             reminderTime.setDate(reminderTime.getDate() + 1)
                         }
-                        console.log(moment(reminderTime).format())
+                        console.log(moment(reminderTime).format());
                         temp.forEach(medi => {
                             if (medi.name == documentSnapshot.data().medicine) {
                                 const details = {
@@ -77,15 +77,15 @@ class UserReminders {
                                         itemTime: reminderTime.toString(),
                                     }
                                 }
-                                ReactNativeAN.scheduleAlarm(details)
+                                ReactNativeAN.scheduleAlarm(details);
 
                                 // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-                                this.findIdAN(details.alarm_id, documentSnapshot.id, reminderTime)
+                                this.findIdAN(details.alarm_id, documentSnapshot.id, reminderTime);
                             }
-                        })
-                    })
-                })
-        })
+                        });
+                    });
+                });
+        });
     }
 }
 

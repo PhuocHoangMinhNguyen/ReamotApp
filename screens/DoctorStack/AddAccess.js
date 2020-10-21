@@ -16,7 +16,7 @@ import { SearchBar } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class AddAccess extends React.Component {
     state = {
@@ -60,10 +60,10 @@ class AddAccess extends React.Component {
                         ...documentSnapshot.data(),
                         key: documentSnapshot.id,
                         type: "Doctor"
-                    })
+                    });
                 }
-            })
-        })
+            });
+        });
 
         // push pharmacist data into temp
         this.unsubscribe3 = firestore().collection("pharmacist").onSnapshot(querySnapshot => {
@@ -79,28 +79,28 @@ class AddAccess extends React.Component {
                         ...documentSnapshot.data(),
                         key: documentSnapshot.id,
                         type: "Pharmacist"
-                    })
+                    });
                 }
-            })
+            });
             // put temp data into myArray and doc_phar attributes of state
             this.setState({
                 doc_phar: temp,
                 myArray: temp,
                 loading: false,
-            })
-        })
+            });
+        });
     }
 
     componentWillUnmount() {
-        this.unsubscribe1()
-        this.unsubscribe2()
-        this.unsubscribe3()
+        this.unsubscribe1();
+        this.unsubscribe2();
+        this.unsubscribe3();
     }
 
     // Click on each item in flatlist will lead user to DoctorInfoScreen 
     // to show that doctor/pharmacist information with some options.
     handleClick = (dataInfor) => {
-        this.props.navigation.navigate("DoctorInfoScreen", dataInfor)
+        this.props.navigation.navigate("DoctorInfoScreen", dataInfor);
     }
 
     // Information appears on each item.
@@ -120,20 +120,14 @@ class AddAccess extends React.Component {
             address: item.address
         }
         return (
-            <TouchableOpacity
-                style={styles.feedItem}
-                onPress={() => {
-                    this.handleClick(dataInfor)
-                }}
+            <TouchableOpacity style={styles.feedItem}
+                onPress={() => { this.handleClick(dataInfor) }}
             >
-                <Image
-                    source={
-                        item.avatar
-                            ? { uri: item.avatar }
-                            : tempAvatar
-                    }
-                    style={styles.avatar}
-                />
+                <Image style={styles.avatar}
+                    source={item.avatar
+                        ? { uri: item.avatar }
+                        : tempAvatar
+                    } />
                 <View style={{ flex: 1 }}>
                     <Text style={styles.name}>{item.name}</Text>
                     <Text>{item.type}</Text>
@@ -147,33 +141,29 @@ class AddAccess extends React.Component {
     searchFilterFunction(newText) {
         const newData = this.state.doc_phar.filter(function (item) {
             //applying filter for the inserted text in search bar
-            const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
-            const textData = newText.toUpperCase()
+            const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+            const textData = newText.toUpperCase();
             return itemData.indexOf(textData) > -1
         })
         this.setState({
             myArray: newData,
             text: newText,
-        })
+        });
     }
 
     render() {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.header}>
-                    <SearchBar
-                        placeholder="Search Doctor/ Pharmacist..."
+                    <SearchBar placeholder="Search Doctor/ Pharmacist..."
                         lightTheme
                         round
                         onChangeText={(newText) => this.searchFilterFunction(newText)}
-                        value={this.state.text}
-                    />
+                        value={this.state.text} />
                 </View>
-                <FlatList
-                    style={styles.feed}
+                <FlatList style={styles.feed}
                     data={this.state.myArray}
-                    renderItem={({ item }) => this.renderItem(item)}
-                />
+                    renderItem={({ item }) => this.renderItem(item)} />
             </SafeAreaView>
         )
     }
@@ -212,6 +202,6 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         color: "#454D65",
     },
-})
+});
 
 export default AddAccess

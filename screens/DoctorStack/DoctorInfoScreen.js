@@ -12,7 +12,7 @@ import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class DoctorInfoScreen extends React.Component {
     state = {
@@ -24,7 +24,7 @@ class DoctorInfoScreen extends React.Component {
         // Take doctor/pharmacist data from DoctorScreen, including avatar, name, and type.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
-        this.setState({ doctor: paramsFromDoctorScreen })
+        this.setState({ doctor: paramsFromDoctorScreen });
     }
 
     // Open a dialog to make sure if user wants to give doctor/pharmacist access to user's data.
@@ -39,11 +39,11 @@ class DoctorInfoScreen extends React.Component {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     doctorList: firestore.FieldValue.arrayUnion(doctor.email)
-                })
+                });
             // Add user's email to doctor's patientList
             firestore().collection("doctor").doc(doctor.id).update({
                 patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
-            })
+            });
         }
         // If the target is a pharmacist
         if (doctor.type == "Pharmacist") {
@@ -51,15 +51,15 @@ class DoctorInfoScreen extends React.Component {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     pharmacistList: firestore.FieldValue.arrayUnion(doctor.email)
-                })
+                });
             // Add user's email to pharmacist's patientList
             firestore().collection("pharmacist").doc(doctor.id).update({
                 patientList: firestore.FieldValue.arrayUnion(auth().currentUser.email)
-            })
+            });
         }
-        this.setState({ dialogVisible: false })
-        Toast.show("Your request is confirmed !")
-        this.props.navigation.navigate("DoctorScreen")
+        this.setState({ dialogVisible: false });
+        Toast.show("Your request is confirmed !");
+        this.props.navigation.navigate("DoctorScreen");
     }
 
     render() {
@@ -72,29 +72,25 @@ class DoctorInfoScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Background />
-                <TouchableOpacity
-                    style={styles.back}
+                <TouchableOpacity style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
                 </TouchableOpacity>
                 {header}
                 <View style={styles.information}>
-                    <Image
-                        source={
-                            this.state.doctor.avatar
-                                ? { uri: this.state.doctor.avatar }
-                                : tempAvatar
-                        }
-                        style={styles.image} />
+                    <Image style={styles.image}
+                        source={this.state.doctor.avatar
+                            ? { uri: this.state.doctor.avatar }
+                            : tempAvatar
+                        } />
                     <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
                     <Text>Address: {this.state.doctor.address}</Text>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={this.handleGiveAccessToDoctor}>
+                <TouchableOpacity style={styles.button} onPress={() => this.handleGiveAccessToDoctor}>
                     <Text style={{ color: "#FFF" }}>Give access of medical details</Text>
                 </TouchableOpacity>
-                <ConfirmDialog
-                    visible={this.state.dialogVisible}
+                <ConfirmDialog visible={this.state.dialogVisible}
                     title="Alert"
                     message="Are you sure?"
                     onTouchOutside={() => this.setState({ dialogVisible: false })}
@@ -158,6 +154,6 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         marginHorizontal: 30
     },
-})
+});
 
 export default DoctorInfoScreen

@@ -14,7 +14,7 @@ import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/tempAvatar.png");
 
 class AppointmentMaker extends React.Component {
     state = {
@@ -31,18 +31,14 @@ class AppointmentMaker extends React.Component {
         // Take doctor/pharmacist data from DoctorScreen, including avatar, name, and type.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
-        this.setState({ doctor: paramsFromDoctorScreen })
+        this.setState({ doctor: paramsFromDoctorScreen });
     }
 
     // Show DatePicker
-    showModeDate = () => {
-        this.setState({ showDate: true })
-    }
+    showModeDate = () => { this.setState({ showDate: true }) }
 
     // Show TimePicker
-    showModeTime = () => {
-        this.setState({ showTime: true })
-    }
+    showModeTime = () => { this.setState({ showTime: true }) }
 
     // When a date is chosen from DatePicker
     onChangeDate = (event, selectedDate) => {
@@ -51,7 +47,7 @@ class AppointmentMaker extends React.Component {
         this.setState({
             showDate: Platform.OS === 'ios',
             testDate: currentDate,
-        })
+        });
     }
 
     // When a time is chosen from TimePicker
@@ -61,7 +57,7 @@ class AppointmentMaker extends React.Component {
         this.setState({
             showTime: Platform.OS === 'ios',
             testTime: currentTime,
-        })
+        });
     }
 
     // Open a Dialog to confirm if user wants to make the appointment
@@ -69,17 +65,17 @@ class AppointmentMaker extends React.Component {
 
     // If user confirms to make the appointment
     handleYes = () => {
-        const time = this.calculateTime()
-        console.log('Time: ' + time)
-        this.setState({ dialogVisible: false })
+        const time = this.calculateTime();
+        console.log('Time: ' + time);
+        this.setState({ dialogVisible: false });
         firestore().collection("appointment").add({
             doctor: this.state.doctor.name,
             time: time,
             reason: this.state.reason,
             patientEmail: auth().currentUser.email
         }).then(() => {
-            Toast.show("Your appointment is confirmed !")
-            this.props.navigation.goBack()
+            Toast.show("Your appointment is confirmed !");
+            this.props.navigation.goBack();
         })
     }
 
@@ -87,14 +83,14 @@ class AppointmentMaker extends React.Component {
     // we need to merge the date of testDate with the time of testTime
     calculateTime = () => {
         const { testTime, testDate } = this.state
-        const time = new Date()
-        time.setFullYear(testDate.getFullYear())
-        time.setMonth(testDate.getMonth())
-        time.setDate(testDate.getDate())
-        time.setHours(testTime.getHours())
-        time.setMinutes(testTime.getMinutes())
-        time.setSeconds(0)
-        time.setMilliseconds(0)
+        const time = new Date();
+        time.setFullYear(testDate.getFullYear());
+        time.setMonth(testDate.getMonth());
+        time.setDate(testDate.getDate());
+        time.setHours(testTime.getHours());
+        time.setMinutes(testTime.getMinutes());
+        time.setSeconds(0);
+        time.setMilliseconds(0);
         return time
     }
 
@@ -102,8 +98,7 @@ class AppointmentMaker extends React.Component {
         return (
             <View style={styles.container}>
                 <Background />
-                <TouchableOpacity
-                    style={styles.back}
+                <TouchableOpacity style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={30} color="#FFF" />
@@ -126,10 +121,8 @@ class AppointmentMaker extends React.Component {
                     <Text style={{ alignSelf: "center" }}>{moment(this.state.testDate).format("MMM Do YYYY")}</Text>
                 </View>
                 {this.state.showDate && (
-                    <DateTimePicker
-                        value={this.state.testDate}
-                        onChange={this.onChangeDate}
-                    />
+                    <DateTimePicker value={this.state.testDate}
+                        onChange={this.onChangeDate} />
                 )}
                 <View style={styles.timePicker}>
                     <TouchableOpacity style={styles.pickerButton} onPress={this.showModeTime}>
@@ -138,21 +131,15 @@ class AppointmentMaker extends React.Component {
                     <Text style={{ alignSelf: "center" }}>{moment(this.state.testTime).format('hh:mm a')}</Text>
                 </View>
                 {this.state.showTime && (
-                    <DateTimePicker
-                        value={this.state.testTime}
+                    <DateTimePicker value={this.state.testTime}
                         mode="time"
-                        onChange={this.onChangeTime}
-                    />
+                        onChange={this.onChangeTime} />
                 )}
                 <View style={styles.reason}>
                     <Text style={styles.inputTitle}>Reason</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={reason =>
-                            this.setState({ reason: reason })
-                        }
-                        value={this.state.reason}
-                    />
+                    <TextInput style={styles.input}
+                        onChangeText={reason => this.setState({ reason: reason })}
+                        value={this.state.reason} />
                 </View>
                 <TouchableOpacity style={styles.button} onPress={this.handlePress}>
                     <Text style={{ color: "#FFF" }}>Set Appointment</Text>
@@ -164,13 +151,13 @@ class AppointmentMaker extends React.Component {
                     onTouchOutside={() => this.setState({ dialogVisible: false })}
                     positiveButton={{
                         title: "YES",
-                        onPress: this.handleYes
+                        onPress: () => this.handleYes()
                     }}
                     negativeButton={{
                         title: "NO",
                         onPress: () => {
-                            this.setState({ dialogVisible: false })
-                            Toast.show("Your request is canceled !")
+                            this.setState({ dialogVisible: false });
+                            Toast.show("Your request is canceled !");
                         }
                     }}
                 />
@@ -263,6 +250,6 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100
     },
-})
+});
 
 export default AppointmentMaker

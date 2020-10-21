@@ -28,11 +28,11 @@ class AccessedDoctorScreen extends React.Component {
         // Take doctor/pharmacist data from DoctorScreen, including avatar, name, and type.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromDoctorScreen = this.props.navigation.state.params
-        this.setState({ doctor: paramsFromDoctorScreen })
+        this.setState({ doctor: paramsFromDoctorScreen });
         // If the item chosen has type == "Doctor", 
         // it will show the make appointment button
         if (paramsFromDoctorScreen.type == "Doctor") {
-            this.setState({ show: true })
+            this.setState({ show: true });
         }
     }
 
@@ -41,7 +41,7 @@ class AccessedDoctorScreen extends React.Component {
 
     // Send user to AppointmentMaker to choose appointment time and reason.
     handleSchedule = () => {
-        this.props.navigation.navigate("AppointmentMaker", this.state.doctor)
+        this.props.navigation.navigate("AppointmentMaker", this.state.doctor);
     }
 
     // If the user is sure to revoke doctor/pharmacist access to user's data
@@ -53,11 +53,11 @@ class AccessedDoctorScreen extends React.Component {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     doctorList: firestore.FieldValue.arrayRemove(doctor.email)
-                })
+                });
             // Remove user's email from doctor's patientList
             firestore().collection("doctor").doc(doctor.id).update({
                 patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
-            })
+            });
         }
         // If the target is a pharmacist
         if (doctor.type == "Pharmacist") {
@@ -65,15 +65,15 @@ class AccessedDoctorScreen extends React.Component {
             firestore().collection("users").doc((auth().currentUser || {}).uid)
                 .update({
                     pharmacistList: firestore.FieldValue.arrayRemove(doctor.email)
-                })
+                });
             // Remove user's email from pharmacist's patientList
             firestore().collection("pharmacist").doc(doctor.id).update({
                 patientList: firestore.FieldValue.arrayRemove(auth().currentUser.email)
-            })
+            });
         }
-        this.setState({ dialogVisible: false })
-        Toast.show("Your request is confirmed !")
-        this.props.navigation.goBack()
+        this.setState({ dialogVisible: false });
+        Toast.show("Your request is confirmed !");
+        this.props.navigation.goBack();
     }
 
     render() {
@@ -122,8 +122,8 @@ class AccessedDoctorScreen extends React.Component {
                     negativeButton={{
                         title: "NO",
                         onPress: () => {
-                            this.setState({ dialogVisible: false })
-                            Toast.show("Your request is canceled !")
+                            this.setState({ dialogVisible: false });
+                            Toast.show("Your request is canceled !");
                         }
                     }}
                 />
@@ -175,6 +175,6 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         marginHorizontal: 30
     },
-})
+});
 
 export default AccessedDoctorScreen

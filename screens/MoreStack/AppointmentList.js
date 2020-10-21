@@ -18,7 +18,7 @@ class AppointmentList extends React.Component {
     unsubscribe = null
 
     componentDidMount() {
-        const dateNow = new Date()
+        const dateNow = new Date();
         this.unsubscribe = firestore().collection("appointment")
             .where('patientEmail', '==', auth().currentUser.email)
             .onSnapshot(querySnapshot => {
@@ -29,23 +29,23 @@ class AppointmentList extends React.Component {
                         tempPast.push({
                             ...documentSnapshot.data(),
                             key: documentSnapshot.id
-                        })
+                        });
                     } else {
                         tempUpcomming.push({
                             ...documentSnapshot.data(),
                             key: documentSnapshot.id
-                        })
+                        });
                     }
-                })
+                });
                 this.setState({
                     past_appointmentList: tempPast,
                     upcomming_appointmentList: tempUpcomming
-                })
-            })
+                });
+            });
     }
 
     componentWillUnmount() {
-        this.unsubscribe()
+        this.unsubscribe();
     }
 
     // Information appeared on each item.
@@ -79,17 +79,13 @@ class AppointmentList extends React.Component {
                 <Text style={styles.header}>Appointment List</Text>
                 <Text style={styles.header1}>List of Upcomming and Past Appointment</Text>
                 <Text style={styles.titleUpcomming}>Upcomming Appointments</Text>
-                <FlatList
-                    style={styles.feed}
+                <FlatList style={styles.feed}
                     data={this.state.upcomming_appointmentList}
-                    renderItem={({ item }) => this.renderItem(item)}
-                />
+                    renderItem={({ item }) => this.renderItem(item)} />
                 <Text style={styles.titlePast}>Past Appointments</Text>
-                <FlatList
-                    style={styles.feed}
+                <FlatList style={styles.feed}
                     data={this.state.past_appointmentList}
-                    renderItem={({ item }) => this.renderItem(item)}
-                />
+                    renderItem={({ item }) => this.renderItem(item)} />
             </View>
         )
     }
@@ -145,6 +141,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 30,
         fontSize: 18
     }
-})
+});
 
 export default AppointmentList

@@ -10,12 +10,10 @@ class UserPermissions {
   getPhotoPermission = async () => {
     // if the platform OS is iOS
     if (Platform.OS === "ios") {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
       if (status !== "granted") {
-        alert(
-          "We need permission to use your camera roll if you'd like to incude a photo."
-        )
+        alert("We need permission to use your camera roll if you'd like to incude a photo.");
       }
     }
 
@@ -23,7 +21,7 @@ class UserPermissions {
     if (Platform.OS === "android") {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-      )
+      );
     }
   }
 }

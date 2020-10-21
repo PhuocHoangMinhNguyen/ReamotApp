@@ -21,7 +21,7 @@ const alarmNotifData = {
     message: "Take your Medicine",
 }
 
-var tempAvatar = require("../../../assets/tempAvatar.png")
+var tempAvatar = require("../../../assets/tempAvatar.png");
 
 class WeeklyNewReminder extends React.Component {
     constructor(props) {
@@ -42,17 +42,17 @@ class WeeklyNewReminder extends React.Component {
             },
             number: 0
         }
-        this.scheduleAlarm = this.scheduleAlarm.bind(this)
+        this.scheduleAlarm = this.scheduleAlarm.bind(this);
     }
 
     componentDidMount() {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMedicineScreen = this.props.navigation.state.params.medicine
-        this.setState({ medicine: paramsFromMedicineScreen })
+        this.setState({ medicine: paramsFromMedicineScreen });
 
         let paramsNumber = this.props.navigation.state.params.number
-        this.setState({ number: paramsNumber })
+        this.setState({ number: paramsNumber });
     }
 
     // This function called after the alarm is set.
@@ -61,7 +61,7 @@ class WeeklyNewReminder extends React.Component {
         const { name } = this.state.medicine
         const { testDate } = this.state.timePicker
         // Get the alarm's "id", set it as idAN attribute for Cloud Firestore
-        const alarm = await ReactNativeAN.getScheduledAlarms()
+        const alarm = await ReactNativeAN.getScheduledAlarms();
         let idAN = ""
         for (let i = 0; i < alarm.length; i++) {
             if (alarm[i].alarmId == details.alarm_id) {
@@ -78,9 +78,9 @@ class WeeklyNewReminder extends React.Component {
             patientEmail: auth().currentUser.email,
             numberOfPills: this.state.number
         }).then(() => {
-            Toast.show("Reminder Set!")
-            this.props.navigation.goBack()
-        })
+            Toast.show("Reminder Set!");
+            this.props.navigation.goBack();
+        });
     }
 
     // This function called when Schedule Alarm button is clicked
@@ -104,8 +104,8 @@ class WeeklyNewReminder extends React.Component {
             }
         }
         // Officially make a new alarm with information from details.
-        ReactNativeAN.scheduleAlarm(details)
-        this.getANid(details)
+        ReactNativeAN.scheduleAlarm(details);
+        this.getANid(details);
     }
 
     // Show TimePicker
@@ -115,7 +115,7 @@ class WeeklyNewReminder extends React.Component {
                 ...this.state.timePicker,
                 show: true
             }
-        })
+        });
     }
 
     // When a time is chosen from TimePicker
@@ -156,7 +156,7 @@ class WeeklyNewReminder extends React.Component {
                 ...this.state.alarm,
                 fireDate: ReactNativeAN.parseDate(currentDate)
             }
-        })
+        });
     }
 
     render() {
@@ -191,14 +191,12 @@ class WeeklyNewReminder extends React.Component {
                             <Text style={{ alignSelf: "center" }}>{moment(testDate).format('hh:mm a')}</Text>
                         </View>
                         {show && (
-                            <TimePicker
-                                value={testDate}
+                            <TimePicker value={testDate}
                                 mode="time"
-                                onChange={this.onChange}
-                            />
+                                onChange={this.onChange} />
                         )}
                     </View>
-                    <TouchableOpacity style={styles.button} onPress={this.scheduleAlarm}>
+                    <TouchableOpacity style={styles.button} onPress={() => this.scheduleAlarm()}>
                         <Text style={{ color: "#FFF" }}>Schedule Alarm</Text>
                     </TouchableOpacity>
                 </View>
@@ -273,6 +271,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     }
-})
+});
 
 export default WeeklyNewReminder

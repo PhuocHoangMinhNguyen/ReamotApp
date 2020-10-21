@@ -39,15 +39,15 @@ class AddMedicine extends React.Component {
                 skipBackup: true,
                 path: "images"
             }
-        };
+        }
 
         let result = await ImagePicker.showImagePicker(options, (response) => {
-            console.log("Response = ", response)
+            console.log("Response = ", response);
 
             if (response.didCancel) {
-                console.log("User cancelled image picker")
+                console.log("User cancelled image picker");
             } else if (response.error) {
-                console.log("ImagePicker Error: ", response.error)
+                console.log("ImagePicker Error: ", response.error);
             } else {
                 const source = response.uri
                 this.setState({
@@ -62,15 +62,15 @@ class AddMedicine extends React.Component {
         const { name, number, times } = this.state.medicine
         const { dailyType, weeklyType } = this.state.reminder
         if (name.trim == "") {
-            Toast.show("Please Enter Medicine Name", Toast.LONG)
+            Toast.show("Please Enter Medicine Name", Toast.LONG);
         } else if (number == "") {
-            Toast.show("Please enter number of capsules for each time you take medicine", Toast.LONG)
+            Toast.show("Please enter number of capsules for each time you take medicine", Toast.LONG);
         } else if (times == "") {
-            Toast.show("Please enter number of times you have to take medicine per day/week", Toast.LONG)
+            Toast.show("Please enter number of times you have to take medicine per day/week", Toast.LONG);
         } else if (dailyType == false && weeklyType == false) {
-            Toast.show("Please Choose a Reminder Type", Toast.LONG)
+            Toast.show("Please Choose a Reminder Type", Toast.LONG);
         } else {
-            this.addMedicine()
+            this.addMedicine();
         }
     }
 
@@ -105,7 +105,7 @@ class AddMedicine extends React.Component {
                     number: parseInt(number, 10),
                     times: parseInt(times, 10),
                     type: "Daily",
-                })
+                });
             }
             if (weeklyType == true) {
                 firestore().collection("prescription").add({
@@ -116,61 +116,51 @@ class AddMedicine extends React.Component {
                     number: parseInt(number, 10),
                     times: parseInt(times, 10),
                     type: "Weekly",
-                })
+                });
             }
         })
-        this.props.navigation.goBack()
-        Toast.show("A new medicine is added !")
+        this.props.navigation.goBack();
+        Toast.show("A new medicine is added !");
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Background />
-                <TouchableOpacity
-                    style={styles.back}
+                <TouchableOpacity style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={30} color="#FFF" />
                 </TouchableOpacity>
                 <Text style={styles.title}>Add Medication</Text>
                 <View style={styles.cover}>
-                    <TouchableOpacity
-                        style={styles.imagePlaceholder}
+                    <TouchableOpacity style={styles.imagePlaceholder}
                         onPress={this.handlePickImage}
                     >
-                        <Image
-                            source={{ uri: this.state.medicine.image }}
-                            style={styles.image}
-                        />
-                        <Ionicons
-                            name="ios-add"
+                        <Image style={styles.image}
+                            source={{ uri: this.state.medicine.image }} />
+                        <Ionicons name="ios-add"
                             size={40}
                             color="#FFF"
-                            style={{ marginTop: 6, marginLeft: 2 }}
-                        />
+                            style={{ marginTop: 6, marginLeft: 2 }} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.cover2}>
                     <View style={styles.textInputContainer1}>
-                        <TextInput
-                            placeholder="Medicine Name"
+                        <TextInput placeholder="Medicine Name"
                             onChangeText={name => this.setState({ medicine: { ...this.state.medicine, name: name } })}
-                            value={this.state.medicine.name}
-                        />
+                            value={this.state.medicine.name} />
                     </View>
                     <View style={styles.textInputContainer2}>
-                        <TextInput
-                            placeholder="Medicine Barcode"
+                        <TextInput placeholder="Medicine Barcode"
                             keyboardType="numeric"
                             onChangeText={barcode => this.setState({ medicine: { ...this.state.medicine, barcode: barcode } })}
-                            value={this.state.medicine.barcode}
-                        />
+                            value={this.state.medicine.barcode} />
                     </View>
                 </View>
                 <View style={styles.reminderType}>
                     <CheckBox value={this.state.reminder.dailyType}
-                        onValueChange={(newValue) => {
+                        onValueChange={newValue => {
                             if (this.state.reminder.weeklyType != this.state.reminder.dailyType && newValue == true) {
                                 this.setState({
                                     reminder: {
@@ -178,14 +168,14 @@ class AddMedicine extends React.Component {
                                         dailyType: newValue,
                                         weeklyType: !this.state.reminder.weeklyType
                                     }
-                                })
+                                });
                             } else {
                                 this.setState({
                                     reminder: {
                                         ...this.state.reminder,
                                         dailyType: newValue,
                                     }
-                                })
+                                });
                             }
                         }} />
                     <Text>Taken Daily</Text>
@@ -198,43 +188,37 @@ class AddMedicine extends React.Component {
                                         dailyType: !this.state.reminder.dailyType,
                                         weeklyType: newValue
                                     }
-                                })
+                                });
                             } else {
                                 this.setState({
                                     reminder: {
                                         ...this.state.reminder,
                                         weeklyType: newValue
                                     }
-                                })
+                                });
                             }
                         }} />
                     <Text>Taken Weekly</Text>
                 </View>
                 <View style={styles.numberTimes}>
                     <View style={styles.number}>
-                        <TextInput
-                            placeholder="Number"
+                        <TextInput placeholder="Number"
                             keyboardType="numeric"
                             onChangeText={number => this.setState({ medicine: { ...this.state.medicine, number: number } })}
-                            value={this.state.medicine.number}
-                        />
+                            value={this.state.medicine.number} />
                     </View>
                     <View style={styles.times}>
-                        <TextInput
-                            placeholder="Times"
+                        <TextInput placeholder="Times"
                             keyboardType="numeric"
                             onChangeText={times => this.setState({ medicine: { ...this.state.medicine, times: times } })}
-                            value={this.state.medicine.times}
-                        />
+                            value={this.state.medicine.times} />
                     </View>
                 </View>
                 <View style={styles.note}>
-                    <TextInput
-                        placeholder="Note"
+                    <TextInput placeholder="Note"
                         autoCapitalize="none"
                         onChangeText={note => this.setState({ medicine: { ...this.state.medicine, note: note } })}
-                        value={this.state.medicine.note}
-                    />
+                        value={this.state.medicine.note} />
                 </View>
                 <TouchableOpacity style={styles.button} onPress={() => this.handleAdd()}>
                     <Text style={styles.buttonText}>Add Medicine</Text>
@@ -344,6 +328,6 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginHorizontal: 30
     },
-})
+});
 
 export default AddMedicine
