@@ -31,7 +31,7 @@ class AddMedicine extends React.Component {
 
     // To pick image from library or take a photo for medicine image (optional)
     handlePickImage = async () => {
-        UserPermissions.getPhotoPermission()
+        UserPermissions.getPhotoPermission();
 
         var options = {
             title: "Select Image",
@@ -52,9 +52,9 @@ class AddMedicine extends React.Component {
                 const source = response.uri
                 this.setState({
                     medicine: { ...this.state.medicine, image: source }
-                })
+                });
             }
-        })
+        });
     }
 
     // Make sure all the information is enter successfully before adding the medicine into Firebase
