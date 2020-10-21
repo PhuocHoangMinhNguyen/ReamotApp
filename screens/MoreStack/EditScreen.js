@@ -42,9 +42,7 @@ class EditScreen extends React.Component {
     const user = this.props.uid || (auth().currentUser || {}).uid
 
     this.unsubscribe = firestore().collection("users").doc(user)
-      .onSnapshot(doc => {
-        this.setState({ user: doc.data() });
-      });
+      .onSnapshot(doc => this.setState({ user: doc.data() }));
   }
 
   componentWillUnmount() {
