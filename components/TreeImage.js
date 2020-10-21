@@ -1,12 +1,12 @@
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 
-var growing1 = require('../assets/growing_0.png')
-var growing2 = require('../assets/growing_0_to_25.png')
-var growing3 = require('../assets/growing_25_to_50.png')
-var growing4 = require('../assets/growing_50_to_75.png')
-var growing5 = require('../assets/growing_75_to_100.png')
-var growing6 = require('../assets/GrowingTree.png')
+var growing1 = require('../assets/growing_0.png');
+var growing2 = require('../assets/growing_0_to_25.png');
+var growing3 = require('../assets/growing_25_to_50.png');
+var growing4 = require('../assets/growing_50_to_75.png');
+var growing5 = require('../assets/growing_75_to_100.png');
+var growing6 = require('../assets/GrowingTree.png');
 
 const TreeImage = ({ value }) => {
     let image
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
         marginTop: -150,
         alignSelf: 'center'
     }
-})
+});
 
 export default TreeImage

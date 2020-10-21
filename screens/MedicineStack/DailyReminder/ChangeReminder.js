@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import AntDesign from "react-native-vector-icons/AntDesign";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
@@ -73,13 +74,12 @@ class ChangeReminder extends React.Component {
             .where('medicine', '==', paramsFromMediInfoScreen.name)
             .onSnapshot(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
-                    console.log(documentSnapshot.data().time.seconds)
                     if (Math.floor(paramsTime.getTime() / 1000) == documentSnapshot.data().time.seconds) {
                         console.log(documentSnapshot.id)
                         tempFirebase = documentSnapshot.id
                         tempIdAN = documentSnapshot.data().idAN
                     }
-                })
+                });
                 // Assign to firebaseId and idAN in state.firebase
                 this.setState({
                     firebase: {
@@ -87,8 +87,8 @@ class ChangeReminder extends React.Component {
                         firebaseId: tempFirebase,
                         idAN: tempIdAN,
                     }
-                })
-            })
+                });
+            });
     }
 
     componentWillUnmount() {
@@ -105,7 +105,7 @@ class ChangeReminder extends React.Component {
                 ReactNativeAN.deleteAlarm(idAN.toString())
                 Toast.show("Reminder Deleted!")
                 this.props.navigation.goBack()
-            })
+            });
     }
 
     // Show up a dialog to ask if user is sure to miss the reminder.
@@ -117,15 +117,15 @@ class ChangeReminder extends React.Component {
         const { firebaseId, alarmId } = this.state.firebase
         const { initial } = this.state
         // Stop Alarm Sound
-        ReactNativeAN.stopAlarmSound()
+        ReactNativeAN.stopAlarmSound();
         // Remove Notification
-        ReactNativeAN.removeAllFiredNotifications()
+        ReactNativeAN.removeAllFiredNotifications();
 
-        console.log("Initial: " + new Date(initial))
-        const newReminderTime = new Date(initial)
-        newReminderTime.setDate(newReminderTime.getDate() + 1)
-        console.log("Change Reminder: " + newReminderTime)
-        const fireDates = ReactNativeAN.parseDate(newReminderTime)
+        console.log("Initial: " + new Date(initial));
+        const newReminderTime = new Date(initial);
+        newReminderTime.setDate(newReminderTime.getDate() + 1);
+        console.log("Change Reminder: " + newReminderTime);
+        const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
         const details = {
             ...alarmNotifData,
@@ -140,7 +140,7 @@ class ChangeReminder extends React.Component {
                 itemTime: newReminderTime.toString(),
             }
         }
-        ReactNativeAN.scheduleAlarm(details)
+        ReactNativeAN.scheduleAlarm(details);
 
         // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
         const alarm = await ReactNativeAN.getScheduledAlarms()
@@ -154,7 +154,7 @@ class ChangeReminder extends React.Component {
             idAN: idAN,
             alarmId: alarmId,
             time: newReminderTime
-        })
+        });
 
         // When the alarm is turned off, add the medicine into "history" collection
         const firebaseReminder = new Date(initial)
@@ -164,16 +164,15 @@ class ChangeReminder extends React.Component {
             startTime: firebaseReminder,
             date: moment().format('MMMM Do YYYY'),
             status: "missed"
-        })
-        this.props.navigation.navigate("MedicineScreen")
+        });
+        this.props.navigation.navigate("MedicineScreen");
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Background />
-                <TouchableOpacity
-                    style={styles.back}
+                <TouchableOpacity style={styles.back}
                     onPress={() => this.props.navigation.goBack()}
                 >
                     <Ionicons name="arrow-back" size={32} color="#FFF" />
@@ -202,18 +201,19 @@ class ChangeReminder extends React.Component {
                                 firebaseId: this.state.firebase.firebaseId,
                             })
                         }}>
-                        <Text style={{ color: "#FFF" }}>Take Medicine</Text>
+                        <Text style={{ color: "#FFF", marginRight: 50 }}>Take</Text>
+                        <AntDesign name="check" size={25} color="#FFF" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2}
-                        onPress={this.handleMiss}>
-                        <Text style={{ color: "#FFF" }}>Miss Medicine</Text>
+                    <TouchableOpacity style={styles.button2} onPress={() => this.handleMiss()}>
+                        <Text style={{ color: "#FFF", marginRight: 50 }}>Miss</Text>
+                        <AntDesign name="close" size={25} color="#FFF" />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={this.deleteAlarm}>
+                <TouchableOpacity style={styles.button} onPress={() => this.deleteAlarm()}>
                     <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
+                    <AntDesign name="delete" size={25} color="#FFF" />
                 </TouchableOpacity>
-                <ConfirmDialog
-                    visible={this.state.dialogVisible}
+                <ConfirmDialog visible={this.state.dialogVisible}
                     title="Alert"
                     message="Are you sure?"
                     onTouchOutside={() => this.setState({ dialogVisible: false })}
@@ -223,7 +223,10 @@ class ChangeReminder extends React.Component {
                     }}
                     negativeButton={{
                         title: "NO",
-                        onPress: () => { this.setState({ dialogVisible: false }) }
+                        onPress: () => {
+                            this.setState({ dialogVisible: false });
+                            Toast.show("Your request is canceled !");
+                        }
                     }}
                 />
             </View>
@@ -265,7 +268,7 @@ const styles = StyleSheet.create({
     },
     information: {
         backgroundColor: "#ddd",
-        borderRadius: 5,
+        borderRadius: 10,
         padding: 16,
         marginTop: 50,
         marginBottom: 12,
@@ -281,27 +284,28 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     button: {
-        justifyContent: "center",
+        justifyContent: "space-evenly",
         alignItems: "center",
         height: 40,
         backgroundColor: "#1565C0",
-        borderRadius: 4,
+        borderRadius: 10,
         marginVertical: 12,
         marginHorizontal: 30,
-        padding: 20
+        padding: 20,
+        flexDirection: "row",
     },
     button2: {
-        justifyContent: "center",
         alignItems: "center",
         height: 40,
         backgroundColor: "#1565C0",
-        borderRadius: 4,
+        borderRadius: 10,
         marginVertical: 12,
-        padding: 20
+        padding: 20,
+        flexDirection: "row",
     },
     showPicker: {
         backgroundColor: "#1565C0",
-        borderRadius: 4,
+        borderRadius: 8,
         height: 40,
         width: 120,
         alignItems: "center",
@@ -311,6 +315,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         marginTop: 10
     }
-})
+});
 
 export default ChangeReminder
