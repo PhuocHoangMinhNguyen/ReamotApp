@@ -78,7 +78,6 @@ class MedicineScreen extends React.Component {
 
     DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
       const obj = JSON.parse(e);
-      //console.log("Item Time: " + new Date(Date.parse(obj.itemTime)));
       NavigationService.navigate("ChangeReminder", {
         medicine: {
           image: obj.image,
