@@ -21,9 +21,10 @@ DoctorStack = createStackNavigator(
         DoctorInfoScreen,
         AccessedDoctorScreen,
         AppointmentMaker
-    }, {
-    headerMode: "none"
-}
+    },
+    {
+        headerMode: "none"
+    }
 )
 
 export default DoctorStack

@@ -11,11 +11,8 @@ import firestore from "@react-native-firebase/firestore";
 var tempAvatar = require("../../assets/tempAvatar.png");
 
 class ProfileScreen extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: {}
-    }
+  state = {
+    user: {}
   }
 
   unsubscribe = null

@@ -12,10 +12,11 @@ HomeStack = createStackNavigator(
         // HomeStack
         HomeScreen,
         MedicationInformation,
-    }, {
-    headerMode: "none",
-    initialRouteName: "HomeScreen",
-}
+    },
+    {
+        headerMode: "none",
+        initialRouteName: "HomeScreen",
+    }
 );
 
 export default HomeStack
