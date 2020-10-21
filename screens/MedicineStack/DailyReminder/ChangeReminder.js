@@ -58,11 +58,11 @@ class ChangeReminder extends React.Component {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
         let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
-        this.setState({ medicine: paramsFromMediInfoScreen })
+        this.setState({ medicine: paramsFromMediInfoScreen });
 
         // Take value from params and put it as state.timePicker.initial
         let paramsTime = this.props.navigation.state.params.itemTime
-        this.setState({ initial: paramsTime })
+        this.setState({ initial: paramsTime });
 
         // Find the document Id and idAN in Cloud Firestore
         let tempIdAN = ""
