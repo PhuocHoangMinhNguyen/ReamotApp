@@ -76,7 +76,7 @@ class AppointmentMaker extends React.Component {
         }).then(() => {
             Toast.show("Your appointment is confirmed !");
             this.props.navigation.goBack();
-        })
+        });
     }
 
     // After pick date and time from different DateTimePicker, 
@@ -141,7 +141,7 @@ class AppointmentMaker extends React.Component {
                         onChangeText={reason => this.setState({ reason: reason })}
                         value={this.state.reason} />
                 </View>
-                <TouchableOpacity style={styles.button} onPress={this.handlePress}>
+                <TouchableOpacity style={styles.button} onPress={() => this.handlePress}>
                     <Text style={{ color: "#FFF" }}>Set Appointment</Text>
                 </TouchableOpacity>
                 <ConfirmDialog
@@ -159,8 +159,7 @@ class AppointmentMaker extends React.Component {
                             this.setState({ dialogVisible: false });
                             Toast.show("Your request is canceled !");
                         }
-                    }}
-                />
+                    }} />
             </View>
         )
     }

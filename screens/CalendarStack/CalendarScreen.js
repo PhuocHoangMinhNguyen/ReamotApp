@@ -50,7 +50,7 @@ class CalendarScreen extends React.Component {
     const missedCollection = firestore().collection('history')
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      .where('status', '==', "missed")
+      .where('status', '==', "missed");
     await missedCollection.get().then(querySnapshot => {
       docsMissedLength = querySnapshot.docs.length
     });
@@ -60,14 +60,14 @@ class CalendarScreen extends React.Component {
     const takenCollection = firestore().collection('history')
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      .where('status', '==', "taken")
+      .where('status', '==', "taken");
     await takenCollection.get().then(querySnapshot => {
       docsTakenLength = querySnapshot.docs.length
     });
 
     // calculate percentage
     const percentageArray = [];
-    const percentage = (docsTakenLength * 1.0) / (docsTakenLength + docsMissedLength);
+    const percentage = (docsTakenLength * 1.0) / (docsTakenLength + docsMissedLength)
 
     // decide color
     let r = 0

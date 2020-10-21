@@ -112,10 +112,9 @@ class EditScreen extends React.Component {
         <TouchableOpacity style={styles.opacity}
           onPress={this.handlePickAvatar}>
           <Image style={styles.avatar}
-            source={
-              this.state.user.avatar
-                ? { uri: this.state.user.avatar }
-                : tempAvatar
+            source={this.state.user.avatar
+              ? { uri: this.state.user.avatar }
+              : tempAvatar
             } />
           <MaterialIcons name="photo-camera"
             size={35}
@@ -137,18 +136,16 @@ class EditScreen extends React.Component {
               <TextInput style={styles.input}
                 keyboardType="numeric"
                 onChangeText={phoneNumber => this.setState({ user: { ...this.state.user, phoneNumber } })}
-                value={this.state.user.phoneNumber}
-              />
+                value={this.state.user.phoneNumber} />
             </View>
             <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Address</Text>
               <TextInput style={styles.input}
                 onChangeText={address => this.setState({ user: { ...this.state.user, address } })}
-                value={this.state.user.address}
-              />
+                value={this.state.user.address} />
             </View>
           </View>
-          <TouchableOpacity onPress={this.editProfile}>
+          <TouchableOpacity onPress={() => this.editProfile}>
             <View style={styles.button}>
               <Text style={{ color: "#FFF" }}>Save profile</Text>
             </View>

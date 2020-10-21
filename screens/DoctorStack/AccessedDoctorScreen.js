@@ -40,9 +40,7 @@ class AccessedDoctorScreen extends React.Component {
     handleRevokeAccessToDoctor = () => { this.setState({ dialogVisible: true }) }
 
     // Send user to AppointmentMaker to choose appointment time and reason.
-    handleSchedule = () => {
-        this.props.navigation.navigate("AppointmentMaker", this.state.doctor);
-    }
+    handleSchedule = () => { this.props.navigation.navigate("AppointmentMaker", this.state.doctor) }
 
     // If the user is sure to revoke doctor/pharmacist access to user's data
     handleYes = () => {

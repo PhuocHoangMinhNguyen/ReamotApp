@@ -143,8 +143,7 @@ class HomeScreen extends React.Component {
     return (
       <TouchableOpacity style={item.status == "taken" ? styles.feedTaken : styles.feedMissed}
         onPress={() => { this.props.navigation.navigate("MedicationInformation", dataInfor) }}>
-        <Image style={styles.avatar}
-          source={item.image ? { uri: item.image } : tempAvatar} />
+        <Image style={styles.avatar} source={item.image ? { uri: item.image } : tempAvatar} />
         <Text style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}>{item.medicine}</Text>
         <Text style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}>{moment(item.startTime.toDate()).format('hh:mm a')}</Text>
       </TouchableOpacity>
@@ -190,8 +189,7 @@ class HomeScreen extends React.Component {
             style={styles.feed}
             data={this.state.historymedicines}
             renderItem={({ item }) => this.renderHistory(item)}
-            horizontal={true}
-          />
+            horizontal={true} />
           <View style={styles.chapterView}>
             <Text style={styles.chapter}>Upcoming Reminders</Text>
           </View>
@@ -199,8 +197,7 @@ class HomeScreen extends React.Component {
             style={styles.feed}
             data={this.state.remindermedicines}
             renderItem={({ item }) => this.renderReminder(item)}
-            horizontal={true}
-          />
+            horizontal={true} />
         </View>
       </View>
     )

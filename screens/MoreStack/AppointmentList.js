@@ -22,8 +22,8 @@ class AppointmentList extends React.Component {
         this.unsubscribe = firestore().collection("appointment")
             .where('patientEmail', '==', auth().currentUser.email)
             .onSnapshot(querySnapshot => {
-                let tempUpcomming = []
-                let tempPast = []
+                let tempUpcomming = [];
+                let tempPast = [];
                 querySnapshot.forEach(documentSnapshot => {
                     if (documentSnapshot.data().time.toDate() < dateNow) {
                         tempPast.push({

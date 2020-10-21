@@ -80,7 +80,7 @@ class DoctorScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
+    this.unsubscribe();
   }
 
   // When clicking on one doctor/ pharmacist item, navigate user to 
@@ -109,9 +109,7 @@ class DoctorScreen extends Component {
     }
     return (
       <TouchableOpacity style={styles.feedItem}
-        onPress={() => {
-          this.handleClick(dataInfor)
-        }}
+        onPress={() => this.handleClick(dataInfor)}
       >
         <Image style={styles.avatar}
           source={item.avatar
@@ -151,8 +149,7 @@ class DoctorScreen extends Component {
             } else {
               return <Text style={styles.header}>{title}</Text>
             }
-          }}
-        />
+          }} />
     }
     return (
       <View style={styles.container}>

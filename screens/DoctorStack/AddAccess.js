@@ -99,9 +99,7 @@ class AddAccess extends React.Component {
 
     // Click on each item in flatlist will lead user to DoctorInfoScreen 
     // to show that doctor/pharmacist information with some options.
-    handleClick = (dataInfor) => {
-        this.props.navigation.navigate("DoctorInfoScreen", dataInfor);
-    }
+    handleClick = (dataInfor) => { this.props.navigation.navigate("DoctorInfoScreen", dataInfor) }
 
     // Information appears on each item.
     renderItem = (item) => {
@@ -141,10 +139,10 @@ class AddAccess extends React.Component {
     searchFilterFunction(newText) {
         const newData = this.state.doc_phar.filter(function (item) {
             //applying filter for the inserted text in search bar
-            const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+            const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
             const textData = newText.toUpperCase();
             return itemData.indexOf(textData) > -1
-        })
+        });
         this.setState({
             myArray: newData,
             text: newText,
@@ -158,7 +156,7 @@ class AddAccess extends React.Component {
                     <SearchBar placeholder="Search Doctor/ Pharmacist..."
                         lightTheme
                         round
-                        onChangeText={(newText) => this.searchFilterFunction(newText)}
+                        onChangeText={newText => this.searchFilterFunction(newText)}
                         value={this.state.text} />
                 </View>
                 <FlatList style={styles.feed}

@@ -43,7 +43,7 @@ class DrawerMenu extends React.Component {
                         this.props.navigation.closeDrawer()
                     }}>
                     <AntDesign name="edit" size={20} color={"#161F3D"} />
-                    <Text>  Edit Account</Text>
+                    <Text>  Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
