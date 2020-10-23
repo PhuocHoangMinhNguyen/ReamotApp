@@ -19,7 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import UserReminders from '../../utilities/UserReminders';
 import Background from '../../components/Background';
 
-var logoTest = require("../../assets/logoTest.png")
+var logoTest = require("../../assets/logoTest.png");
 
 class LoginScreen extends React.Component {
   state = {
