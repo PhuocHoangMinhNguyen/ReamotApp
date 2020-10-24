@@ -22,7 +22,7 @@ const alarmNotifData = {
     message: "Take your Medicine",
 }
 
-var tempAvatar = require("../../../assets/tempAvatar.png")
+var tempAvatar = require("../../../assets/images/tempAvatar.png")
 
 class WeeklyChangeReminder extends React.Component {
     state = {

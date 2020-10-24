@@ -8,7 +8,7 @@ import Toast from "react-native-simple-toast";
 import auth from "@react-native-firebase/auth";
 import Background from '../../components/Background';
 
-var confusedMan = require('../../assets/confusedMan.png');
+var confusedMan = require('../../assets/images/confusedMan.png');
 
 class ChangePassword extends React.Component {
     // A link to reset password will be sent to current user's email

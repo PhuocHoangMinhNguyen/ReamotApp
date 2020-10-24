@@ -18,7 +18,7 @@ import moment from "moment";
 import Background from '../../components/Background';
 import TreeImage from '../../components/TreeImage';
 
-var tempAvatar = require("../../assets/tempAvatar.png");
+var tempAvatar = require("../../assets/images/tempAvatar.png");
 
 class HomeScreen extends React.Component {
   state = {

@@ -20,7 +20,7 @@ import moment from "moment";
 import { ProgressChart } from "react-native-chart-kit";
 import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/tempAvatar.png")
+var tempAvatar = require("../../assets/images/tempAvatar.png")
 
 class CalendarScreen extends React.Component {
   static navigationOptions = {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Image } from 'react-native';
 
-var background = require('../assets/background.png')
+var background = require('../assets/images/background.png')
 
 class Background extends React.Component {
     render() {

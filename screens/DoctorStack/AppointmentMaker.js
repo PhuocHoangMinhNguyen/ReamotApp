@@ -14,7 +14,7 @@ import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/tempAvatar.png");
+var tempAvatar = require("../../assets/images/tempAvatar.png");
 
 class AppointmentMaker extends React.Component {
     state = {

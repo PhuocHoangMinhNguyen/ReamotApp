@@ -8,7 +8,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
-var tempAvatar = require("../../assets/tempAvatar.png");
+var tempAvatar = require("../../assets/images/tempAvatar.png");
 
 class ProfileScreen extends React.Component {
   state = {

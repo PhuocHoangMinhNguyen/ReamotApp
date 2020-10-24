@@ -20,7 +20,7 @@ import ReactNativeAN from 'react-native-alarm-notification';
 import { DeviceEventEmitter } from 'react-native';
 import NavigationService from '../../utilities/NavigationService';
 
-var tempAvatar = require("../../assets/tempAvatar.png");
+var tempAvatar = require("../../assets/images/tempAvatar.png");
 
 class MedicineScreen extends React.Component {
   state = {

@@ -9,7 +9,7 @@ import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
 import Background from '../../components/Background';
 
-var confusedMan = require('../../assets/confusedMan.png');
+var confusedMan = require('../../assets/images/confusedMan.png');
 
 class ForgotPasswordScreen extends React.Component {
     state = {
