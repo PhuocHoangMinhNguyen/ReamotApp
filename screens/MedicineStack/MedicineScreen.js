@@ -171,10 +171,10 @@ class MedicineScreen extends React.Component {
     // Need to be fixed
     if (this.state.medicines.length == 0) {
       message =
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View style={{ flex: 1, justifyContent: "center" }}>
           <Text style={styles.emptyText}>You are not currently on medication</Text>
-          <Text>Please add a medicine,</Text>
-          <Text>or contact your doctor for a prescription</Text>
+          <Text style={{ textAlign: "center" }}>Please add a medicine,</Text>
+          <Text style={{ textAlign: "center" }}>or contact your doctor for a prescription</Text>
         </View>
     } else {
       message =
@@ -252,7 +252,8 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontWeight: "bold",
-    fontSize: 20
+    fontSize: 20,
+    textAlign: "center"
   },
 });
 
