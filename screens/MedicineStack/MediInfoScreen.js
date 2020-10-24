@@ -13,6 +13,7 @@ import {
   TextInput
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import ViewMoreText from "react-native-view-more-text";
@@ -229,8 +230,8 @@ class MediInfoScreen extends React.Component {
           />
           <Text>capsule(s)</Text>
         </View>
-        <TouchableOpacity style={styles.showPicker} onPress={this.updateMedicinePills}>
-          <Text style={{ color: "#FFF" }}>Refill</Text>
+        <TouchableOpacity onPress={() => this.updateMedicinePills()}>
+          <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
     const lessThan10 =
@@ -247,8 +248,8 @@ class MediInfoScreen extends React.Component {
           />
           <Text>capsule(s)</Text>
         </View>
-        <TouchableOpacity style={styles.showPicker} onPress={this.updateMedicinePills}>
-          <Text style={{ color: "#FFF" }}>Refill</Text>
+        <TouchableOpacity onPress={() => this.updateMedicinePills()}>
+          <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
     const none =
@@ -265,8 +266,8 @@ class MediInfoScreen extends React.Component {
           />
           <Text style={{ color: "#FF0000", fontWeight: "bold" }}>capsule(s)</Text>
         </View>
-        <TouchableOpacity style={styles.showPicker} onPress={this.updateMedicinePills}>
-          <Text style={{ color: "#FFF" }}>Refill</Text>
+        <TouchableOpacity onPress={() => this.updateMedicinePills()}>
+          <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
     const empty =
@@ -278,8 +279,8 @@ class MediInfoScreen extends React.Component {
           onChangeText={pills => this.setState({ medicinePills: pills })}
           value={this.state.medicinePills}
         />
-        <TouchableOpacity style={styles.showPicker} onPress={this.addMedicinePills}>
-          <Text style={{ color: "#FFF" }}>Edit</Text>
+        <TouchableOpacity onPress={() => this.addMedicinePills()}>
+          <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
 
@@ -418,14 +419,6 @@ const styles = StyleSheet.create({
   },
   repeat: {
     fontSize: 18
-  },
-  showPicker: {
-    backgroundColor: "#1565C0",
-    borderRadius: 4,
-    height: 40,
-    width: 50,
-    alignItems: "center",
-    justifyContent: "center",
   }
 });
 

@@ -19,6 +19,7 @@ import auth from "@react-native-firebase/auth";
 import ReactNativeAN from 'react-native-alarm-notification';
 import { DeviceEventEmitter } from 'react-native';
 import NavigationService from '../../utilities/NavigationService';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 var tempAvatar = require("../../assets/images/tempAvatar.png");
 
@@ -128,13 +129,12 @@ class MedicineScreen extends React.Component {
               : tempAvatar
             } />
           <Text style={styles.name}>{item.name}</Text>
-          <TouchableOpacity style={styles.button}
-            onPress={() => {
-              // Also need to delete alarms for this medicine.
-              firestore().collection('prescription').doc(item.key).delete()
-                .then(() => { this.deleteAlarms(item.name) });
-            }}>
-            <Text style={{ color: "#FFF" }}>Delete</Text>
+          <TouchableOpacity onPress={() => {
+            // Also need to delete alarms for this medicine.
+            firestore().collection('prescription').doc(item.key).delete()
+              .then(() => { this.deleteAlarms(item.name) });
+          }}>
+            <AntDesign name="delete" size={30} />
           </TouchableOpacity>
         </TouchableOpacity>
       )
@@ -254,14 +254,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20
   },
-  button: {
-    backgroundColor: "#1565C0",
-    borderRadius: 4,
-    height: 40,
-    width: 50,
-    alignItems: "center",
-    justifyContent: "center",
-  }
 });
 
 export default MedicineScreen
