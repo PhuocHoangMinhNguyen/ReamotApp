@@ -199,7 +199,7 @@ class MediInfoScreen extends React.Component {
     return (<View style={styles.prescription}>
       <Text style={styles.time}>{moment(item.time.toDate()).format('hh:mm a')}</Text>
       <TouchableOpacity style={styles.showPicker} onPress={() => this.handleChangeReminder(item)}>
-        <Text style={{ color: "#FFF" }}>Edit</Text>
+        <FontAwesome name="edit" size={30} />
       </TouchableOpacity>
     </View>)
   }
