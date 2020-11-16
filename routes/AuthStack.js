@@ -8,7 +8,7 @@ import RegisterScreen from "../screens/AuthStack/RegisterScreen";
 import ForgotPasswordScreen from "../screens/AuthStack/ForgotPasswordScreen";
 import Terms from "../screens/AuthStack/Terms";
 
-AuthStack = createStackNavigator(
+const AuthStack = createStackNavigator(
     {
         LoginScreen,
         RegisterScreen,

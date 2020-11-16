@@ -14,7 +14,7 @@ import DoctorInfoScreen from "../screens/DoctorStack/DoctorInfoScreen";
 import AccessedDoctorScreen from "../screens/DoctorStack/AccessedDoctorScreen";
 import AppointmentMaker from "../screens/DoctorStack/AppointmentMaker";
 
-DoctorStack = createStackNavigator(
+const DoctorStack = createStackNavigator(
     {
         DoctorScreen,
         AddAccess,

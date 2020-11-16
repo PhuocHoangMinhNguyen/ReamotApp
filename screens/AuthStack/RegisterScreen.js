@@ -37,7 +37,9 @@ class RegisterScreen extends React.Component {
   }
 
   // To Show or Hide Password
-  handlePassword = () => { this.setState({ showPassword: !this.state.showPassword }) }
+  handlePassword = () => {
+    this.setState({ showPassword: !this.state.showPassword })
+  }
 
   // Check if all information is entered before create a new user.
   handleSignUp = () => {
@@ -177,8 +179,9 @@ class RegisterScreen extends React.Component {
                   secureTextEntry={!this.state.showPassword}
                   autoCapitalize="none"
                   onChangeText={password => this.setState({ user: { ...this.state.user, password } })}
-                  value={this.state.user.password} />
-                <TouchableOpacity onPress={() => this.handlePassword}>
+                  value={this.state.user.password}
+                />
+                <TouchableOpacity onPress={this.handlePassword}>
                   {this.state.showPassword == true
                     ? <Ionicons name="ios-eye" size={24} />
                     : <Ionicons name="ios-eye-off" size={24} />}
@@ -208,7 +211,7 @@ class RegisterScreen extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={() => this.handleSignUp}>
+          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
             <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
           </TouchableOpacity>
 

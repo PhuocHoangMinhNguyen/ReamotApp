@@ -25,7 +25,7 @@ import ChangeReminder from "../screens/MedicineStack/DailyReminder/ChangeReminde
 import WeeklyNewReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyNewReminder";
 import WeeklyChangeReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder";
 
-MedicineStack = createStackNavigator(
+const MedicineStack = createStackNavigator(
     {
         MedicineScreen,
         AddMedicine,

@@ -10,7 +10,6 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  LayoutAnimation,
   ScrollView
 } from "react-native";
 import auth from "@react-native-firebase/auth";
@@ -23,45 +22,49 @@ var logoTest = require("../../assets/images/logoTest.png");
 
 class LoginScreen extends React.Component {
   state = {
-    email: "",
-    password: "",
+    user: {
+      email: "",
+      password: "",
+    },
     errorMessage: null,
     showPassword: false
   }
 
   // Handle Show, Hide Password
-  handlePassword = () => { this.setState({ showPassword: !this.state.showPassword }) }
+  handlePassword = () => {
+    this.setState({ showPassword: !this.state.showPassword })
+  }
 
   // Handle Login using email and password.
   handleLogin = () => {
-    const { password } = this.state
+    const { email, password } = this.state.user
     // Solve the problem when there is space in the end of email by mistake
-    const email = this.state.email.trim();
+    const emailTrim = email.trim();
 
-    if (email == "") {
+    if (emailTrim == "") {
       Toast.show("Please Enter Email Information", Toast.LONG);
     } else if (password == "") {
       Toast.show("Please Enter Password", Toast.LONG);
     } else {
-      auth().signInWithEmailAndPassword(email, password)
+      auth().signInWithEmailAndPassword(emailTrim, password)
         .catch(error => this.setState({ errorMessage: error.message }))
         .then(() => {
-          if (auth().currentUser) UserReminders.setReminders(email)
+          if (auth().currentUser) UserReminders.setReminders(emailTrim)
         });
     }
   }
 
   render() {
-    LayoutAnimation.easeInEaseOut();
+    const { errorMessage, showPassword } = this.state
+    const { email, password } = this.state.user
     return (
       <View style={{ flex: 1, backgroundColor: "#FFF" }}>
         <Background />
-        <Image source={logoTest}
-          style={styles.logoTest} />
+        <Image source={logoTest} style={styles.logoTest} />
         <ScrollView>
           <View style={styles.errorMessage}>
-            {this.state.errorMessage && (
-              <Text style={styles.error}>{this.state.errorMessage}</Text>
+            {errorMessage && (
+              <Text style={styles.error}>{errorMessage}</Text>
             )}
           </View>
 
@@ -70,22 +73,21 @@ class LoginScreen extends React.Component {
               <Text style={styles.inputTitle}>Email Address</Text>
               <TextInput style={styles.input}
                 autoCapitalize="none"
-                onChangeText={email => this.setState({ email })}
-                value={this.state.email} />
+                onChangeText={email => this.setState({ user: { ...this.state.user, email } })}
+                value={email} />
             </View>
 
             <View style={{ marginTop: 32 }}>
               <Text style={styles.inputTitle}>Password</Text>
               <View style={styles.passwordContainer}>
-                <TextInput
-                  style={styles.password}
-                  secureTextEntry={!this.state.showPassword}
+                <TextInput style={styles.password}
+                  secureTextEntry={!showPassword}
                   autoCapitalize="none"
-                  onChangeText={password => this.setState({ password })}
-                  value={this.state.password}
+                  onChangeText={password => this.setState({ user: { ...this.state.user, password } })}
+                  value={password}
                 />
                 <TouchableOpacity onPress={this.handlePassword}>
-                  {this.state.showPassword == true
+                  {showPassword == true
                     ? <Ionicons name="ios-eye" size={24} />
                     : <Ionicons name="ios-eye-off" size={24} />}
                 </TouchableOpacity>

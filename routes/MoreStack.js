@@ -9,7 +9,7 @@ import TermsOfServices from "../screens/MoreStack/TermsOfServices";
 import ChangePassword from "../screens/MoreStack/ChangePassword";
 import AppointmentList from "../screens/MoreStack/AppointmentList";
 
-MoreStack = createStackNavigator(
+const MoreStack = createStackNavigator(
     {
         // Drawer Menu
         EditScreen,

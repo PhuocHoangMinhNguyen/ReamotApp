@@ -7,7 +7,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import HomeScreen from "../screens/HomeStack/HomeScreen";
 import MedicationInformation from "../screens/HomeStack/MedicationInformation";
 
-HomeStack = createStackNavigator(
+const HomeStack = createStackNavigator(
     {
         // HomeStack
         HomeScreen,

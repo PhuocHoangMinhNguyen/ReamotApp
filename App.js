@@ -17,11 +17,12 @@ import NavigationService from './utilities/NavigationService';
 const Drawer = createDrawerNavigator(
   {
     BottomTabs,
-  }, {
-  drawerPosition: "right",
-  drawerWidth: 250,
-  contentComponent: props => <DrawerMenu {...props} />
-}
+  },
+  {
+    drawerPosition: "right",
+    drawerWidth: 250,
+    contentComponent: props => <DrawerMenu {...props} />
+  }
 );
 
 const AppContainer = createAppContainer(
@@ -31,9 +32,10 @@ const AppContainer = createAppContainer(
       App: Drawer,
       AuthStack,
       Verify: VerificationScreen
-    }, {
-    initialRouteName: "Loading",
-  }
+    },
+    {
+      initialRouteName: "Loading",
+    }
   )
 )
 

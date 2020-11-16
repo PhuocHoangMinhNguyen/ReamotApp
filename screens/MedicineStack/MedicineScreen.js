@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     color: "#454D65",
   },
   add: {
-    color: "#FFF"
+    color: "#FFF",
   },
   addMedicine: {
     alignSelf: "flex-end",

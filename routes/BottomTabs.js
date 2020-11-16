@@ -17,7 +17,7 @@ import MedicineStack from "./MedicineStack";
 import DoctorStack from "./DoctorStack";
 import MoreStack from "./MoreStack";
 
-BottomTabs = createStackNavigator(
+const BottomTabs = createStackNavigator(
     {
         default: createBottomTabNavigator(
             {
