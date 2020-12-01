@@ -6,13 +6,13 @@ import React from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 
-import LoadingScreen from "./screens/LoadingScreen";
-import VerificationScreen from "./screens/VerificationScreen";
-import AuthStack from "./routes/AuthStack";
-import BottomTabs from "./routes/BottomTabs";
-import DrawerMenu from "./routes/DrawerMenu/DrawerMenu";
+import LoadingScreen from "./src/screens/LoadingScreen";
+import VerificationScreen from "./src/screens/VerificationScreen";
+import AuthStack from "./src/routes/AuthStack";
+import BottomTabs from "./src/routes/BottomTabs";
+import DrawerMenu from "./src/routes/DrawerMenu/DrawerMenu";
 
-import NavigationService from './utilities/NavigationService';
+import NavigationService from './src/utilities/NavigationService';
 
 const Drawer = createDrawerNavigator(
   {
