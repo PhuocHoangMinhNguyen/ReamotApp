@@ -37,6 +37,7 @@ const MedicineStack = createStackNavigator(
         WeeklyChangeReminder
     },
     {
+        initialRouteName: "MedicineScreen",
         headerMode: "none"
     }
 );

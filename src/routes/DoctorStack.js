@@ -23,6 +23,7 @@ const DoctorStack = createStackNavigator(
         AppointmentMaker
     },
     {
+        initialRouteName: 'DoctorScreen',
         headerMode: "none"
     }
 )

@@ -11,7 +11,6 @@ import AppointmentList from "../screens/MoreStack/AppointmentList";
 
 const MoreStack = createStackNavigator(
     {
-        // Drawer Menu
         EditScreen,
         ChangePassword,
         AppointmentList,

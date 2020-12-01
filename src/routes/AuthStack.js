@@ -16,6 +16,7 @@ const AuthStack = createStackNavigator(
         Terms
     },
     {
+        initialRouteName: 'LoginScreen',
         headerMode: "none"
     }
 )
