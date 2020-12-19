@@ -25,7 +25,7 @@ Reamot is compromised of a mobile app (compatible with both iOS and Android) for
 ## Features
 
 ## Installation
-[<img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/android.png" width="165" />](https://play.google.com/store/apps/details?id=com.reamotreactnative )
+[<img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/android.png" width="500" />](https://play.google.com/store/apps/details?id=com.reamotreactnative )
 
 ## How to use?
 
