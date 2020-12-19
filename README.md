@@ -22,12 +22,11 @@ Reamot is compromised of a mobile app (compatible with both iOS and Android) for
 - Development Tool: Visual Studio
 - Version Control: Github
 
-## Features
-
 ## Installation
 [<img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/android.png" width="500" />](https://play.google.com/store/apps/details?id=com.reamotreactnative )
 
 ## How to use?
+https://drive.google.com/file/d/1rCnlY_QlXTIxGZ7ovCpVE-jBLlwYFV44/view?usp=sharing
 
 ## Authors
 * **Phuoc Hoang Minh Nguyen** - *Lead Developer* - [PhuocHoangMinhNguyen](https://github.com/PhuocHoangMinhNguyen)
