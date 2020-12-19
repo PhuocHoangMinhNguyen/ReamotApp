@@ -13,7 +13,9 @@ Reamot is compromised of a mobile app (compatible with both iOS and Android) for
 6. [Authors](#authors)
 
 ## Screenshots
-<img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Doctor.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Detail.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/History.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Login.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/History.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Medicine.jpg" width="165" />
+<img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Doctor.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Detail.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/History.jpg" width="165" />
+
+<img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Login.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Home.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/History.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Medicine.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Detail.jpg" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Doctor.jpg" width="165" />
 
 ## Technologies and Framework Used
 - Framework: React Native
