@@ -13,6 +13,7 @@ Reamot is compromised of a mobile app (compatible with both iOS and Android) for
 6. [Authors](#authors)
 
 ## Screenshots
+<img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Home.PNG" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/Notifications.PNG" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/SavedMapping.PNG" width="165" /> <img src="https://github.com/PhuocHoangMinhNguyen/ReamotApp/blob/master/screenshots/FTPServers.PNG" width="165" />
 
 ## Technologies and Framework Used
 - Framework: React Native
