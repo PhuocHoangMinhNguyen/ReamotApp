@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
@@ -48,10 +48,10 @@ class WeeklyNewReminder extends React.Component {
     componentDidMount() {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
-        let paramsFromMedicineScreen = this.props.navigation.state.params.medicine
+        let paramsFromMedicineScreen = this.props.route.params.medicine
         this.setState({ medicine: paramsFromMedicineScreen });
 
-        let paramsNumber = this.props.navigation.state.params.number
+        let paramsNumber = this.props.route.params.number
         this.setState({ number: paramsNumber });
     }
 

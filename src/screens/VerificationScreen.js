@@ -6,7 +6,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import auth from "@react-native-firebase/auth";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import Toast from "react-native-simple-toast";
 
 class VerificationScreen extends React.Component {
@@ -22,10 +22,10 @@ class VerificationScreen extends React.Component {
                     <View style={{ justifyContent: "center" }}>
                         <Text style={styles.text}>Refresh after Verifying your account</Text>
                     </View>
-                    <TouchableOpacity onPress={() => {
-                        auth().currentUser.reload()
+                    <TouchableOpacity onPress={async () => {
+                        await auth().currentUser.reload();
                         if (auth().currentUser.emailVerified) {
-                            this.props.navigation.navigate("App");
+                            // App.js onAuthStateChanged will re-render automatically
                         } else {
                             Toast.show("Email not Verified");
                         }

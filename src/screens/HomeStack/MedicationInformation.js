@@ -4,7 +4,7 @@
 
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import { ScrollView } from "react-native-gesture-handler";
 import Background from '../../components/Background';
 
@@ -18,7 +18,7 @@ class MedicationInformation extends React.Component {
     componentDidMount() {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
-        let paramsFromMedicineScreen = this.props.navigation.state.params
+        let paramsFromMedicineScreen = this.props.route.params
         this.setState({ medicine: paramsFromMedicineScreen });
     }
 

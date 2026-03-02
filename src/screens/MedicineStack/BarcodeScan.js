@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from "@react-native-vector-icons/ionicons";
 import ReactNativeAN from 'react-native-alarm-notification';
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
@@ -41,15 +41,15 @@ class BarcodeScan extends React.Component {
     componentDidMount() {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
-        let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
+        let paramsFromMediInfoScreen = this.props.route.params.medicine
         this.setState({ medicine: paramsFromMediInfoScreen });
 
         // Take value from params and put it as state.firebaseId
-        let paramsFirebaseId = this.props.navigation.state.params.firebaseId
+        let paramsFirebaseId = this.props.route.params.firebaseId
         this.setState({ firebaseId: paramsFirebaseId });
 
         // Take value from params and put it as state.itemTime
-        let paramsItemTime = this.props.navigation.state.params.itemTime
+        let paramsItemTime = this.props.route.params.itemTime
         this.setState({ itemTime: paramsItemTime });
     }
 

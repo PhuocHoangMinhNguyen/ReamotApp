@@ -4,7 +4,7 @@
 
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
 import Background from '../../components/Background';

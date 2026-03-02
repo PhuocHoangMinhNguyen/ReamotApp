@@ -11,22 +11,22 @@ var growing6 = require('../assets/images/GrowingTree.png');
 const TreeImage = ({ value }) => {
     let image
     if (value == 0) {
-        image = <Image style={styles.image}
+        image = <Image testID="tree-dead" style={styles.image}
             source={growing1} />
     } else if (value > 0 && value < 25) {
-        image = <Image style={styles.image}
+        image = <Image testID="tree-0-25" style={styles.image}
             source={growing2} />
     } else if (value >= 25 && value < 50) {
-        image = <Image style={styles.image}
+        image = <Image testID="tree-25-50" style={styles.image}
             source={growing3} />
     } else if (value >= 50 && value < 75) {
-        image = <Image style={styles.image}
+        image = <Image testID="tree-50-75" style={styles.image}
             source={growing4} />
     } else if (value >= 75 && value < 100) {
-        image = <Image style={styles.image}
+        image = <Image testID="tree-75-100" style={styles.image}
             source={growing5} />
     } else {
-        image = <Image style={styles.image}
+        image = <Image testID="tree-full" style={styles.image}
             source={growing6} />
     }
     return (image)

@@ -5,7 +5,7 @@
 
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import Toast from "react-native-simple-toast";
 import { ConfirmDialog } from "react-native-simple-dialogs";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -30,7 +30,7 @@ class AppointmentMaker extends React.Component {
     componentDidMount() {
         // Take doctor/pharmacist data from DoctorScreen, including avatar, name, and type.
         // => Faster than accessing Cloud Firestore again.
-        let paramsFromDoctorScreen = this.props.navigation.state.params
+        let paramsFromDoctorScreen = this.props.route.params
         this.setState({ doctor: paramsFromDoctorScreen });
     }
 

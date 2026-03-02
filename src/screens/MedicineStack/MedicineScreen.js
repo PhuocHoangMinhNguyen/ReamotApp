@@ -19,7 +19,7 @@ import auth from "@react-native-firebase/auth";
 import ReactNativeAN from 'react-native-alarm-notification';
 import { DeviceEventEmitter } from 'react-native';
 import NavigationService from '../../utilities/NavigationService';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import AntDesign from "@react-native-vector-icons/ant-design";
 
 var tempAvatar = require("../../assets/images/tempAvatar.png");
 
@@ -72,12 +72,12 @@ class MedicineScreen extends React.Component {
         this.prescriptionCollection(temp);
       });
 
-    DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
+    this.dismissedSubscription = DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
       const obj = JSON.parse(e);
       console.log(`Notification id: ${obj.id} dismissed`);
     });
 
-    DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
+    this.openedSubscription = DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
       const obj = JSON.parse(e);
       NavigationService.navigate("ChangeReminder", {
         medicine: {
@@ -93,8 +93,8 @@ class MedicineScreen extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribe();
-    DeviceEventEmitter.removeListener('OnNotificationDismissed');
-    DeviceEventEmitter.removeListener('OnNotificationOpened');
+    this.dismissedSubscription?.remove();
+    this.openedSubscription?.remove();
   }
 
   deleteAlarms = (name) => {

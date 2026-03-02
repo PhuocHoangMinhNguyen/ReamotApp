@@ -15,9 +15,8 @@ import {
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import UploadImage from '../../utilities/UploadImage';
-import Ionicons from "react-native-vector-icons/Ionicons";
-import ImagePicker from "react-native-image-picker";
-import UserPermissions from "../../utilities/UserPermissions";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import { launchImageLibrary } from "react-native-image-picker";
 import Toast from "react-native-simple-toast";
 import CheckBox from "@react-native-community/checkbox";
 import Background from '../../components/Background';
@@ -98,32 +97,11 @@ class RegisterScreen extends React.Component {
 
   // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
-    UserPermissions.getPhotoPermission();
-
-    var options = {
-      title: "Select Image",
-      storageOptions: {
-        skipBackup: true,
-        path: "images"
-      }
+    const response = await launchImageLibrary({ mediaType: 'photo' });
+    if (response.didCancel || response.errorCode) return;
+    if (response.assets && response.assets[0]) {
+      this.setState({ user: { ...this.state.user, avatar: response.assets[0].uri } });
     }
-
-    let result = await ImagePicker.showImagePicker(options, (response) => {
-      console.log("Response = ", response);
-
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else {
-        const source = response.uri
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          user: { ...this.state.user, avatar: source }
-        });
-      }
-    });
   }
 
   render() {
@@ -160,6 +138,7 @@ class RegisterScreen extends React.Component {
             <View>
               <Text style={styles.inputTitle}>Full Name</Text>
               <TextInput style={styles.input}
+                testID="register-name-input"
                 onChangeText={name => this.setState({ user: { ...this.state.user, name } })}
                 value={this.state.user.name} />
             </View>
@@ -167,6 +146,7 @@ class RegisterScreen extends React.Component {
             <View style={{ marginTop: 12 }}>
               <Text style={styles.inputTitle}>Email Address</Text>
               <TextInput style={styles.input}
+                testID="register-email-input"
                 autoCapitalize="none"
                 onChangeText={email => this.setState({ user: { ...this.state.user, email } })}
                 value={this.state.user.email} />

@@ -4,8 +4,8 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import Ionicons from "react-native-vector-icons/Ionicons";
-import AntDesign from "react-native-vector-icons/AntDesign";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import AntDesign from "@react-native-vector-icons/ant-design";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
@@ -57,11 +57,11 @@ class ChangeReminder extends React.Component {
     componentDidMount() {
         // Take medicine data from MedicineScreen, including image, name, description, and barcode.
         // => Faster than accessing Cloud Firestore again.
-        let paramsFromMediInfoScreen = this.props.navigation.state.params.medicine
+        let paramsFromMediInfoScreen = this.props.route.params.medicine
         this.setState({ medicine: paramsFromMediInfoScreen });
 
         // Take value from params and put it as state.timePicker.initial
-        let paramsTime = this.props.navigation.state.params.itemTime
+        let paramsTime = this.props.route.params.itemTime
         this.setState({ initial: paramsTime });
 
         // Find the document Id and idAN in Cloud Firestore
@@ -196,8 +196,8 @@ class ChangeReminder extends React.Component {
                         onPress={() => {
                             // To stop alarm sound, go to BarcodeScan
                             this.props.navigation.navigate("BarcodeScan", {
-                                medicine: this.props.navigation.state.params.medicine,
-                                itemTime: this.props.navigation.state.params.itemTime,
+                                medicine: this.props.route.params.medicine,
+                                itemTime: this.props.route.params.itemTime,
                                 firebaseId: this.state.firebase.firebaseId,
                             })
                         }}>

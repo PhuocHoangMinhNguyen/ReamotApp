@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import Toast from "react-native-simple-toast";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import UserReminders from '../../utilities/UserReminders';
 import Background from '../../components/Background';
 
@@ -72,6 +72,7 @@ class LoginScreen extends React.Component {
             <View>
               <Text style={styles.inputTitle}>Email Address</Text>
               <TextInput style={styles.input}
+                testID="login-email-input"
                 autoCapitalize="none"
                 onChangeText={email => this.setState({ user: { ...this.state.user, email } })}
                 value={email} />
@@ -81,6 +82,7 @@ class LoginScreen extends React.Component {
               <Text style={styles.inputTitle}>Password</Text>
               <View style={styles.passwordContainer}>
                 <TextInput style={styles.password}
+                  testID="login-password-input"
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                   onChangeText={password => this.setState({ user: { ...this.state.user, password } })}

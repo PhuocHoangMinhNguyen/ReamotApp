@@ -1,15 +1,13 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Application BottomTabNavigator with 5 options,
-//  each option is a "Stack" in "routes" folder, except the last one,
-//  which will open a drawer navigation containings MoreStack.
-// Status: Optimized
+// Description: Application BottomTabNavigator with 5 tabs.
+//  The Profile tab opens the right-side drawer instead of navigating.
+// Status: Updated for react-navigation v7
 
 import React from "react";
-import { createStackNavigator } from "react-navigation-stack";
-import { createBottomTabNavigator } from "react-navigation-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Material from "react-native-vector-icons/MaterialCommunityIcons";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import Material from "@react-native-vector-icons/material-design-icons";
 
 import HomeStack from "./HomeStack";
 import CalendarStack from "./CalendarStack";
@@ -17,69 +15,59 @@ import MedicineStack from "./MedicineStack";
 import DoctorStack from "./DoctorStack";
 import MoreStack from "./MoreStack";
 
-const BottomTabs = createStackNavigator(
-    {
-        default: createBottomTabNavigator(
-            {
-                Home: {
-                    screen: HomeStack,
-                    navigationOptions: {
-                        tabBarIcon: ({ tintColor }) => (
-                            <Ionicons name="ios-home" size={24} color={tintColor} />
-                        ),
-                        tabBarOnPress: ({ defaultHandler }) => defaultHandler()
-                    },
-                },
-                Calendar: {
-                    screen: CalendarStack,
-                    navigationOptions: {
-                        tabBarIcon: ({ tintColor }) => (
-                            <Ionicons name="ios-calendar" size={24} color={tintColor} />
-                        ),
-                        tabBarOnPress: ({ defaultHandler }) => defaultHandler()
-                    },
-                },
-                Medicine: {
-                    screen: MedicineStack,
-                    navigationOptions: {
-                        tabBarIcon: ({ tintColor }) => (
-                            <Material name="pill" size={24} color={tintColor} />
-                        ),
-                        tabBarOnPress: ({ defaultHandler }) => defaultHandler()
-                    },
-                },
-                Doctor: {
-                    screen: DoctorStack,
-                    navigationOptions: {
-                        tabBarIcon: ({ tintColor }) => (
-                            <Material name="doctor" size={24} color={tintColor} />
-                        ),
-                        tabBarOnPress: ({ defaultHandler }) => defaultHandler()
-                    },
-                },
-                Profile: {
-                    screen: MoreStack,
-                    navigationOptions: {
-                        tabBarIcon: ({ tintColor }) => (
-                            <Ionicons name="reorder-three" size={24} color={tintColor} />
-                        ),
-                        tabBarOnPress: ({ navigation }) => { navigation.openDrawer() }
-                    },
-                },
-            },
-            {
-                tabBarOptions: {
-                    activeTintColor: "#161F3D",
-                    inactiveTintColor: "#B8BBC4",
-                    showLabel: false,
-                },
-            }
-        ),
-    },
-    {
-        mode: "modal",
-        headerMode: "none",
-    }
-);
+const Tab = createBottomTabNavigator();
 
-export default BottomTabs
+export default function BottomTabs() {
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                headerShown: false,
+                tabBarShowLabel: false,
+                tabBarActiveTintColor: "#161F3D",
+                tabBarInactiveTintColor: "#B8BBC4",
+            }}
+        >
+            <Tab.Screen
+                name="Home"
+                component={HomeStack}
+                options={{
+                    tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
+                }}
+            />
+            <Tab.Screen
+                name="Calendar"
+                component={CalendarStack}
+                options={{
+                    tabBarIcon: ({ color }) => <Ionicons name="calendar" size={24} color={color} />,
+                }}
+            />
+            <Tab.Screen
+                name="Medicine"
+                component={MedicineStack}
+                options={{
+                    tabBarIcon: ({ color }) => <Material name="pill" size={24} color={color} />,
+                }}
+            />
+            <Tab.Screen
+                name="Doctor"
+                component={DoctorStack}
+                options={{
+                    tabBarIcon: ({ color }) => <Material name="doctor" size={24} color={color} />,
+                }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={MoreStack}
+                options={{
+                    tabBarIcon: ({ color }) => <Ionicons name="reorder-three" size={24} color={color} />,
+                }}
+                listeners={({ navigation }) => ({
+                    tabPress: e => {
+                        e.preventDefault();
+                        navigation.getParent("Drawer")?.openDrawer();
+                    },
+                })}
+            />
+        </Tab.Navigator>
+    );
+}

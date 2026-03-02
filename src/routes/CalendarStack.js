@@ -1,12 +1,17 @@
 // Author: Phuoc Hoang Minh Nguyen
 // Description: Includes CalendarScreen only
-// Status: Optimized
+// Status: Updated for react-navigation v7
 
-import { createStackNavigator } from "react-navigation-stack";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 import CalendarScreen from "../screens/CalendarStack/CalendarScreen";
 
-const CalendarStack = createStackNavigator({
-    CalendarScreen,
-});
+const Stack = createStackNavigator();
 
-export default CalendarStack
+export default function CalendarStack() {
+    return (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
+        </Stack.Navigator>
+    );
+}

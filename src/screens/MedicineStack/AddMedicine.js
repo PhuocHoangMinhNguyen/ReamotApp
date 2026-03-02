@@ -8,9 +8,8 @@ import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import UploadImage from '../../utilities/UploadImage';
 import Background from '../../components/Background';
-import Ionicons from "react-native-vector-icons/Ionicons";
-import UserPermissions from "../../utilities/UserPermissions";
-import ImagePicker from "react-native-image-picker";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import { launchImageLibrary } from "react-native-image-picker";
 import CheckBox from "@react-native-community/checkbox";
 import Toast from "react-native-simple-toast";
 
@@ -31,30 +30,11 @@ class AddMedicine extends React.Component {
 
     // To pick image from library or take a photo for medicine image (optional)
     handlePickImage = async () => {
-        UserPermissions.getPhotoPermission();
-
-        var options = {
-            title: "Select Image",
-            storageOptions: {
-                skipBackup: true,
-                path: "images"
-            }
+        const response = await launchImageLibrary({ mediaType: 'photo' });
+        if (response.didCancel || response.errorCode) return;
+        if (response.assets && response.assets[0]) {
+            this.setState({ medicine: { ...this.state.medicine, image: response.assets[0].uri } });
         }
-
-        let result = await ImagePicker.showImagePicker(options, (response) => {
-            console.log("Response = ", response);
-
-            if (response.didCancel) {
-                console.log("User cancelled image picker");
-            } else if (response.error) {
-                console.log("ImagePicker Error: ", response.error);
-            } else {
-                const source = response.uri
-                this.setState({
-                    medicine: { ...this.state.medicine, image: source }
-                });
-            }
-        });
     }
 
     // Make sure all the information is enter successfully before adding the medicine into Firebase

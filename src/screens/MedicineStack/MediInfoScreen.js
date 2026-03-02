@@ -12,8 +12,8 @@ import {
   FlatList,
   TextInput
 } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from "@react-native-vector-icons/ionicons";
+import FontAwesome from "@react-native-vector-icons/fontawesome";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 import ViewMoreText from "react-native-view-more-text";
@@ -41,13 +41,13 @@ class MediInfoScreen extends React.Component {
   componentDidMount() {
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
     // => Faster than accessing Cloud Firestore again.
-    let paramsFromMedicineScreen = this.props.navigation.state.params
+    let paramsFromMedicineScreen = this.props.route.params
     this.setState({ medicine: paramsFromMedicineScreen });
 
     // Get Medicine Number of Pills
     this.unsubscribe1 = firestore().collection("medicinePills")
       .where('patientEmail', '==', auth().currentUser.email)
-      .where('medicine', '==', this.props.navigation.state.params.name)
+      .where('medicine', '==', this.props.route.params.name)
       .onSnapshot(querySnapshot => {
         let temp = ""
         let tempID = ""
@@ -66,7 +66,7 @@ class MediInfoScreen extends React.Component {
     // and number of times to take medicine per day.
     this.unsubscribe2 = firestore().collection("prescription")
       .where('patientEmail', '==', auth().currentUser.email)
-      .where('name', '==', this.props.navigation.state.params.name)
+      .where('name', '==', this.props.route.params.name)
       .onSnapshot(querySnapshot => {
         let tempValue = 0
         let tempValue2 = 0
@@ -88,7 +88,7 @@ class MediInfoScreen extends React.Component {
     // Get Reminder data of that patient and that medicine.
     this.unsubscribe3 = firestore().collection("reminder")
       .where('patientEmail', '==', auth().currentUser.email)
-      .where('medicine', '==', this.props.navigation.state.params.name)
+      .where('medicine', '==', this.props.route.params.name)
       .onSnapshot(querySnapshot => {
         let temp = []
         querySnapshot.forEach(documentSnapshot => {
@@ -112,12 +112,12 @@ class MediInfoScreen extends React.Component {
   handleNewReminder = () => {
     if (this.state.prescription.type == "Daily") {
       this.props.navigation.navigate("NewReminder", {
-        medicine: this.props.navigation.state.params,
+        medicine: this.props.route.params,
         number: this.state.prescription.number
       });
     } else {
       this.props.navigation.navigate("WeeklyNewReminder", {
-        medicine: this.props.navigation.state.params,
+        medicine: this.props.route.params,
         number: this.state.prescription.number
       });
     }
@@ -128,12 +128,12 @@ class MediInfoScreen extends React.Component {
   handleChangeReminder = (item) => {
     if (this.state.prescription.type == "Daily") {
       this.props.navigation.navigate("ChangeReminder", {
-        medicine: this.props.navigation.state.params,
+        medicine: this.props.route.params,
         itemTime: item.time.toDate(),
       });
     } else {
       this.props.navigation.navigate("WeeklyChangeReminder", {
-        medicine: this.props.navigation.state.params,
+        medicine: this.props.route.params,
         itemTime: item.time.toDate(),
       });
     }

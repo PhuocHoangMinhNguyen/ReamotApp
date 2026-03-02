@@ -19,9 +19,8 @@ import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import UploadImage from '../../utilities/UploadImage';
 import Background from '../../components/Background';
-import ImagePicker from 'react-native-image-picker';
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import UserPermissions from "../../utilities/UserPermissions";
+import { launchImageLibrary } from 'react-native-image-picker';
+import MaterialIcons from "@react-native-vector-icons/material-icons";
 import Toast from "react-native-simple-toast";
 
 var tempAvatar = require("../../assets/images/tempAvatar.png");
@@ -51,32 +50,11 @@ class EditScreen extends React.Component {
 
   // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
-    UserPermissions.getPhotoPermission();
-
-    var options = {
-      title: "Select Image",
-      storageOptions: {
-        skipBackup: true,
-        path: "images"
-      }
+    const response = await launchImageLibrary({ mediaType: 'photo' });
+    if (response.didCancel || response.errorCode) return;
+    if (response.assets && response.assets[0]) {
+      this.setState({ user: { ...this.state.user, avatar: response.assets[0].uri } });
     }
-
-    let result = await ImagePicker.showImagePicker(options, (response) => {
-      console.log("Response = ", response);
-
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else {
-        const source = response.uri
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          user: { ...this.state.user, avatar: source }
-        })
-      }
-    })
   }
 
   // Edit User's information in Firestore.

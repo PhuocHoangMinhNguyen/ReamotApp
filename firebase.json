@@ -1,5 +1,13 @@
 {
   "react-native": {
     "ml_vision_barcode_model": true
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": false
+    }
   }
 }

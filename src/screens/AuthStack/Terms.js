@@ -4,7 +4,7 @@
 
 import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import TermsServices from '../../components/TermsServices';
 
 class Terms extends React.Component {

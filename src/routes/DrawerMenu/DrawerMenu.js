@@ -16,9 +16,9 @@ import ProfileScreen from './ProfileScreen';
 import UserReminders from '../../utilities/UserReminders';
 
 // Used for the icons in each option of the drawer menu.
-import AntDesign from "react-native-vector-icons/AntDesign";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Material from "react-native-vector-icons/MaterialCommunityIcons";
+import AntDesign from "@react-native-vector-icons/ant-design";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import Material from "@react-native-vector-icons/material-design-icons";
 
 class DrawerMenu extends React.Component {
     handleSignOut = () => {
