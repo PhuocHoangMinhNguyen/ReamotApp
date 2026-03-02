@@ -75,6 +75,10 @@
     "moduleNameMapper": {
       "\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/__mocks__/fileMock.js"
     },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/tests/backend/"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/__mocks__/"
