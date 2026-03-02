@@ -64,7 +64,8 @@
   "pnpm": {
     "overrides": {
       "fast-xml-parser": ">=4.5.4",
-      "minimatch": ">=3.1.4"
+      "minimatch": ">=3.1.4",
+      "test-exclude>minimatch": "^3.1.4"
     }
   },
   "jest": {
