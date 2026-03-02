@@ -2,35 +2,35 @@
 // Description: Allow patient to delete their weekly reminder and stop sounding alarm
 // Status: Currently working similar to daily reminder
 
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import AntDesign from "@react-native-vector-icons/ant-design";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import Toast from "react-native-simple-toast";
-import ReactNativeAN from "react-native-alarm-notification";
-import moment from "moment";
-import { ConfirmDialog } from "react-native-simple-dialogs";
-import Background from "../../../components/Background";
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import AntDesign from '@react-native-vector-icons/ant-design';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-simple-toast';
+import ReactNativeAN from 'react-native-alarm-notification';
+import moment from 'moment';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
+import Background from '../../../components/Background';
 
 // Notification Data Structure.
 const alarmNotifData = {
-  schedule_type: "once",
-  channel: "reminder",
+  schedule_type: 'once',
+  channel: 'reminder',
   loop_sound: true,
-  message: "Take your Medicine",
+  message: 'Take your Medicine',
 };
 
-var tempAvatar = require("../../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../../assets/images/tempAvatar.png');
 
 class WeeklyChangeReminder extends React.Component {
   state = {
     medicine: {},
     // Ids from Firebase.
     firebase: {
-      firebaseId: "",
-      idAN: "",
+      firebaseId: '',
+      idAN: '',
       alarmId: Math.floor(Math.random() * 10000).toString(),
     },
     timePicker: {
@@ -65,16 +65,16 @@ class WeeklyChangeReminder extends React.Component {
     this.setState({ initial: paramsTime });
 
     // Find the document Id and idAN in Cloud Firestore
-    let tempIdAN = "";
-    let tempFirebase = "";
+    let tempIdAN = '';
+    let tempFirebase = '';
     //console.log(`Time la: "${Math.round(paramsTime.getTime() / 1000)}"`)
     this.unsubscribe = firestore()
-      .collection("reminder")
-      .where("patientEmail", "==", auth().currentUser.email)
+      .collection('reminder')
+      .where('patientEmail', '==', auth().currentUser.email)
       //.where('time', '==', paramsTime)
-      .where("medicine", "==", paramsFromMediInfoScreen.name)
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+      .where('medicine', '==', paramsFromMediInfoScreen.name)
+      .onSnapshot(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
           if (
             Math.floor(paramsTime.getTime() / 1000) ==
             documentSnapshot.data().time.seconds
@@ -104,13 +104,13 @@ class WeeklyChangeReminder extends React.Component {
     const { firebaseId, idAN } = this.state.firebase;
     // Delete the reminder from "reminder" collection
     firestore()
-      .collection("reminder")
+      .collection('reminder')
       .doc(firebaseId)
       .delete()
       .then(() => {
         // Delete Alarm using state.idAN
         ReactNativeAN.deleteAlarm(idAN.toString());
-        Toast.show("Reminder Deleted!");
+        Toast.show('Reminder Deleted!');
         this.props.navigation.goBack();
       });
   };
@@ -130,10 +130,10 @@ class WeeklyChangeReminder extends React.Component {
     // Remove Notification
     ReactNativeAN.removeAllFiredNotifications();
 
-    console.log("Initial: " + new Date(initial));
+    console.log('Initial: ' + new Date(initial));
     const newReminderTime = new Date(initial);
     newReminderTime.setDate(newReminderTime.getDate() + 1);
-    console.log("Weekly Change Reminder: " + newReminderTime);
+    console.log('Weekly Change Reminder: ' + newReminderTime);
     const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
     const details = {
@@ -153,13 +153,13 @@ class WeeklyChangeReminder extends React.Component {
 
     // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
     const alarm = await ReactNativeAN.getScheduledAlarms();
-    let idAN = "";
+    let idAN = '';
     for (let i = 0; i < alarm.length; i++) {
       if (alarm[i].alarmId == details.alarm_id) {
         idAN = alarm[i].id;
       }
     }
-    firestore().collection("reminder").doc(firebaseId).update({
+    firestore().collection('reminder').doc(firebaseId).update({
       idAN: idAN,
       alarmId: alarmId,
       time: newReminderTime,
@@ -168,15 +168,15 @@ class WeeklyChangeReminder extends React.Component {
     // When the alarm is turned off, add the medicine into "history" collection
     const firebaseReminder = new Date(initial);
     firestore()
-      .collection("history")
+      .collection('history')
       .add({
         medicine: name,
         patientEmail: auth().currentUser.email,
         startTime: firebaseReminder,
-        date: moment().format("MMMM Do YYYY"),
-        status: "missed",
+        date: moment().format('MMMM Do YYYY'),
+        status: 'missed',
       });
-    this.props.navigation.navigate("MedicineScreen");
+    this.props.navigation.navigate('MedicineScreen');
   };
 
   render() {
@@ -191,7 +191,7 @@ class WeeklyChangeReminder extends React.Component {
         </TouchableOpacity>
         <Text style={styles.header}>Edit Reminder</Text>
         <View style={styles.information}>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: 'row' }}>
             <Image
               style={styles.image}
               source={
@@ -203,15 +203,15 @@ class WeeklyChangeReminder extends React.Component {
             <View style={styles.name}>
               <Text style={{ fontSize: 15 }}>{this.state.medicine.name}</Text>
               <Text style={styles.time}>
-                {moment(this.state.initial).format("hh:mm a")}
+                {moment(this.state.initial).format('hh:mm a')}
               </Text>
             </View>
           </View>
         </View>
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             marginHorizontal: 30,
           }}
         >
@@ -219,21 +219,21 @@ class WeeklyChangeReminder extends React.Component {
             style={styles.button2}
             onPress={() => {
               // To stop alarm sound, go to BarcodeScan
-              this.props.navigation.navigate("BarcodeScan", {
+              this.props.navigation.navigate('BarcodeScan', {
                 medicine: this.props.route.params.medicine,
                 itemTime: this.props.route.params.itemTime,
                 firebaseId: this.state.firebase.firebaseId,
               });
             }}
           >
-            <Text style={{ color: "#FFF", marginRight: 50 }}>Take</Text>
+            <Text style={{ color: '#FFF', marginRight: 50 }}>Take</Text>
             <AntDesign name="check" size={25} color="#FFF" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button2}
             onPress={() => this.handleMiss()}
           >
-            <Text style={{ color: "#FFF", marginRight: 50 }}>Miss</Text>
+            <Text style={{ color: '#FFF', marginRight: 50 }}>Miss</Text>
             <AntDesign name="close" size={25} color="#FFF" />
           </TouchableOpacity>
         </View>
@@ -241,7 +241,7 @@ class WeeklyChangeReminder extends React.Component {
           style={styles.button}
           onPress={() => this.deleteAlarm()}
         >
-          <Text style={{ color: "#FFF" }}>Delete Alarm</Text>
+          <Text style={{ color: '#FFF' }}>Delete Alarm</Text>
           <AntDesign name="delete" size={25} color="#FFF" />
         </TouchableOpacity>
         <ConfirmDialog
@@ -250,16 +250,16 @@ class WeeklyChangeReminder extends React.Component {
           message="Are you sure?"
           onTouchOutside={() => this.setState({ dialogVisible: false })}
           positiveButton={{
-            title: "YES",
+            title: 'YES',
             onPress: () => {
               this.handleYes();
             },
           }}
           negativeButton={{
-            title: "NO",
+            title: 'NO',
             onPress: () => {
               this.setState({ dialogVisible: false });
-              Toast.show("Your request is canceled !");
+              Toast.show('Your request is canceled !');
             },
           }}
         />
@@ -271,7 +271,7 @@ class WeeklyChangeReminder extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   back: {
     marginTop: -170,
@@ -280,9 +280,9 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: 100,
@@ -291,17 +291,17 @@ const styles = StyleSheet.create({
   name: {
     flex: 1,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     marginLeft: 8,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   header: {
-    color: "#FFF",
-    textAlign: "center",
+    color: '#FFF',
+    textAlign: 'center',
     fontSize: 24,
   },
   information: {
-    backgroundColor: "#ddd",
+    backgroundColor: '#ddd',
     borderRadius: 10,
     padding: 16,
     marginTop: 50,
@@ -309,41 +309,41 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   timePicker: {
-    backgroundColor: "#ddd",
+    backgroundColor: '#ddd',
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 30,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   button: {
-    justifyContent: "space-evenly",
-    alignItems: "center",
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 10,
     marginVertical: 12,
     marginHorizontal: 30,
     padding: 20,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   button2: {
-    alignItems: "center",
+    alignItems: 'center',
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 10,
     marginVertical: 12,
     padding: 20,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   showPicker: {
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     height: 40,
     width: 120,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   time: {
     fontSize: 24,

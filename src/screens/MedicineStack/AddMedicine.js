@@ -2,7 +2,7 @@
 // Description: Used to allow patients to add their own medicine
 // Status: Optimized
 
-import React from "react";
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -10,23 +10,23 @@ import {
   Image,
   TextInput,
   Text,
-} from "react-native";
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
-import UploadImage from "../../utilities/UploadImage";
-import Background from "../../components/Background";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { launchImageLibrary } from "react-native-image-picker";
-import CheckBox from "@react-native-community/checkbox";
-import Toast from "react-native-simple-toast";
+} from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import UploadImage from '../../utilities/UploadImage';
+import Background from '../../components/Background';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { launchImageLibrary } from 'react-native-image-picker';
+import CheckBox from '@react-native-community/checkbox';
+import Toast from 'react-native-simple-toast';
 
 class AddMedicine extends React.Component {
   state = {
     medicine: {
-      name: "",
+      name: '',
       image: null,
-      number: "",
-      times: "",
+      number: '',
+      times: '',
       note: null,
     },
     reminder: {
@@ -37,7 +37,7 @@ class AddMedicine extends React.Component {
 
   // To pick image from library or take a photo for medicine image (optional)
   handlePickImage = async () => {
-    const response = await launchImageLibrary({ mediaType: "photo" });
+    const response = await launchImageLibrary({ mediaType: 'photo' });
     if (response.didCancel || response.errorCode) {
       return;
     }
@@ -52,20 +52,20 @@ class AddMedicine extends React.Component {
   handleAdd = () => {
     const { name, number, times } = this.state.medicine;
     const { dailyType, weeklyType } = this.state.reminder;
-    if (name.trim == "") {
-      Toast.show("Please Enter Medicine Name", Toast.LONG);
-    } else if (number == "") {
+    if (name.trim == '') {
+      Toast.show('Please Enter Medicine Name', Toast.LONG);
+    } else if (number == '') {
       Toast.show(
-        "Please enter number of capsules for each time you take medicine",
-        Toast.LONG
+        'Please enter number of capsules for each time you take medicine',
+        Toast.LONG,
       );
-    } else if (times == "") {
+    } else if (times == '') {
       Toast.show(
-        "Please enter number of times you have to take medicine per day/week",
-        Toast.LONG
+        'Please enter number of times you have to take medicine per day/week',
+        Toast.LONG,
       );
     } else if (dailyType == false && weeklyType == false) {
-      Toast.show("Please Choose a Reminder Type", Toast.LONG);
+      Toast.show('Please Choose a Reminder Type', Toast.LONG);
     } else {
       this.addMedicine();
     }
@@ -81,24 +81,24 @@ class AddMedicine extends React.Component {
       // Store the avatar in Firebase Storage
       remoteUri = await UploadImage.uploadPhotoAsync(
         image,
-        `medicines/${(auth().currentUser || {}).uid}`
+        `medicines/${(auth().currentUser || {}).uid}`,
       );
       // Then Store the avatar in Cloud Firestore
       medicineImage = remoteUri;
     }
     firestore()
-      .collection("medicine")
+      .collection('medicine')
       .add({
         name: name,
         barcode: barcode,
         description: null,
         image: medicineImage,
-        adder: "patient",
+        adder: 'patient',
       })
       .then(() => {
         if (dailyType == true) {
           firestore()
-            .collection("prescription")
+            .collection('prescription')
             .add({
               name: name,
               patientEmail: auth().currentUser.email,
@@ -106,12 +106,12 @@ class AddMedicine extends React.Component {
               note: note,
               number: parseInt(number, 10),
               times: parseInt(times, 10),
-              type: "Daily",
+              type: 'Daily',
             });
         }
         if (weeklyType == true) {
           firestore()
-            .collection("prescription")
+            .collection('prescription')
             .add({
               name: name,
               patientEmail: auth().currentUser.email,
@@ -119,12 +119,12 @@ class AddMedicine extends React.Component {
               note: note,
               number: parseInt(number, 10),
               times: parseInt(times, 10),
-              type: "Weekly",
+              type: 'Weekly',
             });
         }
       });
     this.props.navigation.goBack();
-    Toast.show("A new medicine is added !");
+    Toast.show('A new medicine is added !');
   };
 
   render() {
@@ -159,7 +159,7 @@ class AddMedicine extends React.Component {
           <View style={styles.textInputContainer1}>
             <TextInput
               placeholder="Medicine Name"
-              onChangeText={(name) =>
+              onChangeText={name =>
                 this.setState({
                   medicine: { ...this.state.medicine, name: name },
                 })
@@ -171,7 +171,7 @@ class AddMedicine extends React.Component {
             <TextInput
               placeholder="Medicine Barcode"
               keyboardType="numeric"
-              onChangeText={(barcode) =>
+              onChangeText={barcode =>
                 this.setState({
                   medicine: { ...this.state.medicine, barcode: barcode },
                 })
@@ -183,7 +183,7 @@ class AddMedicine extends React.Component {
         <View style={styles.reminderType}>
           <CheckBox
             value={this.state.reminder.dailyType}
-            onValueChange={(newValue) => {
+            onValueChange={newValue => {
               if (
                 this.state.reminder.weeklyType !=
                   this.state.reminder.dailyType &&
@@ -209,7 +209,7 @@ class AddMedicine extends React.Component {
           <Text>Taken Daily</Text>
           <CheckBox
             value={this.state.reminder.weeklyType}
-            onValueChange={(newValue) => {
+            onValueChange={newValue => {
               if (
                 this.state.reminder.weeklyType !=
                   this.state.reminder.dailyType &&
@@ -239,7 +239,7 @@ class AddMedicine extends React.Component {
             <TextInput
               placeholder="Number"
               keyboardType="numeric"
-              onChangeText={(number) =>
+              onChangeText={number =>
                 this.setState({
                   medicine: { ...this.state.medicine, number: number },
                 })
@@ -251,7 +251,7 @@ class AddMedicine extends React.Component {
             <TextInput
               placeholder="Times"
               keyboardType="numeric"
-              onChangeText={(times) =>
+              onChangeText={times =>
                 this.setState({
                   medicine: { ...this.state.medicine, times: times },
                 })
@@ -264,7 +264,7 @@ class AddMedicine extends React.Component {
           <TextInput
             placeholder="Note"
             autoCapitalize="none"
-            onChangeText={(note) =>
+            onChangeText={note =>
               this.setState({
                 medicine: { ...this.state.medicine, note: note },
               })
@@ -286,100 +286,100 @@ class AddMedicine extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   back: {
-    position: "absolute",
+    position: 'absolute',
     top: 24,
     left: 24,
     width: 30,
     height: 30,
     borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     marginTop: -140,
-    textAlign: "center",
-    color: "#FFF",
+    textAlign: 'center',
+    color: '#FFF',
   },
   cover: {
     marginHorizontal: 30,
     marginTop: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   cover2: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginHorizontal: 30,
     marginVertical: 12,
   },
   imagePlaceholder: {
     width: 110,
     height: 110,
-    backgroundColor: "#A9A9A9",
+    backgroundColor: '#A9A9A9',
     borderRadius: 55,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    position: "absolute",
+    position: 'absolute',
     width: 110,
     height: 110,
     borderRadius: 55,
   },
   textInputContainer1: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 4,
     flex: 1,
     marginRight: 8,
   },
   textInputContainer2: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 4,
     flex: 1,
     marginLeft: 8,
   },
   reminderType: {
     marginHorizontal: 30,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
   button: {
-    alignSelf: "flex-end",
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 110,
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginVertical: 12,
     marginEnd: 30,
   },
   buttonText: {
-    color: "#FFF",
+    color: '#FFF',
   },
   number: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 4,
     flex: 1,
     marginRight: 8,
   },
   times: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 4,
     flex: 1,
     marginLeft: 8,
   },
   numberTimes: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginHorizontal: 30,
     marginVertical: 12,
   },
   note: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 4,
     marginHorizontal: 30,
   },

@@ -16,10 +16,10 @@ import {
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import DatePicker from "@react-native-community/datetimepicker";
+import DatePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { ProgressChart } from 'react-native-chart-kit';
-import Background from "../../components/Background";
+import Background from '../../components/Background';
 
 var tempAvatar = require('../../assets/images/tempAvatar.png');
 
@@ -38,35 +38,35 @@ class CalendarScreen extends React.Component {
     missedLength: 0,
     takenLength: 0,
     chartConfig: {
-      backgroundGradientFrom: "#DEE8F1",
-      backgroundGradientTo: "#DEE8F1",
+      backgroundGradientFrom: '#DEE8F1',
+      backgroundGradientTo: '#DEE8F1',
       color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
     },
-  }
+  };
 
   // calculate some value to show the progress chart
   calculate = async () => {
     // Get history documents with status missed to calculate percentage
     let docsMissedLength = 0;
     await firestore()
-      .collection("history")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("date", "==", moment(this.state.testDate).format("MMMM Do YYYY"))
-      .where("status", "==", "missed")
+      .collection('history')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
+      .where('status', '==', 'missed')
       .get()
-      .then((querySnapshot) => {
+      .then(querySnapshot => {
         docsMissedLength = querySnapshot.docs.length;
       });
 
     // Get history documents with status taken to calculate percentage
     let docsTakenLength = 0;
     await firestore()
-      .collection("history")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("date", "==", moment(this.state.testDate).format("MMMM Do YYYY"))
-      .where("status", "==", "taken")
+      .collection('history')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
+      .where('status', '==', 'taken')
       .get()
-      .then((querySnapshot) => {
+      .then(querySnapshot => {
         docsTakenLength = querySnapshot.docs.length;
       });
 
@@ -113,19 +113,19 @@ class CalendarScreen extends React.Component {
   loadItems = () => {
     let found = false;
     firestore()
-      .collection("history")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("date", "==", moment(this.state.testDate).format("MMMM Do YYYY"))
-      .onSnapshot((querySnapshot) => {
+      .collection('history')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
+      .onSnapshot(querySnapshot => {
         found = true;
         let result = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           firestore()
-            .collection("medicine")
-            .where("name", "==", documentSnapshot.data().medicine)
+            .collection('medicine')
+            .where('name', '==', documentSnapshot.data().medicine)
             .get()
-            .then((queryMedicineSnapshot) => {
-              queryMedicineSnapshot.forEach((documentMedicineSnapshot) => {
+            .then(queryMedicineSnapshot => {
+              queryMedicineSnapshot.forEach(documentMedicineSnapshot => {
                 result.push({
                   ...documentMedicineSnapshot.data(),
                   ...documentSnapshot.data(),
@@ -158,7 +158,7 @@ class CalendarScreen extends React.Component {
     const { testDate } = this.state;
     const currentDate = selectedDate || testDate;
     this.setState({
-      show: Platform.OS === "ios",
+      show: Platform.OS === 'ios',
       testDate: currentDate,
     });
     // Reload medicines for the new date chosen and new progress chart.
@@ -169,7 +169,7 @@ class CalendarScreen extends React.Component {
   renderItem(item) {
     const correctItem = (
       <SafeAreaView
-        style={item.status == "taken" ? styles.feedItem : styles.missedItem}
+        style={item.status == 'taken' ? styles.feedItem : styles.missedItem}
       >
         <Image
           style={styles.image}
@@ -178,7 +178,7 @@ class CalendarScreen extends React.Component {
         <View style={{ flex: 1 }}>
           <Text style={styles.missedName}>{item.name}</Text>
           <Text style={styles.missedTime}>
-            {moment(item.startTime.toDate()).format("hh:mm a")}
+            {moment(item.startTime.toDate()).format('hh:mm a')}
           </Text>
         </View>
       </SafeAreaView>
@@ -187,7 +187,7 @@ class CalendarScreen extends React.Component {
       return correctItem;
     } else {
       // Blank text used so that the list can be processed normally
-      return <Text style={{ height: 0.1 }} />
+      return <Text style={{ height: 0.1 }} />;
     }
   }
 
@@ -201,7 +201,7 @@ class CalendarScreen extends React.Component {
           Patient's history of taking medicine per day
         </Text>
         <Text style={styles.testDate}>
-          {moment(testDate).format("MMMM Do YYYY")}
+          {moment(testDate).format('MMMM Do YYYY')}
         </Text>
         <TouchableOpacity style={styles.button} onPress={this.showMode}>
           <Text style={styles.buttonText}>Show Calendar</Text>
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   feedItem: {
-    backgroundColor: "#004481",
+    backgroundColor: '#004481',
     borderRadius: 5,
     padding: 8,
     flexDirection: 'row',
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     marginEnd: 16,
   },
   buttonText: {
-    color: '#FFF'
+    color: '#FFF',
   },
   header: {
     fontSize: 24,
@@ -307,13 +307,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   chart: {
-    backgroundColor: "#DEE8F1",
+    backgroundColor: '#DEE8F1',
   },
   chartHeader: {
     alignSelf: 'center',
     fontWeight: 'bold',
     fontSize: 20,
-    color: '#000'
+    color: '#000',
   },
   chartBody: {
     alignSelf: 'center',
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     color: '#000',
     marginTop: 30,
     height: 120,
-  }
+  },
 });
 
-export default CalendarScreen
+export default CalendarScreen;

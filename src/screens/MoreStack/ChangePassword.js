@@ -2,13 +2,13 @@
 // Description: Allow patient to change password
 // Status: Optimized
 
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import Toast from "react-native-simple-toast";
-import auth from "@react-native-firebase/auth";
-import Background from "../../components/Background";
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Toast from 'react-native-simple-toast';
+import auth from '@react-native-firebase/auth';
+import Background from '../../components/Background';
 
-var confusedMan = require("../../assets/images/confusedMan.png");
+var confusedMan = require('../../assets/images/confusedMan.png');
 
 class ChangePassword extends React.Component {
   // A link to reset password will be sent to current user's email
@@ -16,7 +16,7 @@ class ChangePassword extends React.Component {
     auth()
       .sendPasswordResetEmail(auth().currentUser.email)
       .then(() => {
-        Toast.show("Please Check your Email...");
+        Toast.show('Please Check your Email...');
       });
   };
 
@@ -43,32 +43,32 @@ class ChangePassword extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
-    alignItems: "center",
+    backgroundColor: '#FFF',
+    alignItems: 'center',
   },
   image: {
     width: 250,
     height: 250,
     marginTop: -120,
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 125,
   },
   text: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 16,
     marginVertical: 12,
   },
   submitButton: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 100,
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginTop: 12,
   },
   submitText: {
-    color: "#FFF",
+    color: '#FFF',
   },
 });
 

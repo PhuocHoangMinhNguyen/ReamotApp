@@ -2,7 +2,7 @@
 // Description: Register Screen
 // Status: Optimized
 
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -11,23 +11,23 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-} from "react-native";
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
-import UploadImage from "../../utilities/UploadImage";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { launchImageLibrary } from "react-native-image-picker";
-import Toast from "react-native-simple-toast";
-import CheckBox from "@react-native-community/checkbox";
-import Background from "../../components/Background";
+} from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import UploadImage from '../../utilities/UploadImage';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { launchImageLibrary } from 'react-native-image-picker';
+import Toast from 'react-native-simple-toast';
+import CheckBox from '@react-native-community/checkbox';
+import Background from '../../components/Background';
 
 class RegisterScreen extends React.Component {
   state = {
     user: {
-      name: "",
-      email: "",
-      password: "",
-      phoneNumber: "",
+      name: '',
+      email: '',
+      password: '',
+      phoneNumber: '',
       avatar: null,
     },
     errorMessage: null,
@@ -43,16 +43,16 @@ class RegisterScreen extends React.Component {
   // Check if all information is entered before create a new user.
   handleSignUp = () => {
     const { name, email, password, phoneNumber } = this.state.user;
-    if (name.trim == "") {
-      Toast.show("Please Enter Full Name", Toast.LONG);
-    } else if (email.trim == "") {
-      Toast.show("Please Enter Email Information", Toast.LONG);
-    } else if (password == "") {
-      Toast.show("Please Enter A Password", Toast.LONG);
-    } else if (phoneNumber == "") {
-      Toast.show("Please Enter Contact Number", Toast.LONG);
+    if (name.trim == '') {
+      Toast.show('Please Enter Full Name', Toast.LONG);
+    } else if (email.trim == '') {
+      Toast.show('Please Enter Email Information', Toast.LONG);
+    } else if (password == '') {
+      Toast.show('Please Enter A Password', Toast.LONG);
+    } else if (phoneNumber == '') {
+      Toast.show('Please Enter Contact Number', Toast.LONG);
     } else if (this.state.toggleCheckBox == false) {
-      Toast.show("Please Agree to Terms of Services", Toast.LONG);
+      Toast.show('Please Agree to Terms of Services', Toast.LONG);
     } else {
       this.createUser(this.state.user);
     }
@@ -60,19 +60,19 @@ class RegisterScreen extends React.Component {
 
   // create a new user in Firebase Authentication with email and password,
   // then store the information in Firestore,
-  createUser = async (user) => {
+  createUser = async user => {
     let remoteUri = null;
     try {
       await auth()
         .createUserWithEmailAndPassword(user.email.trim(), user.password)
-        .catch((error) => this.setState({ errorMessage: error.message }));
+        .catch(error => this.setState({ errorMessage: error.message }));
 
       await auth().currentUser.sendEmailVerification();
 
       // If there is no error.
       if (this.state.errorMessage == null) {
         let db = firestore()
-          .collection("users")
+          .collection('users')
           .doc((auth().currentUser || {}).uid);
 
         db.set({
@@ -89,7 +89,7 @@ class RegisterScreen extends React.Component {
           // Store the avatar in Firebase Storage
           remoteUri = await UploadImage.uploadPhotoAsync(
             user.avatar,
-            `users/${(auth().currentUser || {}).uid}`
+            `users/${(auth().currentUser || {}).uid}`,
           );
           // Then Store the avatar in Cloud Firestore
           db.set({ avatar: remoteUri }, { merge: true });
@@ -100,7 +100,7 @@ class RegisterScreen extends React.Component {
 
   // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
-    const response = await launchImageLibrary({ mediaType: "photo" });
+    const response = await launchImageLibrary({ mediaType: 'photo' });
     if (response.didCancel || response.errorCode) {
       return;
     }
@@ -121,9 +121,9 @@ class RegisterScreen extends React.Component {
         >
           <Ionicons name="arrow-back" size={32} color="#FFF" />
         </TouchableOpacity>
-        <View style={{ alignItems: "center", width: "100%", marginTop: -200 }}>
+        <View style={{ alignItems: 'center', width: '100%', marginTop: -200 }}>
           <Text style={styles.greeting}>
-            {"Hello to Reamot!\nSign up to get started."}
+            {'Hello to Reamot!\nSign up to get started.'}
           </Text>
           <TouchableOpacity
             style={styles.avatarPlaceholder}
@@ -149,7 +149,7 @@ class RegisterScreen extends React.Component {
               <TextInput
                 style={styles.input}
                 testID="register-name-input"
-                onChangeText={(name) =>
+                onChangeText={name =>
                   this.setState({ user: { ...this.state.user, name } })
                 }
                 value={this.state.user.name}
@@ -162,7 +162,7 @@ class RegisterScreen extends React.Component {
                 style={styles.input}
                 testID="register-email-input"
                 autoCapitalize="none"
-                onChangeText={(email) =>
+                onChangeText={email =>
                   this.setState({ user: { ...this.state.user, email } })
                 }
                 value={this.state.user.email}
@@ -176,7 +176,7 @@ class RegisterScreen extends React.Component {
                   style={styles.password}
                   secureTextEntry={!this.state.showPassword}
                   autoCapitalize="none"
-                  onChangeText={(password) =>
+                  onChangeText={password =>
                     this.setState({ user: { ...this.state.user, password } })
                   }
                   value={this.state.user.password}
@@ -196,7 +196,7 @@ class RegisterScreen extends React.Component {
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
-                onChangeText={(phoneNumber) =>
+                onChangeText={phoneNumber =>
                   this.setState({ user: { ...this.state.user, phoneNumber } })
                 }
                 value={this.state.user.phoneNumber}
@@ -207,20 +207,20 @@ class RegisterScreen extends React.Component {
           <View style={styles.termsOfServicesContainer}>
             <CheckBox
               value={this.state.toggleCheckBox}
-              onValueChange={(newValue) =>
+              onValueChange={newValue =>
                 this.setState({ toggleCheckBox: newValue })
               }
             />
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
                 flex: 1,
               }}
             >
               <Text>I agree to Reamot</Text>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate("Terms")}
+                onPress={() => this.props.navigation.navigate('Terms')}
               >
                 <Text style={styles.termsOfServices}>Terms of Services</Text>
               </TouchableOpacity>
@@ -228,17 +228,17 @@ class RegisterScreen extends React.Component {
           </View>
 
           <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-            <Text style={{ color: "#FFF", fontWeight: "500" }}>Sign up</Text>
+            <Text style={{ color: '#FFF', fontWeight: '500' }}>Sign up</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 12 }}
-            onPress={() => this.props.navigation.navigate("LoginScreen")}
+            style={{ alignSelf: 'center', marginTop: 12 }}
+            onPress={() => this.props.navigation.navigate('LoginScreen')}
           >
-            <Text style={{ color: "#414959", fontSize: 13 }}>
+            <Text style={{ color: '#414959', fontSize: 13 }}>
               Already have an account?
-              <Text style={{ fontWeight: "500", color: "#018ABE" }}>
-                {" "}
+              <Text style={{ fontWeight: '500', color: '#018ABE' }}>
+                {' '}
                 Sign in
               </Text>
             </Text>
@@ -252,83 +252,83 @@ class RegisterScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   greeting: {
     marginTop: 25,
     fontSize: 18,
-    fontWeight: "500",
-    textAlign: "center",
-    color: "#FFF",
+    fontWeight: '500',
+    textAlign: 'center',
+    color: '#FFF',
   },
   form: {
     marginHorizontal: 30,
   },
   inputTitle: {
-    color: "#8A8F9E",
+    color: '#8A8F9E',
     fontSize: 10,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   input: {
-    borderBottomColor: "#8A8F9E",
+    borderBottomColor: '#8A8F9E',
     borderBottomWidth: StyleSheet.hairlineWidth,
     height: 40,
     fontSize: 15,
-    color: "#161F3D",
+    color: '#161F3D',
   },
   password: {
     height: 40,
     fontSize: 15,
-    color: "#161F3D",
+    color: '#161F3D',
     flex: 1,
   },
   passwordContainer: {
-    flexDirection: "row",
-    borderBottomColor: "#8A8F9E",
+    flexDirection: 'row',
+    borderBottomColor: '#8A8F9E',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   button: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 50,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginHorizontal: 30,
   },
   errorMessage: {
     marginTop: 24,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: 30,
   },
   error: {
-    color: "#E9446A",
+    color: '#E9446A',
     fontSize: 13,
-    fontWeight: "600",
-    textAlign: "center",
+    fontWeight: '600',
+    textAlign: 'center',
   },
   back: {
-    position: "absolute",
+    position: 'absolute',
     top: 24,
     left: 30,
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarPlaceholder: {
     width: 100,
     height: 100,
-    backgroundColor: "#E1E2E6",
+    backgroundColor: '#E1E2E6',
     borderRadius: 50,
     marginTop: 12,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   avatar: {
-    position: "absolute",
+    position: 'absolute',
     width: 100,
     height: 100,
     borderRadius: 50,
@@ -336,11 +336,11 @@ const styles = StyleSheet.create({
   termsOfServicesContainer: {
     marginVertical: 12,
     marginHorizontal: 30,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   termsOfServices: {
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
   },
 });
 

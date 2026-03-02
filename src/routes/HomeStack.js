@@ -2,10 +2,10 @@
 // Description: Includes HomeScreen and MedicationInformation
 // Status: Updated for react-navigation v7
 
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "../screens/HomeStack/HomeScreen";
-import MedicationInformation from "../screens/HomeStack/MedicationInformation";
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from '../screens/HomeStack/HomeScreen';
+import MedicationInformation from '../screens/HomeStack/MedicationInformation';
 
 const Stack = createStackNavigator();
 

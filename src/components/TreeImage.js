@@ -1,12 +1,12 @@
-import React from "react";
-import { Image, StyleSheet } from "react-native";
+import React from 'react';
+import { Image, StyleSheet } from 'react-native';
 
-var growing1 = require("../assets/images/growing_0.png");
-var growing2 = require("../assets/images/growing_0_to_25.png");
-var growing3 = require("../assets/images/growing_25_to_50.png");
-var growing4 = require("../assets/images/growing_50_to_75.png");
-var growing5 = require("../assets/images/growing_75_to_100.png");
-var growing6 = require("../assets/images/GrowingTree.png");
+var growing1 = require('../assets/images/growing_0.png');
+var growing2 = require('../assets/images/growing_0_to_25.png');
+var growing3 = require('../assets/images/growing_25_to_50.png');
+var growing4 = require('../assets/images/growing_50_to_75.png');
+var growing5 = require('../assets/images/growing_75_to_100.png');
+var growing6 = require('../assets/images/GrowingTree.png');
 
 const TreeImage = ({ value }) => {
   let image;
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     marginTop: -150,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
 });
 

@@ -13,12 +13,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import Toast from "react-native-simple-toast";
+import Toast from 'react-native-simple-toast';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import ReactNativeAN from "react-native-alarm-notification";
-import { DeviceEventEmitter } from "react-native";
-import NavigationService from "../../utilities/NavigationService";
+import ReactNativeAN from 'react-native-alarm-notification';
+import { DeviceEventEmitter } from 'react-native';
+import NavigationService from '../../utilities/NavigationService';
 import AntDesign from '@react-native-vector-icons/ant-design';
 
 var tempAvatar = require('../../assets/images/tempAvatar.png');
@@ -33,14 +33,14 @@ class MedicineScreen extends React.Component {
 
   unsubscribe = null;
 
-  prescriptionCollection = (temp) => {
+  prescriptionCollection = temp => {
     // Deal with medicines that patient add
     firestore()
-      .collection("prescription")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .onSnapshot((querySnapshot) => {
+      .collection('prescription')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot(querySnapshot => {
         let temp2 = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           for (let i = 0; i < temp.length; i++) {
             if (documentSnapshot.data().name == temp[i].name) {
               temp2.push({
@@ -62,10 +62,10 @@ class MedicineScreen extends React.Component {
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.
     this.unsubscribe = firestore()
-      .collection("medicine")
-      .onSnapshot((querySnapshot) => {
+      .collection('medicine')
+      .onSnapshot(querySnapshot => {
         let temp = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           temp.push({
             ...documentSnapshot.data(),
             medicineKey: documentSnapshot.id,
@@ -75,18 +75,18 @@ class MedicineScreen extends React.Component {
       });
 
     this.dismissedSubscription = DeviceEventEmitter.addListener(
-      "OnNotificationDismissed",
+      'OnNotificationDismissed',
       async function (e) {
         const obj = JSON.parse(e);
         console.log(`Notification id: ${obj.id} dismissed`);
-      }
+      },
     );
 
     this.openedSubscription = DeviceEventEmitter.addListener(
-      "OnNotificationOpened",
+      'OnNotificationOpened',
       async function (e) {
         const obj = JSON.parse(e);
-        NavigationService.navigate("ChangeReminder", {
+        NavigationService.navigate('ChangeReminder', {
           medicine: {
             image: obj.image,
             name: obj.name,
@@ -95,7 +95,7 @@ class MedicineScreen extends React.Component {
           },
           itemTime: new Date(Date.parse(obj.itemTime)),
         });
-      }
+      },
     );
   }
 
@@ -105,41 +105,41 @@ class MedicineScreen extends React.Component {
     this.openedSubscription?.remove();
   }
 
-  deleteAlarms = (name) => {
+  deleteAlarms = name => {
     firestore()
-      .collection("reminder")
-      .where("medicine", "==", name)
-      .where("patientEmail", "==", auth().currentUser.email)
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+      .collection('reminder')
+      .where('medicine', '==', name)
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
           firestore()
-            .collection("reminder")
+            .collection('reminder')
             .doc(documentSnapshot.id)
             .delete()
             .then(() => {
               ReactNativeAN.deleteAlarm(
-                documentSnapshot.data().idAN.toString()
+                documentSnapshot.data().idAN.toString(),
               );
-              Toast.show("That medicine is deleted");
+              Toast.show('That medicine is deleted');
             });
         });
       });
   };
 
   // Information appears on each item.
-  renderItem = (item) => {
+  renderItem = item => {
     let dataInfor = {
       image: item.image,
       name: item.name,
       description: item.description,
       barcode: item.barcode,
-    }
-    if (item.adder == "patient") {
+    };
+    if (item.adder == 'patient') {
       return (
         <TouchableOpacity
           style={styles.feedItem}
           onPress={() => {
-            this.props.navigation.navigate("MediInfoScreen", dataInfor);
+            this.props.navigation.navigate('MediInfoScreen', dataInfor);
           }}
         >
           <Image
@@ -151,7 +151,7 @@ class MedicineScreen extends React.Component {
             onPress={() => {
               // Also need to delete alarms for this medicine.
               firestore()
-                .collection("prescription")
+                .collection('prescription')
                 .doc(item.key)
                 .delete()
                 .then(() => {
@@ -168,7 +168,7 @@ class MedicineScreen extends React.Component {
       <TouchableOpacity
         style={styles.feedItem}
         onPress={() => {
-          this.props.navigation.navigate("MediInfoScreen", dataInfor);
+          this.props.navigation.navigate('MediInfoScreen', dataInfor);
         }}
       >
         <Image
@@ -226,7 +226,7 @@ class MedicineScreen extends React.Component {
             placeholder="Search Medicine..."
             lightTheme
             round
-            onChangeText={(newText) => this.searchFilterFunction(newText)}
+            onChangeText={newText => this.searchFilterFunction(newText)}
             value={this.state.text}
           />
         </View>
@@ -234,7 +234,7 @@ class MedicineScreen extends React.Component {
         <TouchableOpacity
           style={styles.addMedicine}
           onPress={() => {
-            this.props.navigation.navigate("AddMedicine");
+            this.props.navigation.navigate('AddMedicine');
           }}
         >
           <Text style={styles.add}>Add Medicine</Text>
@@ -247,7 +247,7 @@ class MedicineScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#DEE8F1",
+    backgroundColor: '#DEE8F1',
   },
   header: {
     justifyContent: 'space-between',
@@ -294,8 +294,8 @@ const styles = StyleSheet.create({
   emptyText: {
     fontWeight: 'bold',
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 });
 
-export default MedicineScreen
+export default MedicineScreen;

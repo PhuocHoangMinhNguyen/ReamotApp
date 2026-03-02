@@ -3,27 +3,27 @@
 // If the account hasnt been verified, this screen will be shown when user login.
 // Status: Optimized
 
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import auth from "@react-native-firebase/auth";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import Toast from "react-native-simple-toast";
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import Toast from 'react-native-simple-toast';
 
 class VerificationScreen extends React.Component {
   render() {
     return (
       <View style={styles.view}>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: 'center' }}>
           <Text style={styles.text}>
             A Verification Email was sent to your Email Address
           </Text>
         </View>
         <Image
           style={styles.image}
-          source={require("../assets/images/GrowingTree.png")}
+          source={require('../assets/images/GrowingTree.png')}
         />
         <View style={styles.refreshing}>
-          <View style={{ justifyContent: "center" }}>
+          <View style={{ justifyContent: 'center' }}>
             <Text style={styles.text}>
               Refresh after Verifying your account
             </Text>
@@ -34,7 +34,7 @@ class VerificationScreen extends React.Component {
               if (auth().currentUser.emailVerified) {
                 // App.js onAuthStateChanged will re-render automatically
               } else {
-                Toast.show("Email not Verified");
+                Toast.show('Email not Verified');
               }
             }}
           >
@@ -55,15 +55,15 @@ class VerificationScreen extends React.Component {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#DEE8F1",
+    justifyContent: 'center',
+    backgroundColor: '#DEE8F1',
   },
   text: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   refreshing: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     marginBottom: 16,
   },
   image: {
@@ -73,11 +73,11 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   signOut: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   signOutText: {
-    color: "#1565C0",
-    textDecorationLine: "underline",
+    color: '#1565C0',
+    textDecorationLine: 'underline',
   },
 });
 

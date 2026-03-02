@@ -25,36 +25,36 @@ class DoctorScreen extends Component {
 
   unsubscribe = null;
 
-  doctorCollection = (tempDoctorEmail) => {
+  doctorCollection = tempDoctorEmail => {
     // Accessed Doctor
     firestore()
-      .collection("doctor")
-      .where("doctorEmail", "in", tempDoctorEmail)
-      .onSnapshot((querySnapshot) => {
+      .collection('doctor')
+      .where('doctorEmail', 'in', tempDoctorEmail)
+      .onSnapshot(querySnapshot => {
         let tempAccessedDoctor = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           tempAccessedDoctor.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
-            type: 'Doctor'
+            type: 'Doctor',
           });
         });
         this.setState({ accessedDoctor: tempAccessedDoctor });
       });
   };
 
-  pharmacistCollection = (tempPharmacistEmail) => {
+  pharmacistCollection = tempPharmacistEmail => {
     // Accessed Pharmacist
     firestore()
-      .collection("pharmacist")
-      .where("pharmacistEmail", "in", tempPharmacistEmail)
-      .onSnapshot((querySnapshot) => {
+      .collection('pharmacist')
+      .where('pharmacistEmail', 'in', tempPharmacistEmail)
+      .onSnapshot(querySnapshot => {
         let tempAccessedPharmacist = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           tempAccessedPharmacist.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
-            type: 'Pharmacist'
+            type: 'Pharmacist',
           });
         });
         this.setState({ accessedPharmacist: tempAccessedPharmacist });
@@ -70,9 +70,9 @@ class DoctorScreen extends Component {
     let tempDoctorEmail = [];
 
     this.unsubscribe = firestore()
-      .collection("users")
+      .collection('users')
       .doc((auth().currentUser || {}).uid)
-      .onSnapshot((documentSnapshot) => {
+      .onSnapshot(documentSnapshot => {
         tempPharmacistEmail = documentSnapshot.data().pharmacistList;
         tempDoctorEmail = documentSnapshot.data().doctorList;
 
@@ -96,18 +96,18 @@ class DoctorScreen extends Component {
 
   // When clicking on one doctor/ pharmacist item, navigate user to
   // that doctor/pharmacist information screen.
-  handleClick = (dataInfor) => {
-    this.props.navigation.navigate("AccessedDoctorScreen", dataInfor);
+  handleClick = dataInfor => {
+    this.props.navigation.navigate('AccessedDoctorScreen', dataInfor);
   };
 
   // Navigate user to a screen containing list of doctor/pharmacist
   // that do not have access to user's database.
   addAccess = () => {
-    this.props.navigation.navigate("AddAccess");
+    this.props.navigation.navigate('AddAccess');
   };
 
   // Render each doctor and pharmacist item.
-  renderItem = (item) => {
+  renderItem = item => {
     let emailInfo;
     if (item.type == 'Doctor') {
       emailInfo = item.doctorEmail;
@@ -149,7 +149,7 @@ class DoctorScreen extends Component {
     ) {
       message = (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
           <Text style={styles.emptyText}>You have no accessed doctor</Text>
           <Text style={styles.emptyText}>and accessed pharmacist</Text>
@@ -162,14 +162,14 @@ class DoctorScreen extends Component {
           sections={[
             { title: 'Accessed Doctor', data: this.state.accessedDoctor },
             {
-              title: "Accessed Pharmacist",
+              title: 'Accessed Pharmacist',
               data: this.state.accessedPharmacist,
             },
           ]}
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => this.renderItem(item)}
           renderSectionHeader={({ section: { title } }) => {
-            if (title === "Accessed Doctor") {
+            if (title === 'Accessed Doctor') {
               return <Text style={styles.headerWhite}>{title}</Text>;
             } else {
               return <Text style={styles.header}>{title}</Text>;
@@ -182,9 +182,11 @@ class DoctorScreen extends Component {
       <View style={styles.container}>
         <Background />
         <Text style={styles.header1}>{'Doctors & Pharmacists'}</Text>
-        <Text
-          style={styles.header2}
-        >{`Doctors and pharmacists who have accessed to your medication records`}</Text>
+        <Text style={styles.header2}>
+          {
+            'Doctors and pharmacists who have accessed to your medication records'
+          }
+        </Text>
         {message}
         <TouchableOpacity style={styles.button} onPress={() => this.addAccess}>
           <Text style={{ color: '#FFF' }}>
@@ -199,7 +201,7 @@ class DoctorScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
   item: {
     backgroundColor: '#f9c2ff',
@@ -208,11 +210,11 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 18,
-    color: "#000",
+    color: '#000',
   },
   headerWhite: {
     fontSize: 18,
-    color: "#FFF",
+    color: '#FFF',
   },
   title: {
     fontSize: 24,
@@ -234,7 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 16,
     marginLeft: 8,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   name: {
     fontSize: 15,
@@ -266,4 +268,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DoctorScreen
+export default DoctorScreen;

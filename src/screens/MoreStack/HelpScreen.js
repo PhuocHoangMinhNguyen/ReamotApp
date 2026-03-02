@@ -2,8 +2,8 @@
 // Description: Frequent Asked Questions Screen (Can also be used as tutorial for new users)
 // Status: Optimized
 
-import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 class HelpScreen extends React.Component {
   render() {
@@ -326,10 +326,10 @@ class HelpScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#DEE8F1",
+    backgroundColor: '#DEE8F1',
   },
   questionSection: {
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderRadius: 10,
     marginLeft: 30,
     marginRight: 70,
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   answerSection: {
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 10,
     marginLeft: 70,
     marginRight: 30,
@@ -345,11 +345,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   questionText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 15,
   },
   answerText: {
-    color: "#FFF",
+    color: '#FFF',
     marginBottom: 10,
   },
 });

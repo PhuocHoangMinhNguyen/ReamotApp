@@ -2,13 +2,13 @@
 // Description: Show medicine details of medicines shown on HomeScreen.
 // Status: Optimized
 
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { ScrollView } from "react-native-gesture-handler";
-import Background from "../../components/Background";
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { ScrollView } from 'react-native-gesture-handler';
+import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class MedicationInformation extends React.Component {
   state = {
@@ -34,7 +34,7 @@ class MedicationInformation extends React.Component {
         </TouchableOpacity>
         <Text style={styles.header}>Medicine Information</Text>
         <View style={styles.information}>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: 'row' }}>
             <Image
               style={styles.image}
               source={
@@ -57,18 +57,18 @@ class MedicationInformation extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   back: {
-    position: "absolute",
+    position: 'absolute',
     top: 24,
     left: 32,
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: 100,
@@ -76,19 +76,19 @@ const styles = StyleSheet.create({
   },
   name: {
     flex: 1,
-    fontWeight: "600",
+    fontWeight: '600',
     marginLeft: 8,
     marginVertical: 24,
     fontSize: 20,
   },
   header: {
     marginTop: -120,
-    color: "#FFF",
-    textAlign: "center",
+    color: '#FFF',
+    textAlign: 'center',
     fontSize: 24,
   },
   information: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 5,
     padding: 16,
     marginTop: 20,

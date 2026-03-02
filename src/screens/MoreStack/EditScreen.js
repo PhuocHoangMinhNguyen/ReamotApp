@@ -4,7 +4,7 @@
 //    - Implement ScrollView
 //    - Edit User's information in Firebase Authentication
 
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -13,25 +13,25 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-} from "react-native";
+} from 'react-native';
 
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
-import UploadImage from "../../utilities/UploadImage";
-import Background from "../../components/Background";
-import { launchImageLibrary } from "react-native-image-picker";
-import MaterialIcons from "@react-native-vector-icons/material-icons";
-import Toast from "react-native-simple-toast";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import UploadImage from '../../utilities/UploadImage';
+import Background from '../../components/Background';
+import { launchImageLibrary } from 'react-native-image-picker';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import Toast from 'react-native-simple-toast';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class EditScreen extends React.Component {
   state = {
     user: {
       avatar: null,
-      name: "",
-      phoneNumber: "",
-      address: "",
+      name: '',
+      phoneNumber: '',
+      address: '',
     },
   };
 
@@ -41,9 +41,9 @@ class EditScreen extends React.Component {
     const user = this.props.uid || (auth().currentUser || {}).uid;
 
     this.unsubscribe = firestore()
-      .collection("users")
+      .collection('users')
       .doc(user)
-      .onSnapshot((doc) => this.setState({ user: doc.data() }));
+      .onSnapshot(doc => this.setState({ user: doc.data() }));
   }
 
   componentWillUnmount() {
@@ -52,7 +52,7 @@ class EditScreen extends React.Component {
 
   // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
-    const response = await launchImageLibrary({ mediaType: "photo" });
+    const response = await launchImageLibrary({ mediaType: 'photo' });
     if (response.didCancel || response.errorCode) {
       return;
     }
@@ -68,7 +68,7 @@ class EditScreen extends React.Component {
     const { name, phoneNumber, address, avatar } = this.state.user;
     let remoteUri = null;
     let db = firestore()
-      .collection("users")
+      .collection('users')
       .doc((auth().currentUser || {}).uid);
     db.update({
       avatar: null,
@@ -80,12 +80,12 @@ class EditScreen extends React.Component {
       // Store the avatar in Firebase Storage
       remoteUri = await UploadImage.uploadPhotoAsync(
         avatar,
-        `users/${(auth().currentUser || {}).uid}`
+        `users/${(auth().currentUser || {}).uid}`,
       );
       // Then Store the avatar in Cloud Firestore
       db.set({ avatar: remoteUri }, { merge: true });
     }
-    Toast.show("Your Account Details is editted !");
+    Toast.show('Your Account Details is editted !');
   };
 
   render() {
@@ -119,7 +119,7 @@ class EditScreen extends React.Component {
               <Text style={styles.inputTitle}>Full Name</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(name) =>
+                onChangeText={name =>
                   this.setState({ user: { ...this.state.user, name } })
                 }
                 value={this.state.user.name}
@@ -131,7 +131,7 @@ class EditScreen extends React.Component {
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
-                onChangeText={(phoneNumber) =>
+                onChangeText={phoneNumber =>
                   this.setState({ user: { ...this.state.user, phoneNumber } })
                 }
                 value={this.state.user.phoneNumber}
@@ -141,7 +141,7 @@ class EditScreen extends React.Component {
               <Text style={styles.inputTitle}>Address</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(address) =>
+                onChangeText={address =>
                   this.setState({ user: { ...this.state.user, address } })
                 }
                 value={this.state.user.address}
@@ -150,7 +150,7 @@ class EditScreen extends React.Component {
           </View>
           <TouchableOpacity onPress={() => this.editProfile}>
             <View style={styles.button}>
-              <Text style={{ color: "#FFF" }}>Save profile</Text>
+              <Text style={{ color: '#FFF' }}>Save profile</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>
@@ -162,17 +162,17 @@ class EditScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   header: {
-    alignSelf: "center",
-    color: "#FFF",
+    alignSelf: 'center',
+    color: '#FFF',
     fontSize: 20,
     marginTop: -160,
     marginBottom: 40,
   },
   opacity: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginLeft: 40,
   },
   avatar: {
@@ -181,45 +181,45 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   name: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginEnd: 30,
     //marginTop: -30,
     fontSize: 20,
-    color: "#000000",
+    color: '#000000',
   },
   form: {
     marginHorizontal: 30,
     marginVertical: 24,
   },
   inputTitle: {
-    color: "#8A8F9E",
+    color: '#8A8F9E',
     fontSize: 10,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   input: {
-    borderBottomColor: "#8A8F9E",
+    borderBottomColor: '#8A8F9E',
     borderBottomWidth: StyleSheet.hairlineWidth,
     height: 40,
     fontSize: 15,
-    color: "#161F3D",
+    color: '#161F3D',
   },
   button: {
-    alignSelf: "flex-end",
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40,
     width: 100,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginHorizontal: 30,
   },
   icon: {
-    position: "absolute",
+    position: 'absolute',
     top: 110,
     left: 110,
     width: 35,
     height: 35,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 15,
   },
 });

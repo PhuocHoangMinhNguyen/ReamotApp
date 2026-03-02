@@ -3,7 +3,7 @@
 // and medication taking history for the day
 // Status: Optimized
 
-import React from "react";
+import React from 'react';
 import {
   Text,
   StyleSheet,
@@ -11,14 +11,14 @@ import {
   Image,
   TouchableOpacity,
   View,
-} from "react-native";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import moment from "moment";
-import Background from "../../components/Background";
-import TreeImage from "../../components/TreeImage";
+} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import moment from 'moment';
+import Background from '../../components/Background';
+import TreeImage from '../../components/TreeImage';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class HomeScreen extends React.Component {
   state = {
@@ -31,15 +31,15 @@ class HomeScreen extends React.Component {
 
   unsubscribe = null;
 
-  historyCollection = (tempMedicine) => {
+  historyCollection = tempMedicine => {
     // Get all the history of taking medicine for today.
     firestore()
-      .collection("history")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("date", "==", moment().format("MMMM Do YYYY"))
-      .onSnapshot((querySnapshot) => {
+      .collection('history')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment().format('MMMM Do YYYY'))
+      .onSnapshot(querySnapshot => {
         let tempHistory = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           for (let i = 0; i < tempMedicine.length; i++) {
             if (tempMedicine[i].name == documentSnapshot.data().medicine) {
               tempHistory.push({
@@ -56,16 +56,16 @@ class HomeScreen extends React.Component {
       });
   };
 
-  missCollection = (tempMedicine) => {
+  missCollection = tempMedicine => {
     // Get all the history of taking medicine, that are missed, for today.
     firestore()
-      .collection("history")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("date", "==", moment().format("MMMM Do YYYY"))
-      .where("status", "==", "missed")
-      .onSnapshot((querySnapshot) => {
+      .collection('history')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('date', '==', moment().format('MMMM Do YYYY'))
+      .where('status', '==', 'missed')
+      .onSnapshot(querySnapshot => {
         let tempHistory = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           for (let i = 0; i < tempMedicine.length; i++) {
             if (tempMedicine[i].name == documentSnapshot.data().medicine) {
               tempHistory.push({
@@ -82,14 +82,14 @@ class HomeScreen extends React.Component {
       });
   };
 
-  reminderCollection = (tempMedicine) => {
+  reminderCollection = tempMedicine => {
     // Get all the reminders
     firestore()
-      .collection("reminder")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .onSnapshot((querySnapshot) => {
+      .collection('reminder')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .onSnapshot(querySnapshot => {
         let tempReminder = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           for (let i = 0; i < tempMedicine.length; i++) {
             if (tempMedicine[i].name == documentSnapshot.data().medicine) {
               tempReminder.push({
@@ -109,10 +109,10 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     // Get the medicine information
     this.unsubscribe = firestore()
-      .collection("medicine")
-      .onSnapshot((querySnapshot) => {
+      .collection('medicine')
+      .onSnapshot(querySnapshot => {
         let tempMedicine = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           tempMedicine.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
@@ -129,7 +129,7 @@ class HomeScreen extends React.Component {
   }
 
   // Information appears on each item on "Upcoming Reminder" List
-  renderReminder = (item) => {
+  renderReminder = item => {
     let dataInfor = {
       image: item.image,
       name: item.medicine,
@@ -144,7 +144,7 @@ class HomeScreen extends React.Component {
         <TouchableOpacity
           style={styles.feedItem}
           onPress={() => {
-            this.props.navigation.navigate("MedicationInformation", dataInfor);
+            this.props.navigation.navigate('MedicationInformation', dataInfor);
           }}
         >
           <Image
@@ -153,7 +153,7 @@ class HomeScreen extends React.Component {
           />
           <Text style={styles.name}>{item.medicine}</Text>
           <Text style={styles.time}>
-            {moment(item.time.toDate()).format("hh:mm a")}
+            {moment(item.time.toDate()).format('hh:mm a')}
           </Text>
         </TouchableOpacity>
       );
@@ -164,7 +164,7 @@ class HomeScreen extends React.Component {
   };
 
   // Information appears on each item on "Medicines Taken" List
-  renderHistory = (item) => {
+  renderHistory = item => {
     let dataInfor = {
       image: item.image,
       name: item.medicine,
@@ -173,9 +173,9 @@ class HomeScreen extends React.Component {
 
     return (
       <TouchableOpacity
-        style={item.status == "taken" ? styles.feedTaken : styles.feedMissed}
+        style={item.status == 'taken' ? styles.feedTaken : styles.feedMissed}
         onPress={() => {
-          this.props.navigation.navigate("MedicationInformation", dataInfor);
+          this.props.navigation.navigate('MedicationInformation', dataInfor);
         }}
       >
         <Image
@@ -183,14 +183,14 @@ class HomeScreen extends React.Component {
           source={item.image ? { uri: item.image } : tempAvatar}
         />
         <Text
-          style={item.status == "taken" ? styles.nameTaken : styles.nameMissed}
+          style={item.status == 'taken' ? styles.nameTaken : styles.nameMissed}
         >
           {item.medicine}
         </Text>
         <Text
-          style={item.status == "taken" ? styles.timeTaken : styles.timeMissed}
+          style={item.status == 'taken' ? styles.timeTaken : styles.timeMissed}
         >
-          {moment(item.startTime.toDate()).format("hh:mm a")}
+          {moment(item.startTime.toDate()).format('hh:mm a')}
         </Text>
       </TouchableOpacity>
     );
@@ -227,8 +227,8 @@ class HomeScreen extends React.Component {
             style={{
               flex: 1,
               marginTop: -150,
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <Text style={styles.emptyText}>You have no active reminder</Text>
@@ -273,39 +273,39 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   feed: {
     marginHorizontal: 8,
   },
   feedItem: {
-    backgroundColor: "#FFD700",
+    backgroundColor: '#FFD700',
     borderRadius: 10,
     padding: 7,
     margin: 4,
     width: 115,
     marginVertical: 8,
-    flexDirection: "column",
+    flexDirection: 'column',
     borderWidth: 1,
   },
   feedTaken: {
-    backgroundColor: "#004481",
+    backgroundColor: '#004481',
     borderRadius: 10,
     padding: 7,
     margin: 4,
     width: 115,
     marginVertical: 8,
-    flexDirection: "column",
+    flexDirection: 'column',
     borderWidth: 1,
   },
   feedMissed: {
-    backgroundColor: "#FF0000",
+    backgroundColor: '#FF0000',
     borderRadius: 10,
     padding: 7,
     margin: 4,
     width: 115,
     marginVertical: 8,
-    flexDirection: "column",
+    flexDirection: 'column',
     borderWidth: 1,
   },
   avatar: {
@@ -316,55 +316,55 @@ const styles = StyleSheet.create({
   name: {
     flex: 1,
     fontSize: 15,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   nameMissed: {
     flex: 1,
     fontSize: 15,
-    fontWeight: "500",
-    color: "white",
+    fontWeight: '500',
+    color: 'white',
   },
   nameTaken: {
     flex: 1,
     fontSize: 15,
-    fontWeight: "500",
-    color: "white",
+    fontWeight: '500',
+    color: 'white',
   },
   time: {
     marginBottom: 10,
     fontSize: 15,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   timeTaken: {
     marginBottom: 10,
     fontSize: 15,
-    fontWeight: "500",
-    color: "white",
+    fontWeight: '500',
+    color: 'white',
   },
   timeMissed: {
     marginBottom: 10,
     fontSize: 15,
-    fontWeight: "500",
-    color: "white",
+    fontWeight: '500',
+    color: 'white',
   },
   emptyText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 20,
   },
   titleView: {
     marginTop: 30,
-    alignItems: "center",
+    alignItems: 'center',
   },
   title: {
     fontSize: 20,
-    color: "#FFF",
+    color: '#FFF',
   },
   chapterView: {
     marginVertical: 6,
     marginLeft: 12,
   },
   chapter: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 16,
   },
 });

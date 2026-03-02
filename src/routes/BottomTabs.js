@@ -3,17 +3,17 @@
 //  The Profile tab opens the right-side drawer instead of navigating.
 // Status: Updated for react-navigation v7
 
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Ionicons from "@react-native-vector-icons/ionicons";
-import Material from "@react-native-vector-icons/material-design-icons";
+import Ionicons from '@react-native-vector-icons/ionicons';
+import Material from '@react-native-vector-icons/material-design-icons';
 
-import HomeStack from "./HomeStack";
-import CalendarStack from "./CalendarStack";
-import MedicineStack from "./MedicineStack";
-import DoctorStack from "./DoctorStack";
-import MoreStack from "./MoreStack";
+import HomeStack from './HomeStack';
+import CalendarStack from './CalendarStack';
+import MedicineStack from './MedicineStack';
+import DoctorStack from './DoctorStack';
+import MoreStack from './MoreStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,8 +23,8 @@ export default function BottomTabs() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: "#161F3D",
-        tabBarInactiveTintColor: "#B8BBC4",
+        tabBarActiveTintColor: '#161F3D',
+        tabBarInactiveTintColor: '#B8BBC4',
       }}
     >
       <Tab.Screen
@@ -72,9 +72,9 @@ export default function BottomTabs() {
           ),
         }}
         listeners={({ navigation }) => ({
-          tabPress: (e) => {
+          tabPress: e => {
             e.preventDefault();
-            navigation.getParent("Drawer")?.openDrawer();
+            navigation.getParent('Drawer')?.openDrawer();
           },
         })}
       />

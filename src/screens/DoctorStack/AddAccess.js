@@ -2,7 +2,7 @@
 // Description: Choose a doctor/pharmacist to give him/her access to user medical details.
 // Status: In development
 
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -11,18 +11,18 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-} from "react-native";
-import { SearchBar } from "react-native-elements";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
+} from 'react-native';
+import { SearchBar } from 'react-native-elements';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class AddAccess extends React.Component {
   state = {
     loading: true,
     doc_phar: [],
-    text: "",
+    text: '',
     myArray: [],
   };
 
@@ -36,9 +36,9 @@ class AddAccess extends React.Component {
     let tempDoctorEmail = [];
 
     this.unsubscribe1 = firestore()
-      .collection("users")
+      .collection('users')
       .doc((auth().currentUser || {}).uid)
-      .onSnapshot((documentSnapshot) => {
+      .onSnapshot(documentSnapshot => {
         if (documentSnapshot.data().pharmacistList != null) {
           tempPharmacistEmail = documentSnapshot.data().pharmacistList;
         }
@@ -50,9 +50,9 @@ class AddAccess extends React.Component {
     let temp = [];
     // push doctor data into temp
     this.unsubscribe2 = firestore()
-      .collection("doctor")
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+      .collection('doctor')
+      .onSnapshot(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
           let found = false;
           for (let i = 0; i < tempDoctorEmail.length; i++) {
             if (documentSnapshot.data().doctorEmail == tempDoctorEmail[i]) {
@@ -63,7 +63,7 @@ class AddAccess extends React.Component {
             temp.push({
               ...documentSnapshot.data(),
               key: documentSnapshot.id,
-              type: "Doctor",
+              type: 'Doctor',
             });
           }
         });
@@ -71,9 +71,9 @@ class AddAccess extends React.Component {
 
     // push pharmacist data into temp
     this.unsubscribe3 = firestore()
-      .collection("pharmacist")
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+      .collection('pharmacist')
+      .onSnapshot(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
           let found = false;
           for (let i = 0; i < tempPharmacistEmail.length; i++) {
             if (
@@ -86,7 +86,7 @@ class AddAccess extends React.Component {
             temp.push({
               ...documentSnapshot.data(),
               key: documentSnapshot.id,
-              type: "Pharmacist",
+              type: 'Pharmacist',
             });
           }
         });
@@ -107,14 +107,14 @@ class AddAccess extends React.Component {
 
   // Click on each item in flatlist will lead user to DoctorInfoScreen
   // to show that doctor/pharmacist information with some options.
-  handleClick = (dataInfor) => {
-    this.props.navigation.navigate("DoctorInfoScreen", dataInfor);
+  handleClick = dataInfor => {
+    this.props.navigation.navigate('DoctorInfoScreen', dataInfor);
   };
 
   // Information appears on each item.
-  renderItem = (item) => {
+  renderItem = item => {
     let emailInfo;
-    if (item.type == "Doctor") {
+    if (item.type == 'Doctor') {
       emailInfo = item.doctorEmail;
     } else {
       emailInfo = item.pharmacistEmail;
@@ -151,7 +151,7 @@ class AddAccess extends React.Component {
   searchFilterFunction(newText) {
     const newData = this.state.doc_phar.filter(function (item) {
       //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+      const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
       const textData = newText.toUpperCase();
       return itemData.indexOf(textData) > -1;
     });
@@ -169,7 +169,7 @@ class AddAccess extends React.Component {
             placeholder="Search Doctor/ Pharmacist..."
             lightTheme
             round
-            onChangeText={(newText) => this.searchFilterFunction(newText)}
+            onChangeText={newText => this.searchFilterFunction(newText)}
             value={this.state.text}
           />
         </View>
@@ -186,21 +186,21 @@ class AddAccess extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#DEE8F1",
+    backgroundColor: '#DEE8F1',
   },
   header: {
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: "#D8D9DB",
+    borderBottomColor: '#D8D9DB',
   },
   feed: {
     marginHorizontal: 16,
   },
   feedItem: {
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderRadius: 5,
     padding: 8,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginVertical: 8,
   },
   avatar: {
@@ -209,12 +209,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 16,
     marginLeft: 8,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   name: {
     fontSize: 15,
-    fontWeight: "500",
-    color: "#454D65",
+    fontWeight: '500',
+    color: '#454D65',
   },
 });
 

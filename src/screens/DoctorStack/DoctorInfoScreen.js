@@ -3,16 +3,16 @@
 // who doesn't have access to user medical details
 // Status: In development
 
-import React from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import Toast from "react-native-simple-toast";
-import { ConfirmDialog } from "react-native-simple-dialogs";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import Background from "../../components/Background";
+import React from 'react';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import Toast from 'react-native-simple-toast';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class DoctorInfoScreen extends React.Component {
   state = {
@@ -36,51 +36,51 @@ class DoctorInfoScreen extends React.Component {
   handleYes = () => {
     const { doctor } = this.state;
     // If the target is a doctor
-    if (doctor.type == "Doctor") {
+    if (doctor.type == 'Doctor') {
       // Add the doctor email to user's doctorList
       firestore()
-        .collection("users")
+        .collection('users')
         .doc((auth().currentUser || {}).uid)
         .update({
           doctorList: firestore.FieldValue.arrayUnion(doctor.email),
         });
       // Add user's email to doctor's patientList
       firestore()
-        .collection("doctor")
+        .collection('doctor')
         .doc(doctor.id)
         .update({
           patientList: firestore.FieldValue.arrayUnion(
-            auth().currentUser.email
+            auth().currentUser.email,
           ),
         });
     }
     // If the target is a pharmacist
-    if (doctor.type == "Pharmacist") {
+    if (doctor.type == 'Pharmacist') {
       // Add the pharmacist email to user's pharmacistList
       firestore()
-        .collection("users")
+        .collection('users')
         .doc((auth().currentUser || {}).uid)
         .update({
           pharmacistList: firestore.FieldValue.arrayUnion(doctor.email),
         });
       // Add user's email to pharmacist's patientList
       firestore()
-        .collection("pharmacist")
+        .collection('pharmacist')
         .doc(doctor.id)
         .update({
           patientList: firestore.FieldValue.arrayUnion(
-            auth().currentUser.email
+            auth().currentUser.email,
           ),
         });
     }
     this.setState({ dialogVisible: false });
-    Toast.show("Your request is confirmed !");
-    this.props.navigation.navigate("DoctorScreen");
+    Toast.show('Your request is confirmed !');
+    this.props.navigation.navigate('DoctorScreen');
   };
 
   render() {
     let header;
-    if (this.state.doctor.type == "Doctor") {
+    if (this.state.doctor.type == 'Doctor') {
       header = <Text style={styles.header}>Doctor Information</Text>;
     } else {
       header = <Text style={styles.header}>Pharmacist Information</Text>;
@@ -111,7 +111,7 @@ class DoctorInfoScreen extends React.Component {
           style={styles.button}
           onPress={() => this.handleGiveAccessToDoctor}
         >
-          <Text style={{ color: "#FFF" }}>Give access of medical details</Text>
+          <Text style={{ color: '#FFF' }}>Give access of medical details</Text>
         </TouchableOpacity>
         <ConfirmDialog
           visible={this.state.dialogVisible}
@@ -119,16 +119,16 @@ class DoctorInfoScreen extends React.Component {
           message="Are you sure?"
           onTouchOutside={() => this.setState({ dialogVisible: false })}
           positiveButton={{
-            title: "YES",
+            title: 'YES',
             onPress: () => {
               this.handleYes();
             },
           }}
           negativeButton={{
-            title: "NO",
+            title: 'NO',
             onPress: () => {
               this.setState({ dialogVisible: false });
-              Toast.show("Your request is canceled !");
+              Toast.show('Your request is canceled !');
             },
           }}
         />
@@ -140,42 +140,42 @@ class DoctorInfoScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   back: {
-    position: "absolute",
+    position: 'absolute',
     top: 24,
     left: 32,
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
-    alignSelf: "center",
-    color: "#FFF",
+    alignSelf: 'center',
+    color: '#FFF',
     fontSize: 20,
     marginTop: -150,
   },
   information: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 5,
     padding: 16,
     marginVertical: 12,
     marginHorizontal: 30,
-    alignItems: "center",
+    alignItems: 'center',
   },
   image: {
     width: 100,
     height: 100,
   },
   button: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginVertical: 12,
     marginHorizontal: 30,

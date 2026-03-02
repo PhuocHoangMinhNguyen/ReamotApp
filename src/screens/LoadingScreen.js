@@ -4,15 +4,15 @@
 // based on user's state (null or not null)
 // Status: Optimized
 
-import React from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import auth from "@react-native-firebase/auth";
+import React from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 class LoadingScreen extends React.Component {
   componentDidMount() {
-    auth().onAuthStateChanged((user) => {
+    auth().onAuthStateChanged(user => {
       this.props.navigation.navigate(
-        user ? (user.emailVerified ? "App" : "Verify") : "AuthStack"
+        user ? (user.emailVerified ? 'App' : 'Verify') : 'AuthStack',
       );
     });
   }
@@ -30,8 +30,8 @@ class LoadingScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -2,27 +2,27 @@
 // Description: Delete all reminders when logging out,
 // and set all reminders when logging in
 // Status: Optimized
-import ReactNativeAN from "react-native-alarm-notification";
-import firestore from "@react-native-firebase/firestore";
-import moment from "moment";
+import ReactNativeAN from 'react-native-alarm-notification';
+import firestore from '@react-native-firebase/firestore';
+import moment from 'moment';
 
 // Notification Data Structure.
 const alarmNotifData = {
-  schedule_type: "once",
-  channel: "reminder",
+  schedule_type: 'once',
+  channel: 'reminder',
   loop_sound: true,
-  message: "Take your Medicine",
+  message: 'Take your Medicine',
 };
 
 class UserReminders {
   // Delete All Existing Reminders on the phone when logging out
-  deleteReminders = async (patientEmail) => {
+  deleteReminders = async patientEmail => {
     firestore()
-      .collection("reminder")
-      .where("patientEmail", "==", patientEmail)
+      .collection('reminder')
+      .where('patientEmail', '==', patientEmail)
       .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+      .then(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
           ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString());
         });
       });
@@ -31,48 +31,48 @@ class UserReminders {
   // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
   findIdAN = async (alarm_id, id, time) => {
     const alarm = await ReactNativeAN.getScheduledAlarms();
-    let idAN = "";
+    let idAN = '';
     for (let i = 0; i < alarm.length; i++) {
       if (alarm[i].alarmId == alarm_id) {
         idAN = alarm[i].id;
       }
     }
     // This is having problem because you cannot set a firestore inside a firestore.
-    firestore().collection("reminder").doc(id).update({
+    firestore().collection('reminder').doc(id).update({
       idAN: idAN,
       alarmId: alarm_id,
       time: time,
     });
   };
 
-  setReminders = async (patientEmail) => {
+  setReminders = async patientEmail => {
     // Double check if there is any alarm working before logging in
     const alarm = await ReactNativeAN.getScheduledAlarms();
     console.log(alarm);
 
     let temp = [];
     firestore()
-      .collection("medicine")
+      .collection('medicine')
       .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+      .then(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
           temp.push(documentSnapshot.data());
         });
       })
       .then(() => {
         firestore()
-          .collection("reminder")
-          .where("patientEmail", "==", patientEmail)
+          .collection('reminder')
+          .where('patientEmail', '==', patientEmail)
           .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((documentSnapshot) => {
+          .then(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
               const alarmID = Math.floor(Math.random() * 10000).toString();
               const reminderTime = documentSnapshot.data().time.toDate();
               while (reminderTime < Date.now()) {
                 reminderTime.setDate(reminderTime.getDate() + 1);
               }
               console.log(moment(reminderTime).format());
-              temp.forEach((medi) => {
+              temp.forEach(medi => {
                 if (medi.name == documentSnapshot.data().medicine) {
                   const details = {
                     ...alarmNotifData,
@@ -93,7 +93,7 @@ class UserReminders {
                   this.findIdAN(
                     details.alarm_id,
                     documentSnapshot.id,
-                    reminderTime
+                    reminderTime,
                   );
                 }
               });

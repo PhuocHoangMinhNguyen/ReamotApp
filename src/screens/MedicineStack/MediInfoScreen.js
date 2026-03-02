@@ -18,8 +18,8 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import ViewMoreText from 'react-native-view-more-text';
 import Toast from 'react-native-simple-toast';
-import Background from "../../components/Background";
-import moment from "moment";
+import Background from '../../components/Background';
+import moment from 'moment';
 
 var tempAvatar = require('../../assets/images/tempAvatar.png');
 
@@ -46,13 +46,13 @@ class MediInfoScreen extends React.Component {
 
     // Get Medicine Number of Pills
     this.unsubscribe1 = firestore()
-      .collection("medicinePills")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("medicine", "==", this.props.route.params.name)
-      .onSnapshot((querySnapshot) => {
-        let temp = ''
-        let tempID = ''
-        querySnapshot.forEach((documentSnapshot) => {
+      .collection('medicinePills')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('medicine', '==', this.props.route.params.name)
+      .onSnapshot(querySnapshot => {
+        let temp = '';
+        let tempID = '';
+        querySnapshot.forEach(documentSnapshot => {
           temp = documentSnapshot.data().pills;
           tempID = documentSnapshot.id;
         });
@@ -66,14 +66,14 @@ class MediInfoScreen extends React.Component {
     // Get Prescription data from Cloud Firestore to know number of capsules taken per time,
     // and number of times to take medicine per day.
     this.unsubscribe2 = firestore()
-      .collection("prescription")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("name", "==", this.props.route.params.name)
-      .onSnapshot((querySnapshot) => {
+      .collection('prescription')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('name', '==', this.props.route.params.name)
+      .onSnapshot(querySnapshot => {
         let tempValue = 0;
         let tempValue2 = 0;
-        let tempValue3 = ''
-        querySnapshot.forEach((documentSnapshot) => {
+        let tempValue3 = '';
+        querySnapshot.forEach(documentSnapshot => {
           tempValue = documentSnapshot.data().times;
           tempValue2 = documentSnapshot.data().number;
           tempValue3 = documentSnapshot.data().type;
@@ -83,18 +83,18 @@ class MediInfoScreen extends React.Component {
             times: tempValue,
             number: tempValue2,
             type: tempValue3,
-          }
+          },
         });
       });
 
     // Get Reminder data of that patient and that medicine.
     this.unsubscribe3 = firestore()
-      .collection("reminder")
-      .where("patientEmail", "==", auth().currentUser.email)
-      .where("medicine", "==", this.props.route.params.name)
-      .onSnapshot((querySnapshot) => {
+      .collection('reminder')
+      .where('patientEmail', '==', auth().currentUser.email)
+      .where('medicine', '==', this.props.route.params.name)
+      .onSnapshot(querySnapshot => {
         let temp = [];
-        querySnapshot.forEach((documentSnapshot) => {
+        querySnapshot.forEach(documentSnapshot => {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
@@ -128,7 +128,7 @@ class MediInfoScreen extends React.Component {
 
   // If the prescription.type is Daily, navigate to 'Daily Change Reminder'
   // If the prescription.type is Weekly, navigate to 'Weekly Change Reminder'
-  handleChangeReminder = (item) => {
+  handleChangeReminder = item => {
     if (this.state.prescription.type == 'Daily') {
       this.props.navigation.navigate('ChangeReminder', {
         medicine: this.props.route.params,
@@ -145,7 +145,7 @@ class MediInfoScreen extends React.Component {
   // Handle View More Text in medicine's description
   renderViewMore(onPress) {
     return (
-      <Text onPress={onPress} style={{ color: "#018ABE" }}>
+      <Text onPress={onPress} style={{ color: '#018ABE' }}>
         View More
       </Text>
     );
@@ -154,7 +154,7 @@ class MediInfoScreen extends React.Component {
   // Handle View Less Text in medicine's description
   renderViewLess(onPress) {
     return (
-      <Text onPress={onPress} style={{ color: "#018ABE" }}>
+      <Text onPress={onPress} style={{ color: '#018ABE' }}>
         View less
       </Text>
     );
@@ -182,7 +182,7 @@ class MediInfoScreen extends React.Component {
       const value =
         parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10);
       firestore()
-        .collection("medicinePills")
+        .collection('medicinePills')
         .doc(this.state.firebaseID)
         .update({
           pills: value,
@@ -199,7 +199,7 @@ class MediInfoScreen extends React.Component {
   // If the number of reminder set by that patient for that medicine is equal or larger than
   // times the patient has to take that medicine per day according to "prescription" document in Firebase,
   // all emptyItem will be replace by nonEmptyItem
-  renderItem = (item) => {
+  renderItem = item => {
     if (item == 'null') {
       return (
         <TouchableOpacity
@@ -213,7 +213,7 @@ class MediInfoScreen extends React.Component {
     return (
       <View style={styles.prescription}>
         <Text style={styles.time}>
-          {moment(item.time.toDate()).format("hh:mm a")}
+          {moment(item.time.toDate()).format('hh:mm a')}
         </Text>
         <TouchableOpacity
           style={styles.showPicker}
@@ -251,7 +251,7 @@ class MediInfoScreen extends React.Component {
             placeholder="   "
             autoCapitalize="none"
             keyboardType="numeric"
-            onChangeText={(addPills) => this.setState({ add: addPills })}
+            onChangeText={addPills => this.setState({ add: addPills })}
             value={this.state.add}
           />
           <Text>capsule(s)</Text>
@@ -273,7 +273,7 @@ class MediInfoScreen extends React.Component {
             placeholder="   "
             autoCapitalize="none"
             keyboardType="numeric"
-            onChangeText={(addPills) => this.setState({ add: addPills })}
+            onChangeText={addPills => this.setState({ add: addPills })}
             value={this.state.add}
           />
           <Text>capsule(s)</Text>
@@ -290,14 +290,14 @@ class MediInfoScreen extends React.Component {
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
-            Time to refill:{" "}
+            Time to refill:{' '}
           </Text>
           <TextInput
             style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
             placeholder="   "
             autoCapitalize="none"
             keyboardType="numeric"
-            onChangeText={(addPills) => this.setState({ add: addPills })}
+            onChangeText={addPills => this.setState({ add: addPills })}
             value={this.state.add}
           />
           <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
@@ -316,7 +316,7 @@ class MediInfoScreen extends React.Component {
           placeholder="Number of Capsules in the container"
           autoCapitalize="none"
           keyboardType="numeric"
-          onChangeText={(pills) => this.setState({ medicinePills: pills })}
+          onChangeText={pills => this.setState({ medicinePills: pills })}
           value={this.state.medicinePills}
         />
         <TouchableOpacity onPress={() => this.addMedicinePills()}>
@@ -327,7 +327,7 @@ class MediInfoScreen extends React.Component {
 
     let message;
     // If no info about number of pills is stored
-    if (this.state.text == "") {
+    if (this.state.text == '') {
       message = empty;
     }
     // If the number of pills is lower than 0
@@ -403,7 +403,7 @@ class MediInfoScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   back: {
     position: 'absolute',
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   prescription: {
     backgroundColor: '#DDD',
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   capsules: {
     backgroundColor: '#DDD',
@@ -464,15 +464,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   time: {
     fontSize: 18,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   repeat: {
     fontSize: 18,
-  }
+  },
 });
 
-export default MediInfoScreen
+export default MediInfoScreen;

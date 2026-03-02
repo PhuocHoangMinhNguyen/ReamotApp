@@ -2,9 +2,9 @@
 // Description: Allow patient to view application terms of services
 // Status: Optimized
 
-import React from "react";
-import { Text, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class TermsServices extends React.Component {
   render() {
@@ -59,7 +59,7 @@ class TermsServices extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#DEE8F1",
+    backgroundColor: '#DEE8F1',
   },
   margin: {
     marginHorizontal: 30,
@@ -68,13 +68,13 @@ const styles = StyleSheet.create({
   marginBold: {
     marginHorizontal: 30,
     marginVertical: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   marginHeader: {
     marginHorizontal: 30,
     marginTop: 50,
     marginBottom: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 22,
   },
   marginBottom: {

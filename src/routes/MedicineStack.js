@@ -3,20 +3,20 @@
 //      NewReminder, ChangeReminder, WeeklyNewReminder, WeeklyChangeReminder
 // Status: Updated for react-navigation v7
 
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import MedicineScreen from "../screens/MedicineStack/MedicineScreen";
-import AddMedicine from "../screens/MedicineStack/AddMedicine";
-import MediInfoScreen from "../screens/MedicineStack/MediInfoScreen";
-import BarcodeScan from "../screens/MedicineStack/BarcodeScan";
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import MedicineScreen from '../screens/MedicineStack/MedicineScreen';
+import AddMedicine from '../screens/MedicineStack/AddMedicine';
+import MediInfoScreen from '../screens/MedicineStack/MediInfoScreen';
+import BarcodeScan from '../screens/MedicineStack/BarcodeScan';
 
 // Daily Reminder
-import NewReminder from "../screens/MedicineStack/DailyReminder/NewReminder";
-import ChangeReminder from "../screens/MedicineStack/DailyReminder/ChangeReminder";
+import NewReminder from '../screens/MedicineStack/DailyReminder/NewReminder';
+import ChangeReminder from '../screens/MedicineStack/DailyReminder/ChangeReminder';
 
 // Weekly Reminder
-import WeeklyNewReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyNewReminder";
-import WeeklyChangeReminder from "../screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder";
+import WeeklyNewReminder from '../screens/MedicineStack/WeeklyReminder/WeeklyNewReminder';
+import WeeklyChangeReminder from '../screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder';
 
 const Stack = createStackNavigator();
 

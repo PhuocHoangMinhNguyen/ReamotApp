@@ -3,7 +3,7 @@
 // who already has access to user medical details.
 // Status: Optimized
 
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -12,17 +12,17 @@ import {
   TextInput,
   Image,
   Platform,
-} from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import Toast from "react-native-simple-toast";
-import { ConfirmDialog } from "react-native-simple-dialogs";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import moment from "moment";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import Background from "../../components/Background";
+} from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import Toast from 'react-native-simple-toast';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import Background from '../../components/Background';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class AppointmentMaker extends React.Component {
   state = {
@@ -32,7 +32,7 @@ class AppointmentMaker extends React.Component {
     testDate: new Date(Date.now()),
     showTime: false,
     testTime: new Date(Date.now()),
-    reason: "",
+    reason: '',
   };
 
   componentDidMount() {
@@ -57,7 +57,7 @@ class AppointmentMaker extends React.Component {
     const { testDate } = this.state;
     let currentDate = selectedDate || testDate;
     this.setState({
-      showDate: Platform.OS === "ios",
+      showDate: Platform.OS === 'ios',
       testDate: currentDate,
     });
   };
@@ -67,7 +67,7 @@ class AppointmentMaker extends React.Component {
     const { testTime } = this.state;
     let currentTime = selectedTime || testTime;
     this.setState({
-      showTime: Platform.OS === "ios",
+      showTime: Platform.OS === 'ios',
       testTime: currentTime,
     });
   };
@@ -80,10 +80,10 @@ class AppointmentMaker extends React.Component {
   // If user confirms to make the appointment
   handleYes = () => {
     const time = this.calculateTime();
-    console.log("Time: " + time);
+    console.log('Time: ' + time);
     this.setState({ dialogVisible: false });
     firestore()
-      .collection("appointment")
+      .collection('appointment')
       .add({
         doctor: this.state.doctor.name,
         time: time,
@@ -91,7 +91,7 @@ class AppointmentMaker extends React.Component {
         patientEmail: auth().currentUser.email,
       })
       .then(() => {
-        Toast.show("Your appointment is confirmed !");
+        Toast.show('Your appointment is confirmed !');
         this.props.navigation.goBack();
       });
   };
@@ -142,10 +142,10 @@ class AppointmentMaker extends React.Component {
             style={styles.pickerButton}
             onPress={this.showModeDate}
           >
-            <Text style={{ color: "#FFF" }}>Choose a Day!</Text>
+            <Text style={{ color: '#FFF' }}>Choose a Day!</Text>
           </TouchableOpacity>
-          <Text style={{ alignSelf: "center" }}>
-            {moment(this.state.testDate).format("MMM Do YYYY")}
+          <Text style={{ alignSelf: 'center' }}>
+            {moment(this.state.testDate).format('MMM Do YYYY')}
           </Text>
         </View>
         {this.state.showDate && (
@@ -159,10 +159,10 @@ class AppointmentMaker extends React.Component {
             style={styles.pickerButton}
             onPress={this.showModeTime}
           >
-            <Text style={{ color: "#FFF" }}>Choose a Time!</Text>
+            <Text style={{ color: '#FFF' }}>Choose a Time!</Text>
           </TouchableOpacity>
-          <Text style={{ alignSelf: "center" }}>
-            {moment(this.state.testTime).format("hh:mm a")}
+          <Text style={{ alignSelf: 'center' }}>
+            {moment(this.state.testTime).format('hh:mm a')}
           </Text>
         </View>
         {this.state.showTime && (
@@ -176,7 +176,7 @@ class AppointmentMaker extends React.Component {
           <Text style={styles.inputTitle}>Reason</Text>
           <TextInput
             style={styles.input}
-            onChangeText={(reason) => this.setState({ reason: reason })}
+            onChangeText={reason => this.setState({ reason: reason })}
             value={this.state.reason}
           />
         </View>
@@ -184,7 +184,7 @@ class AppointmentMaker extends React.Component {
           style={styles.button}
           onPress={() => this.handlePress}
         >
-          <Text style={{ color: "#FFF" }}>Set Appointment</Text>
+          <Text style={{ color: '#FFF' }}>Set Appointment</Text>
         </TouchableOpacity>
         <ConfirmDialog
           visible={this.state.dialogVisible}
@@ -192,14 +192,14 @@ class AppointmentMaker extends React.Component {
           message="Are you sure?"
           onTouchOutside={() => this.setState({ dialogVisible: false })}
           positiveButton={{
-            title: "YES",
+            title: 'YES',
             onPress: () => this.handleYes(),
           }}
           negativeButton={{
-            title: "NO",
+            title: 'NO',
             onPress: () => {
               this.setState({ dialogVisible: false });
-              Toast.show("Your request is canceled !");
+              Toast.show('Your request is canceled !');
             },
           }}
         />
@@ -211,7 +211,7 @@ class AppointmentMaker extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   back: {
     marginTop: -160,
@@ -219,71 +219,71 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
-    color: "#FFF",
+    color: '#FFF',
     fontSize: 24,
     marginBottom: 8,
-    textAlign: "center",
+    textAlign: 'center',
   },
   header1: {
-    color: "#FFF",
+    color: '#FFF',
     marginBottom: 20,
     marginHorizontal: 30,
   },
   timePicker: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 30,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   button: {
-    alignSelf: "flex-end",
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginVertical: 12,
     marginEnd: 30,
     width: 120,
   },
   inputTitle: {
-    color: "#8A8F9E",
+    color: '#8A8F9E',
     fontSize: 12,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   input: {
-    borderBottomColor: "#8A8F9E",
+    borderBottomColor: '#8A8F9E',
     borderBottomWidth: StyleSheet.hairlineWidth,
     height: 40,
     fontSize: 15,
-    color: "#161F3D",
+    color: '#161F3D',
   },
   reason: {
     marginHorizontal: 30,
     marginVertical: 8,
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     padding: 10,
     borderRadius: 4,
   },
   pickerButton: {
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     padding: 5,
     height: 35,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   information: {
-    backgroundColor: "#DDD",
-    alignItems: "center",
+    backgroundColor: '#DDD',
+    alignItems: 'center',
     borderRadius: 5,
     padding: 16,
     marginHorizontal: 30,

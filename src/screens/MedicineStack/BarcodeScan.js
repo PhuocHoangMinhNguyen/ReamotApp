@@ -2,21 +2,21 @@
 // Description: Used to scan medicine barcode when the alarm is sounded
 // Status: Optimized
 
-import React from "react";
-import { View, StyleSheet, Alert, TouchableOpacity } from "react-native";
-import { RNCamera } from "react-native-camera";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import ReactNativeAN from "react-native-alarm-notification";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import moment from "moment";
+import React from 'react';
+import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { RNCamera } from 'react-native-camera';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import ReactNativeAN from 'react-native-alarm-notification';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import moment from 'moment';
 
 // Notification Data Structure.
 const alarmNotifData = {
-  schedule_type: "once",
-  channel: "reminder",
+  schedule_type: 'once',
+  channel: 'reminder',
   loop_sound: true,
-  message: "Take your Medicine",
+  message: 'Take your Medicine',
 };
 
 class BarcodeScan extends React.Component {
@@ -27,7 +27,7 @@ class BarcodeScan extends React.Component {
       //prevent the alarm to be read twice
       barcodeRead: false,
       // To update Firebase document data including idAN and alarmId
-      firebaseId: "",
+      firebaseId: '',
       // medicine details
       medicine: {},
       // Set flashOff by default
@@ -53,7 +53,7 @@ class BarcodeScan extends React.Component {
     this.setState({ itemTime: paramsItemTime });
   }
 
-  onBarCodeRead = async (e) => {
+  onBarCodeRead = async e => {
     const { name, barcode, image, description } = this.state.medicine;
     const { firebaseId, barcodeRead, alarmId, itemTime } = this.state;
     // If the barcode scanned is correct.
@@ -68,7 +68,7 @@ class BarcodeScan extends React.Component {
         // Set New Alarm Time
         const newReminderTime = new Date(itemTime);
         newReminderTime.setDate(newReminderTime.getDate() + 1);
-        console.log("Barcode Scanner: " + newReminderTime);
+        console.log('Barcode Scanner: ' + newReminderTime);
         const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
         const details = {
@@ -88,13 +88,13 @@ class BarcodeScan extends React.Component {
 
         // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
         const alarm = await ReactNativeAN.getScheduledAlarms();
-        let idAN = "";
+        let idAN = '';
         for (let i = 0; i < alarm.length; i++) {
           if (alarm[i].alarmId == details.alarm_id) {
             idAN = alarm[i].id;
           }
         }
-        firestore().collection("reminder").doc(firebaseId).update({
+        firestore().collection('reminder').doc(firebaseId).update({
           idAN: idAN,
           alarmId: alarmId,
           time: newReminderTime,
@@ -103,34 +103,34 @@ class BarcodeScan extends React.Component {
         // When the alarm is turned off, add the medicine into "history" collection
         const firebaseReminder = new Date(itemTime);
         firestore()
-          .collection("history")
+          .collection('history')
           .add({
             medicine: name,
             patientEmail: auth().currentUser.email,
             startTime: firebaseReminder,
-            date: moment().format("MMMM Do YYYY"),
-            status: "taken",
+            date: moment().format('MMMM Do YYYY'),
+            status: 'taken',
           });
 
         // Reduce the number of pills
         let temporaryID;
         let firebasePills;
         let numberOfPills;
-        const mPills = firestore().collection("medicinePills");
+        const mPills = firestore().collection('medicinePills');
         firestore()
-          .collection("reminder")
+          .collection('reminder')
           .doc(firebaseId)
           .get()
-          .then((documentSnapshot) => {
+          .then(documentSnapshot => {
             numberOfPills = documentSnapshot.data().numberOfPills;
           })
           .then(() => {
             mPills
-              .where("medicine", "==", name)
-              .where("patientEmail", "==", auth().currentUser.email)
+              .where('medicine', '==', name)
+              .where('patientEmail', '==', auth().currentUser.email)
               .get()
-              .then((querySnapshot) => {
-                querySnapshot.forEach((documentSnapshot) => {
+              .then(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
                   temporaryID = documentSnapshot.id;
                   firebasePills = documentSnapshot.data().pills;
                 });
@@ -140,15 +140,15 @@ class BarcodeScan extends React.Component {
                   pills: value,
                 });
               });
-            this.props.navigation.navigate("MedicineScreen");
+            this.props.navigation.navigate('MedicineScreen');
           });
       }
-      Alert.alert("Alarm Sound is Stopped");
+      Alert.alert('Alarm Sound is Stopped');
       // If the barcode scanned is incorrect.
     } else {
       Alert.alert(
-        "Scanned Barcode is " + e.data,
-        "Required Barcode is " + barcode
+        'Scanned Barcode is ' + e.data,
+        'Required Barcode is ' + barcode,
       );
     }
   };
@@ -173,7 +173,7 @@ class BarcodeScan extends React.Component {
             <Ionicons
               size={40}
               color="#FFF"
-              name={this.state.flashOn === true ? "flash" : "flash-off"}
+              name={this.state.flashOn === true ? 'flash' : 'flash-off'}
             />
           </TouchableOpacity>
         </View>
@@ -185,19 +185,19 @@ class BarcodeScan extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   preview: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   bottomOverlay: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     flex: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 

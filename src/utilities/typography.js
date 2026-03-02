@@ -1,7 +1,7 @@
 // typography.js
 
-import React from "react";
-import { Text, StyleSheet } from "react-native";
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
 
 export const typography = () => {
   const oldTextRender = Text.render;
@@ -15,6 +15,6 @@ export const typography = () => {
 
 const styles = StyleSheet.create({
   defaultText: {
-    fontFamily: "serif",
+    fontFamily: 'serif',
   },
 });

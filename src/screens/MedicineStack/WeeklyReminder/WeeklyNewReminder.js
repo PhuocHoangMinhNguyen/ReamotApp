@@ -2,26 +2,33 @@
 // Description: Allow patient to make a new weekly reminder
 // Status: Currently working similar to daily reminder
 
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import Toast from "react-native-simple-toast";
-import ReactNativeAN from "react-native-alarm-notification";
-import TimePicker from "@react-native-community/datetimepicker";
-import moment from "moment";
-import Background from "../../../components/Background";
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-simple-toast';
+import ReactNativeAN from 'react-native-alarm-notification';
+import TimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
+import Background from '../../../components/Background';
 
 // Notification Data Structure.
 const alarmNotifData = {
-  schedule_type: "once",
-  channel: "reminder",
+  schedule_type: 'once',
+  channel: 'reminder',
   loop_sound: true,
-  message: "Take your Medicine",
+  message: 'Take your Medicine',
 };
 
-var tempAvatar = require("../../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../../assets/images/tempAvatar.png');
 
 class WeeklyNewReminder extends React.Component {
   constructor(props) {
@@ -56,13 +63,13 @@ class WeeklyNewReminder extends React.Component {
   }
 
   // This function called after the alarm is set.
-  getANid = async (details) => {
+  getANid = async details => {
     const { reminderId } = this.state.alarm;
     const { name } = this.state.medicine;
     const { testDate } = this.state.timePicker;
     // Get the alarm's "id", set it as idAN attribute for Cloud Firestore
     const alarm = await ReactNativeAN.getScheduledAlarms();
-    let idAN = "";
+    let idAN = '';
     for (let i = 0; i < alarm.length; i++) {
       if (alarm[i].alarmId == details.alarm_id) {
         idAN = alarm[i].id;
@@ -70,18 +77,18 @@ class WeeklyNewReminder extends React.Component {
     }
     // Officially add the alarm details into Firebase, alarm id is also from reminderId
     firestore()
-      .collection("reminder")
+      .collection('reminder')
       .add({
         alarmId: reminderId,
         idAN: idAN,
         medicine: name,
-        type: "Weekly",
+        type: 'Weekly',
         time: testDate,
         patientEmail: auth().currentUser.email,
         numberOfPills: this.state.number,
       })
       .then(() => {
-        Toast.show("Reminder Set!");
+        Toast.show('Reminder Set!');
         this.props.navigation.goBack();
       });
   };
@@ -125,7 +132,7 @@ class WeeklyNewReminder extends React.Component {
   onChange = (event, selectedDate) => {
     const { testDate } = this.state.timePicker;
     let currentDate;
-    const currentSecond = moment(Date.now()).format("ss");
+    const currentSecond = moment(Date.now()).format('ss');
     const secondValue = parseInt(currentSecond) * 1000;
     const correctValue = Date.now() - secondValue;
     if (selectedDate == null) {
@@ -149,11 +156,11 @@ class WeeklyNewReminder extends React.Component {
     // 1 hour = 3.600.000 miliseconds
     // 24 hours = 86.400.000 miliseconds.
     // 7 days = 168 hours = 604.800.000 miliseconds
-    console.log("Weekly New Reminder: " + currentDate);
+    console.log('Weekly New Reminder: ' + currentDate);
     this.setState({
       timePicker: {
         ...this.state.timePicker,
-        show: Platform.OS === "ios",
+        show: Platform.OS === 'ios',
         testDate: currentDate,
       },
       alarm: {
@@ -176,7 +183,7 @@ class WeeklyNewReminder extends React.Component {
         </TouchableOpacity>
         <Text style={styles.header}>Set Reminder</Text>
         <View style={styles.information}>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: 'row' }}>
             <Image
               style={styles.image}
               source={
@@ -197,10 +204,10 @@ class WeeklyNewReminder extends React.Component {
                 style={styles.showPicker}
                 onPress={this.showMode}
               >
-                <Text style={{ color: "#FFF" }}>Show time picker!</Text>
+                <Text style={{ color: '#FFF' }}>Show time picker!</Text>
               </TouchableOpacity>
-              <Text style={{ alignSelf: "center" }}>
-                {moment(testDate).format("hh:mm a")}
+              <Text style={{ alignSelf: 'center' }}>
+                {moment(testDate).format('hh:mm a')}
               </Text>
             </View>
             {show && (
@@ -215,7 +222,7 @@ class WeeklyNewReminder extends React.Component {
             style={styles.button}
             onPress={() => this.scheduleAlarm()}
           >
-            <Text style={{ color: "#FFF" }}>Schedule Alarm</Text>
+            <Text style={{ color: '#FFF' }}>Schedule Alarm</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -226,18 +233,18 @@ class WeeklyNewReminder extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   back: {
-    position: "absolute",
+    position: 'absolute',
     top: 24,
     left: 24,
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: 100,
@@ -245,18 +252,18 @@ const styles = StyleSheet.create({
   },
   name: {
     flex: 1,
-    fontWeight: "600",
+    fontWeight: '600',
     marginLeft: 8,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   header: {
     marginTop: -150,
-    color: "#FFF",
-    textAlign: "center",
+    color: '#FFF',
+    textAlign: 'center',
     fontSize: 24,
   },
   information: {
-    backgroundColor: "#ddd",
+    backgroundColor: '#ddd',
     borderRadius: 5,
     padding: 16,
     marginTop: 50,
@@ -264,30 +271,30 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   timePicker: {
-    backgroundColor: "#ddd",
+    backgroundColor: '#ddd',
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 30,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   button: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginVertical: 12,
     marginHorizontal: 30,
   },
   showPicker: {
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     height: 40,
     width: 130,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

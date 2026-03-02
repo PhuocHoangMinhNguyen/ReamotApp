@@ -2,10 +2,10 @@
 // Description: Terms of Service Screen so users can read before register account.
 // Status: Optimized
 
-import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import TermsServices from "../../components/TermsServices";
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import TermsServices from '../../components/TermsServices';
 
 class Terms extends React.Component {
   render() {
@@ -25,15 +25,15 @@ class Terms extends React.Component {
 
 const styles = StyleSheet.create({
   back: {
-    position: "absolute",
+    position: 'absolute',
     top: 15,
     left: 30,
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
