@@ -3,12 +3,12 @@
 // Status: Optimized
 
 import React from "react";
-import TermsServices from '../../components/TermsServices';
+import TermsServices from "../../components/TermsServices";
 
 class TermsOfServices extends React.Component {
-    render() {
-        return (<TermsServices />);
-    }
+  render() {
+    return <TermsServices />;
+  }
 }
 
-export default TermsOfServices
+export default TermsOfServices;

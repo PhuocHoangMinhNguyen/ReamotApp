@@ -12,12 +12,18 @@ import Terms from "../screens/AuthStack/Terms";
 const Stack = createStackNavigator();
 
 export default function AuthStack() {
-    return (
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="LoginScreen">
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-            <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
-            <Stack.Screen name="Terms" component={Terms} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="LoginScreen"
+    >
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+      <Stack.Screen
+        name="ForgotPasswordScreen"
+        component={ForgotPasswordScreen}
+      />
+      <Stack.Screen name="Terms" component={Terms} />
+    </Stack.Navigator>
+  );
 }

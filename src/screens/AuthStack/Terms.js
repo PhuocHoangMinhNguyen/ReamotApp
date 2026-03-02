@@ -5,36 +5,36 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Ionicons from "@react-native-vector-icons/ionicons";
-import TermsServices from '../../components/TermsServices';
+import TermsServices from "../../components/TermsServices";
 
 class Terms extends React.Component {
-    render() {
-        return (
-            <View style={{ flex: 1 }}>
-                <TermsServices />
-                <TouchableOpacity
-                    style={styles.back}
-                    onPress={() => this.props.navigation.goBack()}
-                >
-                    <Ionicons name="arrow-back" size={32} color="#FFF" />
-                </TouchableOpacity>
-            </View>
-        )
-    }
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <TermsServices />
+        <TouchableOpacity
+          style={styles.back}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={32} color="#FFF" />
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    back: {
-        position: "absolute",
-        top: 15,
-        left: 30,
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        backgroundColor: "rgba(21, 22, 48, 0.1)",
-        alignItems: "center",
-        justifyContent: "center"
-    },
+  back: {
+    position: "absolute",
+    top: 15,
+    left: 30,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(21, 22, 48, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
-export default Terms
+export default Terms;

@@ -2,7 +2,7 @@
 // Description: Show medicine details, and reminder for that medicine of that patient.
 // Status: Optimized
 
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -10,88 +10,91 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  TextInput
-} from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import FontAwesome from "@react-native-vector-icons/fontawesome";
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import ViewMoreText from "react-native-view-more-text";
-import Toast from "react-native-simple-toast";
-import Background from '../../components/Background';
-import moment from 'moment';
+  TextInput,
+} from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import FontAwesome from '@react-native-vector-icons/fontawesome';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import ViewMoreText from 'react-native-view-more-text';
+import Toast from 'react-native-simple-toast';
+import Background from "../../components/Background";
+import moment from "moment";
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class MediInfoScreen extends React.Component {
   state = {
     medicine: {},
     prescription: {},
     reminder: [],
-    medicinePills: "",
-    text: "",
-    firebaseID: "",
-    add: "",
-  }
+    medicinePills: '',
+    text: '',
+    firebaseID: '',
+    add: '',
+  };
 
-  unsubscribe1 = null
-  unsubscribe2 = null
-  unsubscribe3 = null
+  unsubscribe1 = null;
+  unsubscribe2 = null;
+  unsubscribe3 = null;
 
   componentDidMount() {
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
     // => Faster than accessing Cloud Firestore again.
-    let paramsFromMedicineScreen = this.props.route.params
+    let paramsFromMedicineScreen = this.props.route.params;
     this.setState({ medicine: paramsFromMedicineScreen });
 
     // Get Medicine Number of Pills
-    this.unsubscribe1 = firestore().collection("medicinePills")
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('medicine', '==', this.props.route.params.name)
-      .onSnapshot(querySnapshot => {
-        let temp = ""
-        let tempID = ""
-        querySnapshot.forEach(documentSnapshot => {
-          temp = documentSnapshot.data().pills
-          tempID = documentSnapshot.id
+    this.unsubscribe1 = firestore()
+      .collection("medicinePills")
+      .where("patientEmail", "==", auth().currentUser.email)
+      .where("medicine", "==", this.props.route.params.name)
+      .onSnapshot((querySnapshot) => {
+        let temp = ''
+        let tempID = ''
+        querySnapshot.forEach((documentSnapshot) => {
+          temp = documentSnapshot.data().pills;
+          tempID = documentSnapshot.id;
         });
         this.setState({
           medicinePills: temp.toString(),
           text: temp.toString(),
-          firebaseID: tempID
+          firebaseID: tempID,
         });
       });
 
-    // Get Prescription data from Cloud Firestore to know number of capsules taken per time, 
+    // Get Prescription data from Cloud Firestore to know number of capsules taken per time,
     // and number of times to take medicine per day.
-    this.unsubscribe2 = firestore().collection("prescription")
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('name', '==', this.props.route.params.name)
-      .onSnapshot(querySnapshot => {
-        let tempValue = 0
-        let tempValue2 = 0
-        let tempValue3 = ""
-        querySnapshot.forEach(documentSnapshot => {
-          tempValue = documentSnapshot.data().times
-          tempValue2 = documentSnapshot.data().number
-          tempValue3 = documentSnapshot.data().type
+    this.unsubscribe2 = firestore()
+      .collection("prescription")
+      .where("patientEmail", "==", auth().currentUser.email)
+      .where("name", "==", this.props.route.params.name)
+      .onSnapshot((querySnapshot) => {
+        let tempValue = 0;
+        let tempValue2 = 0;
+        let tempValue3 = ''
+        querySnapshot.forEach((documentSnapshot) => {
+          tempValue = documentSnapshot.data().times;
+          tempValue2 = documentSnapshot.data().number;
+          tempValue3 = documentSnapshot.data().type;
         });
         this.setState({
           prescription: {
             times: tempValue,
             number: tempValue2,
-            type: tempValue3
+            type: tempValue3,
           }
         });
       });
 
     // Get Reminder data of that patient and that medicine.
-    this.unsubscribe3 = firestore().collection("reminder")
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('medicine', '==', this.props.route.params.name)
-      .onSnapshot(querySnapshot => {
-        let temp = []
-        querySnapshot.forEach(documentSnapshot => {
+    this.unsubscribe3 = firestore()
+      .collection("reminder")
+      .where("patientEmail", "==", auth().currentUser.email)
+      .where("medicine", "==", this.props.route.params.name)
+      .onSnapshot((querySnapshot) => {
+        let temp = [];
+        querySnapshot.forEach((documentSnapshot) => {
           temp.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
@@ -110,74 +113,82 @@ class MediInfoScreen extends React.Component {
   // If the prescription.type is Daily, navigate to 'Daily New Reminder'
   // If the prescription.type is Weekly, navigate to 'Weekly New Reminder'
   handleNewReminder = () => {
-    if (this.state.prescription.type == "Daily") {
-      this.props.navigation.navigate("NewReminder", {
+    if (this.state.prescription.type == 'Daily') {
+      this.props.navigation.navigate('NewReminder', {
         medicine: this.props.route.params,
-        number: this.state.prescription.number
+        number: this.state.prescription.number,
       });
     } else {
-      this.props.navigation.navigate("WeeklyNewReminder", {
+      this.props.navigation.navigate('WeeklyNewReminder', {
         medicine: this.props.route.params,
-        number: this.state.prescription.number
+        number: this.state.prescription.number,
       });
     }
-  }
+  };
 
   // If the prescription.type is Daily, navigate to 'Daily Change Reminder'
   // If the prescription.type is Weekly, navigate to 'Weekly Change Reminder'
   handleChangeReminder = (item) => {
-    if (this.state.prescription.type == "Daily") {
-      this.props.navigation.navigate("ChangeReminder", {
+    if (this.state.prescription.type == 'Daily') {
+      this.props.navigation.navigate('ChangeReminder', {
         medicine: this.props.route.params,
         itemTime: item.time.toDate(),
       });
     } else {
-      this.props.navigation.navigate("WeeklyChangeReminder", {
+      this.props.navigation.navigate('WeeklyChangeReminder', {
         medicine: this.props.route.params,
         itemTime: item.time.toDate(),
       });
     }
-  }
+  };
 
   // Handle View More Text in medicine's description
   renderViewMore(onPress) {
     return (
-      <Text onPress={onPress} style={{ color: '#018ABE' }}>View More</Text>
-    )
+      <Text onPress={onPress} style={{ color: "#018ABE" }}>
+        View More
+      </Text>
+    );
   }
 
   // Handle View Less Text in medicine's description
   renderViewLess(onPress) {
     return (
-      <Text onPress={onPress} style={{ color: '#018ABE' }}>View less</Text>
-    )
+      <Text onPress={onPress} style={{ color: "#018ABE" }}>
+        View less
+      </Text>
+    );
   }
 
   // Add Medicine Pills is used when there are no existing number of pills stored in database
   addMedicinePills = () => {
-    if (this.state.medicinePills == "") {
-      Toast.show("Please enter number of capsules");
+    if (this.state.medicinePills == '') {
+      Toast.show('Please enter number of capsules');
     } else {
       const value = parseInt(this.state.medicinePills, 10);
-      firestore().collection("medicinePills").add({
+      firestore().collection('medicinePills').add({
         medicine: this.state.medicine.name,
         patientEmail: auth().currentUser.email,
-        pills: value
+        pills: value,
       });
     }
-  }
+  };
 
   // Update Medicine Pills is used when there are already some number of pills stored in database
   updateMedicinePills = () => {
-    if (this.state.add == "") {
-      Toast.show("Please enter number of capsules");
+    if (this.state.add == '') {
+      Toast.show('Please enter number of capsules');
     } else {
-      const value = parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10);
-      firestore().collection("medicinePills").doc(this.state.firebaseID).update({
-        pills: value
-      });
+      const value =
+        parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10);
+      firestore()
+        .collection("medicinePills")
+        .doc(this.state.firebaseID)
+        .update({
+          pills: value,
+        });
     }
-  }
+  };
 
   // Information appears on each item of Flatlist.
   //
@@ -189,20 +200,30 @@ class MediInfoScreen extends React.Component {
   // times the patient has to take that medicine per day according to "prescription" document in Firebase,
   // all emptyItem will be replace by nonEmptyItem
   renderItem = (item) => {
-    if (item == "null") {
+    if (item == 'null') {
       return (
-        <TouchableOpacity style={styles.reminder} onPress={this.handleNewReminder}>
+        <TouchableOpacity
+          style={styles.reminder}
+          onPress={this.handleNewReminder}
+        >
           <Text style={{ fontSize: 18 }}>+ Add Reminder</Text>
         </TouchableOpacity>
-      )
+      );
     }
-    return (<View style={styles.prescription}>
-      <Text style={styles.time}>{moment(item.time.toDate()).format('hh:mm a')}</Text>
-      <TouchableOpacity style={styles.showPicker} onPress={() => this.handleChangeReminder(item)}>
-        <FontAwesome name="edit" size={30} />
-      </TouchableOpacity>
-    </View>)
-  }
+    return (
+      <View style={styles.prescription}>
+        <Text style={styles.time}>
+          {moment(item.time.toDate()).format("hh:mm a")}
+        </Text>
+        <TouchableOpacity
+          style={styles.showPicker}
+          onPress={() => this.handleChangeReminder(item)}
+        >
+          <FontAwesome name="edit" size={30} />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   render() {
     // This is to make the number of element in "reminder" equal to times the patient
@@ -211,21 +232,26 @@ class MediInfoScreen extends React.Component {
     // ==> To support renderItem function above.
 
     if (this.state.reminder.length < this.state.prescription.times) {
-      for (let i = this.state.reminder.length; i < this.state.prescription.times; i++) {
-        this.state.reminder.push("null");
+      for (
+        let i = this.state.reminder.length;
+        i < this.state.prescription.times;
+        i++
+      ) {
+        this.state.reminder.push('null');
       }
     }
 
-    const normal =
+    const normal = (
       <View style={styles.capsules}>
         <Text>{this.state.medicinePills} left</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text>Add some more: </Text>
-          <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+          <TextInput
+            style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
             placeholder="   "
             autoCapitalize="none"
             keyboardType="numeric"
-            onChangeText={addPills => this.setState({ add: addPills })}
+            onChangeText={(addPills) => this.setState({ add: addPills })}
             value={this.state.add}
           />
           <Text>capsule(s)</Text>
@@ -234,16 +260,20 @@ class MediInfoScreen extends React.Component {
           <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
-    const lessThan10 =
+    );
+    const lessThan10 = (
       <View style={styles.capsules}>
-        <Text style={{ color: "#FF0000", fontWeight: "bold" }}>{this.state.medicinePills} left</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
+          {this.state.medicinePills} left
+        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text>Add some more: </Text>
-          <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+          <TextInput
+            style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
             placeholder="   "
             autoCapitalize="none"
             keyboardType="numeric"
-            onChangeText={addPills => this.setState({ add: addPills })}
+            onChangeText={(addPills) => this.setState({ add: addPills })}
             value={this.state.add}
           />
           <Text>capsule(s)</Text>
@@ -252,80 +282,100 @@ class MediInfoScreen extends React.Component {
           <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
-    const none =
+    );
+    const none = (
       <View style={styles.capsules}>
-        <Text style={{ color: "#FF0000", fontWeight: "bold" }}>{this.state.medicinePills} left</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={{ color: "#FF0000", fontWeight: "bold" }}>Time to refill: </Text>
-          <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+        <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
+          {this.state.medicinePills} left
+        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
+            Time to refill:{" "}
+          </Text>
+          <TextInput
+            style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
             placeholder="   "
             autoCapitalize="none"
             keyboardType="numeric"
-            onChangeText={addPills => this.setState({ add: addPills })}
+            onChangeText={(addPills) => this.setState({ add: addPills })}
             value={this.state.add}
           />
-          <Text style={{ color: "#FF0000", fontWeight: "bold" }}>capsule(s)</Text>
+          <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
+            capsule(s)
+          </Text>
         </View>
         <TouchableOpacity onPress={() => this.updateMedicinePills()}>
           <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
-    const empty =
+    );
+    const empty = (
       <View style={styles.capsules}>
-        <TextInput style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
+        <TextInput
+          style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
           placeholder="Number of Capsules in the container"
           autoCapitalize="none"
           keyboardType="numeric"
-          onChangeText={pills => this.setState({ medicinePills: pills })}
+          onChangeText={(pills) => this.setState({ medicinePills: pills })}
           value={this.state.medicinePills}
         />
         <TouchableOpacity onPress={() => this.addMedicinePills()}>
           <FontAwesome name="edit" size={30} />
         </TouchableOpacity>
       </View>
+    );
 
-    let message
+    let message;
     // If no info about number of pills is stored
-    if (this.state.text == '') {
-      message = empty
+    if (this.state.text == "") {
+      message = empty;
     }
     // If the number of pills is lower than 0
     if (parseInt(this.state.text, 10) < 0) {
-      message = <Text>{this.state.text}</Text>
+      message = <Text>{this.state.text}</Text>;
     }
     // If the number of pills is equal 0
     if (parseInt(this.state.text, 10) == 0) {
-      message = none
+      message = none;
     }
     // If the number of pills is between 0 and 10
-    if (parseInt(this.state.text, 10) <= 10 && parseInt(this.state.text, 10) > 0) {
-      message = lessThan10
+    if (
+      parseInt(this.state.text, 10) <= 10 &&
+      parseInt(this.state.text, 10) > 0
+    ) {
+      message = lessThan10;
     }
     // If the number of pills is larger than 10
     if (parseInt(this.state.text, 10) > 10) {
-      message = normal
+      message = normal;
     }
     return (
       <View style={styles.container}>
         <Background />
-        <TouchableOpacity style={styles.back}
+        <TouchableOpacity
+          style={styles.back}
           onPress={() => this.props.navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={30} color="#FFF" />
         </TouchableOpacity>
         <View style={styles.information}>
-          <View style={{ flexDirection: "row" }}>
-            <Image style={styles.image}
-              source={this.state.medicine.image
-                ? { uri: this.state.medicine.image }
-                : tempAvatar
-              } />
+          <View style={{ flexDirection: 'row' }}>
+            <Image
+              style={styles.image}
+              source={
+                this.state.medicine.image
+                  ? { uri: this.state.medicine.image }
+                  : tempAvatar
+              }
+            />
             <Text style={styles.name}>{this.state.medicine.name}</Text>
           </View>
-          <ViewMoreText numberOfLines={3}
+          <ViewMoreText
+            numberOfLines={3}
             renderViewMore={this.renderViewMore}
             renderViewLess={this.renderViewLess}
-            textStyle={styles.description}>
+            textStyle={styles.description}
+          >
             <Text>{this.state.medicine.description}</Text>
           </ViewMoreText>
         </View>
@@ -333,92 +383,95 @@ class MediInfoScreen extends React.Component {
         {message}
 
         <View style={styles.prescription}>
-          <Text style={styles.time}>{this.state.prescription.number} capsule</Text>
+          <Text style={styles.time}>
+            {this.state.prescription.number} capsule
+          </Text>
           <Text style={styles.time}>{this.state.prescription.times} times</Text>
           <Text style={styles.repeat}>{this.state.prescription.type}</Text>
         </View>
 
-        <FlatList data={this.state.reminder}
+        <FlatList
+          data={this.state.reminder}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()} />
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   back: {
-    position: "absolute",
+    position: 'absolute',
     top: 20,
     left: 20,
     width: 30,
     height: 30,
     borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(21, 22, 48, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: 100,
-    height: 100
+    height: 100,
   },
   name: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     marginLeft: 8,
     marginVertical: 24,
-    fontSize: 20
+    fontSize: 20,
   },
   information: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 5,
     padding: 16,
     marginTop: -120,
     marginHorizontal: 16,
-    marginBottom: 8
+    marginBottom: 8,
   },
   description: {
-    marginTop: 12
+    marginTop: 12,
   },
   reminder: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
-    flexDirection: "row",
-    justifyContent: "space-evenly"
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
   },
   prescription: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   capsules: {
-    backgroundColor: "#DDD",
+    backgroundColor: '#DDD',
     borderRadius: 5,
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   time: {
     fontSize: 18,
-    alignSelf: "center"
+    alignSelf: 'center'
   },
   repeat: {
-    fontSize: 18
+    fontSize: 18,
   }
 });
 

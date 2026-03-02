@@ -6,7 +6,7 @@
 class UserPermissions {
   getPhotoPermission = async () => {
     // react-native-image-picker v7+ handles permissions internally on both iOS and Android.
-  }
+  };
 }
 
-export default new UserPermissions()
+export default new UserPermissions();

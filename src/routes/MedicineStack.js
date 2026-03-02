@@ -21,16 +21,22 @@ import WeeklyChangeReminder from "../screens/MedicineStack/WeeklyReminder/Weekly
 const Stack = createStackNavigator();
 
 export default function MedicineStack() {
-    return (
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="MedicineScreen">
-            <Stack.Screen name="MedicineScreen" component={MedicineScreen} />
-            <Stack.Screen name="AddMedicine" component={AddMedicine} />
-            <Stack.Screen name="MediInfoScreen" component={MediInfoScreen} />
-            <Stack.Screen name="BarcodeScan" component={BarcodeScan} />
-            <Stack.Screen name="NewReminder" component={NewReminder} />
-            <Stack.Screen name="ChangeReminder" component={ChangeReminder} />
-            <Stack.Screen name="WeeklyNewReminder" component={WeeklyNewReminder} />
-            <Stack.Screen name="WeeklyChangeReminder" component={WeeklyChangeReminder} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="MedicineScreen"
+    >
+      <Stack.Screen name="MedicineScreen" component={MedicineScreen} />
+      <Stack.Screen name="AddMedicine" component={AddMedicine} />
+      <Stack.Screen name="MediInfoScreen" component={MediInfoScreen} />
+      <Stack.Screen name="BarcodeScan" component={BarcodeScan} />
+      <Stack.Screen name="NewReminder" component={NewReminder} />
+      <Stack.Screen name="ChangeReminder" component={ChangeReminder} />
+      <Stack.Screen name="WeeklyNewReminder" component={WeeklyNewReminder} />
+      <Stack.Screen
+        name="WeeklyChangeReminder"
+        component={WeeklyChangeReminder}
+      />
+    </Stack.Navigator>
+  );
 }

@@ -4,7 +4,7 @@
 //    - Implement ScrollView
 //    - Edit User's information in Firebase Authentication
 
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -12,14 +12,14 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  ScrollView
-} from 'react-native';
+  ScrollView,
+} from "react-native";
 
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import UploadImage from '../../utilities/UploadImage';
-import Background from '../../components/Background';
-import { launchImageLibrary } from 'react-native-image-picker';
+import UploadImage from "../../utilities/UploadImage";
+import Background from "../../components/Background";
+import { launchImageLibrary } from "react-native-image-picker";
 import MaterialIcons from "@react-native-vector-icons/material-icons";
 import Toast from "react-native-simple-toast";
 
@@ -31,17 +31,19 @@ class EditScreen extends React.Component {
       avatar: null,
       name: "",
       phoneNumber: "",
-      address: ""
-    }
-  }
+      address: "",
+    },
+  };
 
-  unsubscribe = null
+  unsubscribe = null;
 
   componentDidMount() {
-    const user = this.props.uid || (auth().currentUser || {}).uid
+    const user = this.props.uid || (auth().currentUser || {}).uid;
 
-    this.unsubscribe = firestore().collection("users").doc(user)
-      .onSnapshot(doc => this.setState({ user: doc.data() }));
+    this.unsubscribe = firestore()
+      .collection("users")
+      .doc(user)
+      .onSnapshot((doc) => this.setState({ user: doc.data() }));
   }
 
   componentWillUnmount() {
@@ -50,18 +52,24 @@ class EditScreen extends React.Component {
 
   // To Pick Avatar from library or take a photo and set it as avatar.
   handlePickAvatar = async () => {
-    const response = await launchImageLibrary({ mediaType: 'photo' });
-    if (response.didCancel || response.errorCode) return;
-    if (response.assets && response.assets[0]) {
-      this.setState({ user: { ...this.state.user, avatar: response.assets[0].uri } });
+    const response = await launchImageLibrary({ mediaType: "photo" });
+    if (response.didCancel || response.errorCode) {
+      return;
     }
-  }
+    if (response.assets && response.assets[0]) {
+      this.setState({
+        user: { ...this.state.user, avatar: response.assets[0].uri },
+      });
+    }
+  };
 
   // Edit User's information in Firestore.
   editProfile = async () => {
-    const { name, phoneNumber, address, avatar } = this.state.user
-    let remoteUri = null
-    let db = firestore().collection("users").doc((auth().currentUser || {}).uid);
+    const { name, phoneNumber, address, avatar } = this.state.user;
+    let remoteUri = null;
+    let db = firestore()
+      .collection("users")
+      .doc((auth().currentUser || {}).uid);
     db.update({
       avatar: null,
       name: name,
@@ -78,47 +86,66 @@ class EditScreen extends React.Component {
       db.set({ avatar: remoteUri }, { merge: true });
     }
     Toast.show("Your Account Details is editted !");
-  }
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <Background />
         <Text style={styles.header}>Edit Profile</Text>
-        <TouchableOpacity style={styles.opacity}
-          onPress={this.handlePickAvatar}>
-          <Image style={styles.avatar}
-            source={this.state.user.avatar
-              ? { uri: this.state.user.avatar }
-              : tempAvatar
-            } />
-          <MaterialIcons name="photo-camera"
+        <TouchableOpacity
+          style={styles.opacity}
+          onPress={this.handlePickAvatar}
+        >
+          <Image
+            style={styles.avatar}
+            source={
+              this.state.user.avatar
+                ? { uri: this.state.user.avatar }
+                : tempAvatar
+            }
+          />
+          <MaterialIcons
+            name="photo-camera"
             size={35}
             color="black"
-            style={styles.icon} />
+            style={styles.icon}
+          />
         </TouchableOpacity>
         <ScrollView>
           <Text style={styles.name}>{this.state.user.name}</Text>
           <View style={styles.form}>
             <View>
               <Text style={styles.inputTitle}>Full Name</Text>
-              <TextInput style={styles.input}
-                onChangeText={name => this.setState({ user: { ...this.state.user, name } })}
-                value={this.state.user.name} />
+              <TextInput
+                style={styles.input}
+                onChangeText={(name) =>
+                  this.setState({ user: { ...this.state.user, name } })
+                }
+                value={this.state.user.name}
+              />
             </View>
 
             <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Contact Number</Text>
-              <TextInput style={styles.input}
+              <TextInput
+                style={styles.input}
                 keyboardType="numeric"
-                onChangeText={phoneNumber => this.setState({ user: { ...this.state.user, phoneNumber } })}
-                value={this.state.user.phoneNumber} />
+                onChangeText={(phoneNumber) =>
+                  this.setState({ user: { ...this.state.user, phoneNumber } })
+                }
+                value={this.state.user.phoneNumber}
+              />
             </View>
             <View style={{ marginTop: 16 }}>
               <Text style={styles.inputTitle}>Address</Text>
-              <TextInput style={styles.input}
-                onChangeText={address => this.setState({ user: { ...this.state.user, address } })}
-                value={this.state.user.address} />
+              <TextInput
+                style={styles.input}
+                onChangeText={(address) =>
+                  this.setState({ user: { ...this.state.user, address } })
+                }
+                value={this.state.user.address}
+              />
             </View>
           </View>
           <TouchableOpacity onPress={() => this.editProfile}>
@@ -128,14 +155,14 @@ class EditScreen extends React.Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF"
+    backgroundColor: "#FFF",
   },
   header: {
     alignSelf: "center",
@@ -197,4 +224,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditScreen
+export default EditScreen;

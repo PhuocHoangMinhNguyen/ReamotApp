@@ -2,7 +2,7 @@
 // Description: Show the list of medicines that is in patient's prescriptions
 // Status: Optimized
 
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -11,35 +11,36 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
-} from "react-native";
-import { SearchBar } from "react-native-elements";
-import Toast from 'react-native-simple-toast';
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-import ReactNativeAN from 'react-native-alarm-notification';
-import { DeviceEventEmitter } from 'react-native';
-import NavigationService from '../../utilities/NavigationService';
-import AntDesign from "@react-native-vector-icons/ant-design";
+} from 'react-native';
+import { SearchBar } from 'react-native-elements';
+import Toast from "react-native-simple-toast";
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import ReactNativeAN from "react-native-alarm-notification";
+import { DeviceEventEmitter } from "react-native";
+import NavigationService from "../../utilities/NavigationService";
+import AntDesign from '@react-native-vector-icons/ant-design';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class MedicineScreen extends React.Component {
   state = {
     loading: true,
     medicines: [],
-    text: "",
+    text: '',
     myArray: [],
-  }
+  };
 
-  unsubscribe = null
+  unsubscribe = null;
 
   prescriptionCollection = (temp) => {
     // Deal with medicines that patient add
-    firestore().collection("prescription")
-      .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot(querySnapshot => {
+    firestore()
+      .collection("prescription")
+      .where("patientEmail", "==", auth().currentUser.email)
+      .onSnapshot((querySnapshot) => {
         let temp2 = [];
-        querySnapshot.forEach(documentSnapshot => {
+        querySnapshot.forEach((documentSnapshot) => {
           for (let i = 0; i < temp.length; i++) {
             if (documentSnapshot.data().name == temp[i].name) {
               temp2.push({
@@ -56,39 +57,46 @@ class MedicineScreen extends React.Component {
           loading: false,
         });
       });
-  }
+  };
 
   componentDidMount() {
     // To take user's medicine based on medicine listed in "prescription" collection.
-    this.unsubscribe = firestore().collection("medicine")
-      .onSnapshot(querySnapshot => {
+    this.unsubscribe = firestore()
+      .collection("medicine")
+      .onSnapshot((querySnapshot) => {
         let temp = [];
-        querySnapshot.forEach(documentSnapshot => {
+        querySnapshot.forEach((documentSnapshot) => {
           temp.push({
             ...documentSnapshot.data(),
-            medicineKey: documentSnapshot.id
+            medicineKey: documentSnapshot.id,
           });
         });
         this.prescriptionCollection(temp);
       });
 
-    this.dismissedSubscription = DeviceEventEmitter.addListener('OnNotificationDismissed', async function (e) {
-      const obj = JSON.parse(e);
-      console.log(`Notification id: ${obj.id} dismissed`);
-    });
+    this.dismissedSubscription = DeviceEventEmitter.addListener(
+      "OnNotificationDismissed",
+      async function (e) {
+        const obj = JSON.parse(e);
+        console.log(`Notification id: ${obj.id} dismissed`);
+      }
+    );
 
-    this.openedSubscription = DeviceEventEmitter.addListener('OnNotificationOpened', async function (e) {
-      const obj = JSON.parse(e);
-      NavigationService.navigate("ChangeReminder", {
-        medicine: {
-          image: obj.image,
-          name: obj.name,
-          description: obj.description,
-          barcode: obj.barcode,
-        },
-        itemTime: new Date(Date.parse(obj.itemTime)),
-      });
-    });
+    this.openedSubscription = DeviceEventEmitter.addListener(
+      "OnNotificationOpened",
+      async function (e) {
+        const obj = JSON.parse(e);
+        NavigationService.navigate("ChangeReminder", {
+          medicine: {
+            image: obj.image,
+            name: obj.name,
+            description: obj.description,
+            barcode: obj.barcode,
+          },
+          itemTime: new Date(Date.parse(obj.itemTime)),
+        });
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -98,18 +106,25 @@ class MedicineScreen extends React.Component {
   }
 
   deleteAlarms = (name) => {
-    firestore().collection("reminder").where('medicine', '==', name)
-      .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-          firestore().collection("reminder").doc(documentSnapshot.id).delete()
+    firestore()
+      .collection("reminder")
+      .where("medicine", "==", name)
+      .where("patientEmail", "==", auth().currentUser.email)
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          firestore()
+            .collection("reminder")
+            .doc(documentSnapshot.id)
+            .delete()
             .then(() => {
-              ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString());
-              Toast.show('That medicine is deleted');
-            })
-        })
-      })
-  }
+              ReactNativeAN.deleteAlarm(
+                documentSnapshot.data().idAN.toString()
+              );
+              Toast.show("That medicine is deleted");
+            });
+        });
+      });
+  };
 
   // Information appears on each item.
   renderItem = (item) => {
@@ -117,48 +132,61 @@ class MedicineScreen extends React.Component {
       image: item.image,
       name: item.name,
       description: item.description,
-      barcode: item.barcode
+      barcode: item.barcode,
     }
-    if (item.adder == 'patient') {
+    if (item.adder == "patient") {
       return (
-        <TouchableOpacity style={styles.feedItem}
-          onPress={() => { this.props.navigation.navigate("MediInfoScreen", dataInfor) }} >
-          <Image style={styles.avatar}
-            source={item.image
-              ? { uri: item.image }
-              : tempAvatar
-            } />
+        <TouchableOpacity
+          style={styles.feedItem}
+          onPress={() => {
+            this.props.navigation.navigate("MediInfoScreen", dataInfor);
+          }}
+        >
+          <Image
+            style={styles.avatar}
+            source={item.image ? { uri: item.image } : tempAvatar}
+          />
           <Text style={styles.name}>{item.name}</Text>
-          <TouchableOpacity onPress={() => {
-            // Also need to delete alarms for this medicine.
-            firestore().collection('prescription').doc(item.key).delete()
-              .then(() => { this.deleteAlarms(item.name) });
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              // Also need to delete alarms for this medicine.
+              firestore()
+                .collection("prescription")
+                .doc(item.key)
+                .delete()
+                .then(() => {
+                  this.deleteAlarms(item.name);
+                });
+            }}
+          >
             <AntDesign name="delete" size={30} />
           </TouchableOpacity>
         </TouchableOpacity>
-      )
+      );
     }
     return (
-      <TouchableOpacity style={styles.feedItem}
-        onPress={() => { this.props.navigation.navigate("MediInfoScreen", dataInfor) }} >
-        <Image style={styles.avatar}
-          source={item.image
-            ? { uri: item.image }
-            : tempAvatar
-          } />
+      <TouchableOpacity
+        style={styles.feedItem}
+        onPress={() => {
+          this.props.navigation.navigate("MediInfoScreen", dataInfor);
+        }}
+      >
+        <Image
+          style={styles.avatar}
+          source={item.image ? { uri: item.image } : tempAvatar}
+        />
         <Text style={styles.name}>{item.name}</Text>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   // Responsible for SearchBar to work.
   searchFilterFunction(newText) {
     const newData = this.state.medicines.filter(function (item) {
       //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase()
+      const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
       const textData = newText.toUpperCase();
-      return itemData.indexOf(textData) > -1
+      return itemData.indexOf(textData) > -1;
     });
     this.setState({
       myArray: newData,
@@ -167,60 +195,73 @@ class MedicineScreen extends React.Component {
   }
 
   render() {
-    let message
+    let message;
     // Need to be fixed
     if (this.state.medicines.length == 0) {
-      message =
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text style={styles.emptyText}>You are not currently on medication</Text>
-          <Text style={{ textAlign: "center" }}>Please add a medicine,</Text>
-          <Text style={{ textAlign: "center" }}>or contact your doctor for a prescription</Text>
+      message = (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text style={styles.emptyText}>
+            You are not currently on medication
+          </Text>
+          <Text style={{ textAlign: 'center' }}>Please add a medicine,</Text>
+          <Text style={{ textAlign: 'center' }}>
+            or contact your doctor for a prescription
+          </Text>
         </View>
+      );
     } else {
-      message =
-        <FlatList style={styles.feed}
+      message = (
+        <FlatList
+          style={styles.feed}
           data={this.state.myArray}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) => index.toString()}
         />
+      );
     }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <SearchBar placeholder="Search Medicine..."
+          <SearchBar
+            placeholder="Search Medicine..."
             lightTheme
             round
             onChangeText={(newText) => this.searchFilterFunction(newText)}
-            value={this.state.text} />
+            value={this.state.text}
+          />
         </View>
         {message}
-        <TouchableOpacity style={styles.addMedicine}
-          onPress={() => { this.props.navigation.navigate("AddMedicine") }}>
+        <TouchableOpacity
+          style={styles.addMedicine}
+          onPress={() => {
+            this.props.navigation.navigate("AddMedicine");
+          }}
+        >
           <Text style={styles.add}>Add Medicine</Text>
         </TouchableOpacity>
       </SafeAreaView>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DEE8F1',
+    backgroundColor: "#DEE8F1",
   },
   header: {
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: "#D8D9DB",
+    borderBottomColor: '#D8D9DB',
   },
   feed: {
     marginHorizontal: 16,
   },
   feedItem: {
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderRadius: 5,
     padding: 8,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginVertical: 8,
   },
   avatar: {
@@ -228,32 +269,32 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     marginRight: 16,
-    marginLeft: 8
+    marginLeft: 8,
   },
   name: {
     flex: 1,
     fontSize: 15,
-    fontWeight: "500",
-    color: "#454D65",
+    fontWeight: '500',
+    color: '#454D65',
   },
   add: {
-    color: "#FFF",
+    color: '#FFF',
   },
   addMedicine: {
-    alignSelf: "flex-end",
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 100,
     height: 40,
-    backgroundColor: "#1565C0",
+    backgroundColor: '#1565C0',
     borderRadius: 4,
     marginVertical: 12,
-    marginEnd: 16
+    marginEnd: 16,
   },
   emptyText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 20,
-    textAlign: "center"
+    textAlign: 'center'
   },
 });
 

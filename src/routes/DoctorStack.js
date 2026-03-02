@@ -14,13 +14,19 @@ import AppointmentMaker from "../screens/DoctorStack/AppointmentMaker";
 const Stack = createStackNavigator();
 
 export default function DoctorStack() {
-    return (
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="DoctorScreen">
-            <Stack.Screen name="DoctorScreen" component={DoctorScreen} />
-            <Stack.Screen name="AddAccess" component={AddAccess} />
-            <Stack.Screen name="DoctorInfoScreen" component={DoctorInfoScreen} />
-            <Stack.Screen name="AccessedDoctorScreen" component={AccessedDoctorScreen} />
-            <Stack.Screen name="AppointmentMaker" component={AppointmentMaker} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="DoctorScreen"
+    >
+      <Stack.Screen name="DoctorScreen" component={DoctorScreen} />
+      <Stack.Screen name="AddAccess" component={AddAccess} />
+      <Stack.Screen name="DoctorInfoScreen" component={DoctorInfoScreen} />
+      <Stack.Screen
+        name="AccessedDoctorScreen"
+        component={AccessedDoctorScreen}
+      />
+      <Stack.Screen name="AppointmentMaker" component={AppointmentMaker} />
+    </Stack.Navigator>
+  );
 }

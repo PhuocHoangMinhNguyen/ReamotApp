@@ -10,10 +10,16 @@ import MedicationInformation from "../screens/HomeStack/MedicationInformation";
 const Stack = createStackNavigator();
 
 export default function HomeStack() {
-    return (
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeScreen">
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
-            <Stack.Screen name="MedicationInformation" component={MedicationInformation} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="HomeScreen"
+    >
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen
+        name="MedicationInformation"
+        component={MedicationInformation}
+      />
+    </Stack.Navigator>
+  );
 }

@@ -1,5 +1,5 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Show user information including avatar, user name, 
+// Description: Show user information including avatar, user name,
 //  and user email in the drawer navigator.
 // Status: Optimized
 
@@ -12,16 +12,18 @@ var tempAvatar = require("../../assets/images/tempAvatar.png");
 
 class ProfileScreen extends React.Component {
   state = {
-    user: {}
-  }
+    user: {},
+  };
 
-  unsubscribe = null
+  unsubscribe = null;
 
   componentDidMount() {
-    const user = this.props.uid || (auth().currentUser || {}).uid
+    const user = this.props.uid || (auth().currentUser || {}).uid;
 
-    this.unsubscribe = firestore().collection("users").doc(user)
-      .onSnapshot(doc => {
+    this.unsubscribe = firestore()
+      .collection("users")
+      .doc(user)
+      .onSnapshot((doc) => {
         this.setState({ user: doc.data() });
       });
   }
@@ -54,29 +56,29 @@ const styles = StyleSheet.create({
   avatarContainer: {
     shadowColor: "#151734",
     shadowRadius: 30,
-    shadowOpacity: 0.4
+    shadowOpacity: 0.4,
   },
   avatar: {
     width: 80,
     height: 80,
-    borderRadius: 50
+    borderRadius: 50,
   },
   name: {
     marginTop: 10,
     fontSize: 16,
     fontWeight: "600",
-    color: "white"
+    color: "white",
   },
   email: {
     fontSize: 12,
     fontWeight: "600",
     marginBottom: 15,
-    color: "white"
+    color: "white",
   },
   button: {
     marginVertical: 8,
-    marginHorizontal: 16
-  }
+    marginHorizontal: 16,
+  },
 });
 
-export default ProfileScreen
+export default ProfileScreen;
