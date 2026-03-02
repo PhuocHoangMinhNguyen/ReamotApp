@@ -61,6 +61,12 @@
     "patch-package": "^8.0.1",
     "react-test-renderer": "^18.3.1"
   },
+  "pnpm": {
+    "overrides": {
+      "fast-xml-parser": ">=4.5.4",
+      "minimatch": ">=3.1.4"
+    }
+  },
   "jest": {
     "preset": "react-native",
     "setupFilesAfterEnv": [
