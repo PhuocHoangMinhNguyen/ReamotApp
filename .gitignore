@@ -1,9 +1,46 @@
-# OSX
-#
+# ─── OS ─────────────────────────────────────────────────────────────────────
 .DS_Store
+Thumbs.db
 
-# Xcode
-#
+# ─── Editor ──────────────────────────────────────────────────────────────────
+.idea
+*.iml
+.vscode/
+
+# ─── Node / pnpm ─────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# ─── Environment / secrets ───────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# NOTE: google-services.json and GoogleService-Info.plist are already tracked.
+# If you rotate Firebase credentials, remove them from git with:
+#   git rm --cached android/app/google-services.json ios/GoogleService-Info.plist
+# then uncomment the lines below:
+# android/app/google-services.json
+# ios/GoogleService-Info.plist
+
+# ─── Test / coverage ─────────────────────────────────────────────────────────
+coverage/
+
+# ─── Firebase CLI ────────────────────────────────────────────────────────────
+.firebase/
+firebase-debug.log
+firestore-debug.log
+database-debug.log
+ui-debug.log
+
+# ─── React Native / Metro ────────────────────────────────────────────────────
+*.jsbundle
+.metro/
+*.hprof
+
+# ─── Xcode ───────────────────────────────────────────────────────────────────
 build/
 *.pbxuser
 !default.pbxuser
@@ -20,40 +57,23 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+ios/.xcode.env.local
+/ios/Pods/
 
-# Android/IntelliJ
-#
-build/
-.idea
+# ─── Android ─────────────────────────────────────────────────────────────────
 .gradle
 local.properties
-*.iml
+*.apk
+*.aab
+android/app/release/
 
-# node.js
-#
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# BUCK
+# ─── BUCK ────────────────────────────────────────────────────────────────────
 buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
 
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/
-
+# ─── Fastlane ────────────────────────────────────────────────────────────────
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
-
-# Bundle artifact
-*.jsbundle
-
-# CocoaPods
-/ios/Pods/

@@ -1,26 +1,28 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Show user information including avatar, user name, 
+// Description: Show user information including avatar, user name,
 //  and user email in the drawer navigator.
 // Status: Optimized
 
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import React from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
-var tempAvatar = require("../../assets/images/tempAvatar.png");
+var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class ProfileScreen extends React.Component {
   state = {
-    user: {}
-  }
+    user: {},
+  };
 
-  unsubscribe = null
+  unsubscribe = null;
 
   componentDidMount() {
-    const user = this.props.uid || (auth().currentUser || {}).uid
+    const user = this.props.uid || (auth().currentUser || {}).uid;
 
-    this.unsubscribe = firestore().collection("users").doc(user)
+    this.unsubscribe = firestore()
+      .collection('users')
+      .doc(user)
       .onSnapshot(doc => {
         this.setState({ user: doc.data() });
       });
@@ -52,31 +54,31 @@ class ProfileScreen extends React.Component {
 
 const styles = StyleSheet.create({
   avatarContainer: {
-    shadowColor: "#151734",
+    shadowColor: '#151734',
     shadowRadius: 30,
-    shadowOpacity: 0.4
+    shadowOpacity: 0.4,
   },
   avatar: {
     width: 80,
     height: 80,
-    borderRadius: 50
+    borderRadius: 50,
   },
   name: {
     marginTop: 10,
     fontSize: 16,
-    fontWeight: "600",
-    color: "white"
+    fontWeight: '600',
+    color: 'white',
   },
   email: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 15,
-    color: "white"
+    color: 'white',
   },
   button: {
     marginVertical: 8,
-    marginHorizontal: 16
-  }
+    marginHorizontal: 16,
+  },
 });
 
-export default ProfileScreen
+export default ProfileScreen;

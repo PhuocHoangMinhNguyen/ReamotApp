@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Tests + lint + audit share one VM and one pnpm install
+  ci:
+    name: Tests · Lint · Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm            # caches ~/.pnpm-store keyed on pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Unit tests
+        run: pnpm test --coverage --ci --forceExit
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+      - name: ESLint
+        run: npx eslint src --ext .js,.ts,.tsx
+
+      - name: Dependency audit
+        # Fails on high/critical CVEs; lower to moderate once baseline is clean
+        run: pnpm audit --audit-level high
+
+  # Firestore emulator needs Java — kept in its own job
+  firestore-rules:
+    name: Firestore Security Rules
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # Cache the emulator JARs (~500 MB) so they are not re-downloaded every run
+      - name: Cache Firebase emulator binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ hashFiles('firebase.json') }}
+          restore-keys: firebase-emulators-
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Firestore rules tests via emulator
+        run: |
+          firebase emulators:exec \
+            --only firestore \
+            --project demo-reamot \
+            "npx jest --config tests/backend/jest.config.js --forceExit"
+        env:
+          CI: true
+          FIRESTORE_EMULATOR_HOST: localhost:8080

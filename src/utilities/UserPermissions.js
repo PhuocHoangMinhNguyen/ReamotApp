@@ -1,29 +1,12 @@
 // Author: Phuoc Hoang Minh Nguyen
-// Description: Used to ask for user's permission for taking photos,
-// or choosing photo from library for user's avatar
-// Status: Optimized
-
-import { PermissionsAndroid, Platform } from "react-native";
-import * as Permissions from "expo-permissions";
+// Description: Permissions are now handled automatically by react-native-image-picker v7.
+// This file is kept for backwards compatibility.
+// Status: Updated — expo-permissions removed
 
 class UserPermissions {
   getPhotoPermission = async () => {
-    // if the platform OS is iOS
-    if (Platform.OS === "ios") {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-      if (status !== "granted") {
-        alert("We need permission to use your camera roll if you'd like to incude a photo.");
-      }
-    }
-
-    // if the platform OS is Android
-    if (Platform.OS === "android") {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-      );
-    }
-  }
+    // react-native-image-picker v7+ handles permissions internally on both iOS and Android.
+  };
 }
 
-export default new UserPermissions()
+export default new UserPermissions();
