@@ -205,8 +205,12 @@ class HomeScreen extends React.Component {
   };
 
   render() {
-    const { historymedicines, missedMedicines, remindermedicines, upcomingCount } =
-      this.state;
+    const {
+      historymedicines,
+      missedMedicines,
+      remindermedicines,
+      upcomingCount,
+    } = this.state;
     // Determine Image Chosen to be shown, based on the value below.
     const value =
       ((historymedicines.length - missedMedicines.length) * 100) /
@@ -247,7 +251,7 @@ class HomeScreen extends React.Component {
             style={styles.feed}
             data={historymedicines}
             renderItem={({ item }) => this.renderHistory(item)}
-            keyExtractor={(item) => item.key}
+            keyExtractor={item => item.key}
             horizontal={true}
           />
           <View style={styles.chapterView}>
@@ -258,7 +262,7 @@ class HomeScreen extends React.Component {
             style={styles.feed}
             data={remindermedicines}
             renderItem={({ item }) => this.renderReminder(item)}
-            keyExtractor={(item) => item.key}
+            keyExtractor={item => item.key}
             horizontal={true}
           />
         </View>

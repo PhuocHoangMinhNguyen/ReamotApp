@@ -161,9 +161,8 @@ class CalendarScreen extends React.Component {
   onChange = (event, selectedDate) => {
     const { testDate } = this.state;
     const currentDate = selectedDate || testDate;
-    this.setState(
-      { show: Platform.OS === 'ios', testDate: currentDate },
-      () => this.loadItems(),
+    this.setState({ show: Platform.OS === 'ios', testDate: currentDate }, () =>
+      this.loadItems(),
     );
   };
 

@@ -176,7 +176,7 @@ class MedicineScreen extends React.Component {
           this.props.navigation.navigate('MediInfoScreen', dataInfor);
         }}
       >
-        <Image
+        <FastImage
           style={styles.avatar}
           source={item.image ? { uri: item.image } : tempAvatar}
         />
@@ -222,7 +222,7 @@ class MedicineScreen extends React.Component {
           style={styles.feed}
           data={this.state.myArray}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item) => item.key}
+          keyExtractor={item => item.key}
         />
       );
     }
