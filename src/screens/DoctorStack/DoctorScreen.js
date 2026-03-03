@@ -44,7 +44,9 @@ class DoctorScreen extends Component {
           }
 
           if (tempDoctorEmail != null) {
-            if (this.doctorUnsub) this.doctorUnsub();
+            if (this.doctorUnsub) {
+              this.doctorUnsub();
+            }
             this.doctorUnsub = firestore()
               .collection('doctor')
               .where('doctorEmail', 'in', tempDoctorEmail)
@@ -62,7 +64,9 @@ class DoctorScreen extends Component {
           }
 
           if (tempPharmacistEmail != null) {
-            if (this.pharmacistUnsub) this.pharmacistUnsub();
+            if (this.pharmacistUnsub) {
+              this.pharmacistUnsub();
+            }
             this.pharmacistUnsub = firestore()
               .collection('pharmacist')
               .where('pharmacistEmail', 'in', tempPharmacistEmail)
@@ -84,8 +88,12 @@ class DoctorScreen extends Component {
 
   componentWillUnmount() {
     this.unsubscribers.forEach(unsub => unsub());
-    if (this.doctorUnsub) this.doctorUnsub();
-    if (this.pharmacistUnsub) this.pharmacistUnsub();
+    if (this.doctorUnsub) {
+      this.doctorUnsub();
+    }
+    if (this.pharmacistUnsub) {
+      this.pharmacistUnsub();
+    }
   }
 
   // When clicking on one doctor/ pharmacist item, navigate user to
