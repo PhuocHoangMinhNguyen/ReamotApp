@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Ionicons from '@react-native-vector-icons/ionicons';
@@ -32,6 +33,7 @@ class MediInfoScreen extends React.Component {
     text: '',
     firebaseID: '',
     add: '',
+    loading: true,
   };
 
   unsubscribers = [];
@@ -103,7 +105,7 @@ class MediInfoScreen extends React.Component {
               key: documentSnapshot.id,
             });
           });
-          this.setState({ reminder: temp });
+          this.setState({ reminder: temp, loading: false });
         }),
     );
   }
@@ -228,7 +230,15 @@ class MediInfoScreen extends React.Component {
   };
 
   render() {
-    const { prescription, reminder } = this.state;
+    const { prescription, reminder, loading } = this.state;
+
+    if (loading) {
+      return (
+        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+          <ActivityIndicator size="large" color="#1565C0" />
+        </View>
+      );
+    }
     // Derive the padded list without mutating state. Fills empty slots with 'null'
     // so renderItem can show "+ Add Reminder" placeholders.
     const paddedReminder =

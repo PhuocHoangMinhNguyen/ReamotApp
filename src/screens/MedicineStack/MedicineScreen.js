@@ -36,10 +36,11 @@ class MedicineScreen extends React.Component {
   }
 
   unsubscribe = null;
+  prescriptionUnsub = null;
 
   prescriptionCollection = temp => {
     // Deal with medicines that patient add
-    firestore()
+    this.prescriptionUnsub = firestore()
       .collection('prescription')
       .where('patientEmail', '==', auth().currentUser.email)
       .onSnapshot(querySnapshot => {
@@ -105,6 +106,7 @@ class MedicineScreen extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribe();
+    if (this.prescriptionUnsub) this.prescriptionUnsub();
     this.dismissedSubscription?.remove();
     this.openedSubscription?.remove();
     clearTimeout(this._searchDebounceTimer);
@@ -115,7 +117,8 @@ class MedicineScreen extends React.Component {
       .collection('reminder')
       .where('medicine', '==', name)
       .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot(querySnapshot => {
+      .get()
+      .then(querySnapshot => {
         querySnapshot.forEach(documentSnapshot => {
           firestore()
             .collection('reminder')

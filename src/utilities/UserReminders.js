@@ -45,7 +45,7 @@ class UserReminders {
     // Schedule all alarms and collect the (alarmId, docId, reminderTime) tuples.
     const pendingUpdates = [];
     reminderSnapshot.forEach(documentSnapshot => {
-      const alarmID = Math.floor(Math.random() * 10000).toString();
+      const alarmID = Math.floor(Math.random() * 1e9).toString();
       const reminderTime = documentSnapshot.data().time.toDate();
       while (reminderTime < Date.now()) {
         reminderTime.setDate(reminderTime.getDate() + 1);

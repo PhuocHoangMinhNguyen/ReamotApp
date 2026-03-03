@@ -43,9 +43,9 @@ class RegisterScreen extends React.Component {
   // Check if all information is entered before create a new user.
   handleSignUp = () => {
     const { name, email, password, phoneNumber } = this.state.user;
-    if (name.trim == '') {
+    if (name.trim() === '') {
       Toast.show('Please Enter Full Name', Toast.LONG);
-    } else if (email.trim == '') {
+    } else if (email.trim() === '') {
       Toast.show('Please Enter Email Information', Toast.LONG);
     } else if (password == '') {
       Toast.show('Please Enter A Password', Toast.LONG);
@@ -63,39 +63,40 @@ class RegisterScreen extends React.Component {
   createUser = async user => {
     let remoteUri = null;
     try {
-      await auth()
-        .createUserWithEmailAndPassword(user.email.trim(), user.password)
-        .catch(error => this.setState({ errorMessage: error.message }));
+      await auth().createUserWithEmailAndPassword(
+        user.email.trim(),
+        user.password,
+      );
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+      return;
+    }
 
-      await auth().currentUser.sendEmailVerification();
+    await auth().currentUser.sendEmailVerification();
 
-      // If there is no error.
-      if (this.state.errorMessage == null) {
-        let db = firestore()
-          .collection('users')
-          .doc((auth().currentUser || {}).uid);
+    let db = firestore()
+      .collection('users')
+      .doc((auth().currentUser || {}).uid);
 
-        db.set({
-          name: user.name.trim(),
-          email: user.email.trim(),
-          phoneNumber: user.phoneNumber,
-          avatar: null,
-          doctorList: null,
-          pharmacistList: null,
-        });
+    db.set({
+      name: user.name.trim(),
+      email: user.email.trim(),
+      phoneNumber: user.phoneNumber,
+      avatar: null,
+      doctorList: null,
+      pharmacistList: null,
+    });
 
-        // If the user choose an avatar,
-        if (user.avatar) {
-          // Store the avatar in Firebase Storage
-          remoteUri = await UploadImage.uploadPhotoAsync(
-            user.avatar,
-            `users/${(auth().currentUser || {}).uid}`,
-          );
-          // Then Store the avatar in Cloud Firestore
-          db.set({ avatar: remoteUri }, { merge: true });
-        }
-      }
-    } catch (error) {}
+    // If the user choose an avatar,
+    if (user.avatar) {
+      // Store the avatar in Firebase Storage
+      remoteUri = await UploadImage.uploadPhotoAsync(
+        user.avatar,
+        `users/${(auth().currentUser || {}).uid}`,
+      );
+      // Then Store the avatar in Cloud Firestore
+      db.set({ avatar: remoteUri }, { merge: true });
+    }
   };
 
   // To Pick Avatar from library or take a photo and set it as avatar.

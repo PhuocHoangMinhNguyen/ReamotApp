@@ -43,7 +43,7 @@ class NewReminder extends React.Component {
       },
       alarm: {
         // Details in Problems.txt file, Problem 1
-        reminderId: Math.floor(Math.random() * 10000).toString(),
+        reminderId: Math.floor(Math.random() * 1e9).toString(),
         // Used for react-native-alarm-notification package
         fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
       },

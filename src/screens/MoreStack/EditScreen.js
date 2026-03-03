@@ -43,7 +43,11 @@ class EditScreen extends React.Component {
     this.unsubscribe = firestore()
       .collection('users')
       .doc(user)
-      .onSnapshot(doc => this.setState({ user: doc.data() }));
+      .onSnapshot(doc => {
+        if (doc.exists()) {
+          this.setState({ user: doc.data() });
+        }
+      });
   }
 
   componentWillUnmount() {
@@ -148,7 +152,7 @@ class EditScreen extends React.Component {
               />
             </View>
           </View>
-          <TouchableOpacity onPress={() => this.editProfile}>
+          <TouchableOpacity onPress={this.editProfile}>
             <View style={styles.button}>
               <Text style={{ color: '#FFF' }}>Save profile</Text>
             </View>

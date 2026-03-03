@@ -24,7 +24,9 @@ class ProfileScreen extends React.Component {
       .collection('users')
       .doc(user)
       .onSnapshot(doc => {
-        this.setState({ user: doc.data() });
+        if (doc.exists()) {
+          this.setState({ user: doc.data() });
+        }
       });
   }
 

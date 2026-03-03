@@ -61,7 +61,7 @@ class AppointmentList extends React.Component {
         </View>
         <View style={styles.appoint}>
           <Text style={{ color: '#000000', fontSize: 15 }}>
-            Appoiment Time:{' '}
+            Appointment Time:{' '}
           </Text>
           <Text>{`${moment(item.time.toDate()).format('MMM Do YYYY')} ${moment(
             item.time.toDate(),
@@ -83,9 +83,9 @@ class AppointmentList extends React.Component {
         <Background />
         <Text style={styles.header}>Appointment List</Text>
         <Text style={styles.header1}>
-          List of Upcomming and Past Appointment
+          List of Upcoming and Past Appointments
         </Text>
-        <Text style={styles.titleUpcomming}>Upcomming Appointments</Text>
+        <Text style={styles.titleUpcomming}>Upcoming Appointments</Text>
         <FlatList
           style={styles.feed}
           data={this.state.upcomming_appointmentList}

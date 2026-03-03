@@ -182,7 +182,7 @@ class AppointmentMaker extends React.Component {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => this.handlePress}
+          onPress={this.handlePress}
         >
           <Text style={{ color: '#FFF' }}>Set Appointment</Text>
         </TouchableOpacity>

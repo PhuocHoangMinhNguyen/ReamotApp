@@ -52,7 +52,7 @@ class AddMedicine extends React.Component {
   handleAdd = () => {
     const { name, number, times } = this.state.medicine;
     const { dailyType, weeklyType } = this.state.reminder;
-    if (name.trim == '') {
+    if (name.trim() === '') {
       Toast.show('Please Enter Medicine Name', Toast.LONG);
     } else if (number == '') {
       Toast.show(
@@ -107,6 +107,10 @@ class AddMedicine extends React.Component {
               number: parseInt(number, 10),
               times: parseInt(times, 10),
               type: 'Daily',
+            })
+            .then(() => {
+              this.props.navigation.goBack();
+              Toast.show('A new medicine is added !');
             });
         }
         if (weeklyType == true) {
@@ -120,11 +124,13 @@ class AddMedicine extends React.Component {
               number: parseInt(number, 10),
               times: parseInt(times, 10),
               type: 'Weekly',
+            })
+            .then(() => {
+              this.props.navigation.goBack();
+              Toast.show('A new medicine is added !');
             });
         }
       });
-    this.props.navigation.goBack();
-    Toast.show('A new medicine is added !');
   };
 
   render() {

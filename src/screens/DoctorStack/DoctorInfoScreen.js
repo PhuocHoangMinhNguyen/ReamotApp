@@ -35,47 +35,39 @@ class DoctorInfoScreen extends React.Component {
   // If the user is sure to give doctor/pharmacist access to user's data
   handleYes = () => {
     const { doctor } = this.state;
+    const currentUser = auth().currentUser;
+    const batch = firestore().batch();
     // If the target is a doctor
     if (doctor.type == 'Doctor') {
       // Add the doctor email to user's doctorList
-      firestore()
-        .collection('users')
-        .doc((auth().currentUser || {}).uid)
-        .update({
-          doctorList: firestore.FieldValue.arrayUnion(doctor.email),
-        });
+      batch.update(
+        firestore().collection('users').doc(currentUser.uid),
+        { doctorList: firestore.FieldValue.arrayUnion(doctor.email) },
+      );
       // Add user's email to doctor's patientList
-      firestore()
-        .collection('doctor')
-        .doc(doctor.id)
-        .update({
-          patientList: firestore.FieldValue.arrayUnion(
-            auth().currentUser.email,
-          ),
-        });
+      batch.update(
+        firestore().collection('doctor').doc(doctor.id),
+        { patientList: firestore.FieldValue.arrayUnion(currentUser.email) },
+      );
     }
     // If the target is a pharmacist
     if (doctor.type == 'Pharmacist') {
       // Add the pharmacist email to user's pharmacistList
-      firestore()
-        .collection('users')
-        .doc((auth().currentUser || {}).uid)
-        .update({
-          pharmacistList: firestore.FieldValue.arrayUnion(doctor.email),
-        });
+      batch.update(
+        firestore().collection('users').doc(currentUser.uid),
+        { pharmacistList: firestore.FieldValue.arrayUnion(doctor.email) },
+      );
       // Add user's email to pharmacist's patientList
-      firestore()
-        .collection('pharmacist')
-        .doc(doctor.id)
-        .update({
-          patientList: firestore.FieldValue.arrayUnion(
-            auth().currentUser.email,
-          ),
-        });
+      batch.update(
+        firestore().collection('pharmacist').doc(doctor.id),
+        { patientList: firestore.FieldValue.arrayUnion(currentUser.email) },
+      );
     }
-    this.setState({ dialogVisible: false });
-    Toast.show('Your request is confirmed !');
-    this.props.navigation.navigate('DoctorScreen');
+    batch.commit().then(() => {
+      this.setState({ dialogVisible: false });
+      Toast.show('Your request is confirmed !');
+      this.props.navigation.navigate('DoctorScreen');
+    });
   };
 
   render() {
@@ -109,7 +101,7 @@ class DoctorInfoScreen extends React.Component {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => this.handleGiveAccessToDoctor}
+          onPress={this.handleGiveAccessToDoctor}
         >
           <Text style={{ color: '#FFF' }}>Give access of medical details</Text>
         </TouchableOpacity>

@@ -49,47 +49,39 @@ class AccessedDoctorScreen extends React.Component {
   // If the user is sure to revoke doctor/pharmacist access to user's data
   handleYes = () => {
     const { doctor } = this.state;
+    const currentUser = auth().currentUser;
+    const batch = firestore().batch();
     // If the target is a doctor
     if (doctor.type == 'Doctor') {
       // Remove the doctor email from user's doctorList
-      firestore()
-        .collection('users')
-        .doc((auth().currentUser || {}).uid)
-        .update({
-          doctorList: firestore.FieldValue.arrayRemove(doctor.email),
-        });
+      batch.update(
+        firestore().collection('users').doc(currentUser.uid),
+        { doctorList: firestore.FieldValue.arrayRemove(doctor.email) },
+      );
       // Remove user's email from doctor's patientList
-      firestore()
-        .collection('doctor')
-        .doc(doctor.id)
-        .update({
-          patientList: firestore.FieldValue.arrayRemove(
-            auth().currentUser.email,
-          ),
-        });
+      batch.update(
+        firestore().collection('doctor').doc(doctor.id),
+        { patientList: firestore.FieldValue.arrayRemove(currentUser.email) },
+      );
     }
     // If the target is a pharmacist
     if (doctor.type == 'Pharmacist') {
       // Remove the pharmacist email from user's pharmacistList
-      firestore()
-        .collection('users')
-        .doc((auth().currentUser || {}).uid)
-        .update({
-          pharmacistList: firestore.FieldValue.arrayRemove(doctor.email),
-        });
+      batch.update(
+        firestore().collection('users').doc(currentUser.uid),
+        { pharmacistList: firestore.FieldValue.arrayRemove(doctor.email) },
+      );
       // Remove user's email from pharmacist's patientList
-      firestore()
-        .collection('pharmacist')
-        .doc(doctor.id)
-        .update({
-          patientList: firestore.FieldValue.arrayRemove(
-            auth().currentUser.email,
-          ),
-        });
+      batch.update(
+        firestore().collection('pharmacist').doc(doctor.id),
+        { patientList: firestore.FieldValue.arrayRemove(currentUser.email) },
+      );
     }
-    this.setState({ dialogVisible: false });
-    Toast.show('Your request is confirmed !');
-    this.props.navigation.goBack();
+    batch.commit().then(() => {
+      this.setState({ dialogVisible: false });
+      Toast.show('Your request is confirmed !');
+      this.props.navigation.goBack();
+    });
   };
 
   render() {

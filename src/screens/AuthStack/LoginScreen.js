@@ -48,7 +48,7 @@ class LoginScreen extends React.Component {
     } else {
       auth()
         .signInWithEmailAndPassword(emailTrim, password)
-        .catch(error => this.setState({ errorMessage: error.message }))
+        .catch(() => this.setState({ errorMessage: 'Incorrect email or password.' }))
         .then(() => {
           if (auth().currentUser) {
             UserReminders.setReminders(emailTrim);
@@ -127,7 +127,7 @@ class LoginScreen extends React.Component {
             onPress={() => this.props.navigation.navigate('RegisterScreen')}
           >
             <Text style={{ color: '#414959', fontSize: 13 }}>
-              New to SocialApp?{' '}
+              New to Reamot?{' '}
               <Text style={{ fontWeight: '500', color: '#018ABE' }}>
                 Sign up
               </Text>

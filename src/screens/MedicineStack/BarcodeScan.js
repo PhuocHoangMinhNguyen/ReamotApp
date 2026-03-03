@@ -33,7 +33,7 @@ class BarcodeScan extends React.Component {
       // Set flashOff by default
       flashOn: false,
       // Details in Problems.txt file, Problem 1
-      alarmId: Math.floor(Math.random() * 10000).toString(),
+      alarmId: Math.floor(Math.random() * 1e9).toString(),
       itemTime: null,
     };
   }
