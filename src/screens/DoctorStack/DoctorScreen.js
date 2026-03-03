@@ -158,7 +158,7 @@ class DoctorScreen extends Component {
           <ActivityIndicator size="large" color="#1565C0" />
         </View>
       );
-    // If there is no accessed doctor and accessed pharmacist.
+      // If there is no accessed doctor and accessed pharmacist.
     } else if (
       this.state.accessedDoctor.length == 0 &&
       this.state.accessedPharmacist.length == 0

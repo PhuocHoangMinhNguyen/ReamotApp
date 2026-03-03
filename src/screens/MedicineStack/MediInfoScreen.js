@@ -234,7 +234,12 @@ class MediInfoScreen extends React.Component {
 
     if (loading) {
       return (
-        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <View
+          style={[
+            styles.container,
+            { justifyContent: 'center', alignItems: 'center' },
+          ]}
+        >
           <ActivityIndicator size="large" color="#1565C0" />
         </View>
       );

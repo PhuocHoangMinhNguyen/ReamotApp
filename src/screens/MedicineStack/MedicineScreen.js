@@ -106,7 +106,9 @@ class MedicineScreen extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribe();
-    if (this.prescriptionUnsub) this.prescriptionUnsub();
+    if (this.prescriptionUnsub) {
+      this.prescriptionUnsub();
+    }
     this.dismissedSubscription?.remove();
     this.openedSubscription?.remove();
     clearTimeout(this._searchDebounceTimer);

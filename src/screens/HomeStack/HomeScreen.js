@@ -206,7 +206,9 @@ class HomeScreen extends React.Component {
         <Text
           style={item.status == 'taken' ? styles.timeTaken : styles.timeMissed}
         >
-          {item.startTime ? moment(item.startTime.toDate()).format('hh:mm a') : ''}
+          {item.startTime
+            ? moment(item.startTime.toDate()).format('hh:mm a')
+            : ''}
         </Text>
       </TouchableOpacity>
     );
@@ -223,7 +225,12 @@ class HomeScreen extends React.Component {
 
     if (loading) {
       return (
-        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <View
+          style={[
+            styles.container,
+            { justifyContent: 'center', alignItems: 'center' },
+          ]}
+        >
           <ActivityIndicator size="large" color="#1565C0" />
         </View>
       );

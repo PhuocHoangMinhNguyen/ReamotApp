@@ -48,7 +48,9 @@ class LoginScreen extends React.Component {
     } else {
       auth()
         .signInWithEmailAndPassword(emailTrim, password)
-        .catch(() => this.setState({ errorMessage: 'Incorrect email or password.' }))
+        .catch(() =>
+          this.setState({ errorMessage: 'Incorrect email or password.' }),
+        )
         .then(() => {
           if (auth().currentUser) {
             UserReminders.setReminders(emailTrim);

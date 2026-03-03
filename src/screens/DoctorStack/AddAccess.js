@@ -46,7 +46,11 @@ class AddAccess extends React.Component {
 
         const updateState = () => {
           const combined = [...doctors, ...pharmacists];
-          this.setState({ doc_phar: combined, myArray: combined, loading: false });
+          this.setState({
+            doc_phar: combined,
+            myArray: combined,
+            loading: false,
+          });
         };
 
         this.unsubscribe2 = firestore()
@@ -54,7 +58,9 @@ class AddAccess extends React.Component {
           .onSnapshot(querySnapshot => {
             doctors = [];
             querySnapshot.forEach(documentSnapshot => {
-              if (!tempDoctorEmail.includes(documentSnapshot.data().doctorEmail)) {
+              if (
+                !tempDoctorEmail.includes(documentSnapshot.data().doctorEmail)
+              ) {
                 doctors.push({
                   ...documentSnapshot.data(),
                   key: documentSnapshot.id,
@@ -70,7 +76,11 @@ class AddAccess extends React.Component {
           .onSnapshot(querySnapshot => {
             pharmacists = [];
             querySnapshot.forEach(documentSnapshot => {
-              if (!tempPharmacistEmail.includes(documentSnapshot.data().pharmacistEmail)) {
+              if (
+                !tempPharmacistEmail.includes(
+                  documentSnapshot.data().pharmacistEmail,
+                )
+              ) {
                 pharmacists.push({
                   ...documentSnapshot.data(),
                   key: documentSnapshot.id,
@@ -84,8 +94,12 @@ class AddAccess extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.unsubscribe2) this.unsubscribe2();
-    if (this.unsubscribe3) this.unsubscribe3();
+    if (this.unsubscribe2) {
+      this.unsubscribe2();
+    }
+    if (this.unsubscribe3) {
+      this.unsubscribe3();
+    }
   }
 
   // Click on each item in flatlist will lead user to DoctorInfoScreen

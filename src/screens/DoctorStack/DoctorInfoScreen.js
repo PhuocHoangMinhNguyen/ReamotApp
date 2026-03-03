@@ -40,28 +40,24 @@ class DoctorInfoScreen extends React.Component {
     // If the target is a doctor
     if (doctor.type == 'Doctor') {
       // Add the doctor email to user's doctorList
-      batch.update(
-        firestore().collection('users').doc(currentUser.uid),
-        { doctorList: firestore.FieldValue.arrayUnion(doctor.email) },
-      );
+      batch.update(firestore().collection('users').doc(currentUser.uid), {
+        doctorList: firestore.FieldValue.arrayUnion(doctor.email),
+      });
       // Add user's email to doctor's patientList
-      batch.update(
-        firestore().collection('doctor').doc(doctor.id),
-        { patientList: firestore.FieldValue.arrayUnion(currentUser.email) },
-      );
+      batch.update(firestore().collection('doctor').doc(doctor.id), {
+        patientList: firestore.FieldValue.arrayUnion(currentUser.email),
+      });
     }
     // If the target is a pharmacist
     if (doctor.type == 'Pharmacist') {
       // Add the pharmacist email to user's pharmacistList
-      batch.update(
-        firestore().collection('users').doc(currentUser.uid),
-        { pharmacistList: firestore.FieldValue.arrayUnion(doctor.email) },
-      );
+      batch.update(firestore().collection('users').doc(currentUser.uid), {
+        pharmacistList: firestore.FieldValue.arrayUnion(doctor.email),
+      });
       // Add user's email to pharmacist's patientList
-      batch.update(
-        firestore().collection('pharmacist').doc(doctor.id),
-        { patientList: firestore.FieldValue.arrayUnion(currentUser.email) },
-      );
+      batch.update(firestore().collection('pharmacist').doc(doctor.id), {
+        patientList: firestore.FieldValue.arrayUnion(currentUser.email),
+      });
     }
     batch.commit().then(() => {
       this.setState({ dialogVisible: false });

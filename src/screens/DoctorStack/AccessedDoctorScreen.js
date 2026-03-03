@@ -54,28 +54,24 @@ class AccessedDoctorScreen extends React.Component {
     // If the target is a doctor
     if (doctor.type == 'Doctor') {
       // Remove the doctor email from user's doctorList
-      batch.update(
-        firestore().collection('users').doc(currentUser.uid),
-        { doctorList: firestore.FieldValue.arrayRemove(doctor.email) },
-      );
+      batch.update(firestore().collection('users').doc(currentUser.uid), {
+        doctorList: firestore.FieldValue.arrayRemove(doctor.email),
+      });
       // Remove user's email from doctor's patientList
-      batch.update(
-        firestore().collection('doctor').doc(doctor.id),
-        { patientList: firestore.FieldValue.arrayRemove(currentUser.email) },
-      );
+      batch.update(firestore().collection('doctor').doc(doctor.id), {
+        patientList: firestore.FieldValue.arrayRemove(currentUser.email),
+      });
     }
     // If the target is a pharmacist
     if (doctor.type == 'Pharmacist') {
       // Remove the pharmacist email from user's pharmacistList
-      batch.update(
-        firestore().collection('users').doc(currentUser.uid),
-        { pharmacistList: firestore.FieldValue.arrayRemove(doctor.email) },
-      );
+      batch.update(firestore().collection('users').doc(currentUser.uid), {
+        pharmacistList: firestore.FieldValue.arrayRemove(doctor.email),
+      });
       // Remove user's email from pharmacist's patientList
-      batch.update(
-        firestore().collection('pharmacist').doc(doctor.id),
-        { patientList: firestore.FieldValue.arrayRemove(currentUser.email) },
-      );
+      batch.update(firestore().collection('pharmacist').doc(doctor.id), {
+        patientList: firestore.FieldValue.arrayRemove(currentUser.email),
+      });
     }
     batch.commit().then(() => {
       this.setState({ dialogVisible: false });
