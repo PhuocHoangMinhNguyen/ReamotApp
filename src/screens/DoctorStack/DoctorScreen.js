@@ -10,6 +10,7 @@ import {
   SectionList,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -21,6 +22,7 @@ class DoctorScreen extends Component {
   state = {
     accessedDoctor: [],
     accessedPharmacist: [],
+    loading: true,
   };
 
   unsubscribers = [];
@@ -36,6 +38,9 @@ class DoctorScreen extends Component {
         .collection('users')
         .doc((auth().currentUser || {}).uid)
         .onSnapshot(documentSnapshot => {
+          if (this.state.loading) {
+            this.setState({ loading: false });
+          }
           const tempDoctorEmail = documentSnapshot.data().doctorList;
           const tempPharmacistEmail = documentSnapshot.data().pharmacistList;
 
@@ -143,9 +148,18 @@ class DoctorScreen extends Component {
   };
 
   render() {
+    const { loading } = this.state;
     let message;
-    // If there is no accessed doctor and accessed pharmacist.
-    if (
+    if (loading) {
+      message = (
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
+          <ActivityIndicator size="large" color="#1565C0" />
+        </View>
+      );
+      // If there is no accessed doctor and accessed pharmacist.
+    } else if (
       this.state.accessedDoctor.length == 0 &&
       this.state.accessedPharmacist.length == 0
     ) {
@@ -190,7 +204,7 @@ class DoctorScreen extends Component {
           }
         </Text>
         {message}
-        <TouchableOpacity style={styles.button} onPress={() => this.addAccess}>
+        <TouchableOpacity style={styles.button} onPress={this.addAccess}>
           <Text style={{ color: '#FFF' }}>
             Give Access to Another Doctor/ Pharmacist
           </Text>

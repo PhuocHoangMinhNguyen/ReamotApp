@@ -10,6 +10,7 @@ import {
   FlatList,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
@@ -28,13 +29,18 @@ class HomeScreen extends React.Component {
     remindermedicines: [],
     missedMedicines: [],
     upcomingCount: 0,
+    loading: true,
   };
 
   unsubscribers = [];
   medicineMap = new Map();
 
   componentDidMount() {
-    const email = auth().currentUser.email;
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      return;
+    }
+    const email = currentUser.email;
     const today = moment().format('MMMM Do YYYY');
 
     // Subscribe to medicine catalog once; update the Map on every change.
@@ -69,7 +75,7 @@ class HomeScreen extends React.Component {
               });
             }
           });
-          this.setState({ historymedicines: tempHistory });
+          this.setState({ historymedicines: tempHistory, loading: false });
         }),
     );
 
@@ -120,6 +126,7 @@ class HomeScreen extends React.Component {
               };
               tempReminder.push(item);
               if (
+                item.time &&
                 item.time.toDate().toDateString() === todayStr &&
                 item.time.toDate() >= now
               ) {
@@ -145,6 +152,7 @@ class HomeScreen extends React.Component {
     };
 
     if (
+      item.time &&
       item.time.toDate().toDateString() == new Date().toDateString() &&
       item.time.toDate() >= Date.now()
     ) {
@@ -198,7 +206,9 @@ class HomeScreen extends React.Component {
         <Text
           style={item.status == 'taken' ? styles.timeTaken : styles.timeMissed}
         >
-          {moment(item.startTime.toDate()).format('hh:mm a')}
+          {item.startTime
+            ? moment(item.startTime.toDate()).format('hh:mm a')
+            : ''}
         </Text>
       </TouchableOpacity>
     );
@@ -210,11 +220,26 @@ class HomeScreen extends React.Component {
       missedMedicines,
       remindermedicines,
       upcomingCount,
+      loading,
     } = this.state;
+
+    if (loading) {
+      return (
+        <View
+          style={[
+            styles.container,
+            { justifyContent: 'center', alignItems: 'center' },
+          ]}
+        >
+          <ActivityIndicator size="large" color="#1565C0" />
+        </View>
+      );
+    }
     // Determine Image Chosen to be shown, based on the value below.
-    const value =
+    const rawValue =
       ((historymedicines.length - missedMedicines.length) * 100) /
       (upcomingCount + historymedicines.length);
+    const value = isNaN(rawValue) || !isFinite(rawValue) ? 0 : rawValue;
 
     // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
     if (historymedicines.length == 0 && remindermedicines.length == 0) {

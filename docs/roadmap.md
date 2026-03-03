@@ -1,192 +1,232 @@
-# Performance Optimization Roadmap
+# Bug Fix & Improvement Roadmap
 
-Generated from analysis on 2026-03-03. Issues are ordered by priority — highest impact, lowest effort first.
-
----
-
-## Phase 1 — Critical Fixes (Immediate)
-
-These issues cause exponential performance degradation as user data grows.
-
-### P1-1: Eliminate N+1 Queries in CalendarScreen
-**File:** `src/screens/CalendarStack/CalendarScreen.js:122-139`
-**Severity:** Critical
-
-**Problem:** A Firestore `.get()` call is made inside a `forEach` loop on snapshot results. A patient with 20 history entries triggers 20 separate network calls, each individually calling `setState()` and `calculate()`.
-
-```js
-// Current (broken) pattern:
-querySnapshot.forEach(doc => {
-  firestore().collection('medicine')
-    .where('name', '==', doc.data().medicine)
-    .get()             // ← one network call per item
-    .then(() => {
-      this.setState(...)  // ← re-render per item
-      this.calculate()    // ← recalculate per item
-    });
-});
-```
-
-**Fix:** Pre-fetch the entire `medicine` collection once and build a `Map<name, medicineDoc>`. Resolve all history items against the Map in a single synchronous pass, then call `setState` and `calculate` once.
+Generated from QA review on 2026-03-03. Issues ordered by priority — highest impact first.
 
 ---
 
-### P1-2: Move HomeScreen Counting Logic Out of Render
-**File:** `src/screens/HomeStack/HomeScreen.js:200-209`
-**Severity:** Critical
+## Phase 1 — Critical Fixes
 
-**Problem:** An O(n) `for` loop that counts upcoming reminders runs on every render. HomeScreen re-renders frequently because three simultaneous `onSnapshot` listeners each call `setState`.
-
-```js
-// Currently runs on every render:
-for (let i = 0; i < this.state.remindermedicines.length; i++) {
-  if (reminderTime.toDateString() == today && ...) counting++;
-}
-```
-
-**Fix:** Compute and store `upcomingCount` inside the `onSnapshot` callback. Only recalculate when reminder data actually changes.
-
----
-
-### P1-3: Batch HomeScreen Firestore Joins
-**File:** `src/screens/HomeStack/HomeScreen.js:34-125`
-**Severity:** Critical
-
-**Problem:** Three concurrent `onSnapshot` listeners (history, missed, reminders) each perform O(n×m) client-side joins against the medicine collection on every update.
-
-**Fix:** Subscribe to the `medicine` collection once and store results in a component-level Map. Reference that Map in all three other listeners instead of re-iterating.
-
----
-
-## Phase 2 — High Severity Fixes
-
-### P2-1: Fix FlatList Key Extractors
+### P1-1: Four Broken `onPress` Handlers
 **Files:**
-- `src/screens/MedicineStack/MedicineScreen.js:218`
-- `src/screens/HomeStack/HomeScreen.js:250-266`
-- `src/screens/MedicineStack/MediInfoScreen.js:396`
-**Severity:** High
+- `src/screens/DoctorStack/DoctorScreen.js:193`
+- `src/screens/DoctorStack/DoctorInfoScreen.js:112`
+- `src/screens/DoctorStack/AppointmentMaker.js:185`
+- `src/screens/MoreStack/EditScreen.js:151`
 
-**Problem:** `keyExtractor={(item, index) => index.toString()}` (or no `keyExtractor`) forces React Native to re-render the entire list on any state change, even when only one item changed.
+**Problem:** All four buttons use `onPress={() => this.methodName}` — a reference to the method without calling it. Pressing these buttons does nothing. Affected flows: give doctor access, confirm doctor access grant, book an appointment, save profile edits.
 
-**Fix:** Use the Firestore document ID as the key:
-```js
-keyExtractor={(item) => item.id}
-```
+**Fix:** Change `onPress={() => this.methodName}` to `onPress={this.methodName}`.
 
 ---
 
-### P2-2: Fix State Mutation in Render Path
-**File:** `src/screens/MedicineStack/MediInfoScreen.js:234-242`
-**Severity:** High
-
-**Problem:** The render method directly mutates `this.state.reminder` via `.push()`. This causes React to miss updates and produces unpredictable behaviour.
-
-```js
-// Never mutate state directly:
-this.state.reminder.push('null');
-```
-
-**Fix:** Derive the padded array in the `onSnapshot` callback using a new array: `[...existing, ...padding]`, then store via `setState`.
-
----
-
-### P2-3: Audit and Consolidate onSnapshot Listeners
+### P1-2: `name.trim` Not Called — Validation Always Bypassed
 **Files:**
-- `src/screens/MedicineStack/MediInfoScreen.js:41-104` — 3 concurrent listeners
-- `src/screens/DoctorStack/DoctorScreen.js` — nested `onSnapshot` callbacks
-**Severity:** High
+- `src/screens/AuthStack/RegisterScreen.js:46,48`
+- `src/screens/MedicineStack/AddMedicine.js:55`
 
-**Problem:** Multiple listeners per screen visit can accumulate if `componentWillUnmount` cleanup timing is off (e.g., fast navigation). This drains battery and memory over a session.
+**Problem:** `name.trim == ''` compares the *function reference* to `''`, which is always `false`. Empty name/email fields silently pass validation and write blank strings to Firebase Auth and Firestore.
 
-**Fix:** Store all unsubscribe functions in an array and call them all in `componentWillUnmount`. Consider consolidating queries where possible.
-
----
-
-## Phase 3 — Medium Severity Improvements
-
-### P3-1: Add Image Caching with react-native-fast-image
-**Files:** All screens rendering `item.image` URI from Firebase Storage
-**Severity:** Medium
-
-**Problem:** React Native's `Image` component has no cache by default. Medicine images re-fetch from Firebase Storage on every list scroll or screen revisit.
-
-**Fix:** Replace `<Image>` with `<FastImage>` from `react-native-fast-image`. It is a drop-in replacement with disk-backed caching.
-
-```bash
-pnpm add react-native-fast-image
-```
+**Fix:** Change `name.trim == ''` to `name.trim() === ''`.
 
 ---
 
-### P3-2: Debounce Medicine Search Input
-**File:** `src/screens/MedicineStack/MedicineScreen.js:184-195`
-**Severity:** Medium
+### P1-3: `auth().currentUser` Null Crashes
+**Files:**
+- `src/screens/HomeStack/HomeScreen.js:37`
+- `src/screens/HomeStack/HomeScreen.js:122-124`
+- `src/screens/HomeStack/HomeScreen.js:201`
+- `src/screens/CalendarStack/CalendarScreen.js:56,68,122`
 
-**Problem:** Uppercasing and filtering the full array runs on every single keystroke with no throttling.
+**Problem:** `auth().currentUser.email` is called without a null guard. If `currentUser` is transiently null (e.g. during logout or Firebase re-initialization), the app crashes. Additionally, `item.time` and `item.startTime` are called with `.toDate()` without null guards — malformed Firestore documents crash the render.
 
-**Fix:** Wrap `searchFilterFunction` in a 200–300 ms debounce. Store the debounced reference in the constructor and cancel it in `componentWillUnmount`.
-
----
-
-### P3-3: Lazy-Load Tree Image Assets
-**File:** `src/components/TreeImage.js:11-32`
-**Severity:** Medium
-
-**Problem:** All 6 PNG frames (~471 KB combined, with `GrowingTree.png` alone at 151 KB) are statically `require()`d at bundle time, even though only one is ever displayed.
-
-**Fix:** Replace individual `require()` calls with a lookup array indexed by the `value` range. Alternatively, convert to a Lottie animation (`.json`) which will be significantly smaller.
+**Fix:** Add `const user = auth().currentUser; if (!user) return;` at the top of `componentDidMount` and `calculate()`. Guard `item.time` and `item.startTime` before calling `.toDate()`.
 
 ---
 
-### P3-4: Batch Firestore Writes in UserReminders
-**File:** `src/utilities/UserReminders.js:68-100`
-**Severity:** Medium
+### P1-4: Premature Navigation in `addMedicine`
+**File:** `src/screens/MedicineStack/AddMedicine.js:126-127`
 
-**Problem:** `findIdAN()` issues a separate Firestore document update for each alarm inside a nested loop. On login with many reminders, this serialises many individual writes.
+**Problem:** `this.props.navigation.goBack()` and `Toast.show(...)` are called immediately after initiating the async Firestore write, not inside `.then()`. Success toast fires even if the write fails; navigation happens before the `prescription` document write begins.
 
-**Fix:** Collect all updates in a `firestore().batch()` and commit once after the loop.
-
----
-
-### P3-5: Enable Lazy Tab Initialization
-**File:** `src/routes/BottomTabs.js`
-**Severity:** Low
-
-**Problem:** All 5 tab stacks mount on app cold start, even if the user never visits them in that session.
-
-**Fix:** Add `lazy: true` to the bottom tab navigator config (React Navigation v7 supports this). Screens will mount only on first visit.
+**Fix:** Move `goBack()` and `Toast.show()` inside the innermost `.then()` callback after all writes complete.
 
 ---
 
-## Summary Table
+### P1-5: `createUser` Error Handling Race Condition
+**File:** `src/screens/AuthStack/RegisterScreen.js:63-98`
 
-| ID | Issue | File(s) | Severity | Effort |
-|---|---|---|---|---|
-| P1-1 | N+1 queries in CalendarScreen | CalendarScreen.js:122 | Critical | Medium |
-| P1-2 | Counting loop in render | HomeScreen.js:200 | Critical | Low |
-| P1-3 | Triple onSnapshot joins | HomeScreen.js:34 | Critical | Medium |
-| P2-1 | Bad FlatList key extractors | MedicineScreen, HomeScreen, MediInfoScreen | High | Low |
-| P2-2 | State mutation in render | MediInfoScreen.js:234 | High | Low |
-| P2-3 | Unmanaged onSnapshot listeners | MediInfoScreen.js, DoctorScreen.js | High | Medium |
-| P3-1 | No image caching | All screens with URI images | Medium | Low |
-| P3-2 | Unthrottled search filter | MedicineScreen.js:184 | Medium | Low |
-| P3-3 | All tree images eager-loaded | TreeImage.js:11 | Medium | Low |
-| P3-4 | Sequential Firestore writes | UserReminders.js:68 | Medium | Medium |
-| P3-5 | No lazy tab loading | BottomTabs.js | Low | Trivial |
+**Problem:** If `createUserWithEmailAndPassword` fails, the `.catch()` sets `errorMessage` but the next line `await auth().currentUser.sendEmailVerification()` is called regardless — potentially sending a verification email to the wrong (already signed-in) user.
+
+**Fix:** Check for the error before calling `sendEmailVerification`. Use try/catch properly instead of chaining `.catch()` on the awaited expression.
+
+---
+
+## Phase 2 — High Severity
+
+### P2-1: Leaked `prescription` Listener in MedicineScreen
+**File:** `src/screens/MedicineStack/MedicineScreen.js:40-64`
+
+**Problem:** The inner `onSnapshot` on the `prescription` collection is never stored and never unsubscribed. Every visit to `MedicineScreen` adds a permanent listener. Over multiple navigations, listeners accumulate — draining battery and calling `setState` on unmounted components.
+
+**Fix:** Store `this.prescriptionUnsub = firestore()...onSnapshot(...)` and call it in `componentWillUnmount`.
+
+---
+
+### P2-2: `deleteAlarms` Uses `onSnapshot` Instead of `.get()`
+**File:** `src/screens/MedicineStack/MedicineScreen.js:113-131`
+
+**Problem:** A permanent `onSnapshot` listener is created during a delete operation, and the unsubscribe handle is discarded. The listener persists for the app session.
+
+**Fix:** Replace `onSnapshot(...)` with `.get().then(...)` since no real-time updates are needed for deletion.
+
+---
+
+### P2-3: Non-Atomic Doctor Access Writes
+**Files:**
+- `src/screens/DoctorStack/DoctorInfoScreen.js:39-55`
+- `src/screens/DoctorStack/AccessedDoctorScreen.js:53-89`
+
+**Problem:** Two independent Firestore writes per access grant/revoke. A network failure between them leaves inconsistent state — a privacy-sensitive operation with no self-healing path.
+
+**Fix:** Use `firestore().batch()` to make both writes atomic.
+
+---
+
+### P2-4: Alarm ID Collision Range Too Small
+**Files:**
+- `src/screens/MedicineStack/DailyReminder/NewReminder.js:47`
+- `src/screens/MedicineStack/WeeklyReminder/WeeklyNewReminder.js:46`
+- `src/screens/MedicineStack/BarcodeScan.js:36`
+- `src/utilities/UserReminders.js:48`
+
+**Problem:** `Math.floor(Math.random() * 10000)` — only 10,000 possible IDs. A collision silently marks the new alarm as Inactive, meaning a medication reminder never fires. Directly undermines the app's core purpose.
+
+**Fix:** Increase range to `Math.floor(Math.random() * 1e9)` or use a UUID.
+
+---
+
+### P2-5: `AddAccess` Listener Race Condition + Duplicate Items
+**File:** `src/screens/DoctorStack/AddAccess.js:33-99`
+
+**Problem:** Three `onSnapshot` listeners registered concurrently. The doctor/pharmacist collection listeners may fire before the `users` document listener, leaving `tempDoctorEmail` as `[]`. Already-granted doctors appear as available. Additionally, each re-fire of any listener appends to `temp`, producing duplicate entries.
+
+**Fix:** Use `.get()` for the users document (no real-time needed), then subscribe to doctor/pharmacist collections after the data is available.
+
+---
+
+### P2-6: `doc.data()` Null Guard Missing
+**Files:**
+- `src/routes/DrawerMenu/ProfileScreen.js:26`
+- `src/screens/MoreStack/EditScreen.js:46`
+
+**Problem:** If the `users` Firestore document doesn't exist (partial registration, manual deletion), `doc.data()` returns `undefined`. Subsequent access to `.avatar`, `.name`, `.email` crashes.
+
+**Fix:** Add `if (doc.exists()) { this.setState({ user: doc.data() }); }`.
+
+---
+
+### P2-7: `CalendarScreen` Sets `medicine: null` for Empty State
+**File:** `src/screens/CalendarStack/CalendarScreen.js:136`
+
+**Problem:** `this.setState({ medicine: result.length > 0 ? result : null })` sets `medicine` to `null` when empty. `FlatList` receives `data={null}` and causes a React Native warning.
+
+**Fix:** Use `this.setState({ medicine: result })` — an empty array is the correct empty sentinel.
+
+---
+
+### P2-8: TreeImage Receives `NaN` for New Users
+**File:** `src/screens/HomeStack/HomeScreen.js:215-224`
+
+**Problem:** When a patient has no history and no reminders, `value = 0 / 0 = NaN`. `NaN` is passed to `TreeImage`, which falls through all comparisons and shows the fully-grown tree — misleading for a brand-new user.
+
+**Fix:** Guard `const safeValue = isNaN(value) || !isFinite(value) ? 0 : value;` before passing to `TreeImage`.
+
+---
+
+### P2-9: `CalendarScreen` `calculate()` Stale State Race
+**File:** `src/screens/CalendarStack/CalendarScreen.js:116-138`
+
+**Problem:** If the user changes the date rapidly, two `loadItems()` calls are in flight. The second cancels the first listener, but the first `calculate()` may still be running and will call `setState` with stale chart data for the old date.
+
+**Fix:** Use an `isCancelled` flag per `loadItems()` invocation, checked before `setState` in `calculate()`.
+
+---
+
+## Phase 3 — Medium / Low
+
+### P3-1: User Enumeration via Firebase Auth Error Messages
+**File:** `src/screens/AuthStack/LoginScreen.js:49-57`
+
+**Problem:** Firebase Auth error messages (e.g. "no user with this email") are shown directly in the UI, allowing enumeration of registered email addresses.
+
+**Fix:** Display a generic "Incorrect email or password" message for all auth errors.
+
+---
+
+### P3-2: Dead Code in `CalendarScreen.renderItem`
+**File:** `src/screens/CalendarStack/CalendarScreen.js:187-192`
+
+**Problem:** The `if (item.date == ...)` check is always true — the Firestore query already filters by date. The fallback `<Text style={{ height: 0.1 }} />` never renders. Dead code adds visual noise.
+
+**Fix:** Remove the conditional and always return `correctItem`.
+
+---
+
+### P3-3: Wrong App Name in Login Screen
+**File:** `src/screens/AuthStack/LoginScreen.js:131`
+
+**Problem:** "New to SocialApp?" — copy-paste leftover from a template.
+
+**Fix:** Change to "New to Reamot?".
+
+---
+
+### P3-4: Typos in AppointmentList
+**File:** `src/screens/MoreStack/AppointmentList.js:64,88`
+
+**Problem:** "Appoiment Time" and "Upcomming Appointments".
+
+**Fix:** "Appointment Time" and "Upcoming Appointments".
+
+---
+
+### P3-5: No Loading Indicators on Key Screens
+**Files:** HomeScreen, CalendarScreen, DoctorScreen, MediInfoScreen
+
+**Problem:** Screens show empty-state UI while Firestore data is being fetched. On slow networks this looks like an error.
+
+**Fix:** Add `loading: true` initial state and render an `ActivityIndicator` until the first snapshot fires.
+
+---
+
+### P3-6: Weekly Reminder Fires Daily
+**Files:** `src/screens/MedicineStack/WeeklyReminder/WeeklyNewReminder.js`, `WeeklyChangeReminder.js`
+
+**Problem:** Weekly reminders use `schedule_type: 'once'` — identical to daily reminders. A "weekly" reminder fires at the same frequency as a daily reminder.
+
+**Fix:** Use the correct `schedule_type` for weekly recurrence per the `react-native-alarm-notification` API.
 
 ---
 
 ## Status Tracking
 
-- [x] P1-1 — N+1 queries in CalendarScreen
-- [x] P1-2 — Counting loop in render (HomeScreen)
-- [x] P1-3 — Triple onSnapshot joins (HomeScreen)
-- [x] P2-1 — FlatList key extractors
-- [x] P2-2 — State mutation in render (MediInfoScreen)
-- [x] P2-3 — Unmanaged onSnapshot listeners
-- [x] P3-1 — Image caching (react-native-fast-image)
-- [x] P3-2 — Debounce search filter
-- [x] P3-3 — Lazy-load tree images
-- [x] P3-4 — Batch Firestore writes (UserReminders)
-- [x] P3-5 — Lazy tab initialization
+- [x] P1-1 — Four broken `onPress` handlers
+- [x] P1-2 — `name.trim` not called
+- [x] P1-3 — `auth().currentUser` null crashes
+- [x] P1-4 — Premature navigation in `addMedicine`
+- [x] P1-5 — `createUser` error handling race condition
+- [x] P2-1 — Leaked `prescription` listener in MedicineScreen
+- [x] P2-2 — `deleteAlarms` uses `onSnapshot` instead of `.get()`
+- [x] P2-3 — Non-atomic doctor access writes
+- [x] P2-4 — Alarm ID collision range too small
+- [x] P2-5 — `AddAccess` listener race condition + duplicates
+- [x] P2-6 — `doc.data()` null guard missing
+- [x] P2-7 — `CalendarScreen` sets `medicine: null` for empty state
+- [x] P2-8 — TreeImage receives `NaN` for new users
+- [x] P2-9 — `CalendarScreen` stale `calculate()` race
+- [x] P3-1 — User enumeration via auth error messages
+- [x] P3-2 — Dead code in `CalendarScreen.renderItem`
+- [x] P3-3 — Wrong app name "SocialApp" in LoginScreen
+- [x] P3-4 — Typos in AppointmentList
+- [x] P3-5 — No loading indicators on key screens
+- [x] P3-6 — Weekly reminder fires daily

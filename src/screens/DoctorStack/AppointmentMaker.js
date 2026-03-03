@@ -180,10 +180,7 @@ class AppointmentMaker extends React.Component {
             value={this.state.reason}
           />
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.handlePress}
-        >
+        <TouchableOpacity style={styles.button} onPress={this.handlePress}>
           <Text style={{ color: '#FFF' }}>Set Appointment</Text>
         </TouchableOpacity>
         <ConfirmDialog

@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   Dimensions,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
@@ -42,18 +43,25 @@ class CalendarScreen extends React.Component {
       backgroundGradientTo: '#DEE8F1',
       color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
     },
+    loading: true,
   };
 
   medicineMap = new Map();
   historyUnsubscribe = null;
+  loadToken = 0;
 
   // calculate some value to show the progress chart
   calculate = async () => {
+    const token = this.loadToken;
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      return;
+    }
     // Get history documents with status missed to calculate percentage
     let docsMissedLength = 0;
     await firestore()
       .collection('history')
-      .where('patientEmail', '==', auth().currentUser.email)
+      .where('patientEmail', '==', currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .where('status', '==', 'missed')
       .get()
@@ -65,7 +73,7 @@ class CalendarScreen extends React.Component {
     let docsTakenLength = 0;
     await firestore()
       .collection('history')
-      .where('patientEmail', '==', auth().currentUser.email)
+      .where('patientEmail', '==', currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .where('status', '==', 'taken')
       .get()
@@ -97,6 +105,10 @@ class CalendarScreen extends React.Component {
     }
 
     percentageArray[0] = percentage;
+    // Discard result if a newer loadItems() invocation has started
+    if (this.loadToken !== token) {
+      return;
+    }
     // tag it to this.state.chartData.data
     this.setState({
       chartData: {
@@ -117,9 +129,14 @@ class CalendarScreen extends React.Component {
     if (this.historyUnsubscribe) {
       this.historyUnsubscribe();
     }
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      return;
+    }
+    this.loadToken += 1;
     this.historyUnsubscribe = firestore()
       .collection('history')
-      .where('patientEmail', '==', auth().currentUser.email)
+      .where('patientEmail', '==', currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .onSnapshot(querySnapshot => {
         let result = [];
@@ -133,7 +150,7 @@ class CalendarScreen extends React.Component {
             });
           }
         });
-        this.setState({ medicine: result.length > 0 ? result : null });
+        this.setState({ medicine: result, loading: false });
         this.calculate();
       });
   };
@@ -168,7 +185,7 @@ class CalendarScreen extends React.Component {
 
   // Information appears on each item.
   renderItem(item) {
-    const correctItem = (
+    return (
       <SafeAreaView
         style={item.status == 'taken' ? styles.feedItem : styles.missedItem}
       >
@@ -184,16 +201,10 @@ class CalendarScreen extends React.Component {
         </View>
       </SafeAreaView>
     );
-    if (item.date == moment(this.state.testDate).format('MMMM Do YYYY')) {
-      return correctItem;
-    } else {
-      // Blank text used so that the list can be processed normally
-      return <Text style={{ height: 0.1 }} />;
-    }
   }
 
   render() {
-    const { testDate, medicine, show, chartConfig } = this.state;
+    const { testDate, medicine, show, chartConfig, loading } = this.state;
     return (
       <View style={styles.container}>
         <Background />
@@ -210,14 +221,18 @@ class CalendarScreen extends React.Component {
         {show && (
           <DatePicker value={testDate} mode="date" onChange={this.onChange} />
         )}
-        <FlatList
-          style={styles.feed}
-          data={medicine}
-          renderItem={({ item }) => this.renderItem(item)}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#1565C0" style={styles.feed} />
+        ) : (
+          <FlatList
+            style={styles.feed}
+            data={medicine}
+            renderItem={({ item }) => this.renderItem(item)}
+          />
+        )}
         <View style={styles.chart}>
           <Text style={styles.chartHeader}>Day Progress</Text>
-          {medicine ? (
+          {medicine.length > 0 ? (
             <ProgressChart
               data={this.state.chartData.data}
               width={Dimensions.get('window').width}

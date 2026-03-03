@@ -26,83 +26,80 @@ class AddAccess extends React.Component {
     myArray: [],
   };
 
-  unsubscribe1 = null;
   unsubscribe2 = null;
   unsubscribe3 = null;
 
   componentDidMount() {
-    // doctor and pharmacist email from "users" document
-    let tempPharmacistEmail = [];
-    let tempDoctorEmail = [];
-
-    this.unsubscribe1 = firestore()
+    // Fetch the user's existing access lists once — no real-time updates needed.
+    firestore()
       .collection('users')
       .doc((auth().currentUser || {}).uid)
-      .onSnapshot(documentSnapshot => {
-        if (documentSnapshot.data().pharmacistList != null) {
-          tempPharmacistEmail = documentSnapshot.data().pharmacistList;
-        }
-        if (documentSnapshot.data().doctorList != null) {
-          tempDoctorEmail = documentSnapshot.data().doctorList;
-        }
-      });
+      .get()
+      .then(doc => {
+        const data = doc.exists() ? doc.data() : {};
+        const tempDoctorEmail = data.doctorList || [];
+        const tempPharmacistEmail = data.pharmacistList || [];
 
-    let temp = [];
-    // push doctor data into temp
-    this.unsubscribe2 = firestore()
-      .collection('doctor')
-      .onSnapshot(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-          let found = false;
-          for (let i = 0; i < tempDoctorEmail.length; i++) {
-            if (documentSnapshot.data().doctorEmail == tempDoctorEmail[i]) {
-              found = true;
-            }
-          }
-          if (found == false) {
-            temp.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
-              type: 'Doctor',
-            });
-          }
-        });
-      });
+        // Separate arrays reset on every snapshot to prevent duplicate accumulation.
+        let doctors = [];
+        let pharmacists = [];
 
-    // push pharmacist data into temp
-    this.unsubscribe3 = firestore()
-      .collection('pharmacist')
-      .onSnapshot(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-          let found = false;
-          for (let i = 0; i < tempPharmacistEmail.length; i++) {
-            if (
-              documentSnapshot.data().pharmacistEmail == tempPharmacistEmail[i]
-            ) {
-              found = true;
-            }
-          }
-          if (found == false) {
-            temp.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
-              type: 'Pharmacist',
+        const updateState = () => {
+          const combined = [...doctors, ...pharmacists];
+          this.setState({
+            doc_phar: combined,
+            myArray: combined,
+            loading: false,
+          });
+        };
+
+        this.unsubscribe2 = firestore()
+          .collection('doctor')
+          .onSnapshot(querySnapshot => {
+            doctors = [];
+            querySnapshot.forEach(documentSnapshot => {
+              if (
+                !tempDoctorEmail.includes(documentSnapshot.data().doctorEmail)
+              ) {
+                doctors.push({
+                  ...documentSnapshot.data(),
+                  key: documentSnapshot.id,
+                  type: 'Doctor',
+                });
+              }
             });
-          }
-        });
-        // put temp data into myArray and doc_phar attributes of state
-        this.setState({
-          doc_phar: temp,
-          myArray: temp,
-          loading: false,
-        });
+            updateState();
+          });
+
+        this.unsubscribe3 = firestore()
+          .collection('pharmacist')
+          .onSnapshot(querySnapshot => {
+            pharmacists = [];
+            querySnapshot.forEach(documentSnapshot => {
+              if (
+                !tempPharmacistEmail.includes(
+                  documentSnapshot.data().pharmacistEmail,
+                )
+              ) {
+                pharmacists.push({
+                  ...documentSnapshot.data(),
+                  key: documentSnapshot.id,
+                  type: 'Pharmacist',
+                });
+              }
+            });
+            updateState();
+          });
       });
   }
 
   componentWillUnmount() {
-    this.unsubscribe1();
-    this.unsubscribe2();
-    this.unsubscribe3();
+    if (this.unsubscribe2) {
+      this.unsubscribe2();
+    }
+    if (this.unsubscribe3) {
+      this.unsubscribe3();
+    }
   }
 
   // Click on each item in flatlist will lead user to DoctorInfoScreen
