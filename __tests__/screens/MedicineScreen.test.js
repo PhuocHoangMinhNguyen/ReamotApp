@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, act } from '@testing-library/react-native';
 import MedicineScreen from '../../src/screens/MedicineStack/MedicineScreen';
 import firestore from '@react-native-firebase/firestore';
 import ReactNativeAN from 'react-native-alarm-notification';
@@ -99,6 +99,8 @@ describe('MedicineScreen', () => {
   // ── Search ──────────────────────────────────────────────────────────────────
 
   it('filters the medicine list as the user types in the search bar', () => {
+    jest.useFakeTimers();
+
     const ibuprofen = makeDoc('med2', { name: 'Ibuprofen', image: null, description: '', barcode: '' });
     const ibuprofenRx = makeDoc('p2', { name: 'Ibuprofen', patientEmail: 'patient@example.com', adder: 'patient' });
 
@@ -117,8 +119,11 @@ describe('MedicineScreen', () => {
     );
 
     fireEvent.changeText(getByTestId('search-bar'), 'Asp');
+    act(() => { jest.advanceTimersByTime(250); });
     expect(getByText('Aspirin')).toBeTruthy();
     expect(queryByText('Ibuprofen')).toBeNull();
+
+    jest.useRealTimers();
   });
 
   // ── Cleanup ─────────────────────────────────────────────────────────────────

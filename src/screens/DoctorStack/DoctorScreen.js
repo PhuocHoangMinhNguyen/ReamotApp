@@ -23,75 +23,69 @@ class DoctorScreen extends Component {
     accessedPharmacist: [],
   };
 
-  unsubscribe = null;
-
-  doctorCollection = tempDoctorEmail => {
-    // Accessed Doctor
-    firestore()
-      .collection('doctor')
-      .where('doctorEmail', 'in', tempDoctorEmail)
-      .onSnapshot(querySnapshot => {
-        let tempAccessedDoctor = [];
-        querySnapshot.forEach(documentSnapshot => {
-          tempAccessedDoctor.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-            type: 'Doctor',
-          });
-        });
-        this.setState({ accessedDoctor: tempAccessedDoctor });
-      });
-  };
-
-  pharmacistCollection = tempPharmacistEmail => {
-    // Accessed Pharmacist
-    firestore()
-      .collection('pharmacist')
-      .where('pharmacistEmail', 'in', tempPharmacistEmail)
-      .onSnapshot(querySnapshot => {
-        let tempAccessedPharmacist = [];
-        querySnapshot.forEach(documentSnapshot => {
-          tempAccessedPharmacist.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-            type: 'Pharmacist',
-          });
-        });
-        this.setState({ accessedPharmacist: tempAccessedPharmacist });
-      });
-  };
+  unsubscribers = [];
+  doctorUnsub = null;
+  pharmacistUnsub = null;
 
   componentDidMount() {
-    // check doctor and pharmacist email from "doctorList" and "pharmacistList" from "users" collection
-    // Then use the doctor and pharmacist email to find the infor from "doctor" and "pharmacist" collection
+    // Subscribe to the user document to read doctorList and pharmacistList.
+    // Unsubscribe and recreate the nested doctor/pharmacist listeners whenever
+    // the list changes, preventing listener accumulation.
+    this.unsubscribers.push(
+      firestore()
+        .collection('users')
+        .doc((auth().currentUser || {}).uid)
+        .onSnapshot(documentSnapshot => {
+          const tempDoctorEmail = documentSnapshot.data().doctorList;
+          const tempPharmacistEmail = documentSnapshot.data().pharmacistList;
 
-    // doctor and pharmacist email from "users" document
-    let tempPharmacistEmail = [];
-    let tempDoctorEmail = [];
+          if (tempDoctorEmail == null && tempPharmacistEmail == null) {
+            return;
+          }
 
-    this.unsubscribe = firestore()
-      .collection('users')
-      .doc((auth().currentUser || {}).uid)
-      .onSnapshot(documentSnapshot => {
-        tempPharmacistEmail = documentSnapshot.data().pharmacistList;
-        tempDoctorEmail = documentSnapshot.data().doctorList;
-
-        // if both tempDoctorEmail and tempPharmacistEmail are null.
-        if (tempDoctorEmail == null && tempPharmacistEmail == null) {
-          // If they are not null
-        } else {
           if (tempDoctorEmail != null) {
-            this.doctorCollection(tempDoctorEmail);
+            if (this.doctorUnsub) this.doctorUnsub();
+            this.doctorUnsub = firestore()
+              .collection('doctor')
+              .where('doctorEmail', 'in', tempDoctorEmail)
+              .onSnapshot(querySnapshot => {
+                let tempAccessedDoctor = [];
+                querySnapshot.forEach(doc => {
+                  tempAccessedDoctor.push({
+                    ...doc.data(),
+                    key: doc.id,
+                    type: 'Doctor',
+                  });
+                });
+                this.setState({ accessedDoctor: tempAccessedDoctor });
+              });
           }
+
           if (tempPharmacistEmail != null) {
-            this.pharmacistCollection(tempPharmacistEmail);
+            if (this.pharmacistUnsub) this.pharmacistUnsub();
+            this.pharmacistUnsub = firestore()
+              .collection('pharmacist')
+              .where('pharmacistEmail', 'in', tempPharmacistEmail)
+              .onSnapshot(querySnapshot => {
+                let tempAccessedPharmacist = [];
+                querySnapshot.forEach(doc => {
+                  tempAccessedPharmacist.push({
+                    ...doc.data(),
+                    key: doc.id,
+                    type: 'Pharmacist',
+                  });
+                });
+                this.setState({ accessedPharmacist: tempAccessedPharmacist });
+              });
           }
-        }
-      });
+        }),
+    );
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribers.forEach(unsub => unsub());
+    if (this.doctorUnsub) this.doctorUnsub();
+    if (this.pharmacistUnsub) this.pharmacistUnsub();
   }
 
   // When clicking on one doctor/ pharmacist item, navigate user to

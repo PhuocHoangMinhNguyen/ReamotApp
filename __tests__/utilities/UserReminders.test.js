@@ -65,7 +65,7 @@ describe('UserReminders', () => {
   //
   // The setReminders() method advances past reminder dates to the next future
   // occurrence using a while-loop.  We test that logic directly by simulating
-  // the same algorithm used in UserReminders.js (src/utilities/UserReminders.js:61-63).
+  // the same algorithm used in UserReminders.js.
 
   describe('date advancement algorithm', () => {
     /** Mirrors the while-loop inside UserReminders.setReminders */
@@ -110,36 +110,83 @@ describe('UserReminders', () => {
     });
   });
 
-  // ── findIdAN ────────────────────────────────────────────────────────────────
+  // ── setReminders ────────────────────────────────────────────────────────────
 
-  describe('findIdAN()', () => {
-    it('matches the alarm by alarmId and updates the Firestore document', async () => {
-      const alarms = [
-        { alarmId: 'alarm-99', id: 'native-id-abc' },
-        { alarmId: 'alarm-77', id: 'native-id-xyz' },
-      ];
-      ReactNativeAN.getScheduledAlarms.mockResolvedValueOnce(alarms);
-
-      const reminderTime = dateOffset(3600 * 1000);
-      await UserReminders.findIdAN('alarm-99', 'firestore-doc-id', reminderTime);
-
-      expect(firestore.mocks.update).toHaveBeenCalledWith({
-        idAN:    'native-id-abc',
-        alarmId: 'alarm-99',
-        time:    reminderTime,
+  describe('setReminders()', () => {
+    it('schedules an alarm and commits a single batch write per reminder', async () => {
+      const futureTime = dateOffset(3600 * 1000);
+      const medicineDoc = makeDoc('med1', {
+        name: 'Aspirin',
+        image: null,
+        description: 'Pain relief',
+        barcode: '111',
       });
+      const reminderDoc = makeDoc('rem1', {
+        medicine: 'Aspirin',
+        patientEmail: PATIENT_EMAIL,
+        time: { toDate: () => futureTime },
+      });
+
+      // First getScheduledAlarms call (double-check at top of setReminders).
+      ReactNativeAN.getScheduledAlarms
+        .mockResolvedValueOnce([])
+        // Second call after scheduling — return the newly scheduled alarm.
+        .mockResolvedValueOnce([{ alarmId: expect.any(String), id: 'native-id-1' }]);
+
+      // get() call #1: medicine collection; call #2: reminder collection.
+      firestore.mocks.get
+        .mockResolvedValueOnce(firestore.makeSnapshot([medicineDoc]))
+        .mockResolvedValueOnce(firestore.makeSnapshot([reminderDoc]));
+
+      await UserReminders.setReminders(PATIENT_EMAIL);
+
+      expect(ReactNativeAN.scheduleAlarm).toHaveBeenCalledTimes(1);
+      expect(firestore.mocks.batch).toHaveBeenCalledTimes(1);
+      expect(firestore.mocks.batchUpdate).toHaveBeenCalledTimes(1);
+      expect(firestore.mocks.batchCommit).toHaveBeenCalledTimes(1);
     });
 
-    it('stores an empty string when no alarm matches the alarmId', async () => {
-      ReactNativeAN.getScheduledAlarms.mockResolvedValueOnce([
-        { alarmId: 'other-id', id: 'native-id-xyz' },
-      ]);
+    it('commits only one batch even with multiple reminders', async () => {
+      const futureTime = dateOffset(3600 * 1000);
+      const medicineDocs = [
+        makeDoc('med1', { name: 'Aspirin', image: null, description: '', barcode: '' }),
+        makeDoc('med2', { name: 'Ibuprofen', image: null, description: '', barcode: '' }),
+      ];
+      const reminderDocs = [
+        makeDoc('rem1', { medicine: 'Aspirin',   patientEmail: PATIENT_EMAIL, time: { toDate: () => new Date(futureTime) } }),
+        makeDoc('rem2', { medicine: 'Ibuprofen', patientEmail: PATIENT_EMAIL, time: { toDate: () => new Date(futureTime) } }),
+      ];
 
-      const reminderTime = dateOffset(3600 * 1000);
-      await UserReminders.findIdAN('alarm-99', 'doc-id', reminderTime);
+      ReactNativeAN.getScheduledAlarms
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([]);
 
-      const updateCall = firestore.mocks.update.mock.calls[0][0];
-      expect(updateCall.idAN).toEqual('');
+      firestore.mocks.get
+        .mockResolvedValueOnce(firestore.makeSnapshot(medicineDocs))
+        .mockResolvedValueOnce(firestore.makeSnapshot(reminderDocs));
+
+      await UserReminders.setReminders(PATIENT_EMAIL);
+
+      expect(ReactNativeAN.scheduleAlarm).toHaveBeenCalledTimes(2);
+      expect(firestore.mocks.batchUpdate).toHaveBeenCalledTimes(2);
+      // Despite 2 reminders there is exactly one batch.commit() call.
+      expect(firestore.mocks.batchCommit).toHaveBeenCalledTimes(1);
+    });
+
+    it('does nothing (no alarms, no batch writes) when there are no reminders', async () => {
+      ReactNativeAN.getScheduledAlarms
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([]);
+
+      firestore.mocks.get
+        .mockResolvedValueOnce(firestore.makeSnapshot([]))  // medicine
+        .mockResolvedValueOnce(firestore.makeSnapshot([])); // reminders
+
+      await UserReminders.setReminders(PATIENT_EMAIL);
+
+      expect(ReactNativeAN.scheduleAlarm).not.toHaveBeenCalled();
+      expect(firestore.mocks.batchUpdate).not.toHaveBeenCalled();
+      expect(firestore.mocks.batchCommit).toHaveBeenCalledTimes(1);
     });
   });
 });

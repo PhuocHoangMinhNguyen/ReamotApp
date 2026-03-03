@@ -76,22 +76,35 @@ class MockDocRef {
 
 const mockCollection = jest.fn(() => new MockCollectionRef());
 
+// ── Batch writer ──────────────────────────────────────────────────────────────
+
+const mockBatchUpdate = jest.fn();
+const mockBatchCommit = jest.fn(() => Promise.resolve());
+const mockBatch = jest.fn(() => ({
+  update: mockBatchUpdate,
+  commit: mockBatchCommit,
+}));
+
 // ── Default export: the firestore() factory ───────────────────────────────────
 
 const firestore = jest.fn(() => ({
   collection: mockCollection,
+  batch: mockBatch,
 }));
 
 // Attach helpers for test access.
 firestore.mocks = {
-  onSnapshot: mockOnSnapshot,
-  get:        mockGet,
-  update:     mockUpdate,
-  delete:     mockDelete,
-  set:        mockSet,
-  add:        mockAdd,
-  where:      mockWhere,
-  collection: mockCollection,
+  onSnapshot:   mockOnSnapshot,
+  get:          mockGet,
+  update:       mockUpdate,
+  delete:       mockDelete,
+  set:          mockSet,
+  add:          mockAdd,
+  where:        mockWhere,
+  collection:   mockCollection,
+  batch:        mockBatch,
+  batchUpdate:  mockBatchUpdate,
+  batchCommit:  mockBatchCommit,
 };
 
 firestore.makeSnapshot = makeSnapshot;

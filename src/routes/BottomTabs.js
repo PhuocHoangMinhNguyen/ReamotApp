@@ -25,6 +25,7 @@ export default function BottomTabs() {
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#161F3D',
         tabBarInactiveTintColor: '#B8BBC4',
+        lazy: true,
       }}
     >
       <Tab.Screen

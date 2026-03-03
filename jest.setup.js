@@ -6,6 +6,16 @@ jest.mock('@react-native-firebase/firestore');
 jest.mock('@react-native-firebase/storage');
 
 // ── Device-only native modules ────────────────────────────────────────────────
+jest.mock('react-native-fast-image', () => {
+  const React = require('react');
+  const { Image } = require('react-native');
+  const FastImage = ({ source, style, testID }) =>
+    React.createElement(Image, { source, style, testID });
+  FastImage.resizeMode = { contain: 'contain', cover: 'cover', stretch: 'stretch', center: 'center' };
+  FastImage.priority = { low: 'low', normal: 'normal', high: 'high' };
+  FastImage.cacheControl = { immutable: 'immutable', web: 'web', cacheOnly: 'cacheOnly' };
+  return { __esModule: true, default: FastImage };
+});
 jest.mock('react-native-alarm-notification');
 jest.mock('react-native-simple-toast');
 jest.mock('react-native-image-picker');
