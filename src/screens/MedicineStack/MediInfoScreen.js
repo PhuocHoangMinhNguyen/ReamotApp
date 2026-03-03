@@ -8,10 +8,10 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
   FlatList,
   TextInput,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import firestore from '@react-native-firebase/firestore';
@@ -34,9 +34,7 @@ class MediInfoScreen extends React.Component {
     add: '',
   };
 
-  unsubscribe1 = null;
-  unsubscribe2 = null;
-  unsubscribe3 = null;
+  unsubscribers = [];
 
   componentDidMount() {
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
@@ -45,69 +43,73 @@ class MediInfoScreen extends React.Component {
     this.setState({ medicine: paramsFromMedicineScreen });
 
     // Get Medicine Number of Pills
-    this.unsubscribe1 = firestore()
-      .collection('medicinePills')
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('medicine', '==', this.props.route.params.name)
-      .onSnapshot(querySnapshot => {
-        let temp = '';
-        let tempID = '';
-        querySnapshot.forEach(documentSnapshot => {
-          temp = documentSnapshot.data().pills;
-          tempID = documentSnapshot.id;
-        });
-        this.setState({
-          medicinePills: temp.toString(),
-          text: temp.toString(),
-          firebaseID: tempID,
-        });
-      });
+    this.unsubscribers.push(
+      firestore()
+        .collection('medicinePills')
+        .where('patientEmail', '==', auth().currentUser.email)
+        .where('medicine', '==', this.props.route.params.name)
+        .onSnapshot(querySnapshot => {
+          let temp = '';
+          let tempID = '';
+          querySnapshot.forEach(documentSnapshot => {
+            temp = documentSnapshot.data().pills;
+            tempID = documentSnapshot.id;
+          });
+          this.setState({
+            medicinePills: temp.toString(),
+            text: temp.toString(),
+            firebaseID: tempID,
+          });
+        }),
+    );
 
     // Get Prescription data from Cloud Firestore to know number of capsules taken per time,
     // and number of times to take medicine per day.
-    this.unsubscribe2 = firestore()
-      .collection('prescription')
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('name', '==', this.props.route.params.name)
-      .onSnapshot(querySnapshot => {
-        let tempValue = 0;
-        let tempValue2 = 0;
-        let tempValue3 = '';
-        querySnapshot.forEach(documentSnapshot => {
-          tempValue = documentSnapshot.data().times;
-          tempValue2 = documentSnapshot.data().number;
-          tempValue3 = documentSnapshot.data().type;
-        });
-        this.setState({
-          prescription: {
-            times: tempValue,
-            number: tempValue2,
-            type: tempValue3,
-          },
-        });
-      });
+    this.unsubscribers.push(
+      firestore()
+        .collection('prescription')
+        .where('patientEmail', '==', auth().currentUser.email)
+        .where('name', '==', this.props.route.params.name)
+        .onSnapshot(querySnapshot => {
+          let tempValue = 0;
+          let tempValue2 = 0;
+          let tempValue3 = '';
+          querySnapshot.forEach(documentSnapshot => {
+            tempValue = documentSnapshot.data().times;
+            tempValue2 = documentSnapshot.data().number;
+            tempValue3 = documentSnapshot.data().type;
+          });
+          this.setState({
+            prescription: {
+              times: tempValue,
+              number: tempValue2,
+              type: tempValue3,
+            },
+          });
+        }),
+    );
 
     // Get Reminder data of that patient and that medicine.
-    this.unsubscribe3 = firestore()
-      .collection('reminder')
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('medicine', '==', this.props.route.params.name)
-      .onSnapshot(querySnapshot => {
-        let temp = [];
-        querySnapshot.forEach(documentSnapshot => {
-          temp.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
+    this.unsubscribers.push(
+      firestore()
+        .collection('reminder')
+        .where('patientEmail', '==', auth().currentUser.email)
+        .where('medicine', '==', this.props.route.params.name)
+        .onSnapshot(querySnapshot => {
+          let temp = [];
+          querySnapshot.forEach(documentSnapshot => {
+            temp.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
           });
-        });
-        this.setState({ reminder: temp });
-      });
+          this.setState({ reminder: temp });
+        }),
+    );
   }
 
   componentWillUnmount() {
-    this.unsubscribe1();
-    this.unsubscribe2();
-    this.unsubscribe3();
+    this.unsubscribers.forEach(unsub => unsub());
   }
 
   // If the prescription.type is Daily, navigate to 'Daily New Reminder'
@@ -226,20 +228,16 @@ class MediInfoScreen extends React.Component {
   };
 
   render() {
-    // This is to make the number of element in "reminder" equal to times the patient
-    // has to take that medicine per day according to "prescription" document in Firebase.
-    // If reminder.length is lower, fill reminder array with null values.
-    // ==> To support renderItem function above.
-
-    if (this.state.reminder.length < this.state.prescription.times) {
-      for (
-        let i = this.state.reminder.length;
-        i < this.state.prescription.times;
-        i++
-      ) {
-        this.state.reminder.push('null');
-      }
-    }
+    const { prescription, reminder } = this.state;
+    // Derive the padded list without mutating state. Fills empty slots with 'null'
+    // so renderItem can show "+ Add Reminder" placeholders.
+    const paddedReminder =
+      reminder.length < prescription.times
+        ? [
+            ...reminder,
+            ...Array(prescription.times - reminder.length).fill('null'),
+          ]
+        : reminder;
 
     const normal = (
       <View style={styles.capsules}>
@@ -360,7 +358,7 @@ class MediInfoScreen extends React.Component {
         </TouchableOpacity>
         <View style={styles.information}>
           <View style={{ flexDirection: 'row' }}>
-            <Image
+            <FastImage
               style={styles.image}
               source={
                 this.state.medicine.image
@@ -391,9 +389,11 @@ class MediInfoScreen extends React.Component {
         </View>
 
         <FlatList
-          data={this.state.reminder}
+          data={paddedReminder}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) =>
+            item === 'null' ? `null-${index}` : item.key
+          }
         />
       </View>
     );

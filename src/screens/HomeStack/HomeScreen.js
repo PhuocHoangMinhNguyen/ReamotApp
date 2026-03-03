@@ -8,10 +8,10 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Image,
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import moment from 'moment';
@@ -27,105 +27,113 @@ class HomeScreen extends React.Component {
     // Medicine info in "reminder" collection
     remindermedicines: [],
     missedMedicines: [],
+    upcomingCount: 0,
   };
 
-  unsubscribe = null;
-
-  historyCollection = tempMedicine => {
-    // Get all the history of taking medicine for today.
-    firestore()
-      .collection('history')
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('date', '==', moment().format('MMMM Do YYYY'))
-      .onSnapshot(querySnapshot => {
-        let tempHistory = [];
-        querySnapshot.forEach(documentSnapshot => {
-          for (let i = 0; i < tempMedicine.length; i++) {
-            if (tempMedicine[i].name == documentSnapshot.data().medicine) {
-              tempHistory.push({
-                ...documentSnapshot.data(),
-                barcode: tempMedicine[i].barcode,
-                description: tempMedicine[i].description,
-                image: tempMedicine[i].image,
-                key: documentSnapshot.id,
-              });
-            }
-          }
-        });
-        this.setState({ historymedicines: tempHistory });
-      });
-  };
-
-  missCollection = tempMedicine => {
-    // Get all the history of taking medicine, that are missed, for today.
-    firestore()
-      .collection('history')
-      .where('patientEmail', '==', auth().currentUser.email)
-      .where('date', '==', moment().format('MMMM Do YYYY'))
-      .where('status', '==', 'missed')
-      .onSnapshot(querySnapshot => {
-        let tempHistory = [];
-        querySnapshot.forEach(documentSnapshot => {
-          for (let i = 0; i < tempMedicine.length; i++) {
-            if (tempMedicine[i].name == documentSnapshot.data().medicine) {
-              tempHistory.push({
-                ...documentSnapshot.data(),
-                barcode: tempMedicine[i].barcode,
-                description: tempMedicine[i].description,
-                image: tempMedicine[i].image,
-                key: documentSnapshot.id,
-              });
-            }
-          }
-        });
-        this.setState({ missedMedicines: tempHistory });
-      });
-  };
-
-  reminderCollection = tempMedicine => {
-    // Get all the reminders
-    firestore()
-      .collection('reminder')
-      .where('patientEmail', '==', auth().currentUser.email)
-      .onSnapshot(querySnapshot => {
-        let tempReminder = [];
-        querySnapshot.forEach(documentSnapshot => {
-          for (let i = 0; i < tempMedicine.length; i++) {
-            if (tempMedicine[i].name == documentSnapshot.data().medicine) {
-              tempReminder.push({
-                ...documentSnapshot.data(),
-                barcode: tempMedicine[i].barcode,
-                description: tempMedicine[i].description,
-                image: tempMedicine[i].image,
-                key: documentSnapshot.id,
-              });
-            }
-          }
-        });
-        this.setState({ remindermedicines: tempReminder });
-      });
-  };
+  unsubscribers = [];
+  medicineMap = new Map();
 
   componentDidMount() {
-    // Get the medicine information
-    this.unsubscribe = firestore()
-      .collection('medicine')
-      .onSnapshot(querySnapshot => {
-        let tempMedicine = [];
-        querySnapshot.forEach(documentSnapshot => {
-          tempMedicine.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
+    const email = auth().currentUser.email;
+    const today = moment().format('MMMM Do YYYY');
+
+    // Subscribe to medicine catalog once; update the Map on every change.
+    this.unsubscribers.push(
+      firestore()
+        .collection('medicine')
+        .onSnapshot(querySnapshot => {
+          this.medicineMap = new Map();
+          querySnapshot.forEach(doc => {
+            this.medicineMap.set(doc.data().name, doc.data());
           });
-        });
-        this.historyCollection(tempMedicine);
-        this.missCollection(tempMedicine);
-        this.reminderCollection(tempMedicine);
-      });
+        }),
+    );
+
+    // History listener — O(1) Map lookup instead of O(n) loop
+    this.unsubscribers.push(
+      firestore()
+        .collection('history')
+        .where('patientEmail', '==', email)
+        .where('date', '==', today)
+        .onSnapshot(querySnapshot => {
+          let tempHistory = [];
+          querySnapshot.forEach(documentSnapshot => {
+            const med = this.medicineMap.get(documentSnapshot.data().medicine);
+            if (med) {
+              tempHistory.push({
+                ...documentSnapshot.data(),
+                barcode: med.barcode,
+                description: med.description,
+                image: med.image,
+                key: documentSnapshot.id,
+              });
+            }
+          });
+          this.setState({ historymedicines: tempHistory });
+        }),
+    );
+
+    // Missed-history listener
+    this.unsubscribers.push(
+      firestore()
+        .collection('history')
+        .where('patientEmail', '==', email)
+        .where('date', '==', today)
+        .where('status', '==', 'missed')
+        .onSnapshot(querySnapshot => {
+          let tempMissed = [];
+          querySnapshot.forEach(documentSnapshot => {
+            const med = this.medicineMap.get(documentSnapshot.data().medicine);
+            if (med) {
+              tempMissed.push({
+                ...documentSnapshot.data(),
+                barcode: med.barcode,
+                description: med.description,
+                image: med.image,
+                key: documentSnapshot.id,
+              });
+            }
+          });
+          this.setState({ missedMedicines: tempMissed });
+        }),
+    );
+
+    // Reminder listener — also computes upcomingCount so render stays pure
+    this.unsubscribers.push(
+      firestore()
+        .collection('reminder')
+        .where('patientEmail', '==', email)
+        .onSnapshot(querySnapshot => {
+          let tempReminder = [];
+          let upcomingCount = 0;
+          const todayStr = new Date().toDateString();
+          const now = Date.now();
+          querySnapshot.forEach(documentSnapshot => {
+            const med = this.medicineMap.get(documentSnapshot.data().medicine);
+            if (med) {
+              const item = {
+                ...documentSnapshot.data(),
+                barcode: med.barcode,
+                description: med.description,
+                image: med.image,
+                key: documentSnapshot.id,
+              };
+              tempReminder.push(item);
+              if (
+                item.time.toDate().toDateString() === todayStr &&
+                item.time.toDate() >= now
+              ) {
+                upcomingCount++;
+              }
+            }
+          });
+          this.setState({ remindermedicines: tempReminder, upcomingCount });
+        }),
+    );
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribers.forEach(unsub => unsub());
   }
 
   // Information appears on each item on "Upcoming Reminder" List
@@ -147,7 +155,7 @@ class HomeScreen extends React.Component {
             this.props.navigation.navigate('MedicationInformation', dataInfor);
           }}
         >
-          <Image
+          <FastImage
             style={styles.avatar}
             source={item.image ? { uri: item.image } : tempAvatar}
           />
@@ -178,7 +186,7 @@ class HomeScreen extends React.Component {
           this.props.navigation.navigate('MedicationInformation', dataInfor);
         }}
       >
-        <Image
+        <FastImage
           style={styles.avatar}
           source={item.image ? { uri: item.image } : tempAvatar}
         />
@@ -197,31 +205,22 @@ class HomeScreen extends React.Component {
   };
 
   render() {
-    let counting = 0;
-    for (let i = 0; i < this.state.remindermedicines.length; i++) {
-      if (
-        this.state.remindermedicines[i].time.toDate().toDateString() ==
-          new Date().toDateString() &&
-        this.state.remindermedicines[i].time.toDate() >= Date.now()
-      ) {
-        counting++;
-      }
-    }
+    const {
+      historymedicines,
+      missedMedicines,
+      remindermedicines,
+      upcomingCount,
+    } = this.state;
     // Determine Image Chosen to be shown, based on the value below.
     const value =
-      ((this.state.historymedicines.length -
-        this.state.missedMedicines.length) *
-        100) /
-      (counting + this.state.historymedicines.length);
+      ((historymedicines.length - missedMedicines.length) * 100) /
+      (upcomingCount + historymedicines.length);
 
     // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
-    if (
-      this.state.historymedicines.length == 0 &&
-      this.state.remindermedicines.length == 0
-    ) {
+    if (historymedicines.length == 0 && remindermedicines.length == 0) {
       return (
         <View style={styles.container}>
-          <Background style={styles.containter} />
+          <Background style={styles.container} />
           <TreeImage value={value} />
           <View
             style={{
@@ -250,8 +249,9 @@ class HomeScreen extends React.Component {
           <FlatList
             removeClippedSubviews={true}
             style={styles.feed}
-            data={this.state.historymedicines}
+            data={historymedicines}
             renderItem={({ item }) => this.renderHistory(item)}
+            keyExtractor={item => item.key}
             horizontal={true}
           />
           <View style={styles.chapterView}>
@@ -260,8 +260,9 @@ class HomeScreen extends React.Component {
           <FlatList
             removeClippedSubviews={true}
             style={styles.feed}
-            data={this.state.remindermedicines}
+            data={remindermedicines}
             renderItem={({ item }) => this.renderReminder(item)}
+            keyExtractor={item => item.key}
             horizontal={true}
           />
         </View>

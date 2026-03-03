@@ -1,35 +1,54 @@
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 
-var growing1 = require('../assets/images/growing_0.png');
-var growing2 = require('../assets/images/growing_0_to_25.png');
-var growing3 = require('../assets/images/growing_25_to_50.png');
-var growing4 = require('../assets/images/growing_50_to_75.png');
-var growing5 = require('../assets/images/growing_75_to_100.png');
-var growing6 = require('../assets/images/GrowingTree.png');
+// Images are stored in a lookup array so only the required asset is resolved
+// at render time instead of all six being loaded at bundle start.
+const TREE_FRAMES = [
+  require('../assets/images/growing_0.png'), // value == 0
+  require('../assets/images/growing_0_to_25.png'), // 0 < value < 25
+  require('../assets/images/growing_25_to_50.png'), // 25 <= value < 50
+  require('../assets/images/growing_50_to_75.png'), // 50 <= value < 75
+  require('../assets/images/growing_75_to_100.png'), // 75 <= value < 100
+  require('../assets/images/GrowingTree.png'), // value >= 100
+];
+
+function getFrameIndex(value) {
+  if (value <= 0) {
+    return 0;
+  }
+  if (value < 25) {
+    return 1;
+  }
+  if (value < 50) {
+    return 2;
+  }
+  if (value < 75) {
+    return 3;
+  }
+  if (value < 100) {
+    return 4;
+  }
+  return 5;
+}
+
+const TEST_IDS = [
+  'tree-dead',
+  'tree-0-25',
+  'tree-25-50',
+  'tree-50-75',
+  'tree-75-100',
+  'tree-full',
+];
 
 const TreeImage = ({ value }) => {
-  let image;
-  if (value == 0) {
-    image = <Image testID="tree-dead" style={styles.image} source={growing1} />;
-  } else if (value > 0 && value < 25) {
-    image = <Image testID="tree-0-25" style={styles.image} source={growing2} />;
-  } else if (value >= 25 && value < 50) {
-    image = (
-      <Image testID="tree-25-50" style={styles.image} source={growing3} />
-    );
-  } else if (value >= 50 && value < 75) {
-    image = (
-      <Image testID="tree-50-75" style={styles.image} source={growing4} />
-    );
-  } else if (value >= 75 && value < 100) {
-    image = (
-      <Image testID="tree-75-100" style={styles.image} source={growing5} />
-    );
-  } else {
-    image = <Image testID="tree-full" style={styles.image} source={growing6} />;
-  }
-  return image;
+  const index = getFrameIndex(value);
+  return (
+    <Image
+      testID={TEST_IDS[index]}
+      style={styles.image}
+      source={TREE_FRAMES[index]}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

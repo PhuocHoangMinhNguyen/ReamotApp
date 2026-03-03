@@ -8,10 +8,10 @@ import {
   FlatList,
   View,
   Text,
-  Image,
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { SearchBar } from 'react-native-elements';
 import Toast from 'react-native-simple-toast';
 import firestore from '@react-native-firebase/firestore';
@@ -24,12 +24,16 @@ import AntDesign from '@react-native-vector-icons/ant-design';
 var tempAvatar = require('../../assets/images/tempAvatar.png');
 
 class MedicineScreen extends React.Component {
-  state = {
-    loading: true,
-    medicines: [],
-    text: '',
-    myArray: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      medicines: [],
+      text: '',
+      myArray: [],
+    };
+    this._searchDebounceTimer = null;
+  }
 
   unsubscribe = null;
 
@@ -103,6 +107,7 @@ class MedicineScreen extends React.Component {
     this.unsubscribe();
     this.dismissedSubscription?.remove();
     this.openedSubscription?.remove();
+    clearTimeout(this._searchDebounceTimer);
   }
 
   deleteAlarms = name => {
@@ -142,7 +147,7 @@ class MedicineScreen extends React.Component {
             this.props.navigation.navigate('MediInfoScreen', dataInfor);
           }}
         >
-          <Image
+          <FastImage
             style={styles.avatar}
             source={item.image ? { uri: item.image } : tempAvatar}
           />
@@ -171,7 +176,7 @@ class MedicineScreen extends React.Component {
           this.props.navigation.navigate('MediInfoScreen', dataInfor);
         }}
       >
-        <Image
+        <FastImage
           style={styles.avatar}
           source={item.image ? { uri: item.image } : tempAvatar}
         />
@@ -182,16 +187,18 @@ class MedicineScreen extends React.Component {
 
   // Responsible for SearchBar to work.
   searchFilterFunction(newText) {
-    const newData = this.state.medicines.filter(function (item) {
-      //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
-      const textData = newText.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    this.setState({
-      myArray: newData,
-      text: newText,
-    });
+    // Update the visible text immediately so the input feels responsive.
+    this.setState({ text: newText });
+    // Debounce the actual filter computation by 250 ms.
+    clearTimeout(this._searchDebounceTimer);
+    this._searchDebounceTimer = setTimeout(() => {
+      const upper = newText.toUpperCase();
+      const newData = this.state.medicines.filter(item => {
+        const itemData = item.name ? item.name.toUpperCase() : '';
+        return itemData.indexOf(upper) > -1;
+      });
+      this.setState({ myArray: newData });
+    }, 250);
   }
 
   render() {
@@ -215,7 +222,7 @@ class MedicineScreen extends React.Component {
           style={styles.feed}
           data={this.state.myArray}
           renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={item => item.key}
         />
       );
     }

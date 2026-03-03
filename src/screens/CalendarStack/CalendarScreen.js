@@ -6,7 +6,6 @@ import React from 'react';
 import {
   StyleSheet,
   FlatList,
-  Image,
   View,
   Text,
   TouchableOpacity,
@@ -14,6 +13,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import DatePicker from '@react-native-community/datetimepicker';
@@ -43,6 +43,9 @@ class CalendarScreen extends React.Component {
       color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
     },
   };
+
+  medicineMap = new Map();
+  historyUnsubscribe = null;
 
   // calculate some value to show the progress chart
   calculate = async () => {
@@ -111,41 +114,42 @@ class CalendarScreen extends React.Component {
   // appeared in the history.
   // Then calculate some value to show the progress chart
   loadItems = () => {
-    let found = false;
-    firestore()
+    if (this.historyUnsubscribe) {
+      this.historyUnsubscribe();
+    }
+    this.historyUnsubscribe = firestore()
       .collection('history')
       .where('patientEmail', '==', auth().currentUser.email)
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .onSnapshot(querySnapshot => {
-        found = true;
         let result = [];
         querySnapshot.forEach(documentSnapshot => {
-          firestore()
-            .collection('medicine')
-            .where('name', '==', documentSnapshot.data().medicine)
-            .get()
-            .then(queryMedicineSnapshot => {
-              queryMedicineSnapshot.forEach(documentMedicineSnapshot => {
-                result.push({
-                  ...documentMedicineSnapshot.data(),
-                  ...documentSnapshot.data(),
-                  key: documentSnapshot.id,
-                });
-              });
-            })
-            .then(() => {
-              this.setState({ medicine: result });
-              this.calculate();
+          const med = this.medicineMap.get(documentSnapshot.data().medicine);
+          if (med) {
+            result.push({
+              ...med,
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
             });
+          }
         });
+        this.setState({ medicine: result.length > 0 ? result : null });
+        this.calculate();
       });
-    if (found == false) {
-      this.setState({ medicine: null });
-    }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const medSnapshot = await firestore().collection('medicine').get();
+    medSnapshot.forEach(doc => {
+      this.medicineMap.set(doc.data().name, doc.data());
+    });
     this.loadItems();
+  }
+
+  componentWillUnmount() {
+    if (this.historyUnsubscribe) {
+      this.historyUnsubscribe();
+    }
   }
 
   // Show DatePicker
@@ -157,12 +161,9 @@ class CalendarScreen extends React.Component {
   onChange = (event, selectedDate) => {
     const { testDate } = this.state;
     const currentDate = selectedDate || testDate;
-    this.setState({
-      show: Platform.OS === 'ios',
-      testDate: currentDate,
-    });
-    // Reload medicines for the new date chosen and new progress chart.
-    this.loadItems();
+    this.setState({ show: Platform.OS === 'ios', testDate: currentDate }, () =>
+      this.loadItems(),
+    );
   };
 
   // Information appears on each item.
@@ -171,7 +172,7 @@ class CalendarScreen extends React.Component {
       <SafeAreaView
         style={item.status == 'taken' ? styles.feedItem : styles.missedItem}
       >
-        <Image
+        <FastImage
           style={styles.image}
           source={item.image ? { uri: item.image } : tempAvatar}
         />
