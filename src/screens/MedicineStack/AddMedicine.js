@@ -54,17 +54,17 @@ class AddMedicine extends React.Component {
     const { dailyType, weeklyType } = this.state.reminder;
     if (name.trim() === '') {
       Toast.show('Please Enter Medicine Name', Toast.LONG);
-    } else if (number == '' || !(parseInt(number, 10) > 0)) {
+    } else if (number === '' || !(parseInt(number, 10) > 0)) {
       Toast.show(
         'Please enter number of capsules for each time you take medicine',
         Toast.LONG,
       );
-    } else if (times == '' || !(parseInt(times, 10) > 0)) {
+    } else if (times === '' || !(parseInt(times, 10) > 0)) {
       Toast.show(
         'Please enter number of times you have to take medicine per day/week',
         Toast.LONG,
       );
-    } else if (dailyType == false && weeklyType == false) {
+    } else if (dailyType === false && weeklyType === false) {
       Toast.show('Please Choose a Reminder Type', Toast.LONG);
     } else {
       this.addMedicine();
@@ -156,7 +156,7 @@ class AddMedicine extends React.Component {
               name="ios-add"
               size={40}
               color="#FFF"
-              style={{ marginTop: 6, marginLeft: 2 }}
+              style={styles.addIcon}
             />
           </TouchableOpacity>
         </View>
@@ -387,6 +387,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDD',
     borderRadius: 4,
     marginHorizontal: 30,
+  },
+  addIcon: {
+    marginTop: 6,
+    marginLeft: 2,
   },
 });
 

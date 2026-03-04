@@ -158,16 +158,18 @@ class CalendarScreen extends React.Component {
   renderItem(item) {
     return (
       <SafeAreaView
-        style={item.status == 'taken' ? styles.feedItem : styles.missedItem}
+        style={item.status === 'taken' ? styles.feedItem : styles.missedItem}
       >
         <FastImage
           style={styles.image}
           source={item.image ? { uri: item.image } : tempAvatar}
         />
-        <View style={{ flex: 1 }}>
+        <View style={styles.itemInfo}>
           <Text style={styles.missedName}>{item.name}</Text>
           <Text style={styles.missedTime}>
-            {item.startTime ? moment(item.startTime.toDate()).format('hh:mm a') : ''}
+            {item.startTime
+              ? moment(item.startTime.toDate()).format('hh:mm a')
+              : ''}
           </Text>
         </View>
       </SafeAreaView>
@@ -309,6 +311,9 @@ const styles = StyleSheet.create({
     color: '#000',
     marginTop: 30,
     height: 120,
+  },
+  itemInfo: {
+    flex: 1,
   },
 });
 

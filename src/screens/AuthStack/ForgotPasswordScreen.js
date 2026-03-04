@@ -26,7 +26,7 @@ class ForgotPasswordScreen extends React.Component {
   // A link will be sent to provided email address to reset password.
   handleChangePassword = () => {
     const emailTrim = this.state.forgottenEmail.trim();
-    if (emailTrim == '') {
+    if (emailTrim === '') {
       Toast.show('Please Enter Email Address to Change Password');
     } else {
       auth()
@@ -48,7 +48,7 @@ class ForgotPasswordScreen extends React.Component {
           <Ionicons name="arrow-back" size={32} color="#FFF" />
         </TouchableOpacity>
         <View style={styles.smallerContainer}>
-          <View style={{ alignItems: 'center' }}>
+          <View style={styles.centerContainer}>
             <Image style={styles.image} source={confusedMan} />
             <Text style={styles.text}>Did someone forget their password?</Text>
             <Text>That's ok...</Text>
@@ -126,6 +126,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginVertical: 12,
+  },
+  centerContainer: {
+    alignItems: 'center',
   },
 });
 

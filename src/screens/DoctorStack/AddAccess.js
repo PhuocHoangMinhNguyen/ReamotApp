@@ -99,7 +99,7 @@ class AddAccess extends React.Component {
   // Information appears on each item.
   renderItem = item => {
     let emailInfo;
-    if (item.type == 'Doctor') {
+    if (item.type === 'Doctor') {
       emailInfo = item.doctorEmail;
     } else {
       emailInfo = item.pharmacistEmail;
@@ -123,7 +123,7 @@ class AddAccess extends React.Component {
           style={styles.avatar}
           source={item.avatar ? { uri: item.avatar } : tempAvatar}
         />
-        <View style={{ flex: 1 }}>
+        <View style={styles.itemInfo}>
           <Text style={styles.name}>{item.name}</Text>
           <Text>{item.type}</Text>
           <Text>Address: {item.address}</Text>
@@ -201,6 +201,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#454D65',
+  },
+  itemInfo: {
+    flex: 1,
   },
 });
 

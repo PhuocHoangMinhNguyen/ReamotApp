@@ -17,6 +17,22 @@ import MoreStack from './MoreStack';
 
 const Tab = createBottomTabNavigator();
 
+const HomeTabIcon = ({ color }) => (
+  <Ionicons name="home" size={24} color={color} />
+);
+const CalendarTabIcon = ({ color }) => (
+  <Ionicons name="calendar" size={24} color={color} />
+);
+const MedicineTabIcon = ({ color }) => (
+  <Material name="pill" size={24} color={color} />
+);
+const DoctorTabIcon = ({ color }) => (
+  <Material name="doctor" size={24} color={color} />
+);
+const ProfileTabIcon = ({ color }) => (
+  <Ionicons name="reorder-three" size={24} color={color} />
+);
+
 export default function BottomTabs() {
   return (
     <Tab.Navigator
@@ -31,47 +47,27 @@ export default function BottomTabs() {
       <Tab.Screen
         name="Home"
         component={HomeStack}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={24} color={color} />
-          ),
-        }}
+        options={{ tabBarIcon: HomeTabIcon }}
       />
       <Tab.Screen
         name="Calendar"
         component={CalendarStack}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="calendar" size={24} color={color} />
-          ),
-        }}
+        options={{ tabBarIcon: CalendarTabIcon }}
       />
       <Tab.Screen
         name="Medicine"
         component={MedicineStack}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Material name="pill" size={24} color={color} />
-          ),
-        }}
+        options={{ tabBarIcon: MedicineTabIcon }}
       />
       <Tab.Screen
         name="Doctor"
         component={DoctorStack}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Material name="doctor" size={24} color={color} />
-          ),
-        }}
+        options={{ tabBarIcon: DoctorTabIcon }}
       />
       <Tab.Screen
         name="Profile"
         component={MoreStack}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="reorder-three" size={24} color={color} />
-          ),
-        }}
+        options={{ tabBarIcon: ProfileTabIcon }}
         listeners={({ navigation }) => ({
           tabPress: e => {
             e.preventDefault();

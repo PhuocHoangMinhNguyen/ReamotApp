@@ -47,13 +47,13 @@ class RegisterScreen extends React.Component {
       Toast.show('Please Enter Full Name', Toast.LONG);
     } else if (email.trim() === '') {
       Toast.show('Please Enter Email Information', Toast.LONG);
-    } else if (password == '') {
+    } else if (password === '') {
       Toast.show('Please Enter A Password', Toast.LONG);
     } else if (password.length < 6) {
       Toast.show('Password must be at least 6 characters', Toast.LONG);
-    } else if (phoneNumber == '') {
+    } else if (phoneNumber === '') {
       Toast.show('Please Enter Contact Number', Toast.LONG);
-    } else if (this.state.toggleCheckBox == false) {
+    } else if (this.state.toggleCheckBox === false) {
       Toast.show('Please Agree to Terms of Services', Toast.LONG);
     } else {
       this.createUser(this.state.user);
@@ -123,7 +123,7 @@ class RegisterScreen extends React.Component {
         >
           <Ionicons name="arrow-back" size={32} color="#FFF" />
         </TouchableOpacity>
-        <View style={{ alignItems: 'center', width: '100%', marginTop: -200 }}>
+        <View style={styles.headerContainer}>
           <Text style={styles.greeting}>
             {'Hello to Reamot!\nSign up to get started.'}
           </Text>
@@ -158,7 +158,7 @@ class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 12 }}>
+            <View style={styles.formSection}>
               <Text style={styles.inputTitle}>Email Address</Text>
               <TextInput
                 style={styles.input}
@@ -171,7 +171,7 @@ class RegisterScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 12 }}>
+            <View style={styles.formSection}>
               <Text style={styles.inputTitle}>Password</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
@@ -184,7 +184,7 @@ class RegisterScreen extends React.Component {
                   value={this.state.user.password}
                 />
                 <TouchableOpacity onPress={this.handlePassword}>
-                  {this.state.showPassword == true ? (
+                  {this.state.showPassword === true ? (
                     <Ionicons name="ios-eye" size={24} />
                   ) : (
                     <Ionicons name="ios-eye-off" size={24} />
@@ -193,7 +193,7 @@ class RegisterScreen extends React.Component {
               </View>
             </View>
 
-            <View style={{ marginTop: 12 }}>
+            <View style={styles.formSection}>
               <Text style={styles.inputTitle}>Contact Number</Text>
               <TextInput
                 style={styles.input}
@@ -213,13 +213,7 @@ class RegisterScreen extends React.Component {
                 this.setState({ toggleCheckBox: newValue })
               }
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                flex: 1,
-              }}
-            >
+            <View style={styles.termsRow}>
               <Text>I agree to Reamot</Text>
               <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Terms')}
@@ -230,19 +224,16 @@ class RegisterScreen extends React.Component {
           </View>
 
           <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-            <Text style={{ color: '#FFF', fontWeight: '500' }}>Sign up</Text>
+            <Text style={styles.buttonText}>Sign up</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ alignSelf: 'center', marginTop: 12 }}
+            style={styles.signInLink}
             onPress={() => this.props.navigation.navigate('LoginScreen')}
           >
-            <Text style={{ color: '#414959', fontSize: 13 }}>
+            <Text style={styles.signInText}>
               Already have an account?
-              <Text style={{ fontWeight: '500', color: '#018ABE' }}>
-                {' '}
-                Sign in
-              </Text>
+              <Text style={styles.signInHighlight}> Sign in</Text>
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -343,6 +334,35 @@ const styles = StyleSheet.create({
   },
   termsOfServices: {
     textDecorationLine: 'underline',
+  },
+  headerContainer: {
+    alignItems: 'center',
+    width: '100%',
+    marginTop: -200,
+  },
+  formSection: {
+    marginTop: 12,
+  },
+  termsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    flex: 1,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontWeight: '500',
+  },
+  signInLink: {
+    alignSelf: 'center',
+    marginTop: 12,
+  },
+  signInText: {
+    color: '#414959',
+    fontSize: 13,
+  },
+  signInHighlight: {
+    fontWeight: '500',
+    color: '#018ABE',
   },
 });
 

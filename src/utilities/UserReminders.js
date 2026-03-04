@@ -53,7 +53,7 @@ class UserReminders {
       console.log(moment(reminderTime).format());
       const reminderType = documentSnapshot.data().type;
       medicineList.forEach(medi => {
-        if (medi.name == documentSnapshot.data().medicine) {
+        if (medi.name === documentSnapshot.data().medicine) {
           const details = {
             ...alarmNotifData,
             schedule_type: reminderType === 'Weekly' ? 'weekly' : 'once',
@@ -86,7 +86,7 @@ class UserReminders {
     pendingUpdates.forEach(({ alarmID, docId, reminderTime }) => {
       let idAN = '';
       for (let i = 0; i < scheduledAlarms.length; i++) {
-        if (scheduledAlarms[i].alarmId == alarmID) {
+        if (scheduledAlarms[i].alarmId === alarmID) {
           idAN = scheduledAlarms[i].id;
           break;
         }

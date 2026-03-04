@@ -13,7 +13,7 @@ class VerificationScreen extends React.Component {
   render() {
     return (
       <View style={styles.view}>
-        <View style={{ alignItems: 'center' }}>
+        <View style={styles.centerContainer}>
           <Text style={styles.text}>
             A Verification Email was sent to your Email Address
           </Text>
@@ -23,7 +23,7 @@ class VerificationScreen extends React.Component {
           source={require('../assets/images/GrowingTree.png')}
         />
         <View style={styles.refreshing}>
-          <View style={{ justifyContent: 'center' }}>
+          <View style={styles.justifyCenter}>
             <Text style={styles.text}>
               Refresh after Verifying your account
             </Text>
@@ -71,6 +71,12 @@ const styles = StyleSheet.create({
     height: 350,
     borderRadius: 180,
     marginVertical: 16,
+  },
+  centerContainer: {
+    alignItems: 'center',
+  },
+  justifyCenter: {
+    justifyContent: 'center',
   },
   signOut: {
     alignItems: 'center',

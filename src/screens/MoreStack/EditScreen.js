@@ -135,7 +135,7 @@ class EditScreen extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 16 }}>
+            <View style={styles.formField}>
               <Text style={styles.inputTitle}>Contact Number</Text>
               <TextInput
                 style={styles.input}
@@ -146,7 +146,7 @@ class EditScreen extends React.Component {
                 value={this.state.user.phoneNumber}
               />
             </View>
-            <View style={{ marginTop: 16 }}>
+            <View style={styles.formField}>
               <Text style={styles.inputTitle}>Address</Text>
               <TextInput
                 style={styles.input}
@@ -159,7 +159,7 @@ class EditScreen extends React.Component {
           </View>
           <TouchableOpacity onPress={this.editProfile}>
             <View style={styles.button}>
-              <Text style={{ color: '#FFF' }}>Save profile</Text>
+              <Text style={styles.buttonText}>Save profile</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>
@@ -221,6 +221,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#1565C0',
     borderRadius: 4,
     marginHorizontal: 30,
+  },
+  formField: {
+    marginTop: 16,
+  },
+  buttonText: {
+    color: '#FFF',
   },
   icon: {
     position: 'absolute',

@@ -51,7 +51,7 @@ class MedicineScreen extends React.Component {
         let temp2 = [];
         querySnapshot.forEach(documentSnapshot => {
           for (let i = 0; i < temp.length; i++) {
-            if (documentSnapshot.data().name == temp[i].name) {
+            if (documentSnapshot.data().name === temp[i].name) {
               temp2.push({
                 ...documentSnapshot.data(),
                 ...temp[i],
@@ -148,7 +148,7 @@ class MedicineScreen extends React.Component {
       description: item.description,
       barcode: item.barcode,
     };
-    if (item.adder == 'patient') {
+    if (item.adder === 'patient') {
       return (
         <TouchableOpacity
           style={styles.feedItem}
@@ -213,14 +213,14 @@ class MedicineScreen extends React.Component {
   render() {
     let message;
     // Need to be fixed
-    if (this.state.medicines.length == 0) {
+    if (this.state.medicines.length === 0) {
       message = (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
             You are not currently on medication
           </Text>
-          <Text style={{ textAlign: 'center' }}>Please add a medicine,</Text>
-          <Text style={{ textAlign: 'center' }}>
+          <Text style={styles.centerText}>Please add a medicine,</Text>
+          <Text style={styles.centerText}>
             or contact your doctor for a prescription
           </Text>
         </View>
@@ -310,6 +310,13 @@ const styles = StyleSheet.create({
   emptyText: {
     fontWeight: 'bold',
     fontSize: 20,
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  centerText: {
     textAlign: 'center',
   },
 });

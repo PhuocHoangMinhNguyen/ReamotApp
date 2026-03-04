@@ -72,7 +72,7 @@ class NewReminder extends React.Component {
     const alarm = await ReactNativeAN.getScheduledAlarms();
     let idAN = '';
     for (let i = 0; i < alarm.length; i++) {
-      if (alarm[i].alarmId == details.alarm_id) {
+      if (alarm[i].alarmId === details.alarm_id) {
         idAN = alarm[i].id;
       }
     }
@@ -134,7 +134,7 @@ class NewReminder extends React.Component {
     const { testDate } = this.state.timePicker;
     let currentDate;
     const currentSecond = moment(Date.now()).format('ss');
-    const secondValue = parseInt(currentSecond) * 1000;
+    const secondValue = parseInt(currentSecond, 10) * 1000;
     const correctValue = Date.now() - secondValue;
     if (selectedDate == null) {
       currentDate = testDate;
@@ -184,7 +184,7 @@ class NewReminder extends React.Component {
         </TouchableOpacity>
         <Text style={styles.header}>Set Reminder</Text>
         <View style={styles.information}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.imageRow}>
             <Image
               style={styles.image}
               source={
@@ -194,20 +194,22 @@ class NewReminder extends React.Component {
               }
             />
             <View style={styles.name}>
-              <Text style={{ fontSize: 16 }}>{this.state.medicine.name}</Text>
+              <Text style={styles.medicineName}>
+                {this.state.medicine.name}
+              </Text>
             </View>
           </View>
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.timeSection}>
           <View>
             <View style={styles.timePicker}>
               <TouchableOpacity
                 style={styles.showPicker}
                 onPress={this.showMode}
               >
-                <Text style={{ color: '#FFF' }}>Show time picker!</Text>
+                <Text style={styles.pickerText}>Show time picker!</Text>
               </TouchableOpacity>
-              <Text style={{ alignSelf: 'center' }}>
+              <Text style={styles.timeDisplay}>
                 {moment(testDate).format('hh:mm a')}
               </Text>
             </View>
@@ -223,7 +225,7 @@ class NewReminder extends React.Component {
             style={styles.button}
             onPress={() => this.scheduleAlarm()}
           >
-            <Text style={{ color: '#FFF' }}>Schedule Alarm</Text>
+            <Text style={styles.pickerText}>Schedule Alarm</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -296,6 +298,21 @@ const styles = StyleSheet.create({
     width: 130,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  imageRow: {
+    flexDirection: 'row',
+  },
+  medicineName: {
+    fontSize: 16,
+  },
+  timeSection: {
+    flex: 1,
+  },
+  pickerText: {
+    color: '#FFF',
+  },
+  timeDisplay: {
+    alignSelf: 'center',
   },
 });
 
