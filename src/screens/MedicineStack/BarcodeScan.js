@@ -57,8 +57,8 @@ class BarcodeScan extends React.Component {
     const { name, barcode, image, description } = this.state.medicine;
     const { firebaseId, barcodeRead, alarmId, itemTime } = this.state;
     // If the barcode scanned is correct.
-    if (barcode == e.data) {
-      if (barcodeRead == false) {
+    if (barcode === e.data) {
+      if (barcodeRead === false) {
         this.setState({ barcodeRead: true });
         // Stop Alarm Sound
         ReactNativeAN.stopAlarmSound();
@@ -90,7 +90,7 @@ class BarcodeScan extends React.Component {
         const alarm = await ReactNativeAN.getScheduledAlarms();
         let idAN = '';
         for (let i = 0; i < alarm.length; i++) {
-          if (alarm[i].alarmId == details.alarm_id) {
+          if (alarm[i].alarmId === details.alarm_id) {
             idAN = alarm[i].id;
           }
         }
@@ -136,9 +136,11 @@ class BarcodeScan extends React.Component {
                 });
                 // Need to minus the correct number of pills, not just one
                 const value = firebasePills - numberOfPills;
-                mPills.doc(temporaryID).update({
-                  pills: value,
-                });
+                if (temporaryID) {
+                  mPills.doc(temporaryID).update({
+                    pills: value,
+                  });
+                }
               });
             this.props.navigation.navigate('MedicineScreen');
           });
@@ -165,7 +167,15 @@ class BarcodeScan extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <RNCamera style={styles.preview} onBarCodeRead={this.onBarCodeRead} />
+        <RNCamera
+          style={styles.preview}
+          onBarCodeRead={this.onBarCodeRead}
+          flashMode={
+            this.state.flashOn
+              ? RNCamera.Constants.FlashMode.torch
+              : RNCamera.Constants.FlashMode.off
+          }
+        />
         <View style={styles.bottomOverlay}>
           <TouchableOpacity
             onPress={() => this.handleTourch(this.state.flashOn)}

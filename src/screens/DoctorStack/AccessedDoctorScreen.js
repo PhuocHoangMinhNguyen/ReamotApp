@@ -31,7 +31,7 @@ class AccessedDoctorScreen extends React.Component {
     this.setState({ doctor: paramsFromDoctorScreen });
     // If the item chosen has type == "Doctor",
     // it will show the make appointment button
-    if (paramsFromDoctorScreen.type == 'Doctor') {
+    if (paramsFromDoctorScreen.type === 'Doctor') {
       this.setState({ show: true });
     }
   }
@@ -52,7 +52,7 @@ class AccessedDoctorScreen extends React.Component {
     const currentUser = auth().currentUser;
     const batch = firestore().batch();
     // If the target is a doctor
-    if (doctor.type == 'Doctor') {
+    if (doctor.type === 'Doctor') {
       // Remove the doctor email from user's doctorList
       batch.update(firestore().collection('users').doc(currentUser.uid), {
         doctorList: firestore.FieldValue.arrayRemove(doctor.email),
@@ -63,7 +63,7 @@ class AccessedDoctorScreen extends React.Component {
       });
     }
     // If the target is a pharmacist
-    if (doctor.type == 'Pharmacist') {
+    if (doctor.type === 'Pharmacist') {
       // Remove the pharmacist email from user's pharmacistList
       batch.update(firestore().collection('users').doc(currentUser.uid), {
         pharmacistList: firestore.FieldValue.arrayRemove(doctor.email),
@@ -82,7 +82,7 @@ class AccessedDoctorScreen extends React.Component {
 
   render() {
     let header;
-    if (this.state.doctor.type == 'Doctor') {
+    if (this.state.doctor.type === 'Doctor') {
       header = <Text style={styles.header}>Doctor Information</Text>;
     } else {
       header = <Text style={styles.header}>Pharmacist Information</Text>;
@@ -106,20 +106,20 @@ class AccessedDoctorScreen extends React.Component {
                 : tempAvatar
             }
           />
-          <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
+          <Text style={styles.doctorName}>{this.state.doctor.name}</Text>
           <Text>Address: {this.state.doctor.address}</Text>
         </View>
         <TouchableOpacity
           style={styles.button}
           onPress={this.handleRevokeAccessToDoctor}
         >
-          <Text style={{ color: '#FFF' }}>
+          <Text style={styles.buttonText}>
             Revoke access of medical details
           </Text>
         </TouchableOpacity>
         {this.state.show && (
           <TouchableOpacity style={styles.button} onPress={this.handleSchedule}>
-            <Text style={{ color: '#FFF' }}>Schedule An Appointment</Text>
+            <Text style={styles.buttonText}>Schedule An Appointment</Text>
           </TouchableOpacity>
         )}
         <ConfirmDialog
@@ -188,6 +188,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginVertical: 12,
     marginHorizontal: 30,
+  },
+  doctorName: {
+    fontSize: 18,
+  },
+  buttonText: {
+    color: '#FFF',
   },
 });
 

@@ -36,7 +36,7 @@ class ProfileScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ marginTop: 30, marginHorizontal: 20 }}>
+      <View style={styles.profileContainer}>
         <View style={styles.avatarContainer}>
           <Image
             source={
@@ -55,6 +55,10 @@ class ProfileScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  profileContainer: {
+    marginTop: 30,
+    marginHorizontal: 20,
+  },
   avatarContainer: {
     shadowColor: '#151734',
     shadowRadius: 30,

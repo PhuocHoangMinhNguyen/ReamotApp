@@ -41,21 +41,21 @@ class LoginScreen extends React.Component {
     // Solve the problem when there is space in the end of email by mistake
     const emailTrim = email.trim();
 
-    if (emailTrim == '') {
+    if (emailTrim === '') {
       Toast.show('Please Enter Email Information', Toast.LONG);
-    } else if (password == '') {
+    } else if (password === '') {
       Toast.show('Please Enter Password', Toast.LONG);
     } else {
       auth()
         .signInWithEmailAndPassword(emailTrim, password)
-        .catch(() =>
-          this.setState({ errorMessage: 'Incorrect email or password.' }),
-        )
         .then(() => {
           if (auth().currentUser) {
             UserReminders.setReminders(emailTrim);
           }
-        });
+        })
+        .catch(() =>
+          this.setState({ errorMessage: 'Incorrect email or password.' }),
+        );
     }
   };
 
@@ -63,7 +63,7 @@ class LoginScreen extends React.Component {
     const { errorMessage, showPassword } = this.state;
     const { email, password } = this.state.user;
     return (
-      <View style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <View style={styles.outerContainer}>
         <Background />
         <Image source={logoTest} style={styles.logoTest} />
         <ScrollView>
@@ -78,14 +78,16 @@ class LoginScreen extends React.Component {
                 style={styles.input}
                 testID="login-email-input"
                 autoCapitalize="none"
-                onChangeText={email =>
-                  this.setState({ user: { ...this.state.user, email } })
+                onChangeText={newEmail =>
+                  this.setState({
+                    user: { ...this.state.user, email: newEmail },
+                  })
                 }
                 value={email}
               />
             </View>
 
-            <View style={{ marginTop: 32 }}>
+            <View style={styles.passwordSection}>
               <Text style={styles.inputTitle}>Password</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
@@ -93,13 +95,15 @@ class LoginScreen extends React.Component {
                   testID="login-password-input"
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
-                  onChangeText={password =>
-                    this.setState({ user: { ...this.state.user, password } })
+                  onChangeText={newPassword =>
+                    this.setState({
+                      user: { ...this.state.user, password: newPassword },
+                    })
                   }
                   value={password}
                 />
                 <TouchableOpacity onPress={this.handlePassword}>
-                  {showPassword == true ? (
+                  {showPassword === true ? (
                     <Ionicons name="ios-eye" size={24} />
                   ) : (
                     <Ionicons name="ios-eye-off" size={24} />
@@ -110,29 +114,24 @@ class LoginScreen extends React.Component {
           </View>
 
           <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-            <Text style={{ color: '#FFF', fontWeight: '500' }}>Sign in</Text>
+            <Text style={styles.buttonText}>Sign in</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ alignItems: 'center', marginVertical: 24 }}
+            style={styles.forgotPassword}
             onPress={() =>
               this.props.navigation.navigate('ForgotPasswordScreen')
             }
           >
-            <Text style={{ textDecorationLine: 'underline' }}>
-              Forgot Password?
-            </Text>
+            <Text style={styles.underline}>Forgot Password?</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ alignSelf: 'center' }}
+            style={styles.signUpLink}
             onPress={() => this.props.navigation.navigate('RegisterScreen')}
           >
-            <Text style={{ color: '#414959', fontSize: 13 }}>
-              New to Reamot?{' '}
-              <Text style={{ fontWeight: '500', color: '#018ABE' }}>
-                Sign up
-              </Text>
+            <Text style={styles.signUpText}>
+              New to Reamot? <Text style={styles.signUpHighlight}>Sign up</Text>
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -195,6 +194,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: '#8A8F9E',
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  outerContainer: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  passwordSection: {
+    marginTop: 32,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontWeight: '500',
+  },
+  forgotPassword: {
+    alignItems: 'center',
+    marginVertical: 24,
+  },
+  underline: {
+    textDecorationLine: 'underline',
+  },
+  signUpLink: {
+    alignSelf: 'center',
+  },
+  signUpText: {
+    color: '#414959',
+    fontSize: 13,
+  },
+  signUpHighlight: {
+    fontWeight: '500',
+    color: '#018ABE',
   },
 });
 

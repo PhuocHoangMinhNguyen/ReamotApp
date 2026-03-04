@@ -41,14 +41,17 @@ class DoctorScreen extends Component {
           if (this.state.loading) {
             this.setState({ loading: false });
           }
+          if (!documentSnapshot.exists()) {
+            return;
+          }
           const tempDoctorEmail = documentSnapshot.data().doctorList;
           const tempPharmacistEmail = documentSnapshot.data().pharmacistList;
 
-          if (tempDoctorEmail == null && tempPharmacistEmail == null) {
+          if (tempDoctorEmail === null && tempPharmacistEmail === null) {
             return;
           }
 
-          if (tempDoctorEmail != null) {
+          if (tempDoctorEmail !== null) {
             if (this.doctorUnsub) {
               this.doctorUnsub();
             }
@@ -68,7 +71,7 @@ class DoctorScreen extends Component {
               });
           }
 
-          if (tempPharmacistEmail != null) {
+          if (tempPharmacistEmail !== null) {
             if (this.pharmacistUnsub) {
               this.pharmacistUnsub();
             }
@@ -116,7 +119,7 @@ class DoctorScreen extends Component {
   // Render each doctor and pharmacist item.
   renderItem = item => {
     let emailInfo;
-    if (item.type == 'Doctor') {
+    if (item.type === 'Doctor') {
       emailInfo = item.doctorEmail;
     } else {
       emailInfo = item.pharmacistEmail;
@@ -138,7 +141,7 @@ class DoctorScreen extends Component {
           style={styles.avatar}
           source={item.avatar ? { uri: item.avatar } : tempAvatar}
         />
-        <View style={{ flex: 1 }}>
+        <View style={styles.itemInfo}>
           <Text style={styles.name}>{item.name}</Text>
           <Text>{item.type}</Text>
           <Text>Address: {item.address}</Text>
@@ -152,21 +155,17 @@ class DoctorScreen extends Component {
     let message;
     if (loading) {
       message = (
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
+        <View style={styles.centered}>
           <ActivityIndicator size="large" color="#1565C0" />
         </View>
       );
       // If there is no accessed doctor and accessed pharmacist.
     } else if (
-      this.state.accessedDoctor.length == 0 &&
-      this.state.accessedPharmacist.length == 0
+      this.state.accessedDoctor.length === 0 &&
+      this.state.accessedPharmacist.length === 0
     ) {
       message = (
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
+        <View style={styles.centered}>
           <Text style={styles.emptyText}>You have no accessed doctor</Text>
           <Text style={styles.emptyText}>and accessed pharmacist</Text>
         </View>
@@ -205,7 +204,7 @@ class DoctorScreen extends Component {
         </Text>
         {message}
         <TouchableOpacity style={styles.button} onPress={this.addAccess}>
-          <Text style={{ color: '#FFF' }}>
+          <Text style={styles.buttonText}>
             Give Access to Another Doctor/ Pharmacist
           </Text>
         </TouchableOpacity>
@@ -271,6 +270,17 @@ const styles = StyleSheet.create({
   emptyText: {
     fontWeight: 'bold',
     fontSize: 20,
+  },
+  itemInfo: {
+    flex: 1,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#FFF',
   },
   header1: {
     color: '#FFF',

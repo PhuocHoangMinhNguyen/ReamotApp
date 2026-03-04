@@ -117,7 +117,7 @@ class MediInfoScreen extends React.Component {
   // If the prescription.type is Daily, navigate to 'Daily New Reminder'
   // If the prescription.type is Weekly, navigate to 'Weekly New Reminder'
   handleNewReminder = () => {
-    if (this.state.prescription.type == 'Daily') {
+    if (this.state.prescription.type === 'Daily') {
       this.props.navigation.navigate('NewReminder', {
         medicine: this.props.route.params,
         number: this.state.prescription.number,
@@ -133,7 +133,7 @@ class MediInfoScreen extends React.Component {
   // If the prescription.type is Daily, navigate to 'Daily Change Reminder'
   // If the prescription.type is Weekly, navigate to 'Weekly Change Reminder'
   handleChangeReminder = item => {
-    if (this.state.prescription.type == 'Daily') {
+    if (this.state.prescription.type === 'Daily') {
       this.props.navigation.navigate('ChangeReminder', {
         medicine: this.props.route.params,
         itemTime: item.time.toDate(),
@@ -149,7 +149,7 @@ class MediInfoScreen extends React.Component {
   // Handle View More Text in medicine's description
   renderViewMore(onPress) {
     return (
-      <Text onPress={onPress} style={{ color: '#018ABE' }}>
+      <Text onPress={onPress} style={styles.viewMoreText}>
         View More
       </Text>
     );
@@ -158,7 +158,7 @@ class MediInfoScreen extends React.Component {
   // Handle View Less Text in medicine's description
   renderViewLess(onPress) {
     return (
-      <Text onPress={onPress} style={{ color: '#018ABE' }}>
+      <Text onPress={onPress} style={styles.viewMoreText}>
         View less
       </Text>
     );
@@ -166,10 +166,10 @@ class MediInfoScreen extends React.Component {
 
   // Add Medicine Pills is used when there are no existing number of pills stored in database
   addMedicinePills = () => {
-    if (this.state.medicinePills == '') {
-      Toast.show('Please enter number of capsules');
+    const value = parseInt(this.state.medicinePills, 10);
+    if (this.state.medicinePills === '' || isNaN(value) || value <= 0) {
+      Toast.show('Please enter a valid number of capsules');
     } else {
-      const value = parseInt(this.state.medicinePills, 10);
       firestore().collection('medicinePills').add({
         medicine: this.state.medicine.name,
         patientEmail: auth().currentUser.email,
@@ -180,7 +180,7 @@ class MediInfoScreen extends React.Component {
 
   // Update Medicine Pills is used when there are already some number of pills stored in database
   updateMedicinePills = () => {
-    if (this.state.add == '') {
+    if (this.state.add === '') {
       Toast.show('Please enter number of capsules');
     } else {
       const value =
@@ -204,13 +204,13 @@ class MediInfoScreen extends React.Component {
   // times the patient has to take that medicine per day according to "prescription" document in Firebase,
   // all emptyItem will be replace by nonEmptyItem
   renderItem = item => {
-    if (item == 'null') {
+    if (item === 'null') {
       return (
         <TouchableOpacity
           style={styles.reminder}
           onPress={this.handleNewReminder}
         >
-          <Text style={{ fontSize: 18 }}>+ Add Reminder</Text>
+          <Text style={styles.addReminderText}>+ Add Reminder</Text>
         </TouchableOpacity>
       );
     }
@@ -234,12 +234,7 @@ class MediInfoScreen extends React.Component {
 
     if (loading) {
       return (
-        <View
-          style={[
-            styles.container,
-            { justifyContent: 'center', alignItems: 'center' },
-          ]}
-        >
+        <View style={[styles.container, styles.loadingContainer]}>
           <ActivityIndicator size="large" color="#1565C0" />
         </View>
       );
@@ -257,7 +252,7 @@ class MediInfoScreen extends React.Component {
     const normal = (
       <View style={styles.capsules}>
         <Text>{this.state.medicinePills} left</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={styles.pillsRow}>
           <Text>Add some more: </Text>
           <TextInput
             style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
@@ -276,10 +271,8 @@ class MediInfoScreen extends React.Component {
     );
     const lessThan10 = (
       <View style={styles.capsules}>
-        <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
-          {this.state.medicinePills} left
-        </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={styles.warningText}>{this.state.medicinePills} left</Text>
+        <View style={styles.pillsRow}>
           <Text>Add some more: </Text>
           <TextInput
             style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
@@ -298,13 +291,9 @@ class MediInfoScreen extends React.Component {
     );
     const none = (
       <View style={styles.capsules}>
-        <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
-          {this.state.medicinePills} left
-        </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
-            Time to refill:{' '}
-          </Text>
+        <Text style={styles.warningText}>{this.state.medicinePills} left</Text>
+        <View style={styles.pillsRow}>
+          <Text style={styles.warningText}>Time to refill: </Text>
           <TextInput
             style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
             placeholder="   "
@@ -313,9 +302,7 @@ class MediInfoScreen extends React.Component {
             onChangeText={addPills => this.setState({ add: addPills })}
             value={this.state.add}
           />
-          <Text style={{ color: '#FF0000', fontWeight: 'bold' }}>
-            capsule(s)
-          </Text>
+          <Text style={styles.warningText}>capsule(s)</Text>
         </View>
         <TouchableOpacity onPress={() => this.updateMedicinePills()}>
           <FontAwesome name="edit" size={30} />
@@ -340,7 +327,7 @@ class MediInfoScreen extends React.Component {
 
     let message;
     // If no info about number of pills is stored
-    if (this.state.text == '') {
+    if (this.state.text === '') {
       message = empty;
     }
     // If the number of pills is lower than 0
@@ -348,7 +335,7 @@ class MediInfoScreen extends React.Component {
       message = <Text>{this.state.text}</Text>;
     }
     // If the number of pills is equal 0
-    if (parseInt(this.state.text, 10) == 0) {
+    if (parseInt(this.state.text, 10) === 0) {
       message = none;
     }
     // If the number of pills is between 0 and 10
@@ -372,7 +359,7 @@ class MediInfoScreen extends React.Component {
           <Ionicons name="arrow-back" size={30} color="#FFF" />
         </TouchableOpacity>
         <View style={styles.information}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.imageRow}>
             <FastImage
               style={styles.image}
               source={
@@ -487,6 +474,27 @@ const styles = StyleSheet.create({
   },
   repeat: {
     fontSize: 18,
+  },
+  viewMoreText: {
+    color: '#018ABE',
+  },
+  addReminderText: {
+    fontSize: 18,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pillsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  warningText: {
+    color: '#FF0000',
+    fontWeight: 'bold',
+  },
+  imageRow: {
+    flexDirection: 'row',
   },
 });
 

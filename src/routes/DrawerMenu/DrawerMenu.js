@@ -28,8 +28,8 @@ class DrawerMenu extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <View style={{ backgroundColor: '#001F4C' }}>
+      <View style={styles.container}>
+        <View style={styles.headerBg}>
           <TouchableOpacity
             style={styles.back}
             onPress={() => {
@@ -105,6 +105,12 @@ class DrawerMenu extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  headerBg: {
+    backgroundColor: '#001F4C',
+  },
   name: {
     marginTop: 24,
     fontSize: 16,

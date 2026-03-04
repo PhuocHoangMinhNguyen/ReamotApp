@@ -80,6 +80,11 @@ class AppointmentMaker extends React.Component {
   // If user confirms to make the appointment
   handleYes = () => {
     const time = this.calculateTime();
+    if (time <= new Date()) {
+      this.setState({ dialogVisible: false });
+      Toast.show('Please choose a future date and time');
+      return;
+    }
     console.log('Time: ' + time);
     this.setState({ dialogVisible: false });
     firestore()
@@ -134,7 +139,7 @@ class AppointmentMaker extends React.Component {
                 : tempAvatar
             }
           />
-          <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
+          <Text style={styles.doctorName}>{this.state.doctor.name}</Text>
           <Text>Address: {this.state.doctor.address}</Text>
         </View>
         <View style={styles.timePicker}>
@@ -142,9 +147,9 @@ class AppointmentMaker extends React.Component {
             style={styles.pickerButton}
             onPress={this.showModeDate}
           >
-            <Text style={{ color: '#FFF' }}>Choose a Day!</Text>
+            <Text style={styles.pickerText}>Choose a Day!</Text>
           </TouchableOpacity>
-          <Text style={{ alignSelf: 'center' }}>
+          <Text style={styles.dateText}>
             {moment(this.state.testDate).format('MMM Do YYYY')}
           </Text>
         </View>
@@ -159,9 +164,9 @@ class AppointmentMaker extends React.Component {
             style={styles.pickerButton}
             onPress={this.showModeTime}
           >
-            <Text style={{ color: '#FFF' }}>Choose a Time!</Text>
+            <Text style={styles.pickerText}>Choose a Time!</Text>
           </TouchableOpacity>
-          <Text style={{ alignSelf: 'center' }}>
+          <Text style={styles.dateText}>
             {moment(this.state.testTime).format('hh:mm a')}
           </Text>
         </View>
@@ -181,7 +186,7 @@ class AppointmentMaker extends React.Component {
           />
         </View>
         <TouchableOpacity style={styles.button} onPress={this.handlePress}>
-          <Text style={{ color: '#FFF' }}>Set Appointment</Text>
+          <Text style={styles.buttonText}>Set Appointment</Text>
         </TouchableOpacity>
         <ConfirmDialog
           visible={this.state.dialogVisible}
@@ -288,6 +293,18 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
+  },
+  doctorName: {
+    fontSize: 18,
+  },
+  pickerText: {
+    color: '#FFF',
+  },
+  dateText: {
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: '#FFF',
   },
 });
 

@@ -31,7 +31,7 @@ class ChangeReminder extends React.Component {
     firebase: {
       firebaseId: '',
       idAN: '',
-      alarmId: Math.floor(Math.random() * 10000).toString(),
+      alarmId: Math.floor(Math.random() * 1e9).toString(),
     },
     timePicker: {
       // Used for TimePicker
@@ -76,7 +76,7 @@ class ChangeReminder extends React.Component {
       .onSnapshot(querySnapshot => {
         querySnapshot.forEach(documentSnapshot => {
           if (
-            Math.floor(paramsTime.getTime() / 1000) ==
+            Math.floor(paramsTime.getTime() / 1000) ===
             documentSnapshot.data().time.seconds
           ) {
             console.log(documentSnapshot.id);
@@ -96,7 +96,9 @@ class ChangeReminder extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   // delete alarm from "reminder" collection in firestore
@@ -155,7 +157,7 @@ class ChangeReminder extends React.Component {
     const alarm = await ReactNativeAN.getScheduledAlarms();
     let idAN = '';
     for (let i = 0; i < alarm.length; i++) {
-      if (alarm[i].alarmId == details.alarm_id) {
+      if (alarm[i].alarmId === details.alarm_id) {
         idAN = alarm[i].id;
       }
     }
@@ -176,7 +178,7 @@ class ChangeReminder extends React.Component {
         date: moment().format('MMMM Do YYYY'),
         status: 'missed',
       });
-    this.props.navigation.navigate('MedicineScreen');
+    this.props.navigation.popToTop();
   };
 
   render() {
@@ -191,7 +193,7 @@ class ChangeReminder extends React.Component {
         </TouchableOpacity>
         <Text style={styles.header}>Edit Reminder</Text>
         <View style={styles.information}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.imageRow}>
             <Image
               style={styles.image}
               source={
@@ -201,20 +203,16 @@ class ChangeReminder extends React.Component {
               }
             />
             <View style={styles.name}>
-              <Text style={{ fontSize: 15 }}>{this.state.medicine.name}</Text>
+              <Text style={styles.medicineName}>
+                {this.state.medicine.name}
+              </Text>
               <Text style={styles.time}>
                 {moment(this.state.initial).format('hh:mm a')}
               </Text>
             </View>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginHorizontal: 30,
-          }}
-        >
+        <View style={styles.actionRow}>
           <TouchableOpacity
             style={styles.button2}
             onPress={() => {
@@ -226,14 +224,14 @@ class ChangeReminder extends React.Component {
               });
             }}
           >
-            <Text style={{ color: '#FFF', marginRight: 50 }}>Take</Text>
+            <Text style={styles.actionText}>Take</Text>
             <AntDesign name="check" size={25} color="#FFF" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button2}
             onPress={() => this.handleMiss()}
           >
-            <Text style={{ color: '#FFF', marginRight: 50 }}>Miss</Text>
+            <Text style={styles.actionText}>Miss</Text>
             <AntDesign name="close" size={25} color="#FFF" />
           </TouchableOpacity>
         </View>
@@ -241,7 +239,7 @@ class ChangeReminder extends React.Component {
           style={styles.button}
           onPress={() => this.deleteAlarm()}
         >
-          <Text style={{ color: '#FFF' }}>Delete Alarm</Text>
+          <Text style={styles.deleteText}>Delete Alarm</Text>
           <AntDesign name="delete" size={25} color="#FFF" />
         </TouchableOpacity>
         <ConfirmDialog
@@ -348,6 +346,24 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 24,
     marginTop: 10,
+  },
+  imageRow: {
+    flexDirection: 'row',
+  },
+  medicineName: {
+    fontSize: 15,
+  },
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 30,
+  },
+  actionText: {
+    color: '#FFF',
+    marginRight: 50,
+  },
+  deleteText: {
+    color: '#FFF',
   },
 });
 

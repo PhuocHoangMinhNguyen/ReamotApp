@@ -10,7 +10,7 @@ import TermsServices from '../../components/TermsServices';
 class Terms extends React.Component {
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <TermsServices />
         <TouchableOpacity
           style={styles.back}
@@ -24,6 +24,9 @@ class Terms extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   back: {
     position: 'absolute',
     top: 15,

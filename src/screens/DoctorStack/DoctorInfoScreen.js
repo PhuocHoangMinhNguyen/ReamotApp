@@ -38,7 +38,7 @@ class DoctorInfoScreen extends React.Component {
     const currentUser = auth().currentUser;
     const batch = firestore().batch();
     // If the target is a doctor
-    if (doctor.type == 'Doctor') {
+    if (doctor.type === 'Doctor') {
       // Add the doctor email to user's doctorList
       batch.update(firestore().collection('users').doc(currentUser.uid), {
         doctorList: firestore.FieldValue.arrayUnion(doctor.email),
@@ -49,7 +49,7 @@ class DoctorInfoScreen extends React.Component {
       });
     }
     // If the target is a pharmacist
-    if (doctor.type == 'Pharmacist') {
+    if (doctor.type === 'Pharmacist') {
       // Add the pharmacist email to user's pharmacistList
       batch.update(firestore().collection('users').doc(currentUser.uid), {
         pharmacistList: firestore.FieldValue.arrayUnion(doctor.email),
@@ -68,7 +68,7 @@ class DoctorInfoScreen extends React.Component {
 
   render() {
     let header;
-    if (this.state.doctor.type == 'Doctor') {
+    if (this.state.doctor.type === 'Doctor') {
       header = <Text style={styles.header}>Doctor Information</Text>;
     } else {
       header = <Text style={styles.header}>Pharmacist Information</Text>;
@@ -92,14 +92,14 @@ class DoctorInfoScreen extends React.Component {
                 : tempAvatar
             }
           />
-          <Text style={{ fontSize: 18 }}>{this.state.doctor.name}</Text>
+          <Text style={styles.doctorName}>{this.state.doctor.name}</Text>
           <Text>Address: {this.state.doctor.address}</Text>
         </View>
         <TouchableOpacity
           style={styles.button}
           onPress={this.handleGiveAccessToDoctor}
         >
-          <Text style={{ color: '#FFF' }}>Give access of medical details</Text>
+          <Text style={styles.buttonText}>Give access of medical details</Text>
         </TouchableOpacity>
         <ConfirmDialog
           visible={this.state.dialogVisible}
@@ -167,6 +167,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginVertical: 12,
     marginHorizontal: 30,
+  },
+  doctorName: {
+    fontSize: 18,
+  },
+  buttonText: {
+    color: '#FFF',
   },
 });
 

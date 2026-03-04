@@ -54,17 +54,17 @@ class AddMedicine extends React.Component {
     const { dailyType, weeklyType } = this.state.reminder;
     if (name.trim() === '') {
       Toast.show('Please Enter Medicine Name', Toast.LONG);
-    } else if (number == '') {
+    } else if (number === '' || !(parseInt(number, 10) > 0)) {
       Toast.show(
         'Please enter number of capsules for each time you take medicine',
         Toast.LONG,
       );
-    } else if (times == '') {
+    } else if (times === '' || !(parseInt(times, 10) > 0)) {
       Toast.show(
         'Please enter number of times you have to take medicine per day/week',
         Toast.LONG,
       );
-    } else if (dailyType == false && weeklyType == false) {
+    } else if (dailyType === false && weeklyType === false) {
       Toast.show('Please Choose a Reminder Type', Toast.LONG);
     } else {
       this.addMedicine();
@@ -96,7 +96,7 @@ class AddMedicine extends React.Component {
         adder: 'patient',
       })
       .then(() => {
-        if (dailyType == true) {
+        if (dailyType === true) {
           firestore()
             .collection('prescription')
             .add({
@@ -112,8 +112,7 @@ class AddMedicine extends React.Component {
               this.props.navigation.goBack();
               Toast.show('A new medicine is added !');
             });
-        }
-        if (weeklyType == true) {
+        } else if (weeklyType === true) {
           firestore()
             .collection('prescription')
             .add({
@@ -157,7 +156,7 @@ class AddMedicine extends React.Component {
               name="ios-add"
               size={40}
               color="#FFF"
-              style={{ marginTop: 6, marginLeft: 2 }}
+              style={styles.addIcon}
             />
           </TouchableOpacity>
         </View>
@@ -191,9 +190,9 @@ class AddMedicine extends React.Component {
             value={this.state.reminder.dailyType}
             onValueChange={newValue => {
               if (
-                this.state.reminder.weeklyType !=
+                this.state.reminder.weeklyType !==
                   this.state.reminder.dailyType &&
-                newValue == true
+                newValue === true
               ) {
                 this.setState({
                   reminder: {
@@ -217,9 +216,9 @@ class AddMedicine extends React.Component {
             value={this.state.reminder.weeklyType}
             onValueChange={newValue => {
               if (
-                this.state.reminder.weeklyType !=
+                this.state.reminder.weeklyType !==
                   this.state.reminder.dailyType &&
-                newValue == true
+                newValue === true
               ) {
                 this.setState({
                   reminder: {
@@ -388,6 +387,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDD',
     borderRadius: 4,
     marginHorizontal: 30,
+  },
+  addIcon: {
+    marginTop: 6,
+    marginLeft: 2,
   },
 });
 

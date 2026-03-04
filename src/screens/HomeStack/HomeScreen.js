@@ -145,38 +145,27 @@ class HomeScreen extends React.Component {
 
   // Information appears on each item on "Upcoming Reminder" List
   renderReminder = item => {
-    let dataInfor = {
+    const itemTime = item.time.toDate();
+    const dataInfor = {
       image: item.image,
       name: item.medicine,
       description: item.description,
     };
-
-    if (
-      item.time &&
-      item.time.toDate().toDateString() == new Date().toDateString() &&
-      item.time.toDate() >= Date.now()
-    ) {
-      return (
-        <TouchableOpacity
-          style={styles.feedItem}
-          onPress={() => {
-            this.props.navigation.navigate('MedicationInformation', dataInfor);
-          }}
-        >
-          <FastImage
-            style={styles.avatar}
-            source={item.image ? { uri: item.image } : tempAvatar}
-          />
-          <Text style={styles.name}>{item.medicine}</Text>
-          <Text style={styles.time}>
-            {moment(item.time.toDate()).format('hh:mm a')}
-          </Text>
-        </TouchableOpacity>
-      );
-    } else {
-      // Blank Text so the List can be processed normally
-      return <Text />;
-    }
+    return (
+      <TouchableOpacity
+        style={styles.feedItem}
+        onPress={() => {
+          this.props.navigation.navigate('MedicationInformation', dataInfor);
+        }}
+      >
+        <FastImage
+          style={styles.avatar}
+          source={item.image ? { uri: item.image } : tempAvatar}
+        />
+        <Text style={styles.name}>{item.medicine}</Text>
+        <Text style={styles.time}>{moment(itemTime).format('hh:mm a')}</Text>
+      </TouchableOpacity>
+    );
   };
 
   // Information appears on each item on "Medicines Taken" List
@@ -189,7 +178,7 @@ class HomeScreen extends React.Component {
 
     return (
       <TouchableOpacity
-        style={item.status == 'taken' ? styles.feedTaken : styles.feedMissed}
+        style={item.status === 'taken' ? styles.feedTaken : styles.feedMissed}
         onPress={() => {
           this.props.navigation.navigate('MedicationInformation', dataInfor);
         }}
@@ -199,12 +188,12 @@ class HomeScreen extends React.Component {
           source={item.image ? { uri: item.image } : tempAvatar}
         />
         <Text
-          style={item.status == 'taken' ? styles.nameTaken : styles.nameMissed}
+          style={item.status === 'taken' ? styles.nameTaken : styles.nameMissed}
         >
           {item.medicine}
         </Text>
         <Text
-          style={item.status == 'taken' ? styles.timeTaken : styles.timeMissed}
+          style={item.status === 'taken' ? styles.timeTaken : styles.timeMissed}
         >
           {item.startTime
             ? moment(item.startTime.toDate()).format('hh:mm a')
@@ -225,12 +214,7 @@ class HomeScreen extends React.Component {
 
     if (loading) {
       return (
-        <View
-          style={[
-            styles.container,
-            { justifyContent: 'center', alignItems: 'center' },
-          ]}
-        >
+        <View style={[styles.container, styles.loadingContainer]}>
           <ActivityIndicator size="large" color="#1565C0" />
         </View>
       );
@@ -242,19 +226,12 @@ class HomeScreen extends React.Component {
     const value = isNaN(rawValue) || !isFinite(rawValue) ? 0 : rawValue;
 
     // If 2 lists ("Medicines Taken" and "Upcoming Reminders" are blanks)
-    if (historymedicines.length == 0 && remindermedicines.length == 0) {
+    if (historymedicines.length === 0 && remindermedicines.length === 0) {
       return (
         <View style={styles.container}>
           <Background style={styles.container} />
           <TreeImage value={value} />
-          <View
-            style={{
-              flex: 1,
-              marginTop: -150,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
+          <View style={styles.emptyContent}>
             <Text style={styles.emptyText}>You have no active reminder</Text>
             <Text>Please add a medicine,</Text>
             <Text>or contact your doctor for a prescription</Text>
@@ -267,7 +244,7 @@ class HomeScreen extends React.Component {
       <View style={styles.container}>
         <Background />
         <TreeImage value={value} />
-        <View style={{ flex: 1 }}>
+        <View style={styles.content}>
           <View style={styles.chapterView}>
             <Text style={styles.chapter}>Medicines Taken</Text>
           </View>
@@ -285,7 +262,13 @@ class HomeScreen extends React.Component {
           <FlatList
             removeClippedSubviews={true}
             style={styles.feed}
-            data={remindermedicines}
+            data={remindermedicines.filter(
+              item =>
+                item.time &&
+                item.time.toDate().toDateString() ===
+                  new Date().toDateString() &&
+                item.time.toDate() >= Date.now(),
+            )}
             renderItem={({ item }) => this.renderReminder(item)}
             keyExtractor={item => item.key}
             horizontal={true}
@@ -392,6 +375,19 @@ const styles = StyleSheet.create({
   chapter: {
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyContent: {
+    flex: 1,
+    marginTop: -150,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  content: {
+    flex: 1,
   },
 });
 

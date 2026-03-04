@@ -46,30 +46,30 @@ class AppointmentList extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   // Information appeared on each item.
   renderItem(item) {
     return (
       <SafeAreaView style={styles.feedItem}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ color: '#000000', fontSize: 15 }}>Doctor Name: </Text>
-          <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={styles.row}>
+          <Text style={styles.labelText}>Doctor Name: </Text>
+          <View style={styles.valueContainer}>
             <Text>{item.doctor}</Text>
           </View>
         </View>
         <View style={styles.appoint}>
-          <Text style={{ color: '#000000', fontSize: 15 }}>
-            Appointment Time:{' '}
-          </Text>
+          <Text style={styles.labelText}>Appointment Time: </Text>
           <Text>{`${moment(item.time.toDate()).format('MMM Do YYYY')} ${moment(
             item.time.toDate(),
           ).format('hh:mm a')}`}</Text>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ color: '#000000', fontSize: 15 }}>Reason: </Text>
-          <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={styles.row}>
+          <Text style={styles.labelText}>Reason: </Text>
+          <View style={styles.valueContainer}>
             <Text>{item.reason}</Text>
           </View>
         </View>
@@ -90,12 +90,14 @@ class AppointmentList extends React.Component {
           style={styles.feed}
           data={this.state.upcomming_appointmentList}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={item => item.key}
         />
         <Text style={styles.titlePast}>Past Appointments</Text>
         <FlatList
           style={styles.feed}
           data={this.state.past_appointmentList}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={item => item.key}
         />
       </View>
     );
@@ -126,6 +128,17 @@ const styles = StyleSheet.create({
   },
   feed: {
     marginHorizontal: 30,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  labelText: {
+    color: '#000000',
+    fontSize: 15,
+  },
+  valueContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   appoint: {
     flexDirection: 'row',

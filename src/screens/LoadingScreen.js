@@ -9,12 +9,20 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 class LoadingScreen extends React.Component {
+  unsubscribe = null;
+
   componentDidMount() {
-    auth().onAuthStateChanged(user => {
+    this.unsubscribe = auth().onAuthStateChanged(user => {
       this.props.navigation.navigate(
         user ? (user.emailVerified ? 'App' : 'Verify') : 'AuthStack',
       );
     });
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   render() {

@@ -55,11 +55,10 @@ class WeeklyNewReminder extends React.Component {
   componentDidMount() {
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
     // => Faster than accessing Cloud Firestore again.
-    let paramsFromMedicineScreen = this.props.route.params.medicine;
-    this.setState({ medicine: paramsFromMedicineScreen });
-
-    let paramsNumber = this.props.route.params.number;
-    this.setState({ number: paramsNumber });
+    this.setState({
+      medicine: this.props.route.params.medicine,
+      number: this.props.route.params.number,
+    });
   }
 
   // This function called after the alarm is set.
@@ -67,11 +66,13 @@ class WeeklyNewReminder extends React.Component {
     const { reminderId } = this.state.alarm;
     const { name } = this.state.medicine;
     const { testDate } = this.state.timePicker;
+    // Wait briefly for the native alarm to be registered before querying
+    await new Promise(resolve => setTimeout(resolve, 200));
     // Get the alarm's "id", set it as idAN attribute for Cloud Firestore
     const alarm = await ReactNativeAN.getScheduledAlarms();
     let idAN = '';
     for (let i = 0; i < alarm.length; i++) {
-      if (alarm[i].alarmId == details.alarm_id) {
+      if (alarm[i].alarmId === details.alarm_id) {
         idAN = alarm[i].id;
       }
     }
@@ -129,11 +130,11 @@ class WeeklyNewReminder extends React.Component {
   };
 
   // When a time is chosen from TimePicker
-  onChange = (event, selectedDate) => {
+  onChange = (_event, selectedDate) => {
     const { testDate } = this.state.timePicker;
     let currentDate;
     const currentSecond = moment(Date.now()).format('ss');
-    const secondValue = parseInt(currentSecond) * 1000;
+    const secondValue = parseInt(currentSecond, 10) * 1000;
     const correctValue = Date.now() - secondValue;
     if (selectedDate == null) {
       currentDate = testDate;
@@ -183,7 +184,7 @@ class WeeklyNewReminder extends React.Component {
         </TouchableOpacity>
         <Text style={styles.header}>Set Reminder</Text>
         <View style={styles.information}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.imageRow}>
             <Image
               style={styles.image}
               source={
@@ -193,20 +194,22 @@ class WeeklyNewReminder extends React.Component {
               }
             />
             <View style={styles.name}>
-              <Text style={{ fontSize: 16 }}>{this.state.medicine.name}</Text>
+              <Text style={styles.medicineName}>
+                {this.state.medicine.name}
+              </Text>
             </View>
           </View>
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.timeSection}>
           <View>
             <View style={styles.timePicker}>
               <TouchableOpacity
                 style={styles.showPicker}
                 onPress={this.showMode}
               >
-                <Text style={{ color: '#FFF' }}>Show time picker!</Text>
+                <Text style={styles.pickerText}>Show time picker!</Text>
               </TouchableOpacity>
-              <Text style={{ alignSelf: 'center' }}>
+              <Text style={styles.timeDisplay}>
                 {moment(testDate).format('hh:mm a')}
               </Text>
             </View>
@@ -222,7 +225,7 @@ class WeeklyNewReminder extends React.Component {
             style={styles.button}
             onPress={() => this.scheduleAlarm()}
           >
-            <Text style={{ color: '#FFF' }}>Schedule Alarm</Text>
+            <Text style={styles.pickerText}>Schedule Alarm</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -295,6 +298,21 @@ const styles = StyleSheet.create({
     width: 130,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  imageRow: {
+    flexDirection: 'row',
+  },
+  medicineName: {
+    fontSize: 16,
+  },
+  timeSection: {
+    flex: 1,
+  },
+  pickerText: {
+    color: '#FFF',
+  },
+  timeDisplay: {
+    alignSelf: 'center',
   },
 });
 

@@ -34,7 +34,7 @@ class MedicationInformation extends React.Component {
         </TouchableOpacity>
         <Text style={styles.header}>Medicine Information</Text>
         <View style={styles.information}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.imageRow}>
             <Image
               style={styles.image}
               source={
@@ -96,6 +96,9 @@ const styles = StyleSheet.create({
   },
   description: {
     marginTop: 12,
+  },
+  imageRow: {
+    flexDirection: 'row',
   },
 });
 
