@@ -51,10 +51,12 @@ class UserReminders {
         reminderTime.setDate(reminderTime.getDate() + 1);
       }
       console.log(moment(reminderTime).format());
+      const reminderType = documentSnapshot.data().type;
       medicineList.forEach(medi => {
         if (medi.name == documentSnapshot.data().medicine) {
           const details = {
             ...alarmNotifData,
+            schedule_type: reminderType === 'Weekly' ? 'weekly' : 'once',
             fire_date: ReactNativeAN.parseDate(reminderTime),
             title: documentSnapshot.data().medicine,
             alarm_id: alarmID,

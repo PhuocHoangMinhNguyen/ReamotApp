@@ -70,25 +70,30 @@ class EditScreen extends React.Component {
   // Edit User's information in Firestore.
   editProfile = async () => {
     const { name, phoneNumber, address, avatar } = this.state.user;
-    let remoteUri = null;
-    let db = firestore()
+    const db = firestore()
       .collection('users')
       .doc((auth().currentUser || {}).uid);
-    db.update({
-      avatar: null,
-      name: name,
-      phoneNumber: phoneNumber,
-      address: address,
-    });
-    if (avatar) {
-      // Store the avatar in Firebase Storage
-      remoteUri = await UploadImage.uploadPhotoAsync(
+
+    // Only clear avatar when the user has explicitly removed it (avatar is null).
+    // If avatar is an existing remote URL, leave it untouched.
+    // If avatar is a new local URI, upload first then write the URL.
+    const isNewLocalAvatar = avatar && !avatar.startsWith('http');
+    const update = { name, phoneNumber, address };
+    if (!avatar) {
+      update.avatar = null;
+    }
+
+    await db.update(update);
+
+    if (isNewLocalAvatar) {
+      // Store the avatar in Firebase Storage then update Firestore
+      const remoteUri = await UploadImage.uploadPhotoAsync(
         avatar,
         `users/${(auth().currentUser || {}).uid}`,
       );
-      // Then Store the avatar in Cloud Firestore
-      db.set({ avatar: remoteUri }, { merge: true });
+      await db.set({ avatar: remoteUri }, { merge: true });
     }
+
     Toast.show('Your Account Details is editted !');
   };
 

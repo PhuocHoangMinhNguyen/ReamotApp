@@ -49,6 +49,8 @@ class RegisterScreen extends React.Component {
       Toast.show('Please Enter Email Information', Toast.LONG);
     } else if (password == '') {
       Toast.show('Please Enter A Password', Toast.LONG);
+    } else if (password.length < 6) {
+      Toast.show('Password must be at least 6 characters', Toast.LONG);
     } else if (phoneNumber == '') {
       Toast.show('Please Enter Contact Number', Toast.LONG);
     } else if (this.state.toggleCheckBox == false) {
@@ -67,35 +69,34 @@ class RegisterScreen extends React.Component {
         user.email.trim(),
         user.password,
       );
+
+      await auth().currentUser.sendEmailVerification();
+
+      let db = firestore()
+        .collection('users')
+        .doc((auth().currentUser || {}).uid);
+
+      await db.set({
+        name: user.name.trim(),
+        email: user.email.trim(),
+        phoneNumber: user.phoneNumber,
+        avatar: null,
+        doctorList: null,
+        pharmacistList: null,
+      });
+
+      // If the user choose an avatar,
+      if (user.avatar) {
+        // Store the avatar in Firebase Storage
+        remoteUri = await UploadImage.uploadPhotoAsync(
+          user.avatar,
+          `users/${(auth().currentUser || {}).uid}`,
+        );
+        // Then Store the avatar in Cloud Firestore
+        db.set({ avatar: remoteUri }, { merge: true });
+      }
     } catch (error) {
       this.setState({ errorMessage: error.message });
-      return;
-    }
-
-    await auth().currentUser.sendEmailVerification();
-
-    let db = firestore()
-      .collection('users')
-      .doc((auth().currentUser || {}).uid);
-
-    db.set({
-      name: user.name.trim(),
-      email: user.email.trim(),
-      phoneNumber: user.phoneNumber,
-      avatar: null,
-      doctorList: null,
-      pharmacistList: null,
-    });
-
-    // If the user choose an avatar,
-    if (user.avatar) {
-      // Store the avatar in Firebase Storage
-      remoteUri = await UploadImage.uploadPhotoAsync(
-        user.avatar,
-        `users/${(auth().currentUser || {}).uid}`,
-      );
-      // Then Store the avatar in Cloud Firestore
-      db.set({ avatar: remoteUri }, { merge: true });
     }
   };
 

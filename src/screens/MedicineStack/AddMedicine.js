@@ -54,12 +54,12 @@ class AddMedicine extends React.Component {
     const { dailyType, weeklyType } = this.state.reminder;
     if (name.trim() === '') {
       Toast.show('Please Enter Medicine Name', Toast.LONG);
-    } else if (number == '') {
+    } else if (number == '' || !(parseInt(number, 10) > 0)) {
       Toast.show(
         'Please enter number of capsules for each time you take medicine',
         Toast.LONG,
       );
-    } else if (times == '') {
+    } else if (times == '' || !(parseInt(times, 10) > 0)) {
       Toast.show(
         'Please enter number of times you have to take medicine per day/week',
         Toast.LONG,
@@ -96,7 +96,7 @@ class AddMedicine extends React.Component {
         adder: 'patient',
       })
       .then(() => {
-        if (dailyType == true) {
+        if (dailyType === true) {
           firestore()
             .collection('prescription')
             .add({
@@ -112,8 +112,7 @@ class AddMedicine extends React.Component {
               this.props.navigation.goBack();
               Toast.show('A new medicine is added !');
             });
-        }
-        if (weeklyType == true) {
+        } else if (weeklyType === true) {
           firestore()
             .collection('prescription')
             .add({
@@ -191,9 +190,9 @@ class AddMedicine extends React.Component {
             value={this.state.reminder.dailyType}
             onValueChange={newValue => {
               if (
-                this.state.reminder.weeklyType !=
+                this.state.reminder.weeklyType !==
                   this.state.reminder.dailyType &&
-                newValue == true
+                newValue === true
               ) {
                 this.setState({
                   reminder: {
@@ -217,9 +216,9 @@ class AddMedicine extends React.Component {
             value={this.state.reminder.weeklyType}
             onValueChange={newValue => {
               if (
-                this.state.reminder.weeklyType !=
+                this.state.reminder.weeklyType !==
                   this.state.reminder.dailyType &&
-                newValue == true
+                newValue === true
               ) {
                 this.setState({
                   reminder: {

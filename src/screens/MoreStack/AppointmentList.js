@@ -46,7 +46,7 @@ class AppointmentList extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    if (this.unsubscribe) this.unsubscribe();
   }
 
   // Information appeared on each item.
@@ -90,12 +90,14 @@ class AppointmentList extends React.Component {
           style={styles.feed}
           data={this.state.upcomming_appointmentList}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={item => item.key}
         />
         <Text style={styles.titlePast}>Past Appointments</Text>
         <FlatList
           style={styles.feed}
           data={this.state.past_appointmentList}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={item => item.key}
         />
       </View>
     );

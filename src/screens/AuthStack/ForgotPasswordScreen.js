@@ -32,7 +32,8 @@ class ForgotPasswordScreen extends React.Component {
       auth()
         .sendPasswordResetEmail(emailTrim)
         .then(() => this.props.navigation.navigate('LoginScreen'))
-        .then(() => Toast.show('Please Check your Email...'));
+        .then(() => Toast.show('Please Check your Email...'))
+        .catch(error => Toast.show(error.message));
     }
   };
 

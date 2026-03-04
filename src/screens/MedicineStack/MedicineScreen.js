@@ -39,6 +39,10 @@ class MedicineScreen extends React.Component {
   prescriptionUnsub = null;
 
   prescriptionCollection = temp => {
+    // Unsubscribe previous listener before creating a new one to prevent leaks
+    if (this.prescriptionUnsub) {
+      this.prescriptionUnsub();
+    }
     // Deal with medicines that patient add
     this.prescriptionUnsub = firestore()
       .collection('prescription')

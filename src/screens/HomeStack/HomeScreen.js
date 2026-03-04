@@ -145,38 +145,27 @@ class HomeScreen extends React.Component {
 
   // Information appears on each item on "Upcoming Reminder" List
   renderReminder = item => {
-    let dataInfor = {
+    const itemTime = item.time.toDate();
+    const dataInfor = {
       image: item.image,
       name: item.medicine,
       description: item.description,
     };
-
-    if (
-      item.time &&
-      item.time.toDate().toDateString() == new Date().toDateString() &&
-      item.time.toDate() >= Date.now()
-    ) {
-      return (
-        <TouchableOpacity
-          style={styles.feedItem}
-          onPress={() => {
-            this.props.navigation.navigate('MedicationInformation', dataInfor);
-          }}
-        >
-          <FastImage
-            style={styles.avatar}
-            source={item.image ? { uri: item.image } : tempAvatar}
-          />
-          <Text style={styles.name}>{item.medicine}</Text>
-          <Text style={styles.time}>
-            {moment(item.time.toDate()).format('hh:mm a')}
-          </Text>
-        </TouchableOpacity>
-      );
-    } else {
-      // Blank Text so the List can be processed normally
-      return <Text />;
-    }
+    return (
+      <TouchableOpacity
+        style={styles.feedItem}
+        onPress={() => {
+          this.props.navigation.navigate('MedicationInformation', dataInfor);
+        }}
+      >
+        <FastImage
+          style={styles.avatar}
+          source={item.image ? { uri: item.image } : tempAvatar}
+        />
+        <Text style={styles.name}>{item.medicine}</Text>
+        <Text style={styles.time}>{moment(itemTime).format('hh:mm a')}</Text>
+      </TouchableOpacity>
+    );
   };
 
   // Information appears on each item on "Medicines Taken" List
@@ -285,7 +274,13 @@ class HomeScreen extends React.Component {
           <FlatList
             removeClippedSubviews={true}
             style={styles.feed}
-            data={remindermedicines}
+            data={remindermedicines.filter(
+              item =>
+                item.time &&
+                item.time.toDate().toDateString() ===
+                  new Date().toDateString() &&
+                item.time.toDate() >= Date.now(),
+            )}
             renderItem={({ item }) => this.renderReminder(item)}
             keyExtractor={item => item.key}
             horizontal={true}

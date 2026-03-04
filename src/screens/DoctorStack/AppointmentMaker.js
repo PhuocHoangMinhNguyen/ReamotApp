@@ -80,6 +80,11 @@ class AppointmentMaker extends React.Component {
   // If user confirms to make the appointment
   handleYes = () => {
     const time = this.calculateTime();
+    if (time <= new Date()) {
+      this.setState({ dialogVisible: false });
+      Toast.show('Please choose a future date and time');
+      return;
+    }
     console.log('Time: ' + time);
     this.setState({ dialogVisible: false });
     firestore()

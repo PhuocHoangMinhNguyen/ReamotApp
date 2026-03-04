@@ -26,9 +26,6 @@ class AddAccess extends React.Component {
     myArray: [],
   };
 
-  unsubscribe2 = null;
-  unsubscribe3 = null;
-
   componentDidMount() {
     // Fetch the user's existing access lists once — no real-time updates needed.
     firestore()
@@ -53,10 +50,10 @@ class AddAccess extends React.Component {
           });
         };
 
-        this.unsubscribe2 = firestore()
+        const doctorQuery = firestore()
           .collection('doctor')
-          .onSnapshot(querySnapshot => {
-            doctors = [];
+          .get()
+          .then(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
               if (
                 !tempDoctorEmail.includes(documentSnapshot.data().doctorEmail)
@@ -68,13 +65,12 @@ class AddAccess extends React.Component {
                 });
               }
             });
-            updateState();
           });
 
-        this.unsubscribe3 = firestore()
+        const pharmacistQuery = firestore()
           .collection('pharmacist')
-          .onSnapshot(querySnapshot => {
-            pharmacists = [];
+          .get()
+          .then(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
               if (
                 !tempPharmacistEmail.includes(
@@ -88,18 +84,10 @@ class AddAccess extends React.Component {
                 });
               }
             });
-            updateState();
           });
-      });
-  }
 
-  componentWillUnmount() {
-    if (this.unsubscribe2) {
-      this.unsubscribe2();
-    }
-    if (this.unsubscribe3) {
-      this.unsubscribe3();
-    }
+        Promise.all([doctorQuery, pharmacistQuery]).then(updateState);
+      });
   }
 
   // Click on each item in flatlist will lead user to DoctorInfoScreen
@@ -174,6 +162,7 @@ class AddAccess extends React.Component {
           style={styles.feed}
           data={this.state.myArray}
           renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={item => item.key}
         />
       </SafeAreaView>
     );

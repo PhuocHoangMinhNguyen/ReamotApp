@@ -55,11 +55,10 @@ class WeeklyNewReminder extends React.Component {
   componentDidMount() {
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
     // => Faster than accessing Cloud Firestore again.
-    let paramsFromMedicineScreen = this.props.route.params.medicine;
-    this.setState({ medicine: paramsFromMedicineScreen });
-
-    let paramsNumber = this.props.route.params.number;
-    this.setState({ number: paramsNumber });
+    this.setState({
+      medicine: this.props.route.params.medicine,
+      number: this.props.route.params.number,
+    });
   }
 
   // This function called after the alarm is set.
@@ -67,6 +66,8 @@ class WeeklyNewReminder extends React.Component {
     const { reminderId } = this.state.alarm;
     const { name } = this.state.medicine;
     const { testDate } = this.state.timePicker;
+    // Wait briefly for the native alarm to be registered before querying
+    await new Promise(resolve => setTimeout(resolve, 200));
     // Get the alarm's "id", set it as idAN attribute for Cloud Firestore
     const alarm = await ReactNativeAN.getScheduledAlarms();
     let idAN = '';
@@ -129,7 +130,7 @@ class WeeklyNewReminder extends React.Component {
   };
 
   // When a time is chosen from TimePicker
-  onChange = (event, selectedDate) => {
+  onChange = (_event, selectedDate) => {
     const { testDate } = this.state.timePicker;
     let currentDate;
     const currentSecond = moment(Date.now()).format('ss');

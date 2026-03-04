@@ -50,51 +50,20 @@ class CalendarScreen extends React.Component {
   historyUnsubscribe = null;
   loadToken = 0;
 
-  // calculate some value to show the progress chart
-  calculate = async () => {
-    const token = this.loadToken;
-    const currentUser = auth().currentUser;
-    if (!currentUser) {
-      return;
-    }
-    // Get history documents with status missed to calculate percentage
-    let docsMissedLength = 0;
-    await firestore()
-      .collection('history')
-      .where('patientEmail', '==', currentUser.email)
-      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      .where('status', '==', 'missed')
-      .get()
-      .then(querySnapshot => {
-        docsMissedLength = querySnapshot.docs.length;
-      });
-
-    // Get history documents with status taken to calculate percentage
-    let docsTakenLength = 0;
-    await firestore()
-      .collection('history')
-      .where('patientEmail', '==', currentUser.email)
-      .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
-      .where('status', '==', 'taken')
-      .get()
-      .then(querySnapshot => {
-        docsTakenLength = querySnapshot.docs.length;
-      });
-
-    // calculate percentage
-    const percentageArray = [];
-    const percentage =
-      (docsTakenLength * 1.0) / (docsTakenLength + docsMissedLength);
+  // calculate chart data from snapshot counts (no extra Firestore reads)
+  calculate = (takenLength, missedLength) => {
+    const total = takenLength + missedLength;
+    const safePercentage = total === 0 ? 0 : takenLength / total;
 
     // decide color
     let r = 0;
     let g = 0;
     let b = 0;
-    if (percentage <= 0.5) {
+    if (safePercentage <= 0.5) {
       r = 255;
       g = 0;
       b = 0;
-    } else if (percentage >= 0.75) {
+    } else if (safePercentage >= 0.75) {
       r = 0;
       g = 255;
       b = 0;
@@ -104,16 +73,10 @@ class CalendarScreen extends React.Component {
       b = 0;
     }
 
-    percentageArray[0] = percentage;
-    // Discard result if a newer loadItems() invocation has started
-    if (this.loadToken !== token) {
-      return;
-    }
-    // tag it to this.state.chartData.data
     this.setState({
       chartData: {
         ...this.state.chartData,
-        data: percentageArray,
+        data: [safePercentage],
       },
       chartConfig: {
         ...this.state.chartConfig,
@@ -140,18 +103,26 @@ class CalendarScreen extends React.Component {
       .where('date', '==', moment(this.state.testDate).format('MMMM Do YYYY'))
       .onSnapshot(querySnapshot => {
         let result = [];
+        let takenLength = 0;
+        let missedLength = 0;
         querySnapshot.forEach(documentSnapshot => {
-          const med = this.medicineMap.get(documentSnapshot.data().medicine);
+          const data = documentSnapshot.data();
+          const med = this.medicineMap.get(data.medicine);
           if (med) {
             result.push({
               ...med,
-              ...documentSnapshot.data(),
+              ...data,
               key: documentSnapshot.id,
             });
           }
+          if (data.status === 'taken') {
+            takenLength++;
+          } else if (data.status === 'missed') {
+            missedLength++;
+          }
         });
         this.setState({ medicine: result, loading: false });
-        this.calculate();
+        this.calculate(takenLength, missedLength);
       });
   };
 
@@ -175,7 +146,7 @@ class CalendarScreen extends React.Component {
   };
 
   // When a date is chosen from DatePicker
-  onChange = (event, selectedDate) => {
+  onChange = (_event, selectedDate) => {
     const { testDate } = this.state;
     const currentDate = selectedDate || testDate;
     this.setState({ show: Platform.OS === 'ios', testDate: currentDate }, () =>
@@ -196,7 +167,7 @@ class CalendarScreen extends React.Component {
         <View style={{ flex: 1 }}>
           <Text style={styles.missedName}>{item.name}</Text>
           <Text style={styles.missedTime}>
-            {moment(item.startTime.toDate()).format('hh:mm a')}
+            {item.startTime ? moment(item.startTime.toDate()).format('hh:mm a') : ''}
           </Text>
         </View>
       </SafeAreaView>

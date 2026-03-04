@@ -41,6 +41,7 @@ class DoctorScreen extends Component {
           if (this.state.loading) {
             this.setState({ loading: false });
           }
+          if (!documentSnapshot.exists()) return;
           const tempDoctorEmail = documentSnapshot.data().doctorList;
           const tempPharmacistEmail = documentSnapshot.data().pharmacistList;
 

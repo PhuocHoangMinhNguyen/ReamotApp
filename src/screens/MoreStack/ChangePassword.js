@@ -13,8 +13,12 @@ var confusedMan = require('../../assets/images/confusedMan.png');
 class ChangePassword extends React.Component {
   // A link to reset password will be sent to current user's email
   handleChangePassword = () => {
+    const user = auth().currentUser;
+    if (!user) {
+      return;
+    }
     auth()
-      .sendPasswordResetEmail(auth().currentUser.email)
+      .sendPasswordResetEmail(user.email)
       .then(() => {
         Toast.show('Please Check your Email...');
       });

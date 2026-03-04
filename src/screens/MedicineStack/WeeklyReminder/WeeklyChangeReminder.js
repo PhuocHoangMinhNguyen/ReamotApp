@@ -31,7 +31,7 @@ class WeeklyChangeReminder extends React.Component {
     firebase: {
       firebaseId: '',
       idAN: '',
-      alarmId: Math.floor(Math.random() * 10000).toString(),
+      alarmId: Math.floor(Math.random() * 1e9).toString(),
     },
     timePicker: {
       // Used for TimePicker
@@ -96,7 +96,7 @@ class WeeklyChangeReminder extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    if (this.unsubscribe) this.unsubscribe();
   }
 
   // delete alarm from "reminder" collection in firestore
@@ -176,7 +176,7 @@ class WeeklyChangeReminder extends React.Component {
         date: moment().format('MMMM Do YYYY'),
         status: 'missed',
       });
-    this.props.navigation.navigate('MedicineScreen');
+    this.props.navigation.popToTop();
   };
 
   render() {

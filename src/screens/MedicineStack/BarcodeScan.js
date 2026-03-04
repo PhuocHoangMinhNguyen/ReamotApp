@@ -136,9 +136,11 @@ class BarcodeScan extends React.Component {
                 });
                 // Need to minus the correct number of pills, not just one
                 const value = firebasePills - numberOfPills;
-                mPills.doc(temporaryID).update({
-                  pills: value,
-                });
+                if (temporaryID) {
+                  mPills.doc(temporaryID).update({
+                    pills: value,
+                  });
+                }
               });
             this.props.navigation.navigate('MedicineScreen');
           });
@@ -165,7 +167,11 @@ class BarcodeScan extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <RNCamera style={styles.preview} onBarCodeRead={this.onBarCodeRead} />
+        <RNCamera
+          style={styles.preview}
+          onBarCodeRead={this.onBarCodeRead}
+          flashMode={this.state.flashOn ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
+        />
         <View style={styles.bottomOverlay}>
           <TouchableOpacity
             onPress={() => this.handleTourch(this.state.flashOn)}

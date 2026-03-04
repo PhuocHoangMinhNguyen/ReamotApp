@@ -166,10 +166,10 @@ class MediInfoScreen extends React.Component {
 
   // Add Medicine Pills is used when there are no existing number of pills stored in database
   addMedicinePills = () => {
-    if (this.state.medicinePills == '') {
-      Toast.show('Please enter number of capsules');
+    const value = parseInt(this.state.medicinePills, 10);
+    if (this.state.medicinePills == '' || isNaN(value) || value <= 0) {
+      Toast.show('Please enter a valid number of capsules');
     } else {
-      const value = parseInt(this.state.medicinePills, 10);
       firestore().collection('medicinePills').add({
         medicine: this.state.medicine.name,
         patientEmail: auth().currentUser.email,
