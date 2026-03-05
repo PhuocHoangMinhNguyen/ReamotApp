@@ -127,11 +127,18 @@ describe('UserReminders', () => {
         time: { toDate: () => futureTime },
       });
 
+      // Pin Math.random so the generated alarmID is deterministic and can be
+      // matched by the getScheduledAlarms mock return value.
+      const FIXED_RANDOM   = 0.123456789;
+      const FIXED_ALARM_ID = Math.floor(FIXED_RANDOM * 1e9).toString();
+      const randomSpy = jest.spyOn(Math, 'random').mockReturnValueOnce(FIXED_RANDOM);
+
       // First getScheduledAlarms call (double-check at top of setReminders).
       ReactNativeAN.getScheduledAlarms
         .mockResolvedValueOnce([])
-        // Second call after scheduling — return the newly scheduled alarm.
-        .mockResolvedValueOnce([{ alarmId: expect.any(String), id: 'native-id-1' }]);
+        // Second call after scheduling — return the alarm with the exact alarmId
+        // the code generated, so the idAN lookup resolves to 'native-id-1'.
+        .mockResolvedValueOnce([{ alarmId: FIXED_ALARM_ID, id: 'native-id-1' }]);
 
       // get() call #1: medicine collection; call #2: reminder collection.
       firestore.mocks.get
@@ -140,10 +147,19 @@ describe('UserReminders', () => {
 
       await UserReminders.setReminders(PATIENT_EMAIL);
 
+      randomSpy.mockRestore();
+
       expect(ReactNativeAN.scheduleAlarm).toHaveBeenCalledTimes(1);
       expect(firestore.mocks.batch).toHaveBeenCalledTimes(1);
       expect(firestore.mocks.batchUpdate).toHaveBeenCalledTimes(1);
       expect(firestore.mocks.batchCommit).toHaveBeenCalledTimes(1);
+
+      // The critical assertion: idAN must be resolved from the native alarm list,
+      // not left as an empty string ''.
+      expect(firestore.mocks.batchUpdate).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ idAN: 'native-id-1' }),
+      );
     });
 
     it('commits only one batch even with multiple reminders', async () => {

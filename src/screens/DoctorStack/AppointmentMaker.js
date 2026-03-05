@@ -74,6 +74,10 @@ class AppointmentMaker extends React.Component {
 
   // Open a Dialog to confirm if user wants to make the appointment
   handlePress = () => {
+    if (this.state.reason.trim() === '') {
+      Toast.show('Please enter a reason for the appointment');
+      return;
+    }
     this.setState({ dialogVisible: true });
   };
 

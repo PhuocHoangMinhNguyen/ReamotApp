@@ -70,12 +70,11 @@ describe('HomeScreen', () => {
       }),
     ];
 
-    // Call #1 → medicine; calls #2,3,4 → history / miss / reminder collections.
+    // Listeners (after TS-020): 1=medicine, 2=history, 3=reminder
     firestore.mocks.onSnapshot
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot(medicineDocs)); return jest.fn(); })
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot(historyDocs));  return jest.fn(); })
-      .mockImplementationOnce(cb => { cb(firestore.makeSnapshot([]));            return jest.fn(); })
-      .mockImplementationOnce(cb => { cb(firestore.makeSnapshot([]));            return jest.fn(); });
+      .mockImplementationOnce(cb => { cb(firestore.makeSnapshot([]));           return jest.fn(); });
 
     const { getByText } = render(<HomeScreen navigation={mockNavigation} />);
     expect(getByText('Medicines Taken')).toBeTruthy();
@@ -93,9 +92,9 @@ describe('HomeScreen', () => {
       }),
     ];
 
+    // Listeners (after TS-020): 1=medicine, 2=history, 3=reminder
     firestore.mocks.onSnapshot
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot(medicineDocs)); return jest.fn(); })
-      .mockImplementationOnce(cb => { cb(firestore.makeSnapshot([]));           return jest.fn(); })
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot([]));           return jest.fn(); })
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot(reminderDocs)); return jest.fn(); });
 
@@ -111,11 +110,10 @@ describe('HomeScreen', () => {
     const historyDocs  = [
       makeDoc('h1', { medicine: 'Aspirin', date: today, status: 'taken', patientEmail: 'p@p.com', startTime: makeTimestamp() }),
     ];
-    // Mock TreeImage to expose the `value` prop via testID.
+    // Listeners (after TS-020): 1=medicine, 2=history, 3=reminder
     firestore.mocks.onSnapshot
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot(medicineDocs)); return jest.fn(); })
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot(historyDocs));  return jest.fn(); })
-      .mockImplementationOnce(cb => { cb(firestore.makeSnapshot([]));           return jest.fn(); })
       .mockImplementationOnce(cb => { cb(firestore.makeSnapshot([]));           return jest.fn(); });
 
     const { getByTestId } = render(<HomeScreen navigation={mockNavigation} />);

@@ -66,14 +66,19 @@ class WeeklyNewReminder extends React.Component {
     const { reminderId } = this.state.alarm;
     const { name } = this.state.medicine;
     const { testDate } = this.state.timePicker;
-    // Wait briefly for the native alarm to be registered before querying
-    await new Promise(resolve => setTimeout(resolve, 200));
-    // Get the alarm's "id", set it as idAN attribute for Cloud Firestore
-    const alarm = await ReactNativeAN.getScheduledAlarms();
+    // Retry until the native alarm appears in the list (up to 10 × 100ms)
     let idAN = '';
-    for (let i = 0; i < alarm.length; i++) {
-      if (alarm[i].alarmId === details.alarm_id) {
-        idAN = alarm[i].id;
+    for (let attempt = 0; attempt < 10; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const alarm = await ReactNativeAN.getScheduledAlarms();
+      for (let i = 0; i < alarm.length; i++) {
+        if (alarm[i].alarmId === details.alarm_id) {
+          idAN = alarm[i].id;
+          break;
+        }
+      }
+      if (idAN !== '') {
+        break;
       }
     }
     // Officially add the alarm details into Firebase, alarm id is also from reminderId

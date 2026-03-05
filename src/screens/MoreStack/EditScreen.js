@@ -70,6 +70,10 @@ class EditScreen extends React.Component {
   // Edit User's information in Firestore.
   editProfile = async () => {
     const { name, phoneNumber, address, avatar } = this.state.user;
+    if (name.trim() === '') {
+      Toast.show('Name cannot be empty');
+      return;
+    }
     const db = firestore()
       .collection('users')
       .doc((auth().currentUser || {}).uid);

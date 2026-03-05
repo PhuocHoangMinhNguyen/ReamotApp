@@ -73,11 +73,14 @@ class AccessedDoctorScreen extends React.Component {
         patientList: firestore.FieldValue.arrayRemove(currentUser.email),
       });
     }
-    batch.commit().then(() => {
-      this.setState({ dialogVisible: false });
-      Toast.show('Your request is confirmed !');
-      this.props.navigation.goBack();
-    });
+    batch
+      .commit()
+      .then(() => {
+        this.setState({ dialogVisible: false });
+        Toast.show('Your request is confirmed !');
+        this.props.navigation.goBack();
+      })
+      .catch(error => Toast.show(error.message));
   };
 
   render() {

@@ -74,7 +74,7 @@ class AddMedicine extends React.Component {
   // Add the medicine into Firebase
   addMedicine = async () => {
     const { name, image, note, number, times, barcode } = this.state.medicine;
-    const { dailyType, weeklyType } = this.state.reminder;
+    const { dailyType } = this.state.reminder;
     let remoteUri = null;
     let medicineImage = null;
     if (image) {
@@ -86,50 +86,56 @@ class AddMedicine extends React.Component {
       // Then Store the avatar in Cloud Firestore
       medicineImage = remoteUri;
     }
-    firestore()
-      .collection('medicine')
-      .add({
-        name: name,
-        barcode: barcode,
-        description: null,
-        image: medicineImage,
-        adder: 'patient',
-      })
-      .then(() => {
-        if (dailyType === true) {
-          firestore()
-            .collection('prescription')
-            .add({
-              name: name,
-              patientEmail: auth().currentUser.email,
-              authorEmail: auth().currentUser.email,
-              note: note,
-              number: parseInt(number, 10),
-              times: parseInt(times, 10),
-              type: 'Daily',
-            })
-            .then(() => {
-              this.props.navigation.goBack();
-              Toast.show('A new medicine is added !');
-            });
-        } else if (weeklyType === true) {
-          firestore()
-            .collection('prescription')
-            .add({
-              name: name,
-              patientEmail: auth().currentUser.email,
-              authorEmail: auth().currentUser.email,
-              note: note,
-              number: parseInt(number, 10),
-              times: parseInt(times, 10),
-              type: 'Weekly',
-            })
-            .then(() => {
-              this.props.navigation.goBack();
-              Toast.show('A new medicine is added !');
-            });
-        }
-      });
+
+    const prescriptionData = {
+      name: name,
+      patientEmail: auth().currentUser.email,
+      authorEmail: auth().currentUser.email,
+      note: note,
+      number: parseInt(number, 10),
+      times: parseInt(times, 10),
+      type: dailyType === true ? 'Daily' : 'Weekly',
+    };
+
+    const addPrescription = () => {
+      firestore()
+        .collection('prescription')
+        .add(prescriptionData)
+        .then(() => {
+          this.props.navigation.goBack();
+          Toast.show('A new medicine is added !');
+        })
+        .catch(error => Toast.show(error.message));
+    };
+
+    // Check for an existing medicine entry with the same name to avoid duplicates.
+    let existingMeds;
+    try {
+      existingMeds = await firestore()
+        .collection('medicine')
+        .where('name', '==', name)
+        .get();
+    } catch (error) {
+      Toast.show(error.message);
+      return;
+    }
+
+    if (!existingMeds.empty) {
+      // Reuse existing medicine document — only add the prescription.
+      addPrescription();
+    } else {
+      firestore()
+        .collection('medicine')
+        .add({
+          name: name,
+          barcode: barcode,
+          description: null,
+          image: medicineImage,
+          adder: 'patient',
+        })
+        .then(() => addPrescription())
+        .catch(error => Toast.show(error.message));
+    }
   };
 
   render() {

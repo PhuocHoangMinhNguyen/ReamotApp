@@ -81,9 +81,16 @@ class RegisterScreen extends React.Component {
         email: user.email.trim(),
         phoneNumber: user.phoneNumber,
         avatar: null,
-        doctorList: null,
-        pharmacistList: null,
+        doctorList: [],
+        pharmacistList: [],
       });
+
+      // Write email→UID lookup so isGrantedAccessToPatient in Firestore rules
+      // can resolve a patient email to their UID (users docs are keyed by UID).
+      await firestore()
+        .collection('userByEmail')
+        .doc(user.email.trim())
+        .set({ uid: (auth().currentUser || {}).uid });
 
       // If the user choose an avatar,
       if (user.avatar) {
@@ -176,6 +183,7 @@ class RegisterScreen extends React.Component {
               <View style={styles.passwordContainer}>
                 <TextInput
                   style={styles.password}
+                  testID="register-password-input"
                   secureTextEntry={!this.state.showPassword}
                   autoCapitalize="none"
                   onChangeText={password =>
@@ -197,6 +205,7 @@ class RegisterScreen extends React.Component {
               <Text style={styles.inputTitle}>Contact Number</Text>
               <TextInput
                 style={styles.input}
+                testID="register-phone-input"
                 keyboardType="numeric"
                 onChangeText={phoneNumber =>
                   this.setState({ user: { ...this.state.user, phoneNumber } })
