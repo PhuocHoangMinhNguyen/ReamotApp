@@ -32,7 +32,9 @@ class VerificationScreen extends React.Component {
             onPress={async () => {
               await auth().currentUser.reload();
               if (auth().currentUser.emailVerified) {
-                this.props.navigation.navigate('App');
+                // Force onAuthStateChanged to re-fire with updated emailVerified state,
+                // which causes App.js to render the authenticated Drawer navigator.
+                await auth().currentUser.getIdToken(true);
               } else {
                 Toast.show('Email not Verified');
               }

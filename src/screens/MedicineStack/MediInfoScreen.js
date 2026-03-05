@@ -137,11 +137,13 @@ class MediInfoScreen extends React.Component {
       this.props.navigation.navigate('ChangeReminder', {
         medicine: this.props.route.params,
         itemTime: item.time.toDate(),
+        firebaseId: item.key,
       });
     } else {
       this.props.navigation.navigate('WeeklyChangeReminder', {
         medicine: this.props.route.params,
         itemTime: item.time.toDate(),
+        firebaseId: item.key,
       });
     }
   };
@@ -180,11 +182,11 @@ class MediInfoScreen extends React.Component {
 
   // Update Medicine Pills is used when there are already some number of pills stored in database
   updateMedicinePills = () => {
-    if (this.state.add === '') {
-      Toast.show('Please enter number of capsules');
+    const addValue = parseInt(this.state.add, 10);
+    if (this.state.add === '' || isNaN(addValue) || addValue <= 0) {
+      Toast.show('Please enter a valid number of capsules');
     } else {
-      const value =
-        parseInt(this.state.medicinePills, 10) + parseInt(this.state.add, 10);
+      const value = parseInt(this.state.medicinePills, 10) + addValue;
       firestore()
         .collection('medicinePills')
         .doc(this.state.firebaseID)
@@ -242,7 +244,7 @@ class MediInfoScreen extends React.Component {
     // Derive the padded list without mutating state. Fills empty slots with 'null'
     // so renderItem can show "+ Add Reminder" placeholders.
     const paddedReminder =
-      reminder.length < prescription.times
+      prescription.times != null && reminder.length < prescription.times
         ? [
             ...reminder,
             ...Array(prescription.times - reminder.length).fill('null'),

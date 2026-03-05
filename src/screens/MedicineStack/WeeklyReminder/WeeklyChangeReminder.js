@@ -64,34 +64,21 @@ class WeeklyChangeReminder extends React.Component {
     let paramsTime = this.props.route.params.itemTime;
     this.setState({ initial: paramsTime });
 
-    // Find the document Id and idAN in Cloud Firestore
-    let tempIdAN = '';
-    let tempFirebase = '';
-    //console.log(`Time la: "${Math.round(paramsTime.getTime() / 1000)}"`)
+    // Use the document ID passed directly from MediInfoScreen
+    const paramsFirebaseId = this.props.route.params.firebaseId;
     this.unsubscribe = firestore()
       .collection('reminder')
-      .where('patientEmail', '==', auth().currentUser.email)
-      //.where('time', '==', paramsTime)
-      .where('medicine', '==', paramsFromMediInfoScreen.name)
-      .onSnapshot(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-          if (
-            Math.floor(paramsTime.getTime() / 1000) ===
-            documentSnapshot.data().time.seconds
-          ) {
-            console.log(documentSnapshot.id);
-            tempFirebase = documentSnapshot.id;
-            tempIdAN = documentSnapshot.data().idAN;
-          }
-        });
-        // Assign to firebaseId and idAN in state.firebase
-        this.setState({
-          firebase: {
-            ...this.state.firebase,
-            firebaseId: tempFirebase,
-            idAN: tempIdAN,
-          },
-        });
+      .doc(paramsFirebaseId)
+      .onSnapshot(documentSnapshot => {
+        if (documentSnapshot.exists()) {
+          this.setState({
+            firebase: {
+              ...this.state.firebase,
+              firebaseId: paramsFirebaseId,
+              idAN: documentSnapshot.data().idAN,
+            },
+          });
+        }
       });
   }
 
@@ -134,7 +121,7 @@ class WeeklyChangeReminder extends React.Component {
 
     console.log('Initial: ' + new Date(initial));
     const newReminderTime = new Date(initial);
-    newReminderTime.setDate(newReminderTime.getDate() + 1);
+    newReminderTime.setDate(newReminderTime.getDate() + 7);
     console.log('Weekly Change Reminder: ' + newReminderTime);
     const fireDates = ReactNativeAN.parseDate(newReminderTime);
 

@@ -27,7 +27,6 @@ class HomeScreen extends React.Component {
     historymedicines: [],
     // Medicine info in "reminder" collection
     remindermedicines: [],
-    missedMedicines: [],
     upcomingCount: 0,
     loading: true,
   };
@@ -76,31 +75,6 @@ class HomeScreen extends React.Component {
             }
           });
           this.setState({ historymedicines: tempHistory, loading: false });
-        }),
-    );
-
-    // Missed-history listener
-    this.unsubscribers.push(
-      firestore()
-        .collection('history')
-        .where('patientEmail', '==', email)
-        .where('date', '==', today)
-        .where('status', '==', 'missed')
-        .onSnapshot(querySnapshot => {
-          let tempMissed = [];
-          querySnapshot.forEach(documentSnapshot => {
-            const med = this.medicineMap.get(documentSnapshot.data().medicine);
-            if (med) {
-              tempMissed.push({
-                ...documentSnapshot.data(),
-                barcode: med.barcode,
-                description: med.description,
-                image: med.image,
-                key: documentSnapshot.id,
-              });
-            }
-          });
-          this.setState({ missedMedicines: tempMissed });
         }),
     );
 
@@ -206,7 +180,6 @@ class HomeScreen extends React.Component {
   render() {
     const {
       historymedicines,
-      missedMedicines,
       remindermedicines,
       upcomingCount,
       loading,
@@ -220,8 +193,9 @@ class HomeScreen extends React.Component {
       );
     }
     // Determine Image Chosen to be shown, based on the value below.
+    const missedCount = historymedicines.filter(h => h.status === 'missed').length;
     const rawValue =
-      ((historymedicines.length - missedMedicines.length) * 100) /
+      ((historymedicines.length - missedCount) * 100) /
       (upcomingCount + historymedicines.length);
     const value = isNaN(rawValue) || !isFinite(rawValue) ? 0 : rawValue;
 

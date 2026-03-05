@@ -14,10 +14,22 @@ service cloud.firestore {
 
     // Checks whether the requesting user appears in the target patient's
     // doctorList or pharmacistList stored in the users collection.
+    // Uses the userByEmail/{email} lookup collection to resolve email → UID
+    // (users documents are keyed by Firebase Auth UID, not email).
     function isGrantedAccessToPatient(patientEmail) {
-      let patientDoc = get(/databases/$(database)/documents/users/$(patientEmail));
+      let uidDoc = get(/databases/$(database)/documents/userByEmail/$(patientEmail));
+      let patientDoc = get(/databases/$(database)/documents/users/$(uidDoc.data.uid));
       return currentEmail() in patientDoc.data.doctorList
           || currentEmail() in patientDoc.data.pharmacistList;
+    }
+
+    // ── userByEmail (email → UID lookup) ──────────────────────────────────────
+    // Written once on registration; used by isGrantedAccessToPatient.
+    match /userByEmail/{email} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+                    && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
     }
 
     // ── users ──────────────────────────────────────────────────────────────────
@@ -39,11 +51,14 @@ service cloud.firestore {
     }
 
     // ── reminder ──────────────────────────────────────────────────────────────
+    // Split write into create vs update/delete to avoid resource.data error on create.
     match /reminder/{docId} {
-      allow read, write: if isAuthenticated()
-                         && resource.data.patientEmail == currentEmail();
+      allow read: if isAuthenticated()
+                  && resource.data.patientEmail == currentEmail();
       allow create: if isAuthenticated()
                     && request.resource.data.patientEmail == currentEmail();
+      allow update, delete: if isAuthenticated()
+                            && resource.data.patientEmail == currentEmail();
     }
 
     // ── history ───────────────────────────────────────────────────────────────
@@ -57,26 +72,30 @@ service cloud.firestore {
     }
 
     // ── medicine (global catalogue) ───────────────────────────────────────────
-    // Any authenticated user may browse the medicine catalogue.
-    // Only admins should write (enforced via Firebase Admin SDK / Cloud Functions,
-    // not client-side rules — tighten here once an admin role exists).
+    // Any authenticated user may browse and add to the medicine catalogue.
+    // Patient-added medicines use adder: 'patient'.
     match /medicine/{docId} {
       allow read:  if isAuthenticated();
-      allow write: if false; // disable direct client writes
+      allow write: if isAuthenticated();
     }
 
     // ── doctor / pharmacist profiles ──────────────────────────────────────────
     // Any authenticated user can look up a professional's public profile.
+    // Split write into create vs update/delete to avoid resource.data error on create.
     match /doctor/{docId} {
-      allow read:  if isAuthenticated();
-      allow write: if isAuthenticated()
-                   && resource.data.doctorEmail == currentEmail();
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+                    && request.resource.data.doctorEmail == currentEmail();
+      allow update, delete: if isAuthenticated()
+                            && resource.data.doctorEmail == currentEmail();
     }
 
     match /pharmacist/{docId} {
-      allow read:  if isAuthenticated();
-      allow write: if isAuthenticated()
-                   && resource.data.pharmacistEmail == currentEmail();
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+                    && request.resource.data.pharmacistEmail == currentEmail();
+      allow update, delete: if isAuthenticated()
+                            && resource.data.pharmacistEmail == currentEmail();
     }
   }
 }

@@ -16,9 +16,22 @@
 
 // ── Shared mock functions (reset with jest.clearAllMocks) ────────────────────
 
+// Default doc snapshot used by MockDocRef.onSnapshot when no override is set.
+const makeDocSnapshot = (exists = false, data = null) => ({
+  exists: () => exists,
+  data:   () => data,
+  // Collection-compatible iteration (no-op for a single-doc snapshot)
+  forEach: () => {},
+  docs:  [],
+  size:  0,
+  empty: true,
+});
+
 const mockOnSnapshot = jest.fn((cb) => {
-  // Default: call back immediately with an empty snapshot.
-  cb(makeSnapshot([]));
+  // Default: call back immediately with an empty/non-existent snapshot.
+  // Works for both collection listeners (forEach → no items) and document
+  // listeners (exists() → false, so callers skip setState).
+  cb(makeDocSnapshot(false, null));
   return jest.fn(); // returns unsubscribe fn
 });
 
@@ -72,6 +85,7 @@ class MockDocRef {
   delete()     { return mockDelete(); }
   set(data, options) { return mockSet(data, options); }
   get()        { return mockGet(); }
+  onSnapshot(cb, errCb) { return mockOnSnapshot(cb, errCb); }
 }
 
 const mockCollection = jest.fn(() => new MockCollectionRef());

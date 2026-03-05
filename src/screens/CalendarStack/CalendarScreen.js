@@ -24,6 +24,10 @@ import Background from '../../components/Background';
 
 var tempAvatar = require('../../assets/images/tempAvatar.png');
 
+// Module-level cache: avoids re-fetching the medicine catalogue on every
+// navigation to CalendarScreen (each mount creates a new component instance).
+let _medicineCache = null;
+
 class CalendarScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
@@ -127,10 +131,15 @@ class CalendarScreen extends React.Component {
   };
 
   async componentDidMount() {
-    const medSnapshot = await firestore().collection('medicine').get();
-    medSnapshot.forEach(doc => {
-      this.medicineMap.set(doc.data().name, doc.data());
-    });
+    if (_medicineCache) {
+      this.medicineMap = _medicineCache;
+    } else {
+      const medSnapshot = await firestore().collection('medicine').get();
+      medSnapshot.forEach(doc => {
+        this.medicineMap.set(doc.data().name, doc.data());
+      });
+      _medicineCache = this.medicineMap;
+    }
     this.loadItems();
   }
 

@@ -28,6 +28,8 @@ describe('RegisterScreen', () => {
     const { getByTestId } = render(<RegisterScreen navigation={mockNavigation} />);
     expect(getByTestId('register-name-input')).toBeTruthy();
     expect(getByTestId('register-email-input')).toBeTruthy();
+    expect(getByTestId('register-password-input')).toBeTruthy();
+    expect(getByTestId('register-phone-input')).toBeTruthy();
   });
 
   it('shows toast when the terms checkbox is not checked', async () => {
@@ -69,16 +71,20 @@ describe('RegisterScreen', () => {
     );
     fireEvent.changeText(getByTestId('register-name-input'), 'Alice');
     fireEvent.changeText(getByTestId('register-email-input'), 'alice@example.com');
+    fireEvent.changeText(getByTestId('register-password-input'), 'secret123');
+    fireEvent.changeText(getByTestId('register-phone-input'), '0412345678');
 
-    // Note: password + phone inputs lack testID — covered in future enhancement.
-    // Pressing Sign up with missing password triggers a toast (still valid test).
+    // Tick the terms checkbox so the final validation guard passes.
+    fireEvent(getByTestId('checkbox'), 'touchEnd');
+
     await act(async () => {
       fireEvent.press(getByText('Sign up'));
     });
 
-    // Toast fires for missing password before createUser is ever called.
-    expect(Toast.show).toHaveBeenCalled();
-    expect(auth.mocks.createUserWithEmailAndPassword).not.toHaveBeenCalled();
+    expect(auth.mocks.createUserWithEmailAndPassword).toHaveBeenCalledWith(
+      'alice@example.com',
+      'secret123',
+    );
   });
 
   it('navigates to Terms page from the terms link', () => {

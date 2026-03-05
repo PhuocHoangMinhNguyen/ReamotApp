@@ -63,7 +63,7 @@ class DoctorInfoScreen extends React.Component {
       this.setState({ dialogVisible: false });
       Toast.show('Your request is confirmed !');
       this.props.navigation.navigate('DoctorScreen');
-    });
+    }).catch(error => Toast.show(error.message));
   };
 
   render() {

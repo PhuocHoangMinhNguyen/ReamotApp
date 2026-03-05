@@ -26,8 +26,20 @@ class DoctorScreen extends Component {
   };
 
   unsubscribers = [];
-  doctorUnsub = null;
-  pharmacistUnsub = null;
+  doctorUnsubs = [];
+  pharmacistUnsubs = [];
+  doctorChunkResults = {};
+  pharmacistChunkResults = {};
+
+  // Split an array into chunks of at most maxSize to work around the
+  // Firestore 'in' query limit of 30 elements.
+  chunkArray = (arr, maxSize) => {
+    const chunks = [];
+    for (let i = 0; i < arr.length; i += maxSize) {
+      chunks.push(arr.slice(i, i + maxSize));
+    }
+    return chunks;
+  };
 
   componentDidMount() {
     // Subscribe to the user document to read doctorList and pharmacistList.
@@ -51,44 +63,48 @@ class DoctorScreen extends Component {
             return;
           }
 
-          if (tempDoctorEmail !== null) {
-            if (this.doctorUnsub) {
-              this.doctorUnsub();
-            }
-            this.doctorUnsub = firestore()
-              .collection('doctor')
-              .where('doctorEmail', 'in', tempDoctorEmail)
-              .onSnapshot(querySnapshot => {
-                let tempAccessedDoctor = [];
-                querySnapshot.forEach(doc => {
-                  tempAccessedDoctor.push({
-                    ...doc.data(),
-                    key: doc.id,
-                    type: 'Doctor',
+          if (tempDoctorEmail !== null && tempDoctorEmail.length > 0) {
+            this.doctorUnsubs.forEach(u => u());
+            this.doctorUnsubs = [];
+            this.doctorChunkResults = {};
+            const doctorChunks = this.chunkArray(tempDoctorEmail, 30);
+            doctorChunks.forEach((chunk, index) => {
+              const unsub = firestore()
+                .collection('doctor')
+                .where('doctorEmail', 'in', chunk)
+                .onSnapshot(querySnapshot => {
+                  const results = [];
+                  querySnapshot.forEach(doc => {
+                    results.push({ ...doc.data(), key: doc.id, type: 'Doctor' });
                   });
+                  this.doctorChunkResults[index] = results;
+                  const merged = Object.values(this.doctorChunkResults).flat();
+                  this.setState({ accessedDoctor: merged });
                 });
-                this.setState({ accessedDoctor: tempAccessedDoctor });
-              });
+              this.doctorUnsubs.push(unsub);
+            });
           }
 
-          if (tempPharmacistEmail !== null) {
-            if (this.pharmacistUnsub) {
-              this.pharmacistUnsub();
-            }
-            this.pharmacistUnsub = firestore()
-              .collection('pharmacist')
-              .where('pharmacistEmail', 'in', tempPharmacistEmail)
-              .onSnapshot(querySnapshot => {
-                let tempAccessedPharmacist = [];
-                querySnapshot.forEach(doc => {
-                  tempAccessedPharmacist.push({
-                    ...doc.data(),
-                    key: doc.id,
-                    type: 'Pharmacist',
+          if (tempPharmacistEmail !== null && tempPharmacistEmail.length > 0) {
+            this.pharmacistUnsubs.forEach(u => u());
+            this.pharmacistUnsubs = [];
+            this.pharmacistChunkResults = {};
+            const pharmacistChunks = this.chunkArray(tempPharmacistEmail, 30);
+            pharmacistChunks.forEach((chunk, index) => {
+              const unsub = firestore()
+                .collection('pharmacist')
+                .where('pharmacistEmail', 'in', chunk)
+                .onSnapshot(querySnapshot => {
+                  const results = [];
+                  querySnapshot.forEach(doc => {
+                    results.push({ ...doc.data(), key: doc.id, type: 'Pharmacist' });
                   });
+                  this.pharmacistChunkResults[index] = results;
+                  const merged = Object.values(this.pharmacistChunkResults).flat();
+                  this.setState({ accessedPharmacist: merged });
                 });
-                this.setState({ accessedPharmacist: tempAccessedPharmacist });
-              });
+              this.pharmacistUnsubs.push(unsub);
+            });
           }
         }),
     );
@@ -96,12 +112,8 @@ class DoctorScreen extends Component {
 
   componentWillUnmount() {
     this.unsubscribers.forEach(unsub => unsub());
-    if (this.doctorUnsub) {
-      this.doctorUnsub();
-    }
-    if (this.pharmacistUnsub) {
-      this.pharmacistUnsub();
-    }
+    this.doctorUnsubs.forEach(u => u());
+    this.pharmacistUnsubs.forEach(u => u());
   }
 
   // When clicking on one doctor/ pharmacist item, navigate user to
