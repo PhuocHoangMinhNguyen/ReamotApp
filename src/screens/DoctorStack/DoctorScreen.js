@@ -75,7 +75,11 @@ class DoctorScreen extends Component {
                 .onSnapshot(querySnapshot => {
                   const results = [];
                   querySnapshot.forEach(doc => {
-                    results.push({ ...doc.data(), key: doc.id, type: 'Doctor' });
+                    results.push({
+                      ...doc.data(),
+                      key: doc.id,
+                      type: 'Doctor',
+                    });
                   });
                   this.doctorChunkResults[index] = results;
                   const merged = Object.values(this.doctorChunkResults).flat();
@@ -97,10 +101,16 @@ class DoctorScreen extends Component {
                 .onSnapshot(querySnapshot => {
                   const results = [];
                   querySnapshot.forEach(doc => {
-                    results.push({ ...doc.data(), key: doc.id, type: 'Pharmacist' });
+                    results.push({
+                      ...doc.data(),
+                      key: doc.id,
+                      type: 'Pharmacist',
+                    });
                   });
                   this.pharmacistChunkResults[index] = results;
-                  const merged = Object.values(this.pharmacistChunkResults).flat();
+                  const merged = Object.values(
+                    this.pharmacistChunkResults,
+                  ).flat();
                   this.setState({ accessedPharmacist: merged });
                 });
               this.pharmacistUnsubs.push(unsub);

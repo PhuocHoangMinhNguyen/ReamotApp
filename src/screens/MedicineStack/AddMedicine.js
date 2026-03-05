@@ -74,7 +74,7 @@ class AddMedicine extends React.Component {
   // Add the medicine into Firebase
   addMedicine = async () => {
     const { name, image, note, number, times, barcode } = this.state.medicine;
-    const { dailyType, weeklyType } = this.state.reminder;
+    const { dailyType } = this.state.reminder;
     let remoteUri = null;
     let medicineImage = null;
     if (image) {

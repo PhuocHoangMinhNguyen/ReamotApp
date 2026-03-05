@@ -19,7 +19,9 @@ class AppointmentList extends React.Component {
 
   componentDidMount() {
     const user = auth().currentUser;
-    if (!user) return;
+    if (!user) {
+      return;
+    }
     const dateNow = new Date();
     this.unsubscribe = firestore()
       .collection('appointment')

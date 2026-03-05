@@ -59,11 +59,14 @@ class DoctorInfoScreen extends React.Component {
         patientList: firestore.FieldValue.arrayUnion(currentUser.email),
       });
     }
-    batch.commit().then(() => {
-      this.setState({ dialogVisible: false });
-      Toast.show('Your request is confirmed !');
-      this.props.navigation.navigate('DoctorScreen');
-    }).catch(error => Toast.show(error.message));
+    batch
+      .commit()
+      .then(() => {
+        this.setState({ dialogVisible: false });
+        Toast.show('Your request is confirmed !');
+        this.props.navigation.navigate('DoctorScreen');
+      })
+      .catch(error => Toast.show(error.message));
   };
 
   render() {

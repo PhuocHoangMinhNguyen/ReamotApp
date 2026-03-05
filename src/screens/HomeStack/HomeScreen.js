@@ -178,12 +178,8 @@ class HomeScreen extends React.Component {
   };
 
   render() {
-    const {
-      historymedicines,
-      remindermedicines,
-      upcomingCount,
-      loading,
-    } = this.state;
+    const { historymedicines, remindermedicines, upcomingCount, loading } =
+      this.state;
 
     if (loading) {
       return (
@@ -193,7 +189,9 @@ class HomeScreen extends React.Component {
       );
     }
     // Determine Image Chosen to be shown, based on the value below.
-    const missedCount = historymedicines.filter(h => h.status === 'missed').length;
+    const missedCount = historymedicines.filter(
+      h => h.status === 'missed',
+    ).length;
     const rawValue =
       ((historymedicines.length - missedCount) * 100) /
       (upcomingCount + historymedicines.length);

@@ -72,11 +72,11 @@ service cloud.firestore {
     }
 
     // ── medicine (global catalogue) ───────────────────────────────────────────
-    // Any authenticated user may browse and add to the medicine catalogue.
-    // Patient-added medicines use adder: 'patient'.
+    // Any authenticated user may browse the medicine catalogue.
+    // Writes are restricted to the backend/admin only (no client writes allowed).
     match /medicine/{docId} {
-      allow read:  if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isAuthenticated();
+      allow write: if false;
     }
 
     // ── doctor / pharmacist profiles ──────────────────────────────────────────

@@ -77,7 +77,9 @@ class WeeklyNewReminder extends React.Component {
           break;
         }
       }
-      if (idAN !== '') break;
+      if (idAN !== '') {
+        break;
+      }
     }
     // Officially add the alarm details into Firebase, alarm id is also from reminderId
     firestore()
