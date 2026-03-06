@@ -89,7 +89,9 @@ class AppointmentMaker extends React.Component {
       Toast.show('Please choose a future date and time');
       return;
     }
-    console.log('Time: ' + time);
+    if (__DEV__) {
+      console.log('Time: ' + time);
+    }
     this.setState({ dialogVisible: false });
     firestore()
       .collection('appointment')
@@ -102,6 +104,10 @@ class AppointmentMaker extends React.Component {
       .then(() => {
         Toast.show('Your appointment is confirmed !');
         this.props.navigation.goBack();
+      })
+      .catch(error => {
+        this.setState({ dialogVisible: true });
+        Toast.show(error.message);
       });
   };
 

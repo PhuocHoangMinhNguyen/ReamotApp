@@ -206,7 +206,7 @@ class MediInfoScreen extends React.Component {
   // times the patient has to take that medicine per day according to "prescription" document in Firebase,
   // all emptyItem will be replace by nonEmptyItem
   renderItem = item => {
-    if (item === 'null') {
+    if (item === null) {
       return (
         <TouchableOpacity
           style={styles.reminder}
@@ -247,7 +247,7 @@ class MediInfoScreen extends React.Component {
       prescription.times != null && reminder.length < prescription.times
         ? [
             ...reminder,
-            ...Array(prescription.times - reminder.length).fill('null'),
+            ...Array(prescription.times - reminder.length).fill(null),
           ]
         : reminder;
 
@@ -332,9 +332,9 @@ class MediInfoScreen extends React.Component {
     if (this.state.text === '') {
       message = empty;
     }
-    // If the number of pills is lower than 0
+    // If the number of pills is lower than 0, treat same as 0 (show refill view)
     if (parseInt(this.state.text, 10) < 0) {
-      message = <Text>{this.state.text}</Text>;
+      message = none;
     }
     // If the number of pills is equal 0
     if (parseInt(this.state.text, 10) === 0) {
@@ -396,7 +396,7 @@ class MediInfoScreen extends React.Component {
           data={paddedReminder}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={(item, index) =>
-            item === 'null' ? `null-${index}` : item.key
+            item === null ? `null-${index}` : item.key
           }
         />
       </View>

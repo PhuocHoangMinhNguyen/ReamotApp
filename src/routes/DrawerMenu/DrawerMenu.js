@@ -21,8 +21,13 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 import Material from '@react-native-vector-icons/material-design-icons';
 
 class DrawerMenu extends React.Component {
-  handleSignOut = () => {
-    UserReminders.deleteReminders(auth().currentUser.email);
+  handleSignOut = async () => {
+    const user = auth().currentUser;
+    if (!user) {
+      auth().signOut();
+      return;
+    }
+    await UserReminders.deleteReminders(user.email);
     auth().signOut();
   };
 

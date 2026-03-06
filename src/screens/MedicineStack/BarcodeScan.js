@@ -68,7 +68,9 @@ class BarcodeScan extends React.Component {
         // Set New Alarm Time
         const newReminderTime = new Date(itemTime);
         newReminderTime.setDate(newReminderTime.getDate() + 1);
-        console.log('Barcode Scanner: ' + newReminderTime);
+        if (__DEV__) {
+          console.log('Barcode Scanner: ' + newReminderTime);
+        }
         const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
         const details = {
@@ -113,38 +115,34 @@ class BarcodeScan extends React.Component {
           });
 
         // Reduce the number of pills
-        let temporaryID;
-        let firebasePills;
-        let numberOfPills;
-        const mPills = firestore().collection('medicinePills');
-        firestore()
-          .collection('reminder')
-          .doc(firebaseId)
-          .get()
-          .then(documentSnapshot => {
-            numberOfPills = documentSnapshot.data().numberOfPills;
-          })
-          .then(() => {
-            mPills
-              .where('medicine', '==', name)
-              .where('patientEmail', '==', auth().currentUser.email)
-              .get()
-              .then(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                  temporaryID = documentSnapshot.id;
-                  firebasePills = documentSnapshot.data().pills;
-                });
-                // Need to minus the correct number of pills, not just one
-                const value = firebasePills - numberOfPills;
-                if (temporaryID) {
-                  mPills.doc(temporaryID).update({
-                    pills: value,
-                  });
-                }
-              });
-            this.props.navigation.navigate('MedicineScreen');
+        try {
+          const mPills = firestore().collection('medicinePills');
+          const reminderDoc = await firestore()
+            .collection('reminder')
+            .doc(firebaseId)
+            .get();
+          const numberOfPills = reminderDoc.data().numberOfPills;
+
+          const querySnapshot = await mPills
+            .where('medicine', '==', name)
+            .where('patientEmail', '==', auth().currentUser.email)
+            .get();
+          let temporaryID;
+          let firebasePills;
+          querySnapshot.forEach(documentSnapshot => {
+            temporaryID = documentSnapshot.id;
+            firebasePills = documentSnapshot.data().pills;
           });
+          if (temporaryID) {
+            await mPills.doc(temporaryID).update({
+              pills: firebasePills - numberOfPills,
+            });
+          }
+        } catch (_err) {
+          // pill-decrement failure is non-fatal; navigate regardless
+        }
         Alert.alert('Alarm Sound is Stopped');
+        this.props.navigation.navigate('MedicineScreen');
       }
       // If the barcode scanned is incorrect.
     } else {
@@ -177,6 +175,9 @@ class BarcodeScan extends React.Component {
           }
         />
         <View style={styles.bottomOverlay}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <Ionicons size={40} color="#FFF" name="arrow-back" />
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.handleTourch(this.state.flashOn)}
           >
@@ -204,10 +205,11 @@ const styles = StyleSheet.create({
   },
   bottomOverlay: {
     position: 'absolute',
+    bottom: 30,
     width: '100%',
-    flex: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
 });
 

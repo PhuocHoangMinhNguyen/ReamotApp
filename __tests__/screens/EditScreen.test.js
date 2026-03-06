@@ -74,7 +74,7 @@ describe('EditScreen', () => {
     expect(firestore.mocks.update).toHaveBeenCalledWith(
       expect.objectContaining({ name: 'Alice' }),
     );
-    expect(Toast.show).toHaveBeenCalledWith('Your Account Details is editted !');
+    expect(Toast.show).toHaveBeenCalledWith('Your Account Details is edited !');
   });
 
   it('calls unsubscribe on unmount', () => {

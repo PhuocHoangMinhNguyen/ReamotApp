@@ -17,6 +17,7 @@ pnpm-debug.log
 .env
 .env.local
 .env.*.local
+settings.local.json
 
 # NOTE: google-services.json and GoogleService-Info.plist are already tracked.
 # If you rotate Firebase credentials, remove them from git with:

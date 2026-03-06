@@ -39,6 +39,10 @@ class MedicineScreen extends React.Component {
   prescriptionUnsub = null;
 
   prescriptionCollection = temp => {
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      return;
+    }
     // Unsubscribe previous listener before creating a new one to prevent leaks
     if (this.prescriptionUnsub) {
       this.prescriptionUnsub();
@@ -46,7 +50,7 @@ class MedicineScreen extends React.Component {
     // Deal with medicines that patient add
     this.prescriptionUnsub = firestore()
       .collection('prescription')
-      .where('patientEmail', '==', auth().currentUser.email)
+      .where('patientEmail', '==', currentUser.email)
       .onSnapshot(querySnapshot => {
         let temp2 = [];
         querySnapshot.forEach(documentSnapshot => {
@@ -119,10 +123,14 @@ class MedicineScreen extends React.Component {
   }
 
   deleteAlarms = name => {
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      return;
+    }
     firestore()
       .collection('reminder')
       .where('medicine', '==', name)
-      .where('patientEmail', '==', auth().currentUser.email)
+      .where('patientEmail', '==', currentUser.email)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(documentSnapshot => {
@@ -131,13 +139,16 @@ class MedicineScreen extends React.Component {
             .doc(documentSnapshot.id)
             .delete()
             .then(() => {
-              ReactNativeAN.deleteAlarm(
-                documentSnapshot.data().idAN.toString(),
-              );
+              const idAN = documentSnapshot.data().idAN;
+              if (idAN) {
+                ReactNativeAN.deleteAlarm(idAN.toString());
+              }
               Toast.show('That medicine is deleted');
-            });
+            })
+            .catch(error => Toast.show(error.message));
         });
-      });
+      })
+      .catch(error => Toast.show(error.message));
   };
 
   // Information appears on each item.
