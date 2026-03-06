@@ -88,6 +88,11 @@ class WeeklyNewReminder extends React.Component {
       }
     }
     // Officially add the alarm details into Firebase, alarm id is also from reminderId
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      Toast.show('Session expired, please log in again');
+      return;
+    }
     firestore()
       .collection('reminder')
       .add({
@@ -96,7 +101,7 @@ class WeeklyNewReminder extends React.Component {
         medicine: name,
         type: 'Weekly',
         time: testDate,
-        patientEmail: auth().currentUser.email,
+        patientEmail: currentUser.email,
         numberOfPills: this.state.number,
       })
       .then(() => {
@@ -177,7 +182,9 @@ class WeeklyNewReminder extends React.Component {
     // 1 hour = 3.600.000 miliseconds
     // 24 hours = 86.400.000 miliseconds.
     // 7 days = 168 hours = 604.800.000 miliseconds
-    console.log('Weekly New Reminder: ' + currentDate);
+    if (__DEV__) {
+      console.log('Weekly New Reminder: ' + currentDate);
+    }
     this.setState({
       timePicker: {
         ...this.state.timePicker,

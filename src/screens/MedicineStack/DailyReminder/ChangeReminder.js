@@ -162,23 +162,33 @@ class ChangeReminder extends React.Component {
         break;
       }
     }
-    firestore().collection('reminder').doc(firebaseId).update({
-      idAN: idAN,
-      alarmId: alarmId,
-      time: newReminderTime,
-    });
-
-    // When the alarm is turned off, add the medicine into "history" collection
-    const firebaseReminder = new Date(initial);
-    firestore()
-      .collection('history')
-      .add({
-        medicine: name,
-        patientEmail: auth().currentUser.email,
-        startTime: firebaseReminder,
-        date: moment().format('MMMM Do YYYY'),
-        status: 'missed',
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      Toast.show('Session expired, please log in again');
+      return;
+    }
+    try {
+      await firestore().collection('reminder').doc(firebaseId).update({
+        idAN: idAN,
+        alarmId: alarmId,
+        time: newReminderTime,
       });
+
+      // When the alarm is turned off, add the medicine into "history" collection
+      const firebaseReminder = new Date(initial);
+      await firestore()
+        .collection('history')
+        .add({
+          medicine: name,
+          patientEmail: currentUser.email,
+          startTime: firebaseReminder,
+          date: moment().format('MMMM Do YYYY'),
+          status: 'missed',
+        });
+    } catch (error) {
+      Toast.show(error.message);
+      return;
+    }
     this.props.navigation.popToTop();
   };
 

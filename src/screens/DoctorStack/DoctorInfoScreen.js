@@ -36,6 +36,11 @@ class DoctorInfoScreen extends React.Component {
   handleYes = () => {
     const { doctor } = this.state;
     const currentUser = auth().currentUser;
+    if (!currentUser) {
+      Toast.show('Session expired, please log in again');
+      this.setState({ dialogVisible: false });
+      return;
+    }
     const batch = firestore().batch();
     // If the target is a doctor
     if (doctor.type === 'Doctor') {

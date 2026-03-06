@@ -87,10 +87,15 @@ class AddMedicine extends React.Component {
       medicineImage = remoteUri;
     }
 
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      Toast.show('Session expired, please log in again');
+      return;
+    }
     const prescriptionData = {
       name: name,
-      patientEmail: auth().currentUser.email,
-      authorEmail: auth().currentUser.email,
+      patientEmail: currentUser.email,
+      authorEmail: currentUser.email,
       note: note,
       number: parseInt(number, 10),
       times: parseInt(times, 10),

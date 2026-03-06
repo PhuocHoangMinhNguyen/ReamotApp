@@ -88,6 +88,11 @@ class NewReminder extends React.Component {
       }
     }
     // Officially add the alarm details into Firebase, alarm id is also from reminderId
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      Toast.show('Session expired, please log in again');
+      return;
+    }
     firestore()
       .collection('reminder')
       .add({
@@ -96,7 +101,7 @@ class NewReminder extends React.Component {
         medicine: name,
         type: 'Daily',
         time: testDate,
-        patientEmail: auth().currentUser.email,
+        patientEmail: currentUser.email,
         numberOfPills: this.state.number,
       })
       .then(() => {
