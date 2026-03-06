@@ -89,7 +89,9 @@ class AppointmentMaker extends React.Component {
       Toast.show('Please choose a future date and time');
       return;
     }
-    if (__DEV__) { console.log('Time: ' + time); }
+    if (__DEV__) {
+      console.log('Time: ' + time);
+    }
     this.setState({ dialogVisible: false });
     firestore()
       .collection('appointment')

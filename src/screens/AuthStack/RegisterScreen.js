@@ -44,7 +44,8 @@ class RegisterScreen extends React.Component {
 
   // Check if all information is entered before create a new user.
   handleSignUp = () => {
-    const { name, email, password, confirmPassword, phoneNumber } = this.state.user;
+    const { name, email, password, confirmPassword, phoneNumber } =
+      this.state.user;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (name.trim() === '') {
       Toast.show('Please Enter Full Name', Toast.LONG);

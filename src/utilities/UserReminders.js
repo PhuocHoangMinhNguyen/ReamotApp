@@ -32,7 +32,9 @@ class UserReminders {
   setReminders = async patientEmail => {
     // Double check if there is any alarm working before logging in
     const alarm = await ReactNativeAN.getScheduledAlarms();
-    if (__DEV__) { console.log(alarm); }
+    if (__DEV__) {
+      console.log(alarm);
+    }
 
     const medicineSnapshot = await firestore().collection('medicine').get();
     const medicineList = [];

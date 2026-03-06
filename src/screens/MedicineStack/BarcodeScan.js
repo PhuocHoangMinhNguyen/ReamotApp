@@ -68,7 +68,9 @@ class BarcodeScan extends React.Component {
         // Set New Alarm Time
         const newReminderTime = new Date(itemTime);
         newReminderTime.setDate(newReminderTime.getDate() + 1);
-        if (__DEV__) { console.log('Barcode Scanner: ' + newReminderTime); }
+        if (__DEV__) {
+          console.log('Barcode Scanner: ' + newReminderTime);
+        }
         const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
         const details = {

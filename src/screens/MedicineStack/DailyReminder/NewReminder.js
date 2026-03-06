@@ -177,7 +177,9 @@ class NewReminder extends React.Component {
     // 1 hour = 3.600.000 miliseconds
     // 24 hours = 86.400.000 miliseconds.
     // 7 days = 168 hours = 604.800.000 miliseconds
-    if (__DEV__) { console.log('New Reminder: ' + currentDate); }
+    if (__DEV__) {
+      console.log('New Reminder: ' + currentDate);
+    }
     this.setState({
       timePicker: {
         ...this.state.timePicker,

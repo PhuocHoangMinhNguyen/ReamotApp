@@ -122,10 +122,14 @@ class ChangeReminder extends React.Component {
     // Remove Notification
     ReactNativeAN.removeAllFiredNotifications();
 
-    if (__DEV__) { console.log('Initial: ' + new Date(initial)); }
+    if (__DEV__) {
+      console.log('Initial: ' + new Date(initial));
+    }
     const newReminderTime = new Date(initial);
     newReminderTime.setDate(newReminderTime.getDate() + 1);
-    if (__DEV__) { console.log('Change Reminder: ' + newReminderTime); }
+    if (__DEV__) {
+      console.log('Change Reminder: ' + newReminderTime);
+    }
     const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
     const details = {
