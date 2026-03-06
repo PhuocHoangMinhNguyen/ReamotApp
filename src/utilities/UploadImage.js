@@ -7,8 +7,18 @@ import storage from '@react-native-firebase/storage';
 class UploadImage {
   // Upload and replace the avatar in Firebase Storage
   uploadPhotoAsync = async (uri, filename) => {
-    const response = await fetch(uri);
-    const file = await response.blob();
+    let response;
+    try {
+      response = await fetch(uri);
+    } catch (err) {
+      throw new Error('Failed to read image file: ' + err.message);
+    }
+    let file;
+    try {
+      file = await response.blob();
+    } catch (err) {
+      throw new Error('Failed to process image file: ' + err.message);
+    }
     const upload = storage().ref(filename).put(file);
     return new Promise((res, rej) => {
       upload.on(

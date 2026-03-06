@@ -1,340 +1,379 @@
 # Bug Fix & Improvement Roadmap
 
-Generated from QA review on 2026-03-05. Issues ordered by priority — highest impact first.
+Generated from QA review on 2026-03-06. Issues ordered by priority — highest impact first.
 
 ---
 
-## Phase 1 — Critical Fixes
+## Phase 1 — Critical Bugs (crashes / data loss)
 
-### TS-002: Weekly Reminders Rescheduled +1 Day Instead of +7
+### CRIT-001: Race Condition — `setReminders` Stores Empty `idAN`
+**File:** `src/utilities/UserReminders.js:44–98`
+
+**Problem:** `ReactNativeAN.scheduleAlarm(details)` is fire-and-forget (synchronous JS call, async native side). `getScheduledAlarms()` is called immediately after all alarms are scheduled, before the OS has registered them. The ID lookup finds no match and writes `idAN: ''` to Firestore. On the next login, `deleteReminders` calls `deleteAlarm('')` which is a no-op — device alarms accumulate with each login and can never be cleared.
+
+**Fix:** After scheduling all alarms, retry `getScheduledAlarms()` in a loop (up to 10 attempts, 100ms apart) until all expected alarm IDs appear in the result, then commit the batch.
+
+---
+
+### CRIT-002: `deleteAlarm` Called Without Null Guard on `idAN`
 **Files:**
-- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:137`
-- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:137`
+- `src/utilities/UserReminders.js:25`
+- `src/screens/MedicineStack/MedicineScreen.js:134–136`
+- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:101`
+- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:101`
 
-**Problem:** `WeeklyChangeReminder.handleYes()` advances the next alarm by `setDate(getDate() + 1)` — one day, not seven. After the first "Miss", weekly reminders become daily alarms permanently.
+**Problem:** All four call sites execute `idAN.toString()` with no null guard. When CRIT-001 has written `idAN: ''` and it is later read back as `null`/`undefined`, calling `.toString()` on it throws `TypeError` and crashes. In `MedicineScreen.deleteAlarms`, this is inside a `.then()` chain with no `.catch()`, so the exception is silently swallowed — the reminder document is deleted but the device alarm is never cancelled.
 
-**Fix:** Change `setDate(getDate() + 1)` to `setDate(getDate() + 7)` in `WeeklyChangeReminder` only.
+**Fix:** Guard every call site with `if (idAN) { ReactNativeAN.deleteAlarm(idAN.toString()); }` before invoking `deleteAlarm`.
 
 ---
 
-### TS-003: Reminder Lookup by Medicine Name Unreliable (Two Reminders Same Medicine)
+### CRIT-003: `BarcodeScan.onBarCodeRead` — Un-awaited Chains, Navigation Inside `.then()`
+**File:** `src/screens/MedicineStack/BarcodeScan.js:116–147`
+
+**Problem:** After the alarm update and history write complete, the pill-decrement logic runs as a fire-and-forget `.then()` chain. `navigation.navigate('MedicineScreen')` and `Alert.alert` sit inside that chain's inner callback. If any Firestore call throws, navigation never occurs and the user is stuck on the scan screen. Additionally, `Alert.alert('Alarm Sound is Stopped')` is outside the `if (barcodeRead === false)` guard, so it fires on every subsequent camera scan event after the first success.
+
+**Fix:** Rewrite the pill-decrement block with `async/await` inside a `try/catch`. Move `Alert.alert` inside the guard. Place `navigation.navigate` at the end of the `try` block so it always runs after all writes, regardless of whether the pill update succeeded.
+
+---
+
+### CRIT-004: `DrawerMenu.handleSignOut` Crashes When Session Has Expired
+**File:** `src/routes/DrawerMenu/DrawerMenu.js:24–27`
+
+**Problem:** `auth().currentUser.email` is accessed without a null check. If the Firebase session has already expired (or the user was force-signed out), `currentUser` is `null` and `.email` throws `TypeError`, crashing the app before `signOut()` can run.
+
+**Fix:** Add `const user = auth().currentUser; if (!user) { auth().signOut(); return; }` at the start of `handleSignOut`, and use `user.email` for the `deleteReminders` call.
+
+---
+
+### CRIT-005: `EditScreen.componentWillUnmount` Calls `null()` When Unmounted Before Mount Completes
+**File:** `src/screens/MoreStack/EditScreen.js:53–55`
+
+**Problem:** `this.unsubscribe` is initialised to `null` and only assigned inside `componentDidMount`. If the user navigates back before the Firestore listener is set up (rapid back tap on slow network), `componentWillUnmount` calls `this.unsubscribe()` which is `null()` — a `TypeError` crash.
+
+**Fix:** Add a null guard: `if (this.unsubscribe) { this.unsubscribe(); }`.
+
+---
+
+### CRIT-006: `MedicineScreen.prescriptionCollection` Crashes When Auth Session Expires
+**File:** `src/screens/MedicineStack/MedicineScreen.js:47–68`
+
+**Problem:** The outer `medicine` `onSnapshot` listener calls `prescriptionCollection(temp)` on every catalog change. Inside, `auth().currentUser.email` is accessed without a null guard. If the auth session expires while the screen is mounted, `currentUser` is `null`, causing a `TypeError` crash. The outer listener is not unsubscribed during the crash, leaving it active and repeatedly crashing the app.
+
+**Fix:** At the top of `prescriptionCollection`, guard with `const currentUser = auth().currentUser; if (!currentUser) return;` and use `currentUser.email` for the query.
+
+---
+
+## Phase 2 — High Priority (significant UX / functionality problems)
+
+### HIGH-001: No Loading State on Login / Register — Double-Tap Causes Duplicate Requests
 **Files:**
-- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:71-95`
-- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:71-95`
+- `src/screens/AuthStack/LoginScreen.js`
+- `src/screens/AuthStack/RegisterScreen.js`
 
-**Problem:** Both screens query reminders by medicine name, then match by comparing `Math.floor(paramsTime.getTime() / 1000)` to `documentSnapshot.data().time.seconds`. If a patient has two reminders for the same medicine at different times, the comparison may resolve to the wrong document (or empty string), causing silent delete/update failures on the wrong reminder.
+**Problem:** No `loading` state and no button disabled state during Firebase auth calls. Rapid double-taps issue multiple concurrent requests. On `RegisterScreen` this can result in duplicate `createUserWithEmailAndPassword` calls.
 
-**Fix:** Pass the Firestore document ID via navigation params directly from `MediInfoScreen` so `ChangeReminder` can look up the document by ID instead of by name+time comparison.
-
----
-
-### TS-006: VerificationScreen `navigate('App')` Targets Non-Existent Route
-**File:** `src/screens/VerificationScreen.js:35`
-
-**Problem:** After email verification succeeds, the code calls `this.props.navigation.navigate('App')`. The `'App'` route name does not exist in the navigator — authenticated state is managed via `onAuthStateChanged` in `LoadingScreen`. This call silently fails; users are permanently stuck on the verification screen.
-
-**Fix:** Navigate to `'Loading'` instead to re-trigger the auth state check, or call `auth().currentUser.reload()` then manually navigate to the correct authenticated route.
+**Fix:** Set `loading: true` before the async call, disable the submit button while loading, and reset to `false` in both the success and error paths.
 
 ---
 
-### TS-014 (Security): `medicine` Write Rule `if false` Blocks Patient-Added Medicines
+### HIGH-002: `RegisterScreen` Does Not Roll Back Firebase Auth User on Firestore Write Failure
+**File:** `src/screens/AuthStack/RegisterScreen.js:65–107`
+
+**Problem:** If the Firebase Auth user is created (step 1) but the subsequent Firestore `users` or `userByEmail` write fails, the `catch` block shows an error but does not delete the partially created Auth user. The user now has a Firebase account with no Firestore document; every screen that reads `users/{uid}` will encounter undefined data.
+
+**Fix:** In the `catch` block, call `auth().currentUser?.delete()` to clean up the orphaned Auth account before surfacing the error.
+
+---
+
+### HIGH-003: `AddMedicine` Deduplication Is Non-Transactional — Concurrent Adds Create Duplicates
+**File:** `src/screens/MedicineStack/AddMedicine.js:112–138`
+
+**Problem:** The existence check uses a one-time `.get()` query, not a Firestore transaction. Two patients adding the same medicine name simultaneously both pass the check and each inserts a duplicate `medicine` document. The `MedicineScreen` join logic matches on name string equality, so duplicates appear twice in every patient's prescription list.
+
+**Fix:** Wrap the existence check and insert in a Firestore transaction, or use a deterministic document ID (e.g. a slug of the medicine name) so duplicate writes are idempotent.
+
+---
+
+### HIGH-004: `AppointmentList` Past/Upcoming Classification Never Refreshes During Session
+**File:** `src/screens/MoreStack/AppointmentList.js:25–49`
+
+**Problem:** `const dateNow = new Date()` is captured once at `componentDidMount`. The `onSnapshot` callback fires repeatedly as data changes but always compares against the original mount time. An appointment that was upcoming when the screen first opened remains "upcoming" even after its time has passed, until the user navigates away and back.
+
+**Fix:** Replace the `dateNow` constant with `new Date()` evaluated inside the `onSnapshot` callback so each update uses the current time.
+
+---
+
+### HIGH-005: Module-Level `_medicineCache` in `CalendarScreen` Is a Shared Mutable Reference
+**File:** `src/screens/CalendarStack/CalendarScreen.js:29`
+
+**Problem:** `let _medicineCache = null` persists for the entire app lifetime. Once populated, the cache is never invalidated — medicine catalog updates in Firestore are never reflected in the calendar history view for the rest of the session. Additionally, `_medicineCache = this.medicineMap` stores a reference to a mutable `Map`, so mutations by a new component instance corrupt the shared cache.
+
+**Fix:** Either invalidate the cache when the `medicine` collection snapshot updates, or remove the module-level cache and instead subscribe to medicine changes via `onSnapshot` and merge with history data reactively.
+
+---
+
+### HIGH-006: `ChangeReminder` / `WeeklyChangeReminder` — Same Race as CRIT-001 on Reschedule
 **Files:**
-- `src/screens/MedicineStack/AddMedicine.js:89`
-- `firestore.rules:65`
+- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:113–168`
+- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:113–168`
 
-**Problem:** The Firestore rule `allow write: if false` on the `medicine` collection silently rejects all patient-written medicine documents. The subsequent `prescription` write still executes, creating orphaned prescriptions with no corresponding medicine entry. Medicine list joins fail silently.
+**Problem:** Both `handleYes` handlers call `ReactNativeAN.scheduleAlarm(details)` then immediately `await ReactNativeAN.getScheduledAlarms()`. The native alarm is almost certainly not registered yet, so `idAN` is always stored as `''` after a missed-dose reschedule. Future deletion of this alarm is impossible.
 
-**Fix:** Change the rule to `allow write: if request.auth != null` (or stricter role check), OR move patient-added medicines to a `userMedicine/{uid}` sub-collection scoped to the patient.
-
----
-
-### TS-016 (Security): `isGrantedAccessToPatient` Looks Up Users by Email Instead of UID
-**File:** `firestore.rules:17-21`
-
-**Problem:** `get(/databases/$(database)/documents/users/$(patientEmail))` uses email as the document path, but `users` documents are keyed by Firebase Auth UID. The lookup always returns a non-existent document, making `patientDoc.data.doctorList` evaluate to an error. Doctor and pharmacist access to patient data is entirely broken in production.
-
-**Fix:** Store an email→UID mapping or query by a field. Alternatively, key `users` documents by email, or add a Firestore `userByEmail/{email}` lookup collection.
+**Fix:** Apply the same retry loop fix as CRIT-001 — poll `getScheduledAlarms()` until the new alarm ID appears, with a timeout fallback.
 
 ---
 
-## Phase 2 — High Severity
+### HIGH-007: `MedicineScreen.deleteAlarms` Has No Error Handling — Silent Failure Leaves Orphaned Alarms
+**File:** `src/screens/MedicineStack/MedicineScreen.js:121–141`
 
-### TS-001: `deleteReminders` Inner Promise Not Awaited
-**File:** `src/utilities/UserReminders.js:19-29`
+**Problem:** The entire `deleteAlarms` chain has no `.catch()`. If any Firestore `.get()` or `.delete()` fails, the exception is silently swallowed. The prescription document is deleted first (in the caller), then `deleteAlarms` is called — if `deleteAlarms` fails silently, the prescription is gone but the reminder documents and device alarms remain active.
 
-**Problem:** `deleteReminders` is `async` but the inner `firestore().collection('reminder').get().then(...)` is returned (not awaited). Callers that `await deleteReminders(email)` resolve immediately before `deleteAlarm` calls run. Stale device alarms remain after logout.
-
-**Fix:** Replace with `await firestore().collection('reminder').get()` and loop with `await` in the callback body.
+**Fix:** Add a `.catch()` handler that shows a `Toast` error. Consider reversing the deletion order: delete reminders first, then the prescription.
 
 ---
 
-### TS-004: BarcodeScan Firestore Writes Not Awaited Before Navigation
-**File:** `src/screens/MedicineStack/BarcodeScan.js:97-145`
-
-**Problem:** Inside the `.then()` block, `mPills.doc(...).update(...)` and `history.add(...)` are not awaited before `navigation.navigate('MedicineScreen')`. On write failure, the user is navigated away silently and the history record is never stored.
-
-**Fix:** Rewrite with `async/await` and await each write before navigating. Wrap in `try/catch` to surface errors.
-
----
-
-### TS-007: `RegisterScreen` Stores `doctorList: null` Instead of `[]`
-**File:** `src/screens/AuthStack/RegisterScreen.js:80-86`
-
-**Problem:** New user documents are created with `doctorList: null` and `pharmacistList: null`. The Firestore rule `isGrantedAccessToPatient` does `currentEmail() in patientDoc.data.doctorList`, which throws when the field is `null` instead of an array. All doctor/pharmacist access checks error out for new users.
-
-**Fix:** Initialize as `doctorList: []` and `pharmacistList: []`.
-
----
-
-### TS-008: `AppointmentList` Accesses `currentUser.email` Without Null Guard
-**File:** `src/screens/MoreStack/AppointmentList.js:24`
-
-**Problem:** `auth().currentUser.email` accessed directly in `componentDidMount`. If `currentUser` is `null` (expired session or race condition), throws `TypeError: Cannot read property 'email' of null`.
-
-**Fix:** Add `const user = auth().currentUser; if (!user) return;` at the top of `componentDidMount`.
-
----
-
-### TS-009: `getANid()` Uses Hardcoded 200ms `setTimeout` — Race Condition
+### HIGH-008: `NewReminder` / `WeeklyNewReminder` — `getANid` Not Awaited; Fires on Unmounted Component
 **Files:**
-- `src/screens/MedicineStack/DailyReminder/NewReminder.js:65-94`
-- `src/screens/MedicineStack/WeeklyReminder/WeeklyNewReminder.js:65-94`
+- `src/screens/MedicineStack/DailyReminder/NewReminder.js:103–125`
+- `src/screens/MedicineStack/WeeklyReminder/WeeklyNewReminder.js:103–125`
 
-**Problem:** `getANid()` waits 200ms then calls `getScheduledAlarms()`. On slow devices or under load, the native alarm may not be registered yet, so `idAN` is stored as `''`. A reminder with empty `idAN` cannot be deleted from the device later.
+**Problem:** `this.getANid(details)` is an async function called without `await`. The schedule button is not disabled during the 1-second polling window. If the user taps back during polling, `getANid` eventually resolves, calls `firestore().add(...)`, then calls `this.props.navigation.goBack()` on an already-unmounted component.
 
-**Fix:** Retry `getScheduledAlarms()` in a loop (up to ~10 times, 100ms apart) until the new alarm ID appears in the list, or falls back after a timeout.
-
----
-
-### TS-010: `MediInfoScreen` Crashes with `RangeError` When `prescription.times` is Undefined
-**File:** `src/screens/MedicineStack/MediInfoScreen.js:244-250`
-
-**Problem:** `Array(prescription.times - reminder.length)` when `prescription.times` is `undefined` produces `Array(NaN)` which throws `RangeError: Invalid array length`. Occurs on slow networks before the subscription fires.
-
-**Fix:** Guard with `if (!prescription || prescription.times == null) return [];` before computing `paddedReminder`.
+**Fix:** Await `getANid` and disable the button while it runs. Add a mounted guard (`this._mounted`) and check it before calling `goBack()`.
 
 ---
 
-### TS-011: `AddMedicine` Duplicates Global Medicine Catalogue Entries
-**Files:**
-- `src/screens/MedicineStack/AddMedicine.js:89-97`
-- `src/screens/MedicineStack/MedicineScreen.js:51-60`
+### HIGH-009: `DoctorScreen` `=== null` Guard Misses `undefined` — Crashes for Older User Documents
+**File:** `src/screens/DoctorStack/DoctorScreen.js:62–66`
 
-**Problem:** `addMedicine()` always creates a new `medicine` document without checking if one with the same name already exists. Duplicate entries cause the medicine list to show duplicate rows.
+**Problem:** The guard `if (tempDoctorEmail === null)` does not catch `undefined`, which is what Firestore returns for fields that do not exist. Any user document created before `doctorList`/`pharmacistList` were added will have `tempDoctorEmail === undefined`, causing `undefined.length` to throw `TypeError`.
 
-**Fix:** Query `medicine` collection for existing name before inserting. If found, reuse the existing document ID.
-
----
-
-### TS-012: `MediInfoScreen` Pill Count Accepts `NaN` Input
-**File:** `src/screens/MedicineStack/MediInfoScreen.js:182-195`
-
-**Problem:** `parseInt(add)` returns `NaN` for non-numeric input (e.g. pasted text). `NaN` is written to Firestore as the new `pills` value. `keyboardType="numeric"` does not prevent paste on all platforms.
-
-**Fix:** Validate `!isNaN(parseInt(add, 10)) && parseInt(add, 10) > 0` before updating.
-
----
-
-### TS-017 (Security): `reminder` Write Rule Uses `resource.data` on Create
-**File:** `firestore.rules:42-47`
-
-**Problem:** `allow write: if resource.data.patientEmail == currentEmail()` uses `resource.data` (the pre-image). On a `create` operation, the pre-image does not exist, causing an error. Reminder creation may silently fail in production Firestore.
-
-**Fix:** Split rules: `allow create: if request.resource.data.patientEmail == currentEmail();` and `allow update, delete: if resource.data.patientEmail == currentEmail();`
-
----
-
-### TS-026: `AddMedicine` Has No `.catch()` — Silent Failure on Write Error
-**File:** `src/screens/MedicineStack/AddMedicine.js:89-133`
-
-**Problem:** Neither the `medicine.add()` nor `prescription.add()` chains have `.catch()` handlers. Firestore write failures show no user feedback; the button appears to do nothing.
-
-**Fix:** Add `.catch(error => Toast.show(error.message))` to both Promise chains.
-
----
-
-### TS-028: `DoctorInfoScreen.handleYes()` Shows Success Toast Even on Batch Failure
-**Files:**
-- `src/screens/DoctorStack/DoctorInfoScreen.js:62-66`
-- `src/screens/DoctorStack/AccessedDoctorScreen.js:76-80`
-
-**Problem:** `batch.commit().then(...)` has no `.catch()`. If the commit fails, the dialog closes and the success Toast fires anyway. User believes access was granted when it was not.
-
-**Fix:** Add `.catch(error => Toast.show(error.message))` and keep the dialog open on failure.
+**Fix:** Change the guard to `if (!tempDoctorEmail && !tempPharmacistEmail) return;` (falsy check) so both `null` and `undefined` are handled.
 
 ---
 
 ## Phase 3 — Medium Priority
 
-### TS-005: `BarcodeScan` Alert Fires After `barcodeRead = true`
-**File:** `src/screens/MedicineStack/BarcodeScan.js:148`
-
-**Problem:** `Alert.alert('Alarm Sound is Stopped')` is called unconditionally outside the `if (barcodeRead === false)` guard. After the first successful scan, every subsequent camera scan event triggers the alert again.
-
-**Fix:** Move `Alert.alert(...)` inside the `if (barcodeRead === false)` block.
-
----
-
-### TS-013: `DoctorScreen` `in` Query Fails With > 30 Entries
-**File:** `src/screens/DoctorStack/DoctorScreen.js:58-91`
-
-**Problem:** Firestore `in` operator supports max 30 elements. If `doctorList` or `pharmacistList` exceeds 30, the query throws `invalid-argument`. Screen silently shows empty.
-
-**Fix:** Chunk the array into groups of 30 and run parallel `in` queries; merge results client-side.
-
----
-
-### TS-015 (Security): Doctor Document Write Rule Uses `resource.data` on Create
-**File:** `firestore.rules:70-74`
-
-**Problem:** `allow write: if resource.data.doctorEmail == currentEmail()` errors on create (no pre-image). New doctor profiles cannot be created via client. Additionally, no field-level validation prevents a doctor from zeroing out `patientList` on update.
-
-**Fix:** Split into `allow create` (using `request.resource.data`) and `allow update` with field validation.
-
----
-
-### TS-021: `AppointmentMaker` Accepts Past Dates
-**File:** `src/screens/DoctorStack/AppointmentMaker.js:81`
-
-**Problem:** No validation that selected appointment datetime is in the future.
-
-**Fix:** Validate `selectedDate > Date.now()` before saving.
-
----
-
-### TS-023: `MediInfoScreen` Non-Numeric Pill Count Writes `NaN` to Firestore
-*(See TS-012 — same root cause, medium-priority input path)*
-
----
-
-### TS-024: `AppointmentMaker` Missing Reason Validation
-**File:** `src/screens/DoctorStack/AppointmentMaker.js:81-101`
-
-**Problem:** Empty `reason` field passes validation. Blank appointment records written to Firestore.
-
-**Fix:** Validate `reason.trim() !== ''` before saving.
-
----
-
-### TS-027: `EditScreen` Missing Input Validation
-**File:** `src/screens/MoreStack/EditScreen.js:71-96`
-
-**Problem:** No validation before Firestore write. User can save a blank name and phone number.
-
-**Fix:** Add `name.trim() !== ''` check (mirrors `RegisterScreen` validation).
-
----
-
-### TS-029: `UploadImage` Anti-Pattern: Async Executor in Promise Constructor
-**File:** `src/utilities/UploadImage.js:10-28`
-
-**Problem:** `new Promise(async (res, rej) => {...})` — if the `async` body throws before calling `rej`, the rejection is silently swallowed.
-
-**Fix:** Rewrite as a plain `async` function using `await`.
-
----
-
-## Phase 4 — Low Priority / Performance
-
-### TS-020: `HomeScreen` Dual `history` Listeners
-**File:** `src/screens/HomeStack/HomeScreen.js:59-105`
-
-**Problem:** Two Firestore listeners on `history` — one for all history, one filtered by `status == 'missed'`. Doubles read cost. Missed count can be derived client-side from the first listener.
-
-**Fix:** Remove the second listener; compute missed count from the first subscription's data.
-
----
-
-### TS-022: `CalendarScreen` Full Medicine Fetch on Every Mount
-**File:** `src/screens/CalendarStack/CalendarScreen.js:129-134`
-
-**Problem:** Full `medicine` collection `.get()` on every navigation to CalendarScreen. Cache the result or use a module-level variable.
-
----
-
-### TS-031: Alarm ID Collision Range Too Small in ChangeReminder
+### MED-001: No Client-Side Email Format Validation on Auth Screens
 **Files:**
-- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:34`
-- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:34`
+- `src/screens/AuthStack/LoginScreen.js`
+- `src/screens/AuthStack/RegisterScreen.js`
+- `src/screens/AuthStack/ForgotPasswordScreen.js`
 
-**Problem:** `Math.floor(Math.random() * 10000)` — only 10,000 possible IDs. With multiple reminders, collision probability is non-trivial. NewReminder uses `1e9`.
+**Problem:** The only email validation is `trim() === ''`. Strings like `"notanemail"` pass and are sent to Firebase, which returns a generic error.
 
-**Fix:** Use `Math.floor(Math.random() * 1e9)` consistently.
-
----
-
-### TS-033: `RegisterScreen` `createUserWithEmailAndPassword` Not Tested
-**File:** `__tests__/screens/RegisterScreen.test.js:62-82`
-
-**Problem:** Password and phone inputs lack `testID` — the Firebase create user call is never exercised in the test suite.
-
-**Fix:** Add `testID` props to password/phone inputs; add happy-path test covering the full `createUser()` flow.
+**Fix:** Validate with a simple regex (e.g. `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`) before submitting.
 
 ---
 
-### TS-034: Doctor/More Stack Screens Have Zero Test Coverage
-
-**Problem:** `AppointmentList`, `AppointmentMaker`, `DoctorInfoScreen`, `AccessedDoctorScreen`, `AddAccess`, `DoctorScreen`, `CalendarScreen`, `EditScreen`, `ChangePassword`, `HelpScreen`, `ForgotPasswordScreen` — no tests exist.
-
----
-
-### TS-035: Firestore Security Rules Have No Automated Tests
-**File:** `tests/backend/`
-
-**Problem:** Firebase Emulator not configured; critical rule bugs (TS-016, TS-017) only discoverable in production.
-
-**Fix:** Set up Firebase Emulator locally; add `@firebase/rules-unit-testing` test suite.
-
----
-
-### TS-036: `UserReminders.test.js` `idAN` Matching Is a No-Op
-**File:** `__tests__/utilities/UserReminders.test.js:130-146`
-
-**Problem:** `expect.any(String)` is used for the mock `alarmId`, so the lookup logic that finds the correct `idAN` is never actually validated. Test passes even if `idAN` is always `''`.
-
----
-
-### TS-037: `console.log` With Sensitive Data in Production Code
+### MED-002: Phone Number Field Accepts Non-Numeric Paste Despite `keyboardType="numeric"`
 **Files:**
-- `src/utilities/UserReminders.js:34`
-- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:82`
-- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:82`
-- `src/screens/MedicineStack/DailyReminder/NewReminder.js` (various)
+- `src/screens/AuthStack/RegisterScreen.js`
+- `src/screens/MoreStack/EditScreen.js`
 
-**Problem:** Production code logs scheduled alarm lists and document IDs. Should be removed or gated behind a `__DEV__` flag.
+**Problem:** `keyboardType="numeric"` is a keyboard hint only; it does not prevent paste of non-numeric strings. No runtime validation is performed before writing to Firestore.
+
+**Fix:** Validate `phoneNumber` with `/^\d+$/` before submitting.
+
+---
+
+### MED-003: Medicines Added Without a Barcode Cannot Be Confirmed "Taken" via Scan
+**File:** `src/screens/MedicineStack/BarcodeScan.js:60`
+
+**Problem:** `if (barcode === e.data)` — when `barcode` is `undefined` (medicine added without a barcode), this is always `false`. The Alert shows `'Required Barcode is undefined'`. The user is stuck on the scan screen with no back button and no way to confirm the dose.
+
+**Fix:** Either prevent navigation to `BarcodeScan` when `barcode` is falsy (and use a manual "confirm taken" tap instead), or add a back button to the scan screen as a fallback.
+
+---
+
+### MED-004: `HomeScreen` `upcoming` Count Can Diverge from Rendered List
+**File:** `src/screens/HomeStack/HomeScreen.js:237–244`
+
+**Problem:** `upcomingCount` is computed in the `onSnapshot` callback using a snapshot-time `now`, while the rendered `FlatList` filter uses `Date.now()` evaluated on every render. If the component re-renders between these two evaluations, the adherence score (`value`) passed to `TreeImage` can differ from the count of items actually visible.
+
+**Fix:** Compute the filter and counts in the same place (either both in the snapshot callback or both in `render`), using a single consistent `Date.now()` call.
+
+---
+
+### MED-005: `MediInfoScreen` Uses String Sentinel `'null'` Instead of JS `null`
+**File:** `src/screens/MedicineStack/MediInfoScreen.js:209`
+
+**Problem:** Empty reminder slots are represented as the string `'null'` and compared with `=== 'null'`. If any real reminder field ever contains the string `'null'`, it would be misidentified as an empty slot.
+
+**Fix:** Use `null` (JS null) as the sentinel value and check with `=== null`.
+
+---
+
+### MED-006: Negative Pill Count Shows Read-Only Display With No Corrective Action
+**File:** `src/screens/MedicineStack/MediInfoScreen.js:332–352`
+
+**Problem:** When `parseInt(this.state.text, 10) < 0`, the UI renders a plain `<Text>` with the negative number and no input or button to correct it. The patient cannot refill from this state without restarting the add-pills flow.
+
+**Fix:** Clamp pill count at 0 in the `BarcodeScan` pill-decrement write, and/or show the add-pills input when the count is 0 or negative.
+
+---
+
+### MED-007: `ChangeReminder` / `WeeklyChangeReminder` `.delete()` Has No Error Handling
+**Files:**
+- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:92–105`
+- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:92–105`
+
+**Problem:** `.delete()` has no `.catch()`. On network failure, the exception is swallowed, `Toast` and `goBack()` are never called, and the user receives no feedback.
+
+**Fix:** Add `.catch(error => Toast.show(error.message))`.
+
+---
+
+### MED-008: `AppointmentMaker.handleYes` Has No Error Handling on Firestore Write
+**File:** `src/screens/DoctorStack/AppointmentMaker.js:85–106`
+
+**Problem:** The `firestore().collection('appointment').add(...)` call has no `.catch()`. Silent failure means the user gets no confirmation that their appointment was not saved.
+
+**Fix:** Add `.catch(error => Toast.show(error.message))` and keep the dialog open on failure.
+
+---
+
+### MED-009: `RegisterScreen` Has No "Confirm Password" Field
+**File:** `src/screens/AuthStack/RegisterScreen.js`
+
+**Problem:** A user who mistypes their password will have the account created with the wrong password. They will not discover this until login, requiring a "Forgot Password" flow.
+
+**Fix:** Add a `confirmPassword` field and validate `password === confirmPassword` before submitting.
+
+---
+
+### MED-010: `CalendarScreen` `FlatList` Missing `keyExtractor`
+**File:** `src/screens/CalendarStack/CalendarScreen.js:209–213`
+
+**Problem:** No `keyExtractor` prop; React Native falls back to using the array index as key, producing incorrect reconciliation when items are added or removed and a console warning.
+
+**Fix:** Add `keyExtractor={item => item.key}` (or appropriate unique field).
+
+---
+
+### MED-011: `UploadImage.uploadPhotoAsync` Has No Error Handling on `fetch` / `.blob()`
+**File:** `src/utilities/UploadImage.js:9–12`
+
+**Problem:** If the local file URI is invalid or has been deleted from the gallery, `fetch(uri)` or `response.blob()` throws an unhandled rejection. In `AddMedicine.addMedicine`, the upload sits outside the try/catch for the medicine existence check, so upload failure prevents the prescription from being added with no user feedback.
+
+**Fix:** Wrap `fetch` and `blob` in try/catch; surface the error to the caller.
+
+---
+
+## Phase 4 — Low Priority / Nice-to-Have
+
+### LOW-001: `console.log` in Production Paths May Expose Patient Data
+**Files:**
+- `src/utilities/UserReminders.js:32`
+- `src/screens/MedicineStack/DailyReminder/NewReminder.js:165`
+- `src/screens/MedicineStack/DailyReminder/ChangeReminder.js:122,125`
+- `src/screens/MedicineStack/WeeklyReminder/WeeklyChangeReminder.js:122,125`
+- `src/screens/DoctorStack/AppointmentMaker.js:92`
+- `src/screens/MedicineStack/BarcodeScan.js:71`
+
+**Problem:** Multiple `console.log` calls in production code log alarm objects and appointment times, which may contain patient medication data visible in crash reporters.
+
+**Fix:** Remove or gate behind `if (__DEV__)`.
+
+---
+
+### LOW-002: `DoctorScreen` `SectionList` `keyExtractor` Produces `[object Object]N`
+**File:** `src/screens/DoctorStack/DoctorScreen.js:206`
+
+**Problem:** `keyExtractor={(item, index) => item + index}` — `item` is an object; string coercion produces `[object Object]0`, `[object Object]1`, etc. All keys effectively collide, causing incorrect list reconciliation.
+
+**Fix:** Use a unique field: `keyExtractor={(item, index) => (item.email || item.key || '') + index}`.
+
+---
+
+### LOW-003: `DrawerMenu.handleSignOut` Does Not Await `deleteReminders` Before `signOut()`
+**File:** `src/routes/DrawerMenu/DrawerMenu.js:24–27`
+
+**Problem:** `deleteReminders` is async but not awaited. `signOut()` fires immediately after; if Firebase revokes the auth token before `deleteReminders` finishes its Firestore queries (possible with strict security rules), the queries fail and device alarms are never deleted.
+
+**Fix:** Make `handleSignOut` async and `await UserReminders.deleteReminders(user.email)` before calling `auth().signOut()`.
+
+---
+
+### LOW-004: `EditScreen` Toast Typo — "editted"
+**File:** `src/screens/MoreStack/EditScreen.js:101`
+
+**Problem:** `Toast.show('Your Account Details is editted !')` — "editted" should be "edited".
+
+**Fix:** Correct the spelling.
+
+---
+
+### LOW-005: `AddMedicine` `note` Field Initialised to `null` Causes Controlled/Uncontrolled Warning
+**File:** `src/screens/MedicineStack/AddMedicine.js:31,284`
+
+**Problem:** `note: null` is passed as the `value` prop to a `TextInput`. React Native treats `null` as an uncontrolled input; when the user types something, `onChangeText` switches it to controlled, producing a warning.
+
+**Fix:** Initialise to `note: ''`.
+
+---
+
+### LOW-006: `BarcodeScan` Has No Back Button — User Trapped When Barcode Cannot Be Scanned
+**File:** `src/screens/MedicineStack/BarcodeScan.js`
+
+**Problem:** The scan screen has no visible back navigation. Combined with MED-003 (medicines without barcodes), a user can be permanently stuck on this screen with no OS-level back gesture on some Android devices.
+
+**Fix:** Add a back `TouchableOpacity` in the overlay to call `navigation.goBack()`.
+
+---
+
+### LOW-007: `MedicationInformation` Imports `ScrollView` from `react-native-gesture-handler`
+**File:** `src/screens/HomeStack/MedicationInformation.js:8`
+
+**Problem:** `react-native-gesture-handler`'s `ScrollView` is only needed inside a gesture responder context. Importing it in a standalone screen is unnecessary and misleading.
+
+**Fix:** Import `ScrollView` from `react-native` instead.
+
+---
+
+### LOW-008: `CalendarScreen` Two Sequential `setState` Calls Per Snapshot Cause Double Render
+**File:** `src/screens/CalendarStack/CalendarScreen.js:128–130`
+
+**Problem:** `this.setState({ medicine, loading: false })` followed immediately by `this.calculate(...)` (which calls `setState` again) triggers two renders per snapshot update.
+
+**Fix:** Merge both state updates into a single `setState` call.
 
 ---
 
 ## Status Tracking
 
-- [x] TS-002 — Weekly reminders rescheduled +1 day instead of +7
-- [x] TS-003 — Reminder lookup by medicine name unreliable
-- [x] TS-006 — VerificationScreen `navigate('App')` non-existent route
-- [x] TS-014 — `medicine` write rule `if false` blocks patient-added medicines
-- [x] TS-016 — `isGrantedAccessToPatient` uses email instead of UID
-- [x] TS-001 — `deleteReminders` inner Promise not awaited
-- [x] TS-004 — BarcodeScan writes not awaited before navigation
-- [x] TS-007 — `RegisterScreen` stores `doctorList: null` instead of `[]`
-- [x] TS-008 — `AppointmentList` null guard on `currentUser`
-- [x] TS-009 — `getANid()` 200ms setTimeout race condition
-- [x] TS-010 — `MediInfoScreen` `RangeError` on undefined `prescription.times`
-- [x] TS-011 — `AddMedicine` duplicates global medicine catalogue entries
-- [x] TS-012 — `MediInfoScreen` pill count accepts `NaN` input
-- [x] TS-017 — `reminder` write rule uses `resource.data` on create
-- [x] TS-026 — `AddMedicine` no `.catch()` on write errors
-- [x] TS-028 — `DoctorInfoScreen` success toast on batch failure
-- [x] TS-005 — `BarcodeScan` alert fires after `barcodeRead = true`
-- [x] TS-013 — `DoctorScreen` `in` query fails with > 30 entries
-- [x] TS-015 — Doctor document write rule uses `resource.data` on create
-- [x] TS-021 — `AppointmentMaker` accepts past dates
-- [x] TS-024 — `AppointmentMaker` missing reason validation
-- [x] TS-027 — `EditScreen` missing input validation
-- [x] TS-029 — `UploadImage` async executor anti-pattern
-- [x] TS-020 — `HomeScreen` dual `history` listeners
-- [x] TS-022 — `CalendarScreen` full medicine fetch on every mount
-- [x] TS-031 — Alarm ID collision range too small in ChangeReminder
-- [x] TS-033 — `RegisterScreen` `createUserWithEmailAndPassword` not tested
-- [x] TS-034 — Doctor/More stack screens have zero test coverage
-- [x] TS-035 — Firestore security rules have no automated tests
-- [x] TS-036 — `UserReminders.test.js` `idAN` matching is a no-op
-- [ ] TS-037 — `console.log` with sensitive data in production code
+- [x] CRIT-001 — Race condition: `setReminders` stores empty `idAN`
+- [x] CRIT-002 — `deleteAlarm` called without null guard on `idAN`
+- [x] CRIT-003 — `BarcodeScan` un-awaited chains, navigation inside `.then()`
+- [x] CRIT-004 — `DrawerMenu.handleSignOut` crashes when session expired
+- [x] CRIT-005 — `EditScreen.componentWillUnmount` calls `null()`
+- [x] CRIT-006 — `MedicineScreen.prescriptionCollection` crashes on auth expiry
+- [x] HIGH-001 — No loading state on login / register
+- [x] HIGH-002 — `RegisterScreen` no Auth user rollback on Firestore failure
+- [x] HIGH-003 — `AddMedicine` non-transactional deduplication
+- [x] HIGH-004 — `AppointmentList` past/upcoming classification stale
+- [x] HIGH-005 — `CalendarScreen` module-level `_medicineCache` shared mutable reference
+- [x] HIGH-006 — `ChangeReminder` / `WeeklyChangeReminder` reschedule race condition
+- [x] HIGH-007 — `MedicineScreen.deleteAlarms` no error handling, orphaned alarms
+- [x] HIGH-008 — `NewReminder` / `WeeklyNewReminder` `getANid` not awaited
+- [x] HIGH-009 — `DoctorScreen` `=== null` guard misses `undefined`
+- [x] MED-001 — No client-side email format validation
+- [x] MED-002 — Phone number accepts non-numeric paste
+- [x] MED-003 — Medicines without barcodes cannot be confirmed via scan
+- [x] MED-004 — `HomeScreen` upcoming count can diverge from rendered list
+- [x] MED-005 — `MediInfoScreen` string sentinel `'null'` instead of JS `null`
+- [x] MED-006 — Negative pill count shows read-only display
+- [x] MED-007 — `ChangeReminder` / `WeeklyChangeReminder` `.delete()` no error handling
+- [x] MED-008 — `AppointmentMaker.handleYes` no error handling
+- [x] MED-009 — `RegisterScreen` no confirm password field
+- [x] MED-010 — `CalendarScreen` `FlatList` missing `keyExtractor`
+- [x] MED-011 — `UploadImage` no error handling on `fetch` / `.blob()`
+- [x] LOW-001 — `console.log` in production paths
+- [x] LOW-002 — `DoctorScreen` `SectionList` `keyExtractor` produces `[object Object]N`
+- [x] LOW-003 — `DrawerMenu` `deleteReminders` not awaited before `signOut()`
+- [x] LOW-004 — `EditScreen` toast typo "editted"
+- [x] LOW-005 — `AddMedicine` `note` initialised to `null`
+- [x] LOW-006 — `BarcodeScan` no back button
+- [x] LOW-007 — `MedicationInformation` wrong `ScrollView` import
+- [x] LOW-008 — `CalendarScreen` double `setState` per snapshot

@@ -28,6 +28,7 @@ class LoginScreen extends React.Component {
     },
     errorMessage: null,
     showPassword: false,
+    loading: false,
   };
 
   // Handle Show, Hide Password
@@ -41,11 +42,15 @@ class LoginScreen extends React.Component {
     // Solve the problem when there is space in the end of email by mistake
     const emailTrim = email.trim();
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailTrim === '') {
       Toast.show('Please Enter Email Information', Toast.LONG);
+    } else if (!emailRegex.test(emailTrim)) {
+      Toast.show('Please Enter a Valid Email Address', Toast.LONG);
     } else if (password === '') {
       Toast.show('Please Enter Password', Toast.LONG);
     } else {
+      this.setState({ loading: true });
       auth()
         .signInWithEmailAndPassword(emailTrim, password)
         .then(() => {
@@ -54,7 +59,10 @@ class LoginScreen extends React.Component {
           }
         })
         .catch(() =>
-          this.setState({ errorMessage: 'Incorrect email or password.' }),
+          this.setState({
+            errorMessage: 'Incorrect email or password.',
+            loading: false,
+          }),
         );
     }
   };
@@ -113,8 +121,14 @@ class LoginScreen extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-            <Text style={styles.buttonText}>Sign in</Text>
+          <TouchableOpacity
+            style={[styles.button, this.state.loading && styles.buttonDisabled]}
+            onPress={this.handleLogin}
+            disabled={this.state.loading}
+          >
+            <Text style={styles.buttonText}>
+              {this.state.loading ? 'Signing in...' : 'Sign in'}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -170,6 +184,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#1565C0',
     borderRadius: 4,
     marginHorizontal: 30,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   errorMessage: {
     height: 30,

@@ -48,17 +48,23 @@ class WeeklyNewReminder extends React.Component {
         fireDate: ReactNativeAN.parseDate(new Date(Date.now())),
       },
       number: 0,
+      scheduling: false,
     };
     this.scheduleAlarm = this.scheduleAlarm.bind(this);
   }
 
   componentDidMount() {
+    this._mounted = true;
     // Take medicine data from MedicineScreen, including image, name, description, and barcode.
     // => Faster than accessing Cloud Firestore again.
     this.setState({
       medicine: this.props.route.params.medicine,
       number: this.props.route.params.number,
     });
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
   }
 
   // This function called after the alarm is set.
@@ -95,12 +101,18 @@ class WeeklyNewReminder extends React.Component {
       })
       .then(() => {
         Toast.show('Reminder Set!');
-        this.props.navigation.goBack();
+        if (this._mounted) {
+          this.props.navigation.goBack();
+        }
       });
   };
 
   // This function called when Schedule Alarm button is clicked
-  scheduleAlarm = () => {
+  scheduleAlarm = async () => {
+    if (this.state.scheduling) {
+      return;
+    }
+    this.setState({ scheduling: true });
     const { fireDate, reminderId } = this.state.alarm;
     const { name, image, description, barcode } = this.state.medicine;
     const { testDate } = this.state.timePicker;
@@ -121,7 +133,10 @@ class WeeklyNewReminder extends React.Component {
     };
     // Officially make a new alarm with information from details.
     ReactNativeAN.scheduleAlarm(details);
-    this.getANid(details);
+    await this.getANid(details);
+    if (this._mounted) {
+      this.setState({ scheduling: false });
+    }
   };
 
   // Show TimePicker
@@ -227,10 +242,13 @@ class WeeklyNewReminder extends React.Component {
             )}
           </View>
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, this.state.scheduling && { opacity: 0.6 }]}
             onPress={() => this.scheduleAlarm()}
+            disabled={this.state.scheduling}
           >
-            <Text style={styles.pickerText}>Schedule Alarm</Text>
+            <Text style={styles.pickerText}>
+              {this.state.scheduling ? 'Scheduling...' : 'Schedule Alarm'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -51,7 +51,9 @@ class EditScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   // To Pick Avatar from library or take a photo and set it as avatar.
@@ -72,6 +74,10 @@ class EditScreen extends React.Component {
     const { name, phoneNumber, address, avatar } = this.state.user;
     if (name.trim() === '') {
       Toast.show('Name cannot be empty');
+      return;
+    }
+    if (phoneNumber && !/^\d+$/.test(phoneNumber)) {
+      Toast.show('Contact Number must contain digits only');
       return;
     }
     const db = firestore()
@@ -98,7 +104,7 @@ class EditScreen extends React.Component {
       await db.set({ avatar: remoteUri }, { merge: true });
     }
 
-    Toast.show('Your Account Details is editted !');
+    Toast.show('Your Account Details is edited !');
   };
 
   render() {

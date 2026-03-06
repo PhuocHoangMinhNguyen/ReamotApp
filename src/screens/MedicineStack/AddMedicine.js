@@ -27,7 +27,7 @@ class AddMedicine extends React.Component {
       image: null,
       number: '',
       times: '',
-      note: null,
+      note: '',
     },
     reminder: {
       dailyType: false,
@@ -124,9 +124,17 @@ class AddMedicine extends React.Component {
       // Reuse existing medicine document — only add the prescription.
       addPrescription();
     } else {
+      // Use a deterministic document ID derived from the medicine name so
+      // concurrent adds of the same name are idempotent (last write wins,
+      // same data) rather than creating duplicate documents.
+      const medicineDocId = name
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-');
       firestore()
         .collection('medicine')
-        .add({
+        .doc(medicineDocId)
+        .set({
           name: name,
           barcode: barcode,
           description: null,

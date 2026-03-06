@@ -22,14 +22,17 @@ class UserReminders {
       .where('patientEmail', '==', patientEmail)
       .get();
     querySnapshot.forEach(documentSnapshot => {
-      ReactNativeAN.deleteAlarm(documentSnapshot.data().idAN.toString());
+      const idAN = documentSnapshot.data().idAN;
+      if (idAN) {
+        ReactNativeAN.deleteAlarm(idAN.toString());
+      }
     });
   };
 
   setReminders = async patientEmail => {
     // Double check if there is any alarm working before logging in
     const alarm = await ReactNativeAN.getScheduledAlarms();
-    console.log(alarm);
+    if (__DEV__) { console.log(alarm); }
 
     const medicineSnapshot = await firestore().collection('medicine').get();
     const medicineList = [];
@@ -76,8 +79,18 @@ class UserReminders {
       });
     });
 
-    // Fetch scheduled alarms once now that all alarms have been registered.
-    const scheduledAlarms = await ReactNativeAN.getScheduledAlarms();
+    // Poll getScheduledAlarms() until all expected alarm IDs appear (native side
+    // may not register them synchronously). Retry up to 10 times, 100 ms apart.
+    const expectedIds = new Set(pendingUpdates.map(u => u.alarmID));
+    let scheduledAlarms = [];
+    for (let attempt = 0; attempt < 10; attempt++) {
+      scheduledAlarms = await ReactNativeAN.getScheduledAlarms();
+      const foundIds = new Set(scheduledAlarms.map(a => a.alarmId));
+      if ([...expectedIds].every(id => foundIds.has(id))) {
+        break;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
 
     // Build a single batch and commit once instead of one write per reminder.
     const batch = firestore().batch();

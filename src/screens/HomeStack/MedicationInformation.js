@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native';
 import Background from '../../components/Background';
 
 var tempAvatar = require('../../assets/images/tempAvatar.png');

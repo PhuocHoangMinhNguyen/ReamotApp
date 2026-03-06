@@ -98,10 +98,13 @@ class WeeklyChangeReminder extends React.Component {
       .delete()
       .then(() => {
         // Delete Alarm using state.idAN
-        ReactNativeAN.deleteAlarm(idAN.toString());
+        if (idAN) {
+          ReactNativeAN.deleteAlarm(idAN.toString());
+        }
         Toast.show('Reminder Deleted!');
         this.props.navigation.goBack();
-      });
+      })
+      .catch(error => Toast.show(error.message));
   };
 
   // Show up a dialog to ask if user is sure to miss the reminder.
@@ -119,10 +122,10 @@ class WeeklyChangeReminder extends React.Component {
     // Remove Notification
     ReactNativeAN.removeAllFiredNotifications();
 
-    console.log('Initial: ' + new Date(initial));
+    if (__DEV__) { console.log('Initial: ' + new Date(initial)); }
     const newReminderTime = new Date(initial);
     newReminderTime.setDate(newReminderTime.getDate() + 7);
-    console.log('Weekly Change Reminder: ' + newReminderTime);
+    if (__DEV__) { console.log('Weekly Change Reminder: ' + newReminderTime); }
     const fireDates = ReactNativeAN.parseDate(newReminderTime);
 
     const details = {
@@ -140,12 +143,19 @@ class WeeklyChangeReminder extends React.Component {
     };
     ReactNativeAN.scheduleAlarm(details);
 
-    // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-    const alarm = await ReactNativeAN.getScheduledAlarms();
+    // Poll getScheduledAlarms() until the rescheduled alarm appears (retry up to 10 × 100ms)
     let idAN = '';
-    for (let i = 0; i < alarm.length; i++) {
-      if (alarm[i].alarmId === details.alarm_id) {
-        idAN = alarm[i].id;
+    for (let attempt = 0; attempt < 10; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const alarm = await ReactNativeAN.getScheduledAlarms();
+      for (let i = 0; i < alarm.length; i++) {
+        if (alarm[i].alarmId === details.alarm_id) {
+          idAN = alarm[i].id;
+          break;
+        }
+      }
+      if (idAN !== '') {
+        break;
       }
     }
     firestore().collection('reminder').doc(firebaseId).update({

@@ -27,12 +27,14 @@ class RegisterScreen extends React.Component {
       name: '',
       email: '',
       password: '',
+      confirmPassword: '',
       phoneNumber: '',
       avatar: null,
     },
     errorMessage: null,
     showPassword: false,
     toggleCheckBox: false,
+    loading: false,
   };
 
   // To Show or Hide Password
@@ -42,20 +44,30 @@ class RegisterScreen extends React.Component {
 
   // Check if all information is entered before create a new user.
   handleSignUp = () => {
-    const { name, email, password, phoneNumber } = this.state.user;
+    const { name, email, password, confirmPassword, phoneNumber } = this.state.user;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (name.trim() === '') {
       Toast.show('Please Enter Full Name', Toast.LONG);
     } else if (email.trim() === '') {
       Toast.show('Please Enter Email Information', Toast.LONG);
+    } else if (!emailRegex.test(email.trim())) {
+      Toast.show('Please Enter a Valid Email Address', Toast.LONG);
     } else if (password === '') {
       Toast.show('Please Enter A Password', Toast.LONG);
     } else if (password.length < 6) {
       Toast.show('Password must be at least 6 characters', Toast.LONG);
+    } else if (confirmPassword === '') {
+      Toast.show('Please Confirm Your Password', Toast.LONG);
+    } else if (password !== confirmPassword) {
+      Toast.show('Passwords do not match', Toast.LONG);
     } else if (phoneNumber === '') {
       Toast.show('Please Enter Contact Number', Toast.LONG);
+    } else if (!/^\d+$/.test(phoneNumber)) {
+      Toast.show('Contact Number must contain digits only', Toast.LONG);
     } else if (this.state.toggleCheckBox === false) {
       Toast.show('Please Agree to Terms of Services', Toast.LONG);
     } else {
+      this.setState({ loading: true });
       this.createUser(this.state.user);
     }
   };
@@ -103,7 +115,13 @@ class RegisterScreen extends React.Component {
         db.set({ avatar: remoteUri }, { merge: true });
       }
     } catch (error) {
-      this.setState({ errorMessage: error.message });
+      // If Auth user was created but a subsequent Firestore write failed,
+      // delete the orphaned Auth account so the user can retry cleanly.
+      const orphan = auth().currentUser;
+      if (orphan) {
+        await orphan.delete().catch(() => {});
+      }
+      this.setState({ errorMessage: error.message, loading: false });
     }
   };
 
@@ -202,6 +220,24 @@ class RegisterScreen extends React.Component {
             </View>
 
             <View style={styles.formSection}>
+              <Text style={styles.inputTitle}>Confirm Password</Text>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.password}
+                  testID="register-confirm-password-input"
+                  secureTextEntry={!this.state.showPassword}
+                  autoCapitalize="none"
+                  onChangeText={confirmPassword =>
+                    this.setState({
+                      user: { ...this.state.user, confirmPassword },
+                    })
+                  }
+                  value={this.state.user.confirmPassword}
+                />
+              </View>
+            </View>
+
+            <View style={styles.formSection}>
               <Text style={styles.inputTitle}>Contact Number</Text>
               <TextInput
                 style={styles.input}
@@ -232,8 +268,14 @@ class RegisterScreen extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-            <Text style={styles.buttonText}>Sign up</Text>
+          <TouchableOpacity
+            style={[styles.button, this.state.loading && styles.buttonDisabled]}
+            onPress={this.handleSignUp}
+            disabled={this.state.loading}
+          >
+            <Text style={styles.buttonText}>
+              {this.state.loading ? 'Signing up...' : 'Sign up'}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -296,6 +338,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#1565C0',
     borderRadius: 4,
     marginHorizontal: 30,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   errorMessage: {
     marginTop: 24,

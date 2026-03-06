@@ -24,10 +24,6 @@ import Background from '../../components/Background';
 
 var tempAvatar = require('../../assets/images/tempAvatar.png');
 
-// Module-level cache: avoids re-fetching the medicine catalogue on every
-// navigation to CalendarScreen (each mount creates a new component instance).
-let _medicineCache = null;
-
 class CalendarScreen extends React.Component {
   static navigationOptions = {
     headerShown: false,
@@ -125,21 +121,36 @@ class CalendarScreen extends React.Component {
             missedLength++;
           }
         });
-        this.setState({ medicine: result, loading: false });
-        this.calculate(takenLength, missedLength);
+        const total = takenLength + missedLength;
+        const safePercentage = total === 0 ? 0 : takenLength / total;
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        if (safePercentage <= 0.5) {
+          r = 255;
+        } else if (safePercentage >= 0.75) {
+          g = 255;
+        } else {
+          r = 255;
+          g = 127;
+        }
+        this.setState(prevState => ({
+          medicine: result,
+          loading: false,
+          chartData: { ...prevState.chartData, data: [safePercentage] },
+          chartConfig: {
+            ...prevState.chartConfig,
+            color: (opacity = 1) => `rgba(${r}, ${g}, ${b}, ${opacity})`,
+          },
+        }));
       });
   };
 
   async componentDidMount() {
-    if (_medicineCache) {
-      this.medicineMap = _medicineCache;
-    } else {
-      const medSnapshot = await firestore().collection('medicine').get();
-      medSnapshot.forEach(doc => {
-        this.medicineMap.set(doc.data().name, doc.data());
-      });
-      _medicineCache = this.medicineMap;
-    }
+    const medSnapshot = await firestore().collection('medicine').get();
+    medSnapshot.forEach(doc => {
+      this.medicineMap.set(doc.data().name, doc.data());
+    });
     this.loadItems();
   }
 
@@ -210,6 +221,7 @@ class CalendarScreen extends React.Component {
             style={styles.feed}
             data={medicine}
             renderItem={({ item }) => this.renderItem(item)}
+            keyExtractor={item => item.key}
           />
         )}
         <View style={styles.chart}>

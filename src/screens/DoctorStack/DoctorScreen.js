@@ -59,11 +59,11 @@ class DoctorScreen extends Component {
           const tempDoctorEmail = documentSnapshot.data().doctorList;
           const tempPharmacistEmail = documentSnapshot.data().pharmacistList;
 
-          if (tempDoctorEmail === null && tempPharmacistEmail === null) {
+          if (!tempDoctorEmail && !tempPharmacistEmail) {
             return;
           }
 
-          if (tempDoctorEmail !== null && tempDoctorEmail.length > 0) {
+          if (tempDoctorEmail && tempDoctorEmail.length > 0) {
             this.doctorUnsubs.forEach(u => u());
             this.doctorUnsubs = [];
             this.doctorChunkResults = {};
@@ -89,7 +89,7 @@ class DoctorScreen extends Component {
             });
           }
 
-          if (tempPharmacistEmail !== null && tempPharmacistEmail.length > 0) {
+          if (tempPharmacistEmail && tempPharmacistEmail.length > 0) {
             this.pharmacistUnsubs.forEach(u => u());
             this.pharmacistUnsubs = [];
             this.pharmacistChunkResults = {};
@@ -203,7 +203,7 @@ class DoctorScreen extends Component {
               data: this.state.accessedPharmacist,
             },
           ]}
-          keyExtractor={(item, index) => item + index}
+          keyExtractor={(item, index) => (item.email || item.key || '') + index}
           renderItem={({ item }) => this.renderItem(item)}
           renderSectionHeader={({ section: { title } }) => {
             if (title === 'Accessed Doctor') {

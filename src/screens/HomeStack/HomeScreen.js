@@ -178,8 +178,7 @@ class HomeScreen extends React.Component {
   };
 
   render() {
-    const { historymedicines, remindermedicines, upcomingCount, loading } =
-      this.state;
+    const { historymedicines, remindermedicines, loading } = this.state;
 
     if (loading) {
       return (
@@ -188,6 +187,18 @@ class HomeScreen extends React.Component {
         </View>
       );
     }
+    // Compute upcoming list and count from the same timestamp so value and
+    // the rendered FlatList are always consistent (fixes MED-004).
+    const todayStr = new Date().toDateString();
+    const now = Date.now();
+    const upcomingMeds = remindermedicines.filter(
+      item =>
+        item.time &&
+        item.time.toDate().toDateString() === todayStr &&
+        item.time.toDate() >= now,
+    );
+    const upcomingCount = upcomingMeds.length;
+
     // Determine Image Chosen to be shown, based on the value below.
     const missedCount = historymedicines.filter(
       h => h.status === 'missed',
@@ -234,13 +245,7 @@ class HomeScreen extends React.Component {
           <FlatList
             removeClippedSubviews={true}
             style={styles.feed}
-            data={remindermedicines.filter(
-              item =>
-                item.time &&
-                item.time.toDate().toDateString() ===
-                  new Date().toDateString() &&
-                item.time.toDate() >= Date.now(),
-            )}
+            data={upcomingMeds}
             renderItem={({ item }) => this.renderReminder(item)}
             keyExtractor={item => item.key}
             horizontal={true}

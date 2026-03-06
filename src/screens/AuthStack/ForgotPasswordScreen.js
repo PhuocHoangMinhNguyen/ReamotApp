@@ -26,8 +26,11 @@ class ForgotPasswordScreen extends React.Component {
   // A link will be sent to provided email address to reset password.
   handleChangePassword = () => {
     const emailTrim = this.state.forgottenEmail.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailTrim === '') {
       Toast.show('Please Enter Email Address to Change Password');
+    } else if (!emailRegex.test(emailTrim)) {
+      Toast.show('Please Enter a Valid Email Address');
     } else {
       auth()
         .sendPasswordResetEmail(emailTrim)

@@ -22,11 +22,11 @@ class AppointmentList extends React.Component {
     if (!user) {
       return;
     }
-    const dateNow = new Date();
     this.unsubscribe = firestore()
       .collection('appointment')
       .where('patientEmail', '==', user.email)
       .onSnapshot(querySnapshot => {
+        const dateNow = new Date();
         let tempUpcomming = [];
         let tempPast = [];
         querySnapshot.forEach(documentSnapshot => {
