@@ -25,8 +25,10 @@ service cloud.firestore {
 
     // ── userByEmail (email → UID lookup) ──────────────────────────────────────
     // Written once on registration; used by isGrantedAccessToPatient.
+    // Client reads restricted to own document only; isGrantedAccessToPatient
+    // uses server-side get() which bypasses these client read rules.
     match /userByEmail/{email} {
-      allow read: if isAuthenticated();
+      allow read: if isAuthenticated() && email == currentEmail();
       allow create: if isAuthenticated()
                     && request.resource.data.uid == request.auth.uid;
       allow update, delete: if false;
@@ -96,6 +98,30 @@ service cloud.firestore {
                     && request.resource.data.pharmacistEmail == currentEmail();
       allow update, delete: if isAuthenticated()
                             && resource.data.pharmacistEmail == currentEmail();
+    }
+
+    // ── medicinePills ─────────────────────────────────────────────────────────
+    // Patients manage their own pill counts; granted doctors/pharmacists may read.
+    match /medicinePills/{docId} {
+      allow read: if isAuthenticated()
+                  && (resource.data.patientEmail == currentEmail()
+                      || isGrantedAccessToPatient(resource.data.patientEmail));
+      allow create: if isAuthenticated()
+                    && request.resource.data.patientEmail == currentEmail();
+      allow update, delete: if isAuthenticated()
+                            && resource.data.patientEmail == currentEmail();
+    }
+
+    // ── appointment ───────────────────────────────────────────────────────────
+    // Patients write their own appointments; granted doctors/pharmacists may read.
+    match /appointment/{docId} {
+      allow read: if isAuthenticated()
+                  && (resource.data.patientEmail == currentEmail()
+                      || isGrantedAccessToPatient(resource.data.patientEmail));
+      allow create: if isAuthenticated()
+                    && request.resource.data.patientEmail == currentEmail();
+      allow update, delete: if isAuthenticated()
+                            && resource.data.patientEmail == currentEmail();
     }
   }
 }

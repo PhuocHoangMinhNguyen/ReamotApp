@@ -44,11 +44,16 @@ class MediInfoScreen extends React.Component {
     let paramsFromMedicineScreen = this.props.route.params;
     this.setState({ medicine: paramsFromMedicineScreen });
 
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      return;
+    }
+
     // Get Medicine Number of Pills
     this.unsubscribers.push(
       firestore()
         .collection('medicinePills')
-        .where('patientEmail', '==', auth().currentUser.email)
+        .where('patientEmail', '==', currentUser.email)
         .where('medicine', '==', this.props.route.params.name)
         .onSnapshot(querySnapshot => {
           let temp = '';
@@ -70,7 +75,7 @@ class MediInfoScreen extends React.Component {
     this.unsubscribers.push(
       firestore()
         .collection('prescription')
-        .where('patientEmail', '==', auth().currentUser.email)
+        .where('patientEmail', '==', currentUser.email)
         .where('name', '==', this.props.route.params.name)
         .onSnapshot(querySnapshot => {
           let tempValue = 0;
@@ -95,7 +100,7 @@ class MediInfoScreen extends React.Component {
     this.unsubscribers.push(
       firestore()
         .collection('reminder')
-        .where('patientEmail', '==', auth().currentUser.email)
+        .where('patientEmail', '==', currentUser.email)
         .where('medicine', '==', this.props.route.params.name)
         .onSnapshot(querySnapshot => {
           let temp = [];
@@ -172,9 +177,14 @@ class MediInfoScreen extends React.Component {
     if (this.state.medicinePills === '' || isNaN(value) || value <= 0) {
       Toast.show('Please enter a valid number of capsules');
     } else {
+      const currentUser = auth().currentUser;
+      if (!currentUser) {
+        Toast.show('Session expired, please log in again');
+        return;
+      }
       firestore().collection('medicinePills').add({
         medicine: this.state.medicine.name,
-        patientEmail: auth().currentUser.email,
+        patientEmail: currentUser.email,
         pills: value,
       });
     }

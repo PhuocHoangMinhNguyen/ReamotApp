@@ -92,6 +92,11 @@ class AppointmentMaker extends React.Component {
     if (__DEV__) {
       console.log('Time: ' + time);
     }
+    const currentUser = auth().currentUser;
+    if (!currentUser) {
+      Toast.show('Session expired, please log in again');
+      return;
+    }
     this.setState({ dialogVisible: false });
     firestore()
       .collection('appointment')
@@ -99,7 +104,7 @@ class AppointmentMaker extends React.Component {
         doctor: this.state.doctor.name,
         time: time,
         reason: this.state.reason,
-        patientEmail: auth().currentUser.email,
+        patientEmail: currentUser.email,
       })
       .then(() => {
         Toast.show('Your appointment is confirmed !');

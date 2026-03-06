@@ -88,12 +88,19 @@ class BarcodeScan extends React.Component {
         };
         ReactNativeAN.scheduleAlarm(details);
 
-        // Get the NEW alarm's "id", set it as idAN to update in Cloud Firestore
-        const alarm = await ReactNativeAN.getScheduledAlarms();
+        // Poll getScheduledAlarms() until the rescheduled alarm appears (retry up to 10 × 100ms)
         let idAN = '';
-        for (let i = 0; i < alarm.length; i++) {
-          if (alarm[i].alarmId === details.alarm_id) {
-            idAN = alarm[i].id;
+        for (let attempt = 0; attempt < 10; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          const alarm = await ReactNativeAN.getScheduledAlarms();
+          for (let i = 0; i < alarm.length; i++) {
+            if (alarm[i].alarmId === details.alarm_id) {
+              idAN = alarm[i].id;
+              break;
+            }
+          }
+          if (idAN !== '') {
+            break;
           }
         }
         await firestore().collection('reminder').doc(firebaseId).update({
@@ -103,12 +110,16 @@ class BarcodeScan extends React.Component {
         });
 
         // When the alarm is turned off, add the medicine into "history" collection
+        const currentUser = auth().currentUser;
+        if (!currentUser) {
+          return;
+        }
         const firebaseReminder = new Date(itemTime);
         await firestore()
           .collection('history')
           .add({
             medicine: name,
-            patientEmail: auth().currentUser.email,
+            patientEmail: currentUser.email,
             startTime: firebaseReminder,
             date: moment().format('MMMM Do YYYY'),
             status: 'taken',
@@ -123,9 +134,13 @@ class BarcodeScan extends React.Component {
             .get();
           const numberOfPills = reminderDoc.data().numberOfPills;
 
+          const pillsUser = auth().currentUser;
+          if (!pillsUser) {
+            return;
+          }
           const querySnapshot = await mPills
             .where('medicine', '==', name)
-            .where('patientEmail', '==', auth().currentUser.email)
+            .where('patientEmail', '==', pillsUser.email)
             .get();
           let temporaryID;
           let firebasePills;
