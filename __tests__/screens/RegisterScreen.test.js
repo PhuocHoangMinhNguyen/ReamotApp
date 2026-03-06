@@ -72,6 +72,7 @@ describe('RegisterScreen', () => {
     fireEvent.changeText(getByTestId('register-name-input'), 'Alice');
     fireEvent.changeText(getByTestId('register-email-input'), 'alice@example.com');
     fireEvent.changeText(getByTestId('register-password-input'), 'secret123');
+    fireEvent.changeText(getByTestId('register-confirm-password-input'), 'secret123');
     fireEvent.changeText(getByTestId('register-phone-input'), '0412345678');
 
     // Tick the terms checkbox so the final validation guard passes.
